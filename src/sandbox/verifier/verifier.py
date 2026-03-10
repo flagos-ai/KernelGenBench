@@ -461,12 +461,6 @@ class Verifier:
                 return VerifyResult(op_name=report_name, success=False, traceback=f"Test function {func_name} not found")
             params = get_params(func_name, mark)
             for combo in ([{}] if not params else expand_params(params)):
-                # Clean CUDA context between cases for vllm13 ops to avoid state pollution
-                if "vllm13" in report_name and torch.cuda.is_available():
-                    torch.cuda.synchronize()
-                    gc.collect()
-                    torch.cuda.empty_cache()
-                    torch.cuda.synchronize()
                 total += 1
                 success = True
                 tb_str = None
