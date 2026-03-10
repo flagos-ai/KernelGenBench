@@ -795,7 +795,7 @@ class PassAtKTester:
             verifier = Verifier(VerifyConfig(
                 run_name="anti_hack",
                 anti_hack=True,
-                acc_timeout=self.timeout,
+                acc_timeout=self.verify_config.acc_timeout,
                 save_log=False,
                 manage_device_visibility=False,
             ))
