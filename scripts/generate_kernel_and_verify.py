@@ -8,6 +8,8 @@ from typing import Dict, Set, List, Optional, Any
 import sys
 from datetime import datetime
 
+from sandbox.anti_hack import check_code as anti_hack_check
+
 from flagbench.dataset import TorchOpsLoader, APIInfo
 from flagbench.dataset import IMPL_INFO
 from sandbox.verifier import Verifier, VerifyConfig, VerifyRequest, Source
@@ -712,9 +714,133 @@ class PassAtKTester:
             logger.info(f"  Total passed: {len(self.passed_operators)}/{total_operators}")
             logger.info(f"  Pass rate: {round_result['pass_rate']:.2%}")
         
+        # Anti-hack: final check on all passed operators
+        if self.passed_operators:
+            self.anti_hack_final_check()
+
         # Final summary
         self.print_final_summary(total_operators, max_rounds)
     
+    def _get_anti_hack_backend(self, op_name: str) -> str:
+        """Determine anti-hack backend from operator prefix."""
+        if op_name.startswith("vllm13::") or op_name.startswith("vllm15::"):
+            return "vllm13"
+        elif op_name.startswith("cublas::"):
+            return "cublas"
+        elif op_name.startswith("aten::"):
+            return "torch"
+        return self.dataset
+
+    def _need_namespace_triton(self, op_name: str) -> bool:
+        """Check if operator needs namespace='triton' for verification."""
+        if self.dataset == "cupy":
+            return True
+        if self.dataset == "KernelGenBench" and not op_name.startswith("aten::"):
+            return True
+        return False
+
+    def anti_hack_final_check(self) -> None:
+        """Run anti-hack checks on all passed operators after Pass@K completes.
+
+        Does NOT modify self.passed_operators. Saves a separate
+        pass_at_k_results_antihack.json with anti-hack results.
+        """
+        logger.info(f"\n{'='*60}")
+        logger.info(f"Anti-Hack Final Check: {len(self.passed_operators)} passed operators")
+        logger.info(f"{'='*60}")
+
+        # {op_name: {"hacked": bool, "layer": str, "reason": str}}
+        hack_results: Dict[str, Dict[str, Any]] = {}
+
+        for op_name in list(self.passed_operators):
+            # Find the kernel code from the round it first passed
+            round_idx = self.first_pass_round.get(op_name)
+            if round_idx is None:
+                continue
+            codes = self.generated_codes.get(op_name, {})
+            kernel_code = codes.get(round_idx, "")
+            if not kernel_code:
+                continue
+
+            backend = self._get_anti_hack_backend(op_name)
+
+            # Layer 1: Static AST scan
+            is_hack, reason = anti_hack_check(kernel_code, backend=backend)
+            if is_hack:
+                logger.warning(f"[Anti-hack L1] {op_name}: {reason}")
+                hack_results[op_name] = {"hacked": True, "layer": "L1", "reason": reason}
+                continue
+
+            # Layer 2 & 3: re-verify with anti_hack enabled
+            round_dir = self.output_dir / f"round_{round_idx}"
+            kernel_path = round_dir / f"{op_name}.py"
+            if self.test_type == "triton":
+                test_file_path = Path("")
+            else:
+                test_file_path = round_dir / f"test_accuracy_{op_name}.py"
+
+            if not kernel_path.exists():
+                continue
+
+            try:
+                verify_req = self.create_triton_kernel_verify_args(
+                    kernel_path, test_file_path, op_name,
+                    add_namespace_triton=self._need_namespace_triton(op_name),
+                )
+            except Exception as e:
+                logger.warning(f"[Anti-hack] {op_name} verify_args failed: {e}")
+                hack_results[op_name] = {"hacked": True, "layer": "verify_error", "reason": str(e)}
+                continue
+
+            verifier = Verifier(VerifyConfig(
+                run_name="anti_hack",
+                anti_hack=True,
+                acc_timeout=self.timeout,
+                save_log=False,
+                manage_device_visibility=False,
+            ))
+            try:
+                _, results = verifier.only_verify(
+                    name_source_map=[verify_req],
+                    device_count=1,
+                )
+                if results and not results[0].success:
+                    tb = results[0].traceback or ""
+                    if "[Anti-hack]" in tb:
+                        logger.warning(f"[Anti-hack L2/3] {op_name}: {tb}")
+                        hack_results[op_name] = {"hacked": True, "layer": "L2/L3", "reason": tb}
+                        continue
+            except Exception as e:
+                logger.debug(f"[Anti-hack] {op_name} verify failed: {e}")
+
+            # Clean
+            hack_results[op_name] = {"hacked": False, "layer": "", "reason": ""}
+
+        hacked_operators = {op for op, r in hack_results.items() if r["hacked"]}
+        clean_passed = self.passed_operators - hacked_operators
+
+        if hacked_operators:
+            logger.info(f"\nAnti-hack detected {len(hacked_operators)} hacked operators: "
+                        f"{sorted(hacked_operators)}")
+        else:
+            logger.info(f"\nAnti-hack: all {len(self.passed_operators)} operators clean")
+
+        # Save separate anti-hack results JSON (do NOT modify original)
+        antihack_file = self.output_dir / "pass_at_k_results_antihack.json"
+        antihack_data = {
+            "total_operators": len(self.all_operators),
+            "original_passed": len(self.passed_operators),
+            "hacked_count": len(hacked_operators),
+            "clean_passed": len(clean_passed),
+            "clean_pass_rate": len(clean_passed) / len(self.all_operators) if self.all_operators else 0,
+            "hacked_operators": sorted(list(hacked_operators)),
+            "clean_passed_operators": sorted(list(clean_passed)),
+            "hack_details": hack_results,
+        }
+        with open(antihack_file, "w") as f:
+            json.dump(antihack_data, f, indent=2, ensure_ascii=False)
+        logger.info(f"Anti-hack results saved to: {antihack_file}")
+
     def save_results(self) -> None:
         """Save current results to JSON."""
         results_file = self.output_dir / "pass_at_k_results.json"
