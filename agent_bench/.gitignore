@@ -1,0 +1,18 @@
+# User config (use config.example.yaml as template)
+config.yaml
+
+# Environment variables
+.env
+
+# Run results
+runs/
+
+# Generated prompts (can be regenerated)
+prompts/
+
+# Lock files
+*.lock
+
+# Python cache
+__pycache__/
+*.pyc
