@@ -5,7 +5,6 @@ import argparse
 import json
 import logging
 import os
-import re
 import signal
 import subprocess
 import sys
@@ -20,6 +19,7 @@ except ImportError:
     yaml = None
 
 from device_manager import DeviceManager
+from methods import get_method, list_methods
 
 logger = logging.getLogger(__name__)
 
@@ -55,122 +55,29 @@ def load_config(config_path: Path) -> dict:
         return yaml.safe_load(f)
 
 
-def load_ops_list(path: Path) -> list[str]:
-    """Load operator names from ops_list.txt."""
+def load_ops_from_prompts(prompts_dir: Path, namespace: str) -> list[str]:
+    """Load operator names by scanning prompt files in directory.
+
+    Args:
+        prompts_dir: Directory containing prompt .md files
+        namespace: Operator namespace (e.g., "aten" or "cupy")
+
+    Returns:
+        List of full operator names (e.g., ["aten::add", "aten::softmax"])
+    """
     ops = []
-    with open(path) as f:
-        for line in f:
-            line = line.strip()
-            if line and not line.startswith("#"):
-                ops.append(line)
+    for f in sorted(prompts_dir.glob("*.md")):
+        op_name = f.stem  # e.g., "softmax" from "softmax.md"
+        ops.append(f"{namespace}::{op_name}")
     return ops
 
 
-def extract_code_from_output(output_path: Path, operator: str) -> str | None:
-    """Extract Python code from agent's stream-json output."""
-    try:
-        result_text = ""
-        with open(output_path, "r", errors="replace") as f:
-            for line in f:
-                line = line.strip()
-                if not line:
-                    continue
-                try:
-                    event = json.loads(line)
-                    if event.get("type") == "result":
-                        result_text = event.get("result", "")
-                        break
-                except json.JSONDecodeError:
-                    continue
-
-        if not result_text:
-            return None
-
-        # Extract Python code block
-        code_match = re.search(r"```python\s*(.*?)\s*```", result_text, re.DOTALL)
-        if code_match:
-            return code_match.group(1).strip()
-
-        return None
-    except Exception as e:
-        logger.warning(f"Failed to extract code for {operator}: {e}")
-        return None
-
-
-def launch_agent(
-    operator: str,
-    prompt_path: Path,
-    gpu_id: int,
-    config: dict,
-    run_dir: Path,
-) -> subprocess.Popen:
-    """Launch a Claude Code process for an operator."""
-    # Read prompt
-    with open(prompt_path) as f:
-        prompt = f.read()
-
-    # Replace GPU_ID in prompt
-    prompt = prompt.replace("{{GPU_ID}}", str(gpu_id))
-
-    # Prepare directories
-    logs_dir = run_dir / "logs"
-    logs_dir.mkdir(parents=True, exist_ok=True)
-
-    log_path = logs_dir / f"{operator}.log"
-    stdout_path = logs_dir / f"{operator}.jsonl"
-
-    # Environment
-    env = os.environ.copy()
-    env.pop("CLAUDECODE", None)  # Allow launching CC from within CC
-    env["IS_SANDBOX"] = "1"
-
-    # Build command
-    agent_config = config.get("agent", {})
-    claude_bin = agent_config.get("bin", "claude")
-    budget = agent_config.get("budget")
-
-    cmd = [
-        claude_bin,
-        "-p", prompt,
-        "--dangerously-skip-permissions",
-        "--output-format", "stream-json",
-        "--verbose",
-    ]
-
-    if budget:
-        cmd.extend(["--max-budget-usd", str(budget)])
-
-    # Launch process
-    stdout_file = open(stdout_path, "w")
-    stderr_file = open(log_path, "w")
-
-    try:
-        proc = subprocess.Popen(
-            cmd,
-            cwd=str(run_dir),
-            env=env,
-            stdin=subprocess.DEVNULL,
-            stdout=stdout_file,
-            stderr=stderr_file,
-            start_new_session=True,
-        )
-    except Exception:
-        stdout_file.close()
-        stderr_file.close()
-        raise
-
-    # Attach paths for later
-    proc._stdout_path = stdout_path
-    proc._stderr_path = log_path
-    proc._stdout_file = stdout_file
-    proc._stderr_file = stderr_file
-
-    logger.info(f"Launched agent for {operator} (PID={proc.pid}, GPU={gpu_id})")
-    return proc
-
-
-def kill_process(proc: subprocess.Popen):
+def kill_process(handle: dict):
     """Kill a process and its process group."""
+    proc = handle.get("proc")
+    if proc is None:
+        return
+
     try:
         pgid = os.getpgid(proc.pid)
         os.killpg(pgid, signal.SIGKILL)
@@ -185,16 +92,20 @@ def kill_process(proc: subprocess.Popen):
         logger.warning(f"Process {proc.pid} did not exit after SIGKILL")
 
     # Close file handles safely
-    try:
-        if not proc._stdout_file.closed:
-            proc._stdout_file.close()
-    except Exception:
-        pass
-    try:
-        if not proc._stderr_file.closed:
-            proc._stderr_file.close()
-    except Exception:
-        pass
+    stdout_file = handle.get("stdout_file")
+    stderr_file = handle.get("stderr_file")
+    if stdout_file:
+        try:
+            if not stdout_file.closed:
+                stdout_file.close()
+        except Exception:
+            pass
+    if stderr_file:
+        try:
+            if not stderr_file.closed:
+                stderr_file.close()
+        except Exception:
+            pass
 
 
 class Progress:
@@ -271,6 +182,19 @@ def run(args):
     config_path = args.config or (SCRIPT_DIR / "config.yaml")
     config = load_config(config_path)
 
+    # Store dataset in config for methods to access
+    config["dataset"] = args.dataset
+
+    # Override config with command line args for iterative_optimizer
+    if args.max_optimize_calls is not None:
+        config.setdefault("agent", {})["max_optimize_calls"] = args.max_optimize_calls
+    if args.target_speedup is not None:
+        config.setdefault("agent", {})["target_speedup"] = args.target_speedup
+
+    # Get method
+    method = get_method(args.method)
+    logger.info(f"Using method: {method.name}")
+
     # Paths
     prompts_dir = SCRIPT_DIR / config.get("paths", {}).get("prompts", "prompts")
     runs_dir = SCRIPT_DIR / config.get("paths", {}).get("runs", "runs")
@@ -279,16 +203,12 @@ def run(args):
     dataset = args.dataset
     dataset_prompts_dir = prompts_dir / dataset
 
-    # Load operators
-    ops_list_path = dataset_prompts_dir / "ops_list.txt"
-    if not ops_list_path.exists():
-        print(f"Error: {ops_list_path} not found. Run generate_prompts.py first.")
-        sys.exit(1)
-
-    ops = load_ops_list(ops_list_path)
+    # Load operators from prompt files
+    namespace = "cupy" if dataset == "cupy" else "aten"
+    ops = load_ops_from_prompts(dataset_prompts_dir, namespace)
     if not ops:
-        print("No operators to process.")
-        return
+        print(f"Error: No prompt files found in {dataset_prompts_dir}")
+        sys.exit(1)
 
     # Filter operators if specified (exact match on operator name)
     if args.op:
@@ -305,18 +225,22 @@ def run(args):
             print(f"Error: Run directory {run_dir} not found")
             sys.exit(1)
     else:
-        run_name = f"{config.get('agent', {}).get('type', 'claude')}_{dataset}_{datetime.now().strftime('%Y%m%d_%H%M%S')}"
+        run_name = f"{method.name}_{dataset}_{datetime.now().strftime('%Y%m%d_%H%M%S')}"
         run_dir = runs_dir / run_name
         run_dir.mkdir(parents=True, exist_ok=True)
 
     kernels_dir = run_dir / "kernels"
     kernels_dir.mkdir(parents=True, exist_ok=True)
 
-    # Save config snapshot with dataset
+    workspaces_dir = run_dir / "workspaces"
+    workspaces_dir.mkdir(parents=True, exist_ok=True)
+
+    # Save config snapshot with dataset and method
     config_snapshot_path = run_dir / "config.yaml"
     if not config_snapshot_path.exists():
         config_snapshot = config.copy()
         config_snapshot["dataset"] = dataset
+        config_snapshot["method"] = method.name
         with open(config_snapshot_path, "w") as f:
             yaml.dump(config_snapshot, f, default_flow_style=False)
 
@@ -348,12 +272,11 @@ def run(args):
     logger.info(f"Queue: {len(queue)} operators to process")
 
     # Agent config
-    agent_config = config.get("agent", {})
-    timeout = agent_config.get("timeout", 1800)
-    max_retries = agent_config.get("max_retries", 3)
+    timeout = method.get_timeout(config)
+    max_retries = config.get("agent", {}).get("max_retries", 3)
     poll_interval = config.get("poll_interval", 10)
 
-    # Running tasks: {op_name: (proc, gpu_id, attempt, full_name, start_time)}
+    # Running tasks: {op_name: (handle, gpu_id, attempt, full_name, start_time)}
     running: dict[str, tuple] = {}
 
     # Graceful shutdown
@@ -387,10 +310,19 @@ def run(args):
                 device_mgr.release(gpu_id)
                 continue
 
+            workspace_dir = workspaces_dir / op_name
+
             try:
-                proc = launch_agent(op_name, prompt_path, gpu_id, config, run_dir)
-                running[op_name] = (proc, gpu_id, attempt, full_name, time.time())
+                handle = method.launch(
+                    operator=op_name,
+                    prompt_path=prompt_path,
+                    workspace_dir=workspace_dir,
+                    gpu_id=gpu_id,
+                    config=config,
+                )
+                running[op_name] = (handle, gpu_id, attempt, full_name, time.time(), workspace_dir)
                 progress.add_operator(op_name, gpu_id, attempt + 1)
+                logger.info(f"Launched {method.name} for {op_name} (GPU={gpu_id})")
             except Exception as e:
                 logger.error(f"Failed to launch agent for {op_name}: {e}")
                 device_mgr.release(gpu_id)
@@ -399,13 +331,14 @@ def run(args):
 
         # Check running tasks
         for op_name in list(running.keys()):
-            proc, gpu_id, attempt, full_name, start_time = running[op_name]
+            handle, gpu_id, attempt, full_name, start_time, workspace_dir = running[op_name]
             elapsed = time.time() - start_time
+            proc = method.get_process(handle)
 
             # Check timeout
             if timeout and proc.poll() is None and elapsed > timeout:
                 logger.error(f"[TIMEOUT] {op_name} after {timeout}s")
-                kill_process(proc)
+                kill_process(handle)
                 device_mgr.release(gpu_id)
                 del running[op_name]
 
@@ -434,14 +367,18 @@ def run(args):
                 device_mgr.release(gpu_id)
                 del running[op_name]
 
-                # Extract code
-                code = extract_code_from_output(proc._stdout_path, op_name)
+                # Finish and extract result
+                result = method.finish(
+                    operator=op_name,
+                    handle=handle,
+                    workspace_dir=workspace_dir,
+                    config=config,
+                )
 
-                if code:
-                    # Save kernel
+                if result.code:
+                    # Save kernel to unified directory
                     kernel_path = kernels_dir / f"{op_name}.py"
-                    with open(kernel_path, "w") as f:
-                        f.write(code)
+                    kernel_path.write_text(result.code)
 
                     logger.info(f"[SUCCESS] {op_name} ({elapsed:.0f}s)")
                     progress.update_operator(
@@ -467,25 +404,13 @@ def run(args):
                             error="Failed to extract code from output",
                         )
 
-                # Close file handles safely
-                try:
-                    if not proc._stdout_file.closed:
-                        proc._stdout_file.close()
-                except Exception:
-                    pass
-                try:
-                    if not proc._stderr_file.closed:
-                        proc._stderr_file.close()
-                except Exception:
-                    pass
-
         if running:
             time.sleep(poll_interval)
 
     # Handle shutdown
     if shutdown_requested:
-        for op_name, (proc, gpu_id, attempt, full_name, start_time) in running.items():
-            kill_process(proc)
+        for op_name, (handle, gpu_id, attempt, full_name, start_time, workspace_dir) in running.items():
+            kill_process(handle)
             device_mgr.release(gpu_id)
             progress.update_operator(
                 op_name,
@@ -504,6 +429,7 @@ def run(args):
     s = progress.data["summary"]
     print(f"\n{'='*50}")
     print(f"Run completed: {run_name}")
+    print(f"Method: {method.name}")
     print(f"Total: {s['total']}, Completed: {s['completed']}, Failed: {s['failed']}")
     print(f"Results: {run_dir}")
     print(f"{'='*50}")
@@ -524,6 +450,13 @@ def main():
         help="Specific operator(s) to run, comma-separated"
     )
     parser.add_argument(
+        "--method", "-m",
+        type=str,
+        default="naive_cc",
+        choices=list_methods(),
+        help=f"Agent method to use (default: naive_cc, available: {', '.join(list_methods())})"
+    )
+    parser.add_argument(
         "--resume", "-r",
         type=str,
         default=None,
@@ -534,6 +467,18 @@ def main():
         type=Path,
         default=None,
         help="Path to config.yaml"
+    )
+    parser.add_argument(
+        "--max-optimize-calls",
+        type=int,
+        default=None,
+        help="Max CC calls for iterative_optimizer (default: from config or 10)"
+    )
+    parser.add_argument(
+        "--target-speedup",
+        type=float,
+        default=None,
+        help="Target speedup for iterative_optimizer (default: from config or 1.0)"
     )
     parser.add_argument(
         "--verbose", "-v",
