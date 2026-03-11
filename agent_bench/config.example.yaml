@@ -1,0 +1,30 @@
+# Agent Benchmark Configuration
+
+# Agent 配置
+agent:
+  type: claude           # claude / cursor / custom
+  bin: claude            # 可执行文件路径
+  timeout: 1800          # 单算子超时 (秒)
+  max_retries: 3         # 失败重试次数
+  budget: 50.0           # 单算子预算 (USD, 仅 claude)
+
+# 设备配置
+device:
+  gpu_ids: null          # null=自动检测, 或 [0,1,2,3]
+  lock_dir: /tmp/agent_bench_gpu_locks
+
+# 路径配置 (相对于 agent_bench/ 目录)
+paths:
+  prompts: prompts
+  runs: runs
+  templates: templates
+  python: python         # Python 解释器路径
+
+# Dataset 到测试模块的映射 (相对于 flagbench/ 根目录)
+test_modules:
+  v2: src/flagbench/accuracy/test_v2_ops.py
+  v2_1: src/flagbench/accuracy/test_v2_1_ops_with_benchmark.py
+  cupy: src/flagbench/accuracy/cublas/test_cublas_ops.py
+
+# 轮询间隔 (秒)
+poll_interval: 10
