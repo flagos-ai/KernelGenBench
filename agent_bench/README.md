@@ -1,27 +1,56 @@
 # Agent Benchmark
 
-用于评估 agentic 代码生成框架（如 Claude Code）在 Triton kernel 生成任务上的能力。
+用于评估 agentic 代码生成框架（如 Claude Code、Cursor、Devin 等）在 Triton kernel 生成任务上的能力。
 
 ## 快速开始
 
 ```bash
 cd agent_bench/
 
-# Step 1: 生成 prompts (只需运行一次)
-python generate_prompts.py --dataset v2_1
+# 配置（首次使用）
+cp config.example.yaml config.yaml
+cp .env.example .env
+# 编辑 config.yaml 和 .env 填入你的配置
 
-# Step 2: 批量运行 agent 生成代码
-python run.py --dataset v2_1
+# 一键测试完整数据集
+./test_ops.sh -d v2_1
 
-# Step 3: 批量验证生成的代码
-python verify.py --run <run_name> --device-count 8
+# 或测试指定算子
+./test_ops.sh add,softmax
+```
+
+## 一键测试脚本
+
+`test_ops.sh` 提供一键完成 prompt 生成、agent 运行、结果验证的完整流程：
+
+```bash
+# 测试完整数据集
+./test_ops.sh -d v2_1              # 测试 v2_1 全部 110 个算子
+./test_ops.sh -d v2                # 测试 v2 全部 49 个算子
+./test_ops.sh -d cupy              # 测试 cupy 全部 48 个算子
+
+# 测试指定算子
+./test_ops.sh add                  # 测试单个算子
+./test_ops.sh add,softmax          # 测试多个算子
+./test_ops.sh add -d v2            # 指定数据集
+
+# 其他选项
+./test_ops.sh -d v2_1 --skip-gen   # 跳过 prompt 生成
+./test_ops.sh -d v2_1 --skip-verify # 只生成不验证
+./test_ops.sh -d v2_1 --device-count 4  # 指定 GPU 数量
+./test_ops.sh -d v2_1 --timeout 600     # 指定超时时间
+
+# 查看帮助
+./test_ops.sh --help
 ```
 
 ## 目录结构
 
 ```
 agent_bench/
-├── config.yaml              # 全局配置
+├── config.example.yaml      # 配置示例
+├── .env.example             # 环境变量示例
+├── test_ops.sh              # 一键测试脚本
 ├── templates/
 │   └── triton_kernel.md     # Prompt 模板
 ├── prompts/                 # 预生成的 prompt 文件
@@ -49,7 +78,9 @@ agent_bench/
 | v2_1 | 110 | PyTorch 扩展算子 |
 | cupy | 48 | cuBLAS 算子 |
 
-## 命令详解
+## 分步执行
+
+如果需要更精细的控制，可以分步执行：
 
 ### 1. generate_prompts.py
 
@@ -110,16 +141,16 @@ python verify.py --run <run_name> --dataset v2_1
 
 ## 配置说明
 
-`config.yaml`:
+复制 `config.example.yaml` 为 `config.yaml` 并编辑：
 
 ```yaml
 # Agent 配置
 agent:
   type: claude           # agent 类型
-  bin: claude            # 可执行文件
+  bin: /path/to/claude   # 可执行文件路径
   timeout: 1800          # 单算子超时 (秒)
   max_retries: 3         # 失败重试次数
-  budget: 10.0           # 单算子预算 (USD)
+  budget: 50.0           # 单算子预算 (USD)
 
 # 设备配置
 device:
@@ -135,11 +166,12 @@ test_modules:
 
 ## 环境变量
 
-可以在 `.env` 文件中配置：
+复制 `.env.example` 为 `.env` 并配置：
 
 ```bash
 ANTHROPIC_AUTH_TOKEN=your_token
 ANTHROPIC_BASE_URL=https://api.anthropic.com
+ANTHROPIC_MODEL=claude-sonnet-4-6
 ```
 
 ## 结果格式
