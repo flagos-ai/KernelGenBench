@@ -1,13 +1,14 @@
 #!/bin/bash
-# One-click script to test specific operators with agent benchmark
+# One-click script to test operators with agent benchmark
 #
 # Usage:
-#   ./test_ops.sh add                    # Test single operator
-#   ./test_ops.sh add,softmax            # Test multiple operators
-#   ./test_ops.sh add --dataset v2       # Specify dataset
-#   ./test_ops.sh add --skip-gen         # Skip prompt generation
-#   ./test_ops.sh add --skip-verify      # Skip verification
-#   ./test_ops.sh add --device-count 4   # Use 4 GPUs for verification
+#   ./test_ops.sh -d v2_1                 # Test entire v2_1 dataset
+#   ./test_ops.sh add                     # Test single operator
+#   ./test_ops.sh add,softmax             # Test multiple operators
+#   ./test_ops.sh add --dataset v2        # Specify dataset
+#   ./test_ops.sh --skip-gen              # Skip prompt generation
+#   ./test_ops.sh --skip-verify           # Skip verification
+#   ./test_ops.sh --device-count 4        # Use 4 GPUs for verification
 
 set -e
 
@@ -51,10 +52,11 @@ while [[ $# -gt 0 ]]; do
             shift
             ;;
         -h|--help)
-            echo "Usage: $0 <operators> [options]"
+            echo "Usage: $0 [operators] [options]"
             echo ""
             echo "Arguments:"
-            echo "  operators           Comma-separated operator names (e.g., add,softmax)"
+            echo "  operators           Comma-separated operator names (optional)"
+            echo "                      If not specified, test entire dataset"
             echo ""
             echo "Options:"
             echo "  -d, --dataset       Dataset to use (default: v2_1)"
@@ -66,9 +68,11 @@ while [[ $# -gt 0 ]]; do
             echo "  -h, --help          Show this help message"
             echo ""
             echo "Examples:"
-            echo "  $0 add                         # Test add operator"
-            echo "  $0 add,softmax -d v2_1         # Test multiple operators"
-            echo "  $0 add --skip-gen              # Skip regenerating prompts"
+            echo "  $0 -d v2_1                       # Test entire v2_1 dataset"
+            echo "  $0 -d v2                         # Test entire v2 dataset"
+            echo "  $0 add                           # Test add operator"
+            echo "  $0 add,softmax -d v2_1           # Test multiple operators"
+            echo "  $0 --skip-gen -d v2_1            # Skip regenerating prompts"
             exit 0
             ;;
         -*)
@@ -87,24 +91,30 @@ while [[ $# -gt 0 ]]; do
     esac
 done
 
-# Check operators provided
-if [[ -z "$OPERATORS" ]]; then
-    echo "Error: No operators specified"
-    echo "Usage: $0 <operators> [options]"
-    echo "Example: $0 add,softmax"
-    exit 1
+# Build --op argument if operators specified
+if [[ -n "$OPERATORS" ]]; then
+    OP_ARG="--op $OPERATORS"
+    DISPLAY_TARGET="$OPERATORS"
+else
+    OP_ARG=""
+    DISPLAY_TARGET="all operators"
 fi
 
 echo "=================================================="
-echo "Agent Benchmark - Testing: $OPERATORS"
+echo "Agent Benchmark"
 echo "Dataset: $DATASET"
+echo "Target: $DISPLAY_TARGET"
 echo "=================================================="
 
 # Step 1: Generate prompts
 if [[ "$SKIP_GEN" == "false" ]]; then
     echo ""
     echo "[Step 1/3] Generating prompts..."
-    python generate_prompts.py --dataset "$DATASET" --op "$OPERATORS" --force
+    if [[ -n "$OPERATORS" ]]; then
+        python generate_prompts.py --dataset "$DATASET" --op "$OPERATORS" --force
+    else
+        python generate_prompts.py --dataset "$DATASET" --force
+    fi
 else
     echo ""
     echo "[Step 1/3] Skipping prompt generation (--skip-gen)"
@@ -113,7 +123,7 @@ fi
 # Step 2: Run agent
 echo ""
 echo "[Step 2/3] Running agent to generate kernels..."
-python run.py --dataset "$DATASET" --op "$OPERATORS" $VERBOSE
+python run.py --dataset "$DATASET" $OP_ARG $VERBOSE
 
 # Get the latest run directory
 LATEST_RUN=$(ls -td runs/*_${DATASET}_* 2>/dev/null | head -1)
@@ -130,7 +140,7 @@ echo "Run completed: $RUN_NAME"
 if [[ "$SKIP_VERIFY" == "false" ]]; then
     echo ""
     echo "[Step 3/3] Verifying generated kernels..."
-    python verify.py --run "$RUN_NAME" --op "$OPERATORS" --device-count "$DEVICE_COUNT" --timeout "$TIMEOUT" $VERBOSE
+    python verify.py --run "$RUN_NAME" $OP_ARG --device-count "$DEVICE_COUNT" --timeout "$TIMEOUT" $VERBOSE
 else
     echo ""
     echo "[Step 3/3] Skipping verification (--skip-verify)"
