@@ -17,11 +17,14 @@ cd "$SCRIPT_DIR"
 
 # Default values
 DATASET="v2_1"
+METHOD="naive_cc"
 DEVICE_COUNT=8
 TIMEOUT=300
 SKIP_GEN=false
 SKIP_VERIFY=false
 VERBOSE=""
+MAX_OPTIMIZE_CALLS=""
+TARGET_SPEEDUP=""
 
 # Parse arguments
 OPERATORS=""
@@ -31,12 +34,24 @@ while [[ $# -gt 0 ]]; do
             DATASET="$2"
             shift 2
             ;;
+        -m|--method)
+            METHOD="$2"
+            shift 2
+            ;;
         --device-count)
             DEVICE_COUNT="$2"
             shift 2
             ;;
         --timeout)
             TIMEOUT="$2"
+            shift 2
+            ;;
+        --max-optimize-calls)
+            MAX_OPTIMIZE_CALLS="$2"
+            shift 2
+            ;;
+        --target-speedup)
+            TARGET_SPEEDUP="$2"
             shift 2
             ;;
         --skip-gen)
@@ -60,8 +75,12 @@ while [[ $# -gt 0 ]]; do
             echo ""
             echo "Options:"
             echo "  -d, --dataset       Dataset to use (default: v2_1)"
+            echo "  -m, --method        Agent method to use (default: naive_cc)"
+            echo "                      Available: naive_cc, iterative_optimizer"
             echo "  --device-count      Number of GPUs for verification (default: 8)"
             echo "  --timeout           Timeout per operator in seconds (default: 300)"
+            echo "  --max-optimize-calls  Max CC calls for iterative_optimizer (default: 10)"
+            echo "  --target-speedup    Target speedup for iterative_optimizer (default: 1.0)"
             echo "  --skip-gen          Skip prompt generation step"
             echo "  --skip-verify       Skip verification step (only generate)"
             echo "  -v, --verbose       Enable verbose output"
@@ -73,6 +92,8 @@ while [[ $# -gt 0 ]]; do
             echo "  $0 add                           # Test add operator"
             echo "  $0 add,softmax -d v2_1           # Test multiple operators"
             echo "  $0 --skip-gen -d v2_1            # Skip regenerating prompts"
+            echo "  $0 -m iterative_optimizer add    # Use iterative optimizer method"
+            echo "  $0 -m iterative_optimizer add --max-optimize-calls 5  # Limit CC calls"
             exit 0
             ;;
         -*)
@@ -103,6 +124,7 @@ fi
 echo "=================================================="
 echo "Agent Benchmark"
 echo "Dataset: $DATASET"
+echo "Method: $METHOD"
 echo "Target: $DISPLAY_TARGET"
 echo "=================================================="
 
@@ -123,10 +145,26 @@ fi
 # Step 2: Run agent
 echo ""
 echo "[Step 2/3] Running agent to generate kernels..."
-python run.py --dataset "$DATASET" $OP_ARG $VERBOSE
+
+# Build run.py command as an array (safer than eval)
+RUN_ARGS=(--dataset "$DATASET" --method "$METHOD")
+if [[ -n "$OPERATORS" ]]; then
+    RUN_ARGS+=(--op "$OPERATORS")
+fi
+if [[ -n "$VERBOSE" ]]; then
+    RUN_ARGS+=($VERBOSE)
+fi
+if [[ -n "$MAX_OPTIMIZE_CALLS" ]]; then
+    RUN_ARGS+=(--max-optimize-calls "$MAX_OPTIMIZE_CALLS")
+fi
+if [[ -n "$TARGET_SPEEDUP" ]]; then
+    RUN_ARGS+=(--target-speedup "$TARGET_SPEEDUP")
+fi
+
+python run.py "${RUN_ARGS[@]}"
 
 # Get the latest run directory
-LATEST_RUN=$(ls -td runs/*_${DATASET}_* 2>/dev/null | head -1)
+LATEST_RUN=$(ls -td runs/${METHOD}_${DATASET}_* 2>/dev/null | head -1)
 if [[ -z "$LATEST_RUN" ]]; then
     echo "Error: No run directory found"
     exit 1
