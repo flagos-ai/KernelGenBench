@@ -8,7 +8,7 @@ from typing import Dict, Set, List, Optional, Any
 import sys
 from datetime import datetime
 
-from sandbox.anti_hack import check_code as anti_hack_check
+from sandbox.anti_hack_runner import AntiHackRunner
 
 from flagbench.dataset import TorchOpsLoader, APIInfo
 from flagbench.dataset import IMPL_INFO
@@ -721,109 +721,41 @@ class PassAtKTester:
         # Final summary
         self.print_final_summary(total_operators, max_rounds)
     
-    def _get_anti_hack_backend(self, op_name: str) -> str:
-        """Determine anti-hack backend from operator prefix."""
-        if op_name.startswith("vllm13::") or op_name.startswith("vllm15::"):
-            return "vllm13"
-        elif op_name.startswith("cublas::"):
-            return "cublas"
-        elif op_name.startswith("aten::"):
-            return "torch"
-        return self.dataset
-
-    def _need_namespace_triton(self, op_name: str) -> bool:
-        """Check if operator needs namespace='triton' for verification."""
-        if self.dataset == "cupy":
-            return True
-        if self.dataset == "KernelGenBench" and not op_name.startswith("aten::"):
-            return True
-        return False
-
     def anti_hack_final_check(self) -> None:
         """Run anti-hack checks on all passed operators after Pass@K completes.
 
         Does NOT modify self.passed_operators. Saves a separate
         pass_at_k_results_antihack.json with anti-hack results.
         """
-        logger.info(f"\n{'='*60}")
-        logger.info(f"Anti-Hack Final Check: {len(self.passed_operators)} passed operators")
-        logger.info(f"{'='*60}")
-
-        # {op_name: {"hacked": bool, "layer": str, "reason": str}}
-        hack_results: Dict[str, Dict[str, Any]] = {}
-
+        # Prepare operators dict for AntiHackRunner
+        operators = {}
         for op_name in list(self.passed_operators):
-            # Find the kernel code from the round it first passed
             round_idx = self.first_pass_round.get(op_name)
             if round_idx is None:
                 continue
+
             codes = self.generated_codes.get(op_name, {})
             kernel_code = codes.get(round_idx, "")
             if not kernel_code:
                 continue
 
-            backend = self._get_anti_hack_backend(op_name)
-
-            # Layer 1: Static AST scan
-            is_hack, reason = anti_hack_check(kernel_code, backend=backend)
-            if is_hack:
-                logger.warning(f"[Anti-hack L1] {op_name}: {reason}")
-                hack_results[op_name] = {"hacked": True, "layer": "L1", "reason": reason}
-                continue
-
-            # Layer 2 & 3: re-verify with anti_hack enabled
             round_dir = self.output_dir / f"round_{round_idx}"
             kernel_path = round_dir / f"{op_name}.py"
-            if self.test_type == "triton":
-                test_file_path = Path("")
-            else:
-                test_file_path = round_dir / f"test_accuracy_{op_name}.py"
+            test_file_path = None if self.test_type == "triton" else round_dir / f"test_accuracy_{op_name}.py"
 
-            if not kernel_path.exists():
-                continue
+            operators[op_name] = {
+                "kernel_code": kernel_code,
+                "kernel_path": kernel_path,
+                "test_file_path": test_file_path,
+            }
 
-            try:
-                verify_req = self.create_triton_kernel_verify_args(
-                    kernel_path, test_file_path, op_name,
-                    add_namespace_triton=self._need_namespace_triton(op_name),
-                )
-            except Exception as e:
-                logger.warning(f"[Anti-hack] {op_name} verify_args failed: {e}")
-                hack_results[op_name] = {"hacked": True, "layer": "verify_error", "reason": str(e)}
-                continue
+        # Run anti-hack checks
+        runner = AntiHackRunner(self.dataset, self.verify_config)
+        hack_results = runner.batch_check(operators)
 
-            verifier = Verifier(VerifyConfig(
-                run_name="anti_hack",
-                anti_hack=True,
-                acc_timeout=self.verify_config.acc_timeout,
-                save_log=False,
-                manage_device_visibility=False,
-            ))
-            try:
-                _, results = verifier.only_verify(
-                    name_source_map=[verify_req],
-                    device_count=1,
-                )
-                if results and not results[0].success:
-                    tb = results[0].traceback or ""
-                    if "[Anti-hack]" in tb:
-                        logger.warning(f"[Anti-hack L2/3] {op_name}: {tb}")
-                        hack_results[op_name] = {"hacked": True, "layer": "L2/L3", "reason": tb}
-                        continue
-            except Exception as e:
-                logger.debug(f"[Anti-hack] {op_name} verify failed: {e}")
-
-            # Clean
-            hack_results[op_name] = {"hacked": False, "layer": "", "reason": ""}
-
+        # Calculate statistics
         hacked_operators = {op for op, r in hack_results.items() if r["hacked"]}
         clean_passed = self.passed_operators - hacked_operators
-
-        if hacked_operators:
-            logger.info(f"\nAnti-hack detected {len(hacked_operators)} hacked operators: "
-                        f"{sorted(hacked_operators)}")
-        else:
-            logger.info(f"\nAnti-hack: all {len(self.passed_operators)} operators clean")
 
         # Save separate anti-hack results JSON (do NOT modify original)
         antihack_file = self.output_dir / "pass_at_k_results_antihack.json"
