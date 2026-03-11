@@ -749,28 +749,17 @@ class PassAtKTester:
 
         # Run anti-hack checks
         from sandbox.anti_hack_runner import AntiHackRunner
-        runner = AntiHackRunner(self.dataset, self.verify_config)
+        runner = AntiHackRunner(
+            self.dataset, self.verify_config,
+            custom_test_modules=self.custom_test_modules,
+        )
         hack_results = runner.batch_check(operators)
-
-        # Calculate statistics
-        hacked_operators = {op for op, r in hack_results.items() if r["hacked"]}
-        clean_passed = self.passed_operators - hacked_operators
-
-        # Save separate anti-hack results JSON (do NOT modify original)
-        antihack_file = self.output_dir / "pass_at_k_results_antihack.json"
-        antihack_data = {
-            "total_operators": len(self.all_operators),
-            "original_passed": len(self.passed_operators),
-            "hacked_count": len(hacked_operators),
-            "clean_passed": len(clean_passed),
-            "clean_pass_rate": len(clean_passed) / len(self.all_operators) if self.all_operators else 0,
-            "hacked_operators": sorted(list(hacked_operators)),
-            "clean_passed_operators": sorted(list(clean_passed)),
-            "hack_details": hack_results,
-        }
-        with open(antihack_file, "w") as f:
-            json.dump(antihack_data, f, indent=2, ensure_ascii=False)
-        logger.info(f"Anti-hack results saved to: {antihack_file}")
+        runner.save_report(
+            hack_results=hack_results,
+            total_operators=len(self.all_operators),
+            passed_operators=self.passed_operators,
+            output_path=self.output_dir / "pass_at_k_results_antihack.json",
+        )
 
     def save_results(self) -> None:
         """Save current results to JSON."""

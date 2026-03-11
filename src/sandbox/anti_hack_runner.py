@@ -1,8 +1,9 @@
 """Anti-hack runner for batch checking operators."""
 
+import json
 import logging
 from pathlib import Path
-from typing import Dict, Any, Optional
+from typing import Dict, Any, List, Optional
 from copy import deepcopy
 
 from sandbox.anti_hack import check_code as anti_hack_check
@@ -14,15 +15,18 @@ logger = logging.getLogger(__name__)
 class AntiHackRunner:
     """Runs anti-hack checks on operators with three-layer detection."""
 
-    def __init__(self, dataset: str, verify_config: VerifyConfig):
+    def __init__(self, dataset: str, verify_config: VerifyConfig,
+                 custom_test_modules: Optional[List[str]] = None):
         """Initialize anti-hack runner.
 
         Args:
             dataset: Dataset name (e.g., "v2_1", "KernelGenBench", "cupy")
             verify_config: Base verify config for Layer 2/3 checks
+            custom_test_modules: Test modules to load (avoids test case bloat)
         """
         self.dataset = dataset
         self.verify_config = verify_config
+        self.custom_test_modules = custom_test_modules
 
     def get_backend(self, op_name: str) -> str:
         """Determine anti-hack backend from operator name.
@@ -114,6 +118,9 @@ class AntiHackRunner:
                 manage_device_visibility=False,
             ))
 
+            if self.custom_test_modules:
+                verifier.set_modules(modules=self.custom_test_modules)
+
             _, results = verifier.only_verify(
                 name_source_map=[verify_req],
                 device_count=1,
@@ -177,3 +184,41 @@ class AntiHackRunner:
         logger.info(f"{'='*60}")
 
         return results
+
+    def save_report(
+        self,
+        hack_results: Dict[str, Dict[str, Any]],
+        total_operators: int,
+        passed_operators: set,
+        output_path: Path,
+    ) -> Dict[str, Any]:
+        """Save anti-hack report to JSON.
+
+        Args:
+            hack_results: Results from batch_check()
+            total_operators: Total number of operators in dataset
+            passed_operators: Set of operator names that passed verification
+            output_path: Path to save the report JSON
+
+        Returns:
+            The report data dict
+        """
+        hacked_operators = {op for op, r in hack_results.items() if r["hacked"]}
+        clean_passed = passed_operators - hacked_operators
+
+        report = {
+            "total_operators": total_operators,
+            "original_passed": len(passed_operators),
+            "hacked_count": len(hacked_operators),
+            "clean_passed": len(clean_passed),
+            "clean_pass_rate": len(clean_passed) / total_operators if total_operators else 0,
+            "hacked_operators": sorted(list(hacked_operators)),
+            "clean_passed_operators": sorted(list(clean_passed)),
+            "hack_details": hack_results,
+        }
+
+        with open(output_path, "w") as f:
+            json.dump(report, f, indent=2, ensure_ascii=False)
+        logger.info(f"Anti-hack results saved to: {output_path}")
+
+        return report
