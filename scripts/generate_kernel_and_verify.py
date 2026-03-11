@@ -8,8 +8,6 @@ from typing import Dict, Set, List, Optional, Any
 import sys
 from datetime import datetime
 
-from sandbox.anti_hack_runner import AntiHackRunner
-
 from flagbench.dataset import TorchOpsLoader, APIInfo
 from flagbench.dataset import IMPL_INFO
 from sandbox.verifier import Verifier, VerifyConfig, VerifyRequest, Source
@@ -750,6 +748,7 @@ class PassAtKTester:
             }
 
         # Run anti-hack checks
+        from sandbox.anti_hack_runner import AntiHackRunner
         runner = AntiHackRunner(self.dataset, self.verify_config)
         hack_results = runner.batch_check(operators)
 
