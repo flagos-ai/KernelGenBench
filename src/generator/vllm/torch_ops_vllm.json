@@ -1,0 +1,2732 @@
+{
+  "_meta": {
+    "generated_by": "runtime introspection",
+    "generated_at": "2026-02-06T17:17:43",
+    "notes": [
+      "This file is generated from the current Python environment after importing vllm._custom_ops (which triggers torch op registration).",
+      "Operator enumeration uses torch._C._dispatch_get_all_op_names() filtered by namespace prefix (e.g. 'vllm::').",
+      "Schemas are taken from OpOverload.default._schema when available.",
+      "Included namespaces: vllm/_vllm/_C plus any namespaces referenced by wrappers in vllm._custom_ops."
+    ],
+    "usage": {
+      "registration_prelude": "import vllm._custom_ops  # triggers torch operator registration",
+      "call_torch_ops_vllm": "torch.ops.vllm.OP_NAME(...)",
+      "call_torch_ops__C": "torch.ops._C.OP_NAME(...)",
+      "call_custom_ops_wrapper": "from vllm import _custom_ops; _custom_ops.WRAPPER_NAME(...)"
+    }
+  },
+  "environment": {
+    "python": "3.10.0",
+    "torch": "2.9.1+cu128",
+    "vllm": "0.15.0",
+    "cuda_available": true,
+    "conda_env": "zpy_flagbench"
+  },
+  "torch_ops": {
+    "torch.ops.vllm": {
+      "present": true,
+      "count": 7,
+      "ops": [
+        {
+          "name": "all_gather",
+          "qualified_name": "vllm::all_gather",
+          "type": "OpOverloadPacket",
+          "schema": "vllm::all_gather(Tensor tensor, SymInt dim, SymInt world_size, str group_name) -> Tensor",
+          "vllm_api": "torch.ops.vllm.all_gather(...)",
+          "registration_prelude": "import vllm._custom_ops"
+        },
+        {
+          "name": "all_reduce",
+          "qualified_name": "vllm::all_reduce",
+          "type": "OpOverloadPacket",
+          "schema": "vllm::all_reduce(Tensor tensor, str group_name) -> Tensor",
+          "vllm_api": "torch.ops.vllm.all_reduce(...)",
+          "registration_prelude": "import vllm._custom_ops"
+        },
+        {
+          "name": "bmm_fp8",
+          "qualified_name": "vllm::bmm_fp8",
+          "type": "OpOverloadPacket",
+          "schema": "vllm::bmm_fp8(Tensor A, Tensor B, Tensor A_scale, Tensor B_scale, ScalarType dtype, str backend) -> Tensor",
+          "vllm_api": "torch.ops.vllm.bmm_fp8(...)",
+          "registration_prelude": "import vllm._custom_ops"
+        },
+        {
+          "name": "flashinfer_mm_fp4",
+          "qualified_name": "vllm::flashinfer_mm_fp4",
+          "type": "OpOverloadPacket",
+          "schema": "vllm::flashinfer_mm_fp4(Tensor A, Tensor B, Tensor A_scale, Tensor B_scale, Tensor g_scale, ScalarType dtype, bool use_8x4_sf_layout, str backend) -> Tensor",
+          "vllm_api": "torch.ops.vllm.flashinfer_mm_fp4(...)",
+          "registration_prelude": "import vllm._custom_ops"
+        },
+        {
+          "name": "flashinfer_nvfp4_quantize",
+          "qualified_name": "vllm::flashinfer_nvfp4_quantize",
+          "type": "OpOverloadPacket",
+          "schema": "vllm::flashinfer_nvfp4_quantize(Tensor a, Tensor a_global_sf) -> (Tensor, Tensor)",
+          "vllm_api": "torch.ops.vllm.flashinfer_nvfp4_quantize(...)",
+          "registration_prelude": "import vllm._custom_ops"
+        },
+        {
+          "name": "patched_fused_scaled_matmul_reduce_scatter",
+          "qualified_name": "vllm::patched_fused_scaled_matmul_reduce_scatter",
+          "type": "OpOverloadPacket",
+          "schema": "vllm::patched_fused_scaled_matmul_reduce_scatter(Tensor A, Tensor B, Tensor A_scale, Tensor B_scale, str reduce_op, SymInt orig_scatter_dim, SymInt scatter_dim_after_maybe_reshape, str group_name, SymInt[] output_shape, Tensor? bias=None, Tensor? result_scale=None, ScalarType? out_dtype=None, bool use_fast_accum=False) -> Tensor",
+          "vllm_api": "torch.ops.vllm.patched_fused_scaled_matmul_reduce_scatter(...)",
+          "registration_prelude": "import vllm._custom_ops"
+        },
+        {
+          "name": "reduce_scatter",
+          "qualified_name": "vllm::reduce_scatter",
+          "type": "OpOverloadPacket",
+          "schema": "vllm::reduce_scatter(Tensor tensor, SymInt dim, SymInt world_size, str group_name) -> Tensor",
+          "vllm_api": "torch.ops.vllm.reduce_scatter(...)",
+          "registration_prelude": "import vllm._custom_ops"
+        }
+      ],
+      "errors": []
+    },
+    "torch.ops._vllm": {
+      "present": true,
+      "count": 0,
+      "ops": [],
+      "errors": []
+    },
+    "torch.ops._C": {
+      "present": true,
+      "count": 86,
+      "ops": [
+        {
+          "name": "allspark_w8a16_gemm",
+          "qualified_name": "_C::allspark_w8a16_gemm",
+          "type": "OpOverloadPacket",
+          "schema": "_C::allspark_w8a16_gemm(Tensor a, Tensor b_qweight, Tensor b_scales, Tensor? b_qzeros, SymInt n, SymInt group_size, SymInt sm_count, SymInt sm_version, SymInt CUBLAS_M_THRESHOLD, bool has_zp, bool n32k16_reorder) -> Tensor",
+          "vllm_api": "torch.ops._C.allspark_w8a16_gemm(...)",
+          "registration_prelude": "import vllm._custom_ops"
+        },
+        {
+          "name": "apply_repetition_penalties_",
+          "qualified_name": "_C::apply_repetition_penalties_",
+          "type": "OpOverloadPacket",
+          "schema": "_C::apply_repetition_penalties_(Tensor($0! -> ) logits, Tensor prompt_mask, Tensor output_mask, Tensor repetition_penalties) -> ()",
+          "vllm_api": "torch.ops._C.apply_repetition_penalties_(...)",
+          "registration_prelude": "import vllm._custom_ops"
+        },
+        {
+          "name": "awq_dequantize",
+          "qualified_name": "_C::awq_dequantize",
+          "type": "OpOverloadPacket",
+          "schema": "_C::awq_dequantize(Tensor _kernel, Tensor _scaling_factors, Tensor _zeros, SymInt split_k_iters, int thx, int thy) -> Tensor",
+          "vllm_api": "torch.ops._C.awq_dequantize(...)",
+          "registration_prelude": "import vllm._custom_ops"
+        },
+        {
+          "name": "awq_gemm",
+          "qualified_name": "_C::awq_gemm",
+          "type": "OpOverloadPacket",
+          "schema": "_C::awq_gemm(Tensor _in_feats, Tensor _kernel, Tensor _scaling_factors, Tensor _zeros, SymInt split_k_iters) -> Tensor",
+          "vllm_api": "torch.ops._C.awq_gemm(...)",
+          "registration_prelude": "import vllm._custom_ops"
+        },
+        {
+          "name": "awq_marlin_repack",
+          "qualified_name": "_C::awq_marlin_repack",
+          "type": "OpOverloadPacket",
+          "schema": "_C::awq_marlin_repack(Tensor b_q_weight, SymInt size_k, SymInt size_n, int num_bits, bool is_a_8bit) -> Tensor",
+          "vllm_api": "torch.ops._C.awq_marlin_repack(...)",
+          "registration_prelude": "import vllm._custom_ops"
+        },
+        {
+          "name": "convert_vertical_slash_indexes",
+          "qualified_name": "_C::convert_vertical_slash_indexes",
+          "type": "OpOverloadPacket",
+          "schema": "_C::convert_vertical_slash_indexes(Tensor($0! -> ) block_count, Tensor($1! -> ) block_offset, Tensor($2! -> ) column_count, Tensor($3! -> ) column_index, Tensor q_seqlens, Tensor q_seqlens, Tensor vertical_indexes, Tensor slash_indexes, int context_size, int block_size_M, int block_size_N, bool causal) -> ()",
+          "vllm_api": "torch.ops._C.convert_vertical_slash_indexes(...)",
+          "registration_prelude": "import vllm._custom_ops"
+        },
+        {
+          "name": "convert_vertical_slash_indexes_mergehead",
+          "qualified_name": "_C::convert_vertical_slash_indexes_mergehead",
+          "type": "OpOverloadPacket",
+          "schema": "_C::convert_vertical_slash_indexes_mergehead(Tensor($0! -> ) block_count, Tensor($1! -> ) block_offset, Tensor($2! -> ) column_count, Tensor($3! -> ) column_index, Tensor q_seqlens, Tensor q_seqlens, Tensor vertical_indexes, Tensor slash_indexes, Tensor vertical_indices_count, Tensor slash_indices_count, int context_size, int block_size_M, int block_size_N, bool causal) -> ()",
+          "vllm_api": "torch.ops._C.convert_vertical_slash_indexes_mergehead(...)",
+          "registration_prelude": "import vllm._custom_ops"
+        },
+        {
+          "name": "cutlass_encode_and_reorder_int4b",
+          "qualified_name": "_C::cutlass_encode_and_reorder_int4b",
+          "type": "OpOverloadPacket",
+          "schema": "_C::cutlass_encode_and_reorder_int4b(Tensor B) -> Tensor",
+          "vllm_api": "torch.ops._C.cutlass_encode_and_reorder_int4b(...)",
+          "registration_prelude": "import vllm._custom_ops"
+        },
+        {
+          "name": "cutlass_encode_and_reorder_int4b_grouped",
+          "qualified_name": "_C::cutlass_encode_and_reorder_int4b_grouped",
+          "type": "OpOverloadPacket",
+          "schema": "_C::cutlass_encode_and_reorder_int4b_grouped(Tensor b_tensors) -> (Tensor, Tensor)",
+          "vllm_api": "torch.ops._C.cutlass_encode_and_reorder_int4b_grouped(...)",
+          "registration_prelude": "import vllm._custom_ops"
+        },
+        {
+          "name": "cutlass_fp4_group_mm",
+          "qualified_name": "_C::cutlass_fp4_group_mm",
+          "type": "OpOverloadPacket",
+          "schema": "_C::cutlass_fp4_group_mm(Tensor($0! -> ) out, Tensor a, Tensor b, Tensor a_blockscale, Tensor b_blockscales, Tensor alphas, Tensor problem_sizes, Tensor expert_offsets, Tensor sf_offsets) -> ()",
+          "vllm_api": "torch.ops._C.cutlass_fp4_group_mm(...)",
+          "registration_prelude": "import vllm._custom_ops"
+        },
+        {
+          "name": "cutlass_group_gemm_supported",
+          "qualified_name": "_C::cutlass_group_gemm_supported",
+          "type": "OpOverloadPacket",
+          "schema": "_C::cutlass_group_gemm_supported(int cuda_device_capability) -> bool",
+          "vllm_api": "torch.ops._C.cutlass_group_gemm_supported(...)",
+          "registration_prelude": "import vllm._custom_ops"
+        },
+        {
+          "name": "cutlass_moe_mm",
+          "qualified_name": "_C::cutlass_moe_mm",
+          "type": "OpOverloadPacket",
+          "schema": "_C::cutlass_moe_mm(Tensor($0! -> ) out_tensors, Tensor a_tensors, Tensor b_tensors, Tensor a_scales, Tensor b_scales, Tensor expert_offsets, Tensor problem_sizes, Tensor a_strides, Tensor b_strides, Tensor c_strides, bool per_act_token, bool per_out_ch) -> ()",
+          "vllm_api": "torch.ops._C.cutlass_moe_mm(...)",
+          "registration_prelude": "import vllm._custom_ops"
+        },
+        {
+          "name": "cutlass_pack_scale_fp8",
+          "qualified_name": "_C::cutlass_pack_scale_fp8",
+          "type": "OpOverloadPacket",
+          "schema": "_C::cutlass_pack_scale_fp8(Tensor scales) -> Tensor",
+          "vllm_api": "torch.ops._C.cutlass_pack_scale_fp8(...)",
+          "registration_prelude": "import vllm._custom_ops"
+        },
+        {
+          "name": "cutlass_scaled_fp4_mm",
+          "qualified_name": "_C::cutlass_scaled_fp4_mm",
+          "type": "OpOverloadPacket",
+          "schema": "_C::cutlass_scaled_fp4_mm(Tensor($0! -> ) out, Tensor a, Tensor b, Tensor block_scale_a, Tensor block_scale_b, Tensor alpha) -> ()",
+          "vllm_api": "torch.ops._C.cutlass_scaled_fp4_mm(...)",
+          "registration_prelude": "import vllm._custom_ops"
+        },
+        {
+          "name": "cutlass_scaled_mm",
+          "qualified_name": "_C::cutlass_scaled_mm",
+          "type": "OpOverloadPacket",
+          "schema": "_C::cutlass_scaled_mm(Tensor($0! -> ) out, Tensor a, Tensor b, Tensor a_scales, Tensor b_scales, Tensor? bias) -> ()",
+          "vllm_api": "torch.ops._C.cutlass_scaled_mm(...)",
+          "registration_prelude": "import vllm._custom_ops"
+        },
+        {
+          "name": "cutlass_scaled_mm_azp",
+          "qualified_name": "_C::cutlass_scaled_mm_azp",
+          "type": "OpOverloadPacket",
+          "schema": "_C::cutlass_scaled_mm_azp(Tensor($0! -> ) out, Tensor a, Tensor b, Tensor a_scales, Tensor b_scales, Tensor azp_adj, Tensor? azp, Tensor? bias) -> ()",
+          "vllm_api": "torch.ops._C.cutlass_scaled_mm_azp(...)",
+          "registration_prelude": "import vllm._custom_ops"
+        },
+        {
+          "name": "cutlass_scaled_mm_supports_block_fp8",
+          "qualified_name": "_C::cutlass_scaled_mm_supports_block_fp8",
+          "type": "OpOverloadPacket",
+          "schema": "_C::cutlass_scaled_mm_supports_block_fp8(int cuda_device_capability) -> bool",
+          "vllm_api": "torch.ops._C.cutlass_scaled_mm_supports_block_fp8(...)",
+          "registration_prelude": "import vllm._custom_ops"
+        },
+        {
+          "name": "cutlass_scaled_mm_supports_fp4",
+          "qualified_name": "_C::cutlass_scaled_mm_supports_fp4",
+          "type": "OpOverloadPacket",
+          "schema": "_C::cutlass_scaled_mm_supports_fp4(int cuda_device_capability) -> bool",
+          "vllm_api": "torch.ops._C.cutlass_scaled_mm_supports_fp4(...)",
+          "registration_prelude": "import vllm._custom_ops"
+        },
+        {
+          "name": "cutlass_scaled_mm_supports_fp8",
+          "qualified_name": "_C::cutlass_scaled_mm_supports_fp8",
+          "type": "OpOverloadPacket",
+          "schema": "_C::cutlass_scaled_mm_supports_fp8(int cuda_device_capability) -> bool",
+          "vllm_api": "torch.ops._C.cutlass_scaled_mm_supports_fp8(...)",
+          "registration_prelude": "import vllm._custom_ops"
+        },
+        {
+          "name": "cutlass_scaled_sparse_mm",
+          "qualified_name": "_C::cutlass_scaled_sparse_mm",
+          "type": "OpOverloadPacket",
+          "schema": "_C::cutlass_scaled_sparse_mm(Tensor($0! -> ) out, Tensor a, Tensor bt_nzs, Tensor bt_meta, Tensor a_scales, Tensor b_scales, Tensor? bias) -> ()",
+          "vllm_api": "torch.ops._C.cutlass_scaled_sparse_mm(...)",
+          "registration_prelude": "import vllm._custom_ops"
+        },
+        {
+          "name": "cutlass_sparse_compress",
+          "qualified_name": "_C::cutlass_sparse_compress",
+          "type": "OpOverloadPacket",
+          "schema": "_C::cutlass_sparse_compress(Tensor a) -> Tensor[]",
+          "vllm_api": "torch.ops._C.cutlass_sparse_compress(...)",
+          "registration_prelude": "import vllm._custom_ops"
+        },
+        {
+          "name": "cutlass_sparse_scaled_mm_supported",
+          "qualified_name": "_C::cutlass_sparse_scaled_mm_supported",
+          "type": "OpOverloadPacket",
+          "schema": "_C::cutlass_sparse_scaled_mm_supported(int cuda_device_capability) -> bool",
+          "vllm_api": "torch.ops._C.cutlass_sparse_scaled_mm_supported(...)",
+          "registration_prelude": "import vllm._custom_ops"
+        },
+        {
+          "name": "cutlass_w4a8_mm",
+          "qualified_name": "_C::cutlass_w4a8_mm",
+          "type": "OpOverloadPacket",
+          "schema": "_C::cutlass_w4a8_mm(Tensor A, Tensor B, Tensor group_scales, int group_size, Tensor channel_scales, Tensor token_scales, ScalarType? out_type, str? maybe_schedule) -> Tensor",
+          "vllm_api": "torch.ops._C.cutlass_w4a8_mm(...)",
+          "registration_prelude": "import vllm._custom_ops"
+        },
+        {
+          "name": "cutlass_w4a8_moe_mm",
+          "qualified_name": "_C::cutlass_w4a8_moe_mm",
+          "type": "OpOverloadPacket",
+          "schema": "_C::cutlass_w4a8_moe_mm(Tensor($0! -> ) out_tensors, Tensor a_tensors, Tensor b_tensors, Tensor a_scales, Tensor b_scales, Tensor b_group_scales, int b_group_size, Tensor expert_offsets, Tensor problem_sizes, Tensor a_strides, Tensor b_strides, Tensor c_strides, Tensor group_scale_strides, str? maybe_schedule) -> ()",
+          "vllm_api": "torch.ops._C.cutlass_w4a8_moe_mm(...)",
+          "registration_prelude": "import vllm._custom_ops"
+        },
+        {
+          "name": "dynamic_per_token_scaled_fp8_quant",
+          "qualified_name": "_C::dynamic_per_token_scaled_fp8_quant",
+          "type": "OpOverloadPacket",
+          "schema": "_C::dynamic_per_token_scaled_fp8_quant(Tensor($0! -> ) result, Tensor input, Tensor($1! -> ) scale, Tensor? scale_ub) -> ()",
+          "vllm_api": "torch.ops._C.dynamic_per_token_scaled_fp8_quant(...)",
+          "registration_prelude": "import vllm._custom_ops"
+        },
+        {
+          "name": "dynamic_scaled_fp8_quant",
+          "qualified_name": "_C::dynamic_scaled_fp8_quant",
+          "type": "OpOverloadPacket",
+          "schema": "_C::dynamic_scaled_fp8_quant(Tensor($0! -> ) result, Tensor input, Tensor($1! -> ) scale) -> ()",
+          "vllm_api": "torch.ops._C.dynamic_scaled_fp8_quant(...)",
+          "registration_prelude": "import vllm._custom_ops"
+        },
+        {
+          "name": "dynamic_scaled_int8_quant",
+          "qualified_name": "_C::dynamic_scaled_int8_quant",
+          "type": "OpOverloadPacket",
+          "schema": "_C::dynamic_scaled_int8_quant(Tensor($0! -> ) result, Tensor input, Tensor($1! -> ) scale, Tensor($2! -> )? azp) -> ()",
+          "vllm_api": "torch.ops._C.dynamic_scaled_int8_quant(...)",
+          "registration_prelude": "import vllm._custom_ops"
+        },
+        {
+          "name": "fatrelu_and_mul",
+          "qualified_name": "_C::fatrelu_and_mul",
+          "type": "OpOverloadPacket",
+          "schema": "_C::fatrelu_and_mul(Tensor($0! -> ) out, Tensor input, float threshold) -> ()",
+          "vllm_api": "torch.ops._C.fatrelu_and_mul(...)",
+          "registration_prelude": "import vllm._custom_ops"
+        },
+        {
+          "name": "fused_add_rms_norm",
+          "qualified_name": "_C::fused_add_rms_norm",
+          "type": "OpOverloadPacket",
+          "schema": "_C::fused_add_rms_norm(Tensor($0! -> ) input, Tensor($1! -> ) residual, Tensor weight, float epsilon) -> ()",
+          "vllm_api": "torch.ops._C.fused_add_rms_norm(...)",
+          "registration_prelude": "import vllm._custom_ops"
+        },
+        {
+          "name": "fused_add_rms_norm_static_fp8_quant",
+          "qualified_name": "_C::fused_add_rms_norm_static_fp8_quant",
+          "type": "OpOverloadPacket",
+          "schema": "_C::fused_add_rms_norm_static_fp8_quant(Tensor($0! -> ) result, Tensor input, Tensor($1! -> ) residual, Tensor weight, Tensor scale, float epsilon) -> ()",
+          "vllm_api": "torch.ops._C.fused_add_rms_norm_static_fp8_quant(...)",
+          "registration_prelude": "import vllm._custom_ops"
+        },
+        {
+          "name": "fused_qk_norm_rope",
+          "qualified_name": "_C::fused_qk_norm_rope",
+          "type": "OpOverloadPacket",
+          "schema": "_C::fused_qk_norm_rope(Tensor($0! -> ) qkv, int num_heads_q, int num_heads_k, int num_heads_v, int head_dim, float eps, Tensor q_weight, Tensor k_weight, Tensor cos_sin_cache, bool is_neox, Tensor position_ids) -> ()",
+          "vllm_api": "torch.ops._C.fused_qk_norm_rope(...)",
+          "registration_prelude": "import vllm._custom_ops"
+        },
+        {
+          "name": "gelu_and_mul",
+          "qualified_name": "_C::gelu_and_mul",
+          "type": "OpOverloadPacket",
+          "schema": "_C::gelu_and_mul(Tensor($0! -> ) out, Tensor input) -> ()",
+          "vllm_api": "torch.ops._C.gelu_and_mul(...)",
+          "registration_prelude": "import vllm._custom_ops"
+        },
+        {
+          "name": "gelu_fast",
+          "qualified_name": "_C::gelu_fast",
+          "type": "OpOverloadPacket",
+          "schema": "_C::gelu_fast(Tensor($0! -> ) out, Tensor input) -> ()",
+          "vllm_api": "torch.ops._C.gelu_fast(...)",
+          "registration_prelude": "import vllm._custom_ops"
+        },
+        {
+          "name": "gelu_new",
+          "qualified_name": "_C::gelu_new",
+          "type": "OpOverloadPacket",
+          "schema": "_C::gelu_new(Tensor($0! -> ) out, Tensor input) -> ()",
+          "vllm_api": "torch.ops._C.gelu_new(...)",
+          "registration_prelude": "import vllm._custom_ops"
+        },
+        {
+          "name": "gelu_quick",
+          "qualified_name": "_C::gelu_quick",
+          "type": "OpOverloadPacket",
+          "schema": "_C::gelu_quick(Tensor($0! -> ) out, Tensor input) -> ()",
+          "vllm_api": "torch.ops._C.gelu_quick(...)",
+          "registration_prelude": "import vllm._custom_ops"
+        },
+        {
+          "name": "gelu_tanh_and_mul",
+          "qualified_name": "_C::gelu_tanh_and_mul",
+          "type": "OpOverloadPacket",
+          "schema": "_C::gelu_tanh_and_mul(Tensor($0! -> ) out, Tensor input) -> ()",
+          "vllm_api": "torch.ops._C.gelu_tanh_and_mul(...)",
+          "registration_prelude": "import vllm._custom_ops"
+        },
+        {
+          "name": "get_cuda_view_from_cpu_tensor",
+          "qualified_name": "_C::get_cuda_view_from_cpu_tensor",
+          "type": "OpOverloadPacket",
+          "schema": "_C::get_cuda_view_from_cpu_tensor(Tensor cpu_tensor) -> Tensor",
+          "vllm_api": "torch.ops._C.get_cuda_view_from_cpu_tensor(...)",
+          "registration_prelude": "import vllm._custom_ops"
+        },
+        {
+          "name": "get_cutlass_moe_mm_data",
+          "qualified_name": "_C::get_cutlass_moe_mm_data",
+          "type": "OpOverloadPacket",
+          "schema": "_C::get_cutlass_moe_mm_data(Tensor topk_ids, Tensor($0! -> ) expert_offsets, Tensor($1! -> ) problem_sizes1, Tensor($2! -> ) problem_sizes2, Tensor($3! -> ) input_permutation, Tensor($4! -> ) output_permutation, int num_experts, int n, int k, Tensor? blockscale_offsets) -> ()",
+          "vllm_api": "torch.ops._C.get_cutlass_moe_mm_data(...)",
+          "registration_prelude": "import vllm._custom_ops"
+        },
+        {
+          "name": "get_cutlass_moe_mm_problem_sizes_from_expert_offsets",
+          "qualified_name": "_C::get_cutlass_moe_mm_problem_sizes_from_expert_offsets",
+          "type": "OpOverloadPacket",
+          "schema": "_C::get_cutlass_moe_mm_problem_sizes_from_expert_offsets(Tensor expert_first_token_offset, Tensor($0! -> ) problem_sizes1, Tensor($1! -> ) problem_sizes2, int n, int k, bool swap_ab) -> ()",
+          "vllm_api": "torch.ops._C.get_cutlass_moe_mm_problem_sizes_from_expert_offsets(...)",
+          "registration_prelude": "import vllm._custom_ops"
+        },
+        {
+          "name": "get_cutlass_pplx_moe_mm_data",
+          "qualified_name": "_C::get_cutlass_pplx_moe_mm_data",
+          "type": "OpOverloadPacket",
+          "schema": "_C::get_cutlass_pplx_moe_mm_data(Tensor($0! -> ) expert_offsets, Tensor($1! -> ) problem_sizes1, Tensor($2! -> ) problem_sizes2, Tensor expert_num_tokens, int num_local_experts, int padded_m, int n, int k) -> ()",
+          "vllm_api": "torch.ops._C.get_cutlass_pplx_moe_mm_data(...)",
+          "registration_prelude": "import vllm._custom_ops"
+        },
+        {
+          "name": "ggml_dequantize",
+          "qualified_name": "_C::ggml_dequantize",
+          "type": "OpOverloadPacket",
+          "schema": "_C::ggml_dequantize(Tensor W, int type, SymInt m, SymInt n, ScalarType? dtype) -> Tensor",
+          "vllm_api": "torch.ops._C.ggml_dequantize(...)",
+          "registration_prelude": "import vllm._custom_ops"
+        },
+        {
+          "name": "ggml_moe_a8",
+          "qualified_name": "_C::ggml_moe_a8",
+          "type": "OpOverloadPacket",
+          "schema": "_C::ggml_moe_a8(Tensor X, Tensor W, Tensor sorted_token_ids, Tensor expert_ids, Tensor num_tokens_post_padded, int type, SymInt row, SymInt top_k, SymInt tokens) -> Tensor",
+          "vllm_api": "torch.ops._C.ggml_moe_a8(...)",
+          "registration_prelude": "import vllm._custom_ops"
+        },
+        {
+          "name": "ggml_moe_a8_vec",
+          "qualified_name": "_C::ggml_moe_a8_vec",
+          "type": "OpOverloadPacket",
+          "schema": "_C::ggml_moe_a8_vec(Tensor X, Tensor W, Tensor topk_ids, int top_k, int type, SymInt row, SymInt tokens) -> Tensor",
+          "vllm_api": "torch.ops._C.ggml_moe_a8_vec(...)",
+          "registration_prelude": "import vllm._custom_ops"
+        },
+        {
+          "name": "ggml_moe_get_block_size",
+          "qualified_name": "_C::ggml_moe_get_block_size",
+          "type": "OpOverloadPacket",
+          "schema": "_C::ggml_moe_get_block_size(int _0) -> int _0",
+          "vllm_api": "torch.ops._C.ggml_moe_get_block_size(...)",
+          "registration_prelude": "import vllm._custom_ops"
+        },
+        {
+          "name": "ggml_mul_mat_a8",
+          "qualified_name": "_C::ggml_mul_mat_a8",
+          "type": "OpOverloadPacket",
+          "schema": "_C::ggml_mul_mat_a8(Tensor W, Tensor X, int type, SymInt row) -> Tensor",
+          "vllm_api": "torch.ops._C.ggml_mul_mat_a8(...)",
+          "registration_prelude": "import vllm._custom_ops"
+        },
+        {
+          "name": "ggml_mul_mat_vec_a8",
+          "qualified_name": "_C::ggml_mul_mat_vec_a8",
+          "type": "OpOverloadPacket",
+          "schema": "_C::ggml_mul_mat_vec_a8(Tensor W, Tensor X, int type, SymInt row) -> Tensor",
+          "vllm_api": "torch.ops._C.ggml_mul_mat_vec_a8(...)",
+          "registration_prelude": "import vllm._custom_ops"
+        },
+        {
+          "name": "gptq_gemm",
+          "qualified_name": "_C::gptq_gemm",
+          "type": "OpOverloadPacket",
+          "schema": "_C::gptq_gemm(Tensor a, Tensor b_q_weight, Tensor b_gptq_qzeros, Tensor b_gptq_scales, Tensor b_g_idx, bool use_exllama, bool use_v2_format, int bit) -> Tensor",
+          "vllm_api": "torch.ops._C.gptq_gemm(...)",
+          "registration_prelude": "import vllm._custom_ops"
+        },
+        {
+          "name": "gptq_marlin_24_gemm",
+          "qualified_name": "_C::gptq_marlin_24_gemm",
+          "type": "OpOverloadPacket",
+          "schema": "_C::gptq_marlin_24_gemm(Tensor a, Tensor b_q_weight, Tensor b_meta, Tensor b_scales, Tensor workspace, int b_q_type, SymInt size_m, SymInt size_n, SymInt size_k) -> Tensor",
+          "vllm_api": "torch.ops._C.gptq_marlin_24_gemm(...)",
+          "registration_prelude": "import vllm._custom_ops"
+        },
+        {
+          "name": "gptq_marlin_repack",
+          "qualified_name": "_C::gptq_marlin_repack",
+          "type": "OpOverloadPacket",
+          "schema": "_C::gptq_marlin_repack(Tensor b_q_weight, Tensor perm, SymInt size_k, SymInt size_n, int num_bits, bool is_a_8bit) -> Tensor",
+          "vllm_api": "torch.ops._C.gptq_marlin_repack(...)",
+          "registration_prelude": "import vllm._custom_ops"
+        },
+        {
+          "name": "gptq_shuffle",
+          "qualified_name": "_C::gptq_shuffle",
+          "type": "OpOverloadPacket",
+          "schema": "_C::gptq_shuffle(Tensor($0! -> ) q_weight, Tensor q_perm, int bit) -> ()",
+          "vllm_api": "torch.ops._C.gptq_shuffle(...)",
+          "registration_prelude": "import vllm._custom_ops"
+        },
+        {
+          "name": "hadacore_transform",
+          "qualified_name": "_C::hadacore_transform",
+          "type": "OpOverloadPacket",
+          "schema": "_C::hadacore_transform(Tensor($0! -> ) x, bool inplace) -> Tensor",
+          "vllm_api": "torch.ops._C.hadacore_transform(...)",
+          "registration_prelude": "import vllm._custom_ops"
+        },
+        {
+          "name": "machete_mm",
+          "qualified_name": "_C::machete_mm",
+          "type": "OpOverloadPacket",
+          "schema": "_C::machete_mm(Tensor A, Tensor B, int b_type, ScalarType? out_type, Tensor? group_scales, Tensor? group_zeros, int? group_size, Tensor? channel_scales, Tensor? token_scales, str? schedule) -> Tensor",
+          "vllm_api": "torch.ops._C.machete_mm(...)",
+          "registration_prelude": "import vllm._custom_ops"
+        },
+        {
+          "name": "machete_prepack_B",
+          "qualified_name": "_C::machete_prepack_B",
+          "type": "OpOverloadPacket",
+          "schema": "_C::machete_prepack_B(Tensor B, ScalarType a_type, int b_type, ScalarType? group_scales_type) -> Tensor",
+          "vllm_api": "torch.ops._C.machete_prepack_B(...)",
+          "registration_prelude": "import vllm._custom_ops"
+        },
+        {
+          "name": "machete_supported_schedules",
+          "qualified_name": "_C::machete_supported_schedules",
+          "type": "OpOverloadPacket",
+          "schema": "_C::machete_supported_schedules(ScalarType a_type, int b_type, ScalarType? maybe_group_scales_type, ScalarType? maybe_group_zeros_type, ScalarType? maybe_channel_scales_type, ScalarType? maybe_token_scales_type, ScalarType? maybe_out_type) -> str[]",
+          "vllm_api": "torch.ops._C.machete_supported_schedules(...)",
+          "registration_prelude": "import vllm._custom_ops"
+        },
+        {
+          "name": "marlin_gemm",
+          "qualified_name": "_C::marlin_gemm",
+          "type": "OpOverloadPacket",
+          "schema": "_C::marlin_gemm(Tensor a, Tensor? c_or_none, Tensor b_q_weight, Tensor? b_bias_or_none, Tensor b_scales, Tensor? a_scales, Tensor? global_scale, Tensor? b_zeros_or_none, Tensor? g_idx_or_none, Tensor? perm_or_none, Tensor workspace, int b_type_id, SymInt size_m, SymInt size_n, SymInt size_k, bool is_k_full, bool use_atomic_add, bool use_fp32_reduce, bool is_zp_float) -> Tensor",
+          "vllm_api": "torch.ops._C.marlin_gemm(...)",
+          "registration_prelude": "import vllm._custom_ops"
+        },
+        {
+          "name": "marlin_int4_fp8_preprocess",
+          "qualified_name": "_C::marlin_int4_fp8_preprocess",
+          "type": "OpOverloadPacket",
+          "schema": "_C::marlin_int4_fp8_preprocess(Tensor qweight, Tensor? qzeros_or_none, bool inplace) -> Tensor",
+          "vllm_api": "torch.ops._C.marlin_int4_fp8_preprocess(...)",
+          "registration_prelude": "import vllm._custom_ops"
+        },
+        {
+          "name": "merge_attn_states",
+          "qualified_name": "_C::merge_attn_states",
+          "type": "OpOverloadPacket",
+          "schema": "_C::merge_attn_states(Tensor($0! -> ) output, Tensor($1! -> )? output_lse, Tensor prefix_output, Tensor prefix_lse, Tensor suffix_output, Tensor suffix_lse) -> ()",
+          "vllm_api": "torch.ops._C.merge_attn_states(...)",
+          "registration_prelude": "import vllm._custom_ops"
+        },
+        {
+          "name": "mul_and_silu",
+          "qualified_name": "_C::mul_and_silu",
+          "type": "OpOverloadPacket",
+          "schema": "_C::mul_and_silu(Tensor($0! -> ) out, Tensor input) -> ()",
+          "vllm_api": "torch.ops._C.mul_and_silu(...)",
+          "registration_prelude": "import vllm._custom_ops"
+        },
+        {
+          "name": "paged_attention_v1",
+          "qualified_name": "_C::paged_attention_v1",
+          "type": "OpOverloadPacket",
+          "schema": "_C::paged_attention_v1(Tensor($0! -> ) out, Tensor query, Tensor key_cache, Tensor value_cache, int num_kv_heads, float scale, Tensor block_tables, Tensor seq_lens, int block_size, int max_seq_len, Tensor? alibi_slopes, str kv_cache_dtype, Tensor k_scale, Tensor v_scale, int tp_rank, int blocksparse_local_blocks, int blocksparse_vert_stride, int blocksparse_block_size, int blocksparse_head_sliding_step) -> ()",
+          "vllm_api": "torch.ops._C.paged_attention_v1(...)",
+          "registration_prelude": "import vllm._custom_ops"
+        },
+        {
+          "name": "paged_attention_v2",
+          "qualified_name": "_C::paged_attention_v2",
+          "type": "OpOverloadPacket",
+          "schema": "_C::paged_attention_v2(Tensor($0! -> ) out, Tensor($1! -> ) exp_sums, Tensor($2! -> ) max_logits, Tensor($3! -> ) tmp_out, Tensor query, Tensor key_cache, Tensor value_cache, int num_kv_heads, float scale, Tensor block_tables, Tensor seq_lens, int block_size, int max_seq_len, Tensor? alibi_slopes, str kv_cache_dtype, Tensor k_scale, Tensor v_scale, int tp_rank, int blocksparse_local_blocks, int blocksparse_vert_stride, int blocksparse_block_size, int blocksparse_head_sliding_step) -> ()",
+          "vllm_api": "torch.ops._C.paged_attention_v2(...)",
+          "registration_prelude": "import vllm._custom_ops"
+        },
+        {
+          "name": "per_token_group_fp8_quant",
+          "qualified_name": "_C::per_token_group_fp8_quant",
+          "type": "OpOverloadPacket",
+          "schema": "_C::per_token_group_fp8_quant(Tensor input, Tensor($0! -> ) output_q, Tensor($1! -> ) output_s, int group_size, float eps, float fp8_min, float fp8_max, bool scale_ue8m0) -> ()",
+          "vllm_api": "torch.ops._C.per_token_group_fp8_quant(...)",
+          "registration_prelude": "import vllm._custom_ops"
+        },
+        {
+          "name": "per_token_group_fp8_quant_packed",
+          "qualified_name": "_C::per_token_group_fp8_quant_packed",
+          "type": "OpOverloadPacket",
+          "schema": "_C::per_token_group_fp8_quant_packed(Tensor input, Tensor($0! -> ) output_q, Tensor($1! -> ) output_s_packed, int group_size, float eps, float fp8_min, float fp8_max) -> ()",
+          "vllm_api": "torch.ops._C.per_token_group_fp8_quant_packed(...)",
+          "registration_prelude": "import vllm._custom_ops"
+        },
+        {
+          "name": "per_token_group_quant_int8",
+          "qualified_name": "_C::per_token_group_quant_int8",
+          "type": "OpOverloadPacket",
+          "schema": "_C::per_token_group_quant_int8(Tensor input, Tensor($0! -> ) output_q, Tensor($1! -> ) output_s, int group_size, float eps, float int8_min, float int8_max) -> ()",
+          "vllm_api": "torch.ops._C.per_token_group_quant_int8(...)",
+          "registration_prelude": "import vllm._custom_ops"
+        },
+        {
+          "name": "permute_cols",
+          "qualified_name": "_C::permute_cols",
+          "type": "OpOverloadPacket",
+          "schema": "_C::permute_cols(Tensor A, Tensor perm) -> Tensor",
+          "vllm_api": "torch.ops._C.permute_cols(...)",
+          "registration_prelude": "import vllm._custom_ops"
+        },
+        {
+          "name": "persistent_masked_m_silu_mul_quant",
+          "qualified_name": "_C::persistent_masked_m_silu_mul_quant",
+          "type": "OpOverloadPacket",
+          "schema": "_C::persistent_masked_m_silu_mul_quant(Tensor input, Tensor counts, Tensor($0! -> ) y_q, Tensor($1! -> ) y_s, bool use_ue8m0) -> ()",
+          "vllm_api": "torch.ops._C.persistent_masked_m_silu_mul_quant(...)",
+          "registration_prelude": "import vllm._custom_ops"
+        },
+        {
+          "name": "rearrange_kn_weight_as_n32k16_order",
+          "qualified_name": "_C::rearrange_kn_weight_as_n32k16_order",
+          "type": "OpOverloadPacket",
+          "schema": "_C::rearrange_kn_weight_as_n32k16_order(Tensor b_qweight, Tensor b_scales, Tensor? b_zeros, bool has_zp, Tensor($0! -> ) b_qweight_reorder, Tensor($1! -> ) b_scales_reorder, Tensor($2! -> )? b_zeros_reorder, int K, int N, int N_32align) -> ()",
+          "vllm_api": "torch.ops._C.rearrange_kn_weight_as_n32k16_order(...)",
+          "registration_prelude": "import vllm._custom_ops"
+        },
+        {
+          "name": "rms_norm",
+          "qualified_name": "_C::rms_norm",
+          "type": "OpOverloadPacket",
+          "schema": "_C::rms_norm(Tensor($0! -> ) result, Tensor input, Tensor weight, float epsilon) -> ()",
+          "vllm_api": "torch.ops._C.rms_norm(...)",
+          "registration_prelude": "import vllm._custom_ops"
+        },
+        {
+          "name": "rms_norm_dynamic_per_token_quant",
+          "qualified_name": "_C::rms_norm_dynamic_per_token_quant",
+          "type": "OpOverloadPacket",
+          "schema": "_C::rms_norm_dynamic_per_token_quant(Tensor($0! -> ) result, Tensor input, Tensor weight, Tensor($1! -> ) scale, float epsilon, Tensor? scale_ub, Tensor($2! -> )? residual) -> ()",
+          "vllm_api": "torch.ops._C.rms_norm_dynamic_per_token_quant(...)",
+          "registration_prelude": "import vllm._custom_ops"
+        },
+        {
+          "name": "rms_norm_per_block_quant",
+          "qualified_name": "_C::rms_norm_per_block_quant",
+          "type": "OpOverloadPacket",
+          "schema": "_C::rms_norm_per_block_quant(Tensor($0! -> ) result, Tensor input, Tensor weight, Tensor($1! -> ) scale, float epsilon, Tensor? scale_ub, Tensor($2! -> )? residual, int group_size, bool is_scale_transposed) -> ()",
+          "vllm_api": "torch.ops._C.rms_norm_per_block_quant(...)",
+          "registration_prelude": "import vllm._custom_ops"
+        },
+        {
+          "name": "rms_norm_static_fp8_quant",
+          "qualified_name": "_C::rms_norm_static_fp8_quant",
+          "type": "OpOverloadPacket",
+          "schema": "_C::rms_norm_static_fp8_quant(Tensor($0! -> ) result, Tensor input, Tensor weight, Tensor scale, float epsilon) -> ()",
+          "vllm_api": "torch.ops._C.rms_norm_static_fp8_quant(...)",
+          "registration_prelude": "import vllm._custom_ops"
+        },
+        {
+          "name": "rotary_embedding",
+          "qualified_name": "_C::rotary_embedding",
+          "type": "OpOverloadPacket",
+          "schema": "_C::rotary_embedding(Tensor positions, Tensor($0! -> ) query, Tensor($1! -> )? key, int head_size, Tensor cos_sin_cache, bool is_neox) -> ()",
+          "vllm_api": "torch.ops._C.rotary_embedding(...)",
+          "registration_prelude": "import vllm._custom_ops"
+        },
+        {
+          "name": "scaled_fp4_experts_quant",
+          "qualified_name": "_C::scaled_fp4_experts_quant",
+          "type": "OpOverloadPacket",
+          "schema": "_C::scaled_fp4_experts_quant(Tensor($0! -> ) output, Tensor($1! -> ) output_scale, Tensor input, Tensor input_global_scale, Tensor input_offset_by_experts, Tensor output_scale_offset_by_experts) -> ()",
+          "vllm_api": "torch.ops._C.scaled_fp4_experts_quant(...)",
+          "registration_prelude": "import vllm._custom_ops"
+        },
+        {
+          "name": "scaled_fp4_quant",
+          "qualified_name": "_C::scaled_fp4_quant",
+          "type": "OpOverloadPacket",
+          "schema": "_C::scaled_fp4_quant(Tensor($0! -> ) output, Tensor input, Tensor($1! -> ) output_scale, Tensor input_scale, bool is_sf_swizzled_layout) -> ()",
+          "vllm_api": "torch.ops._C.scaled_fp4_quant(...)",
+          "registration_prelude": "import vllm._custom_ops"
+        },
+        {
+          "name": "selective_scan_fwd",
+          "qualified_name": "_C::selective_scan_fwd",
+          "type": "OpOverloadPacket",
+          "schema": "_C::selective_scan_fwd(Tensor($0! -> ) u, Tensor($1! -> ) delta, Tensor($2! -> ) A, Tensor($3! -> ) B, Tensor($4! -> ) C, Tensor? D_, Tensor($5! -> )? z_, Tensor? delta_bias_, bool delta_softplus, Tensor? query_start_loc, Tensor? cache_indices, Tensor? has_initial_state, Tensor($6! -> ) ssm_states, int pad_slot_id, int block_size, Tensor? block_idx_first_scheduled_token, Tensor? block_idx_last_scheduled_token, Tensor? initial_state_idx) -> ()",
+          "vllm_api": "torch.ops._C.selective_scan_fwd(...)",
+          "registration_prelude": "import vllm._custom_ops"
+        },
+        {
+          "name": "silu_and_mul",
+          "qualified_name": "_C::silu_and_mul",
+          "type": "OpOverloadPacket",
+          "schema": "_C::silu_and_mul(Tensor($0! -> ) result, Tensor input) -> ()",
+          "vllm_api": "torch.ops._C.silu_and_mul(...)",
+          "registration_prelude": "import vllm._custom_ops"
+        },
+        {
+          "name": "silu_and_mul_nvfp4_quant",
+          "qualified_name": "_C::silu_and_mul_nvfp4_quant",
+          "type": "OpOverloadPacket",
+          "schema": "_C::silu_and_mul_nvfp4_quant(Tensor($0! -> ) result, Tensor($1! -> ) result_block_scale, Tensor input, Tensor input_global_scale) -> ()",
+          "vllm_api": "torch.ops._C.silu_and_mul_nvfp4_quant(...)",
+          "registration_prelude": "import vllm._custom_ops"
+        },
+        {
+          "name": "silu_and_mul_quant",
+          "qualified_name": "_C::silu_and_mul_quant",
+          "type": "OpOverloadPacket",
+          "schema": "_C::silu_and_mul_quant(Tensor($0! -> ) result, Tensor input, Tensor scale) -> ()",
+          "vllm_api": "torch.ops._C.silu_and_mul_quant(...)",
+          "registration_prelude": "import vllm._custom_ops"
+        },
+        {
+          "name": "silu_and_mul_scaled_fp4_experts_quant",
+          "qualified_name": "_C::silu_and_mul_scaled_fp4_experts_quant",
+          "type": "OpOverloadPacket",
+          "schema": "_C::silu_and_mul_scaled_fp4_experts_quant(Tensor($0! -> ) output, Tensor($1! -> ) output_scale, Tensor input, Tensor input_global_scale, Tensor input_offset_by_experts, Tensor output_scale_offset_by_experts) -> ()",
+          "vllm_api": "torch.ops._C.silu_and_mul_scaled_fp4_experts_quant(...)",
+          "registration_prelude": "import vllm._custom_ops"
+        },
+        {
+          "name": "sm100_cutlass_mla_decode",
+          "qualified_name": "_C::sm100_cutlass_mla_decode",
+          "type": "OpOverloadPacket",
+          "schema": "_C::sm100_cutlass_mla_decode(Tensor($0! -> ) out, Tensor($1! -> ) lse, Tensor q_nope, Tensor q_pe, Tensor kv_c_and_k_pe_cache, Tensor seq_lens, Tensor page_table, Tensor workspace, float scale, int num_kv_splits) -> ()",
+          "vllm_api": "torch.ops._C.sm100_cutlass_mla_decode(...)",
+          "registration_prelude": "import vllm._custom_ops"
+        },
+        {
+          "name": "sm100_cutlass_mla_get_workspace_size",
+          "qualified_name": "_C::sm100_cutlass_mla_get_workspace_size",
+          "type": "OpOverloadPacket",
+          "schema": "_C::sm100_cutlass_mla_get_workspace_size(int max_seq_len, int num_batches, int sm_count, int num_kv_splits) -> int",
+          "vllm_api": "torch.ops._C.sm100_cutlass_mla_get_workspace_size(...)",
+          "registration_prelude": "import vllm._custom_ops"
+        },
+        {
+          "name": "static_scaled_fp8_quant",
+          "qualified_name": "_C::static_scaled_fp8_quant",
+          "type": "OpOverloadPacket",
+          "schema": "_C::static_scaled_fp8_quant(Tensor($0! -> ) result, Tensor input, Tensor scale, (int, int)? group_shape=None) -> ()",
+          "vllm_api": "torch.ops._C.static_scaled_fp8_quant(...)",
+          "registration_prelude": "import vllm._custom_ops"
+        },
+        {
+          "name": "static_scaled_int8_quant",
+          "qualified_name": "_C::static_scaled_int8_quant",
+          "type": "OpOverloadPacket",
+          "schema": "_C::static_scaled_int8_quant(Tensor($0! -> ) result, Tensor input, Tensor scale, Tensor? azp) -> ()",
+          "vllm_api": "torch.ops._C.static_scaled_int8_quant(...)",
+          "registration_prelude": "import vllm._custom_ops"
+        },
+        {
+          "name": "swigluoai_and_mul",
+          "qualified_name": "_C::swigluoai_and_mul",
+          "type": "OpOverloadPacket",
+          "schema": "_C::swigluoai_and_mul(Tensor($0! -> ) out, Tensor input, float alpha=1.702, float limit=7.) -> ()",
+          "vllm_api": "torch.ops._C.swigluoai_and_mul(...)",
+          "registration_prelude": "import vllm._custom_ops"
+        },
+        {
+          "name": "top_k_per_row_decode",
+          "qualified_name": "_C::top_k_per_row_decode",
+          "type": "OpOverloadPacket",
+          "schema": "_C::top_k_per_row_decode(Tensor logits, int next_n, Tensor seq_lens, Tensor($0! -> ) indices, int numRows, int stride0, int stride1, int topK) -> ()",
+          "vllm_api": "torch.ops._C.top_k_per_row_decode(...)",
+          "registration_prelude": "import vllm._custom_ops"
+        },
+        {
+          "name": "top_k_per_row_prefill",
+          "qualified_name": "_C::top_k_per_row_prefill",
+          "type": "OpOverloadPacket",
+          "schema": "_C::top_k_per_row_prefill(Tensor logits, Tensor rowStarts, Tensor rowEnds, Tensor($0! -> ) indices, int numRows, int stride0, int stride1, int topK) -> ()",
+          "vllm_api": "torch.ops._C.top_k_per_row_prefill(...)",
+          "registration_prelude": "import vllm._custom_ops"
+        },
+        {
+          "name": "weak_ref_tensor",
+          "qualified_name": "_C::weak_ref_tensor",
+          "type": "OpOverloadPacket",
+          "schema": "_C::weak_ref_tensor(Tensor input) -> Tensor",
+          "vllm_api": "torch.ops._C.weak_ref_tensor(...)",
+          "registration_prelude": "import vllm._custom_ops"
+        }
+      ],
+      "errors": []
+    },
+    "torch.ops._C_cache_ops": {
+      "present": true,
+      "count": 11,
+      "ops": [
+        {
+          "name": "concat_and_cache_mla",
+          "qualified_name": "_C_cache_ops::concat_and_cache_mla",
+          "type": "OpOverloadPacket",
+          "schema": "_C_cache_ops::concat_and_cache_mla(Tensor kv_c, Tensor k_pe, Tensor($0! -> ) kv_cache, Tensor slot_mapping, str kv_cache_dtype, Tensor scale) -> ()",
+          "vllm_api": "torch.ops._C_cache_ops.concat_and_cache_mla(...)",
+          "registration_prelude": "import vllm._custom_ops"
+        },
+        {
+          "name": "concat_and_cache_mla_rope_fused",
+          "qualified_name": "_C_cache_ops::concat_and_cache_mla_rope_fused",
+          "type": "OpOverloadPacket",
+          "schema": "_C_cache_ops::concat_and_cache_mla_rope_fused(Tensor positions, Tensor($0! -> ) q_pe, Tensor($1! -> ) k_pe, Tensor kv_c, Tensor cos_sin_cache, bool is_neox, Tensor slot_mapping, Tensor($2! -> ) kv_cache, str kv_cache_dtype, Tensor kv_cache_scale) -> ()",
+          "vllm_api": "torch.ops._C_cache_ops.concat_and_cache_mla_rope_fused(...)",
+          "registration_prelude": "import vllm._custom_ops"
+        },
+        {
+          "name": "convert_fp8",
+          "qualified_name": "_C_cache_ops::convert_fp8",
+          "type": "OpOverloadPacket",
+          "schema": "_C_cache_ops::convert_fp8(Tensor($0! -> ) dst_cache, Tensor src_cache, float scale, str kv_cache_dtype) -> ()",
+          "vllm_api": "torch.ops._C_cache_ops.convert_fp8(...)",
+          "registration_prelude": "import vllm._custom_ops"
+        },
+        {
+          "name": "cp_gather_and_upconvert_fp8_kv_cache",
+          "qualified_name": "_C_cache_ops::cp_gather_and_upconvert_fp8_kv_cache",
+          "type": "OpOverloadPacket",
+          "schema": "_C_cache_ops::cp_gather_and_upconvert_fp8_kv_cache(Tensor src_cache, Tensor($0! -> ) dst, Tensor block_table, Tensor seq_lens, Tensor workspace_starts, int batch_size) -> ()",
+          "vllm_api": "torch.ops._C_cache_ops.cp_gather_and_upconvert_fp8_kv_cache(...)",
+          "registration_prelude": "import vllm._custom_ops"
+        },
+        {
+          "name": "cp_gather_cache",
+          "qualified_name": "_C_cache_ops::cp_gather_cache",
+          "type": "OpOverloadPacket",
+          "schema": "_C_cache_ops::cp_gather_cache(Tensor src_cache, Tensor($0! -> ) dst, Tensor block_table, Tensor cu_seq_lens, int batch_size, Tensor? seq_starts) -> ()",
+          "vllm_api": "torch.ops._C_cache_ops.cp_gather_cache(...)",
+          "registration_prelude": "import vllm._custom_ops"
+        },
+        {
+          "name": "cp_gather_indexer_k_quant_cache",
+          "qualified_name": "_C_cache_ops::cp_gather_indexer_k_quant_cache",
+          "type": "OpOverloadPacket",
+          "schema": "_C_cache_ops::cp_gather_indexer_k_quant_cache(Tensor kv_cache, Tensor($0! -> ) dst_k, Tensor($1! -> ) dst_scale, Tensor block_table, Tensor cu_seq_lens) -> ()",
+          "vllm_api": "torch.ops._C_cache_ops.cp_gather_indexer_k_quant_cache(...)",
+          "registration_prelude": "import vllm._custom_ops"
+        },
+        {
+          "name": "gather_and_maybe_dequant_cache",
+          "qualified_name": "_C_cache_ops::gather_and_maybe_dequant_cache",
+          "type": "OpOverloadPacket",
+          "schema": "_C_cache_ops::gather_and_maybe_dequant_cache(Tensor src_cache, Tensor($0! -> ) dst, Tensor block_table, Tensor cu_seq_lens, Tensor token_to_seq, int num_tokens, str kv_cache_dtype, Tensor scale, Tensor? seq_starts) -> ()",
+          "vllm_api": "torch.ops._C_cache_ops.gather_and_maybe_dequant_cache(...)",
+          "registration_prelude": "import vllm._custom_ops"
+        },
+        {
+          "name": "indexer_k_quant_and_cache",
+          "qualified_name": "_C_cache_ops::indexer_k_quant_and_cache",
+          "type": "OpOverloadPacket",
+          "schema": "_C_cache_ops::indexer_k_quant_and_cache(Tensor k, Tensor($0! -> ) kv_cache, Tensor slot_mapping, int quant_block_size, str kv_cache_dtype) -> ()",
+          "vllm_api": "torch.ops._C_cache_ops.indexer_k_quant_and_cache(...)",
+          "registration_prelude": "import vllm._custom_ops"
+        },
+        {
+          "name": "reshape_and_cache",
+          "qualified_name": "_C_cache_ops::reshape_and_cache",
+          "type": "OpOverloadPacket",
+          "schema": "_C_cache_ops::reshape_and_cache(Tensor key, Tensor value, Tensor($0! -> ) key_cache, Tensor($1! -> ) value_cache, Tensor slot_mapping, str kv_cache_dtype, Tensor k_scale, Tensor v_scale) -> ()",
+          "vllm_api": "torch.ops._C_cache_ops.reshape_and_cache(...)",
+          "registration_prelude": "import vllm._custom_ops"
+        },
+        {
+          "name": "reshape_and_cache_flash",
+          "qualified_name": "_C_cache_ops::reshape_and_cache_flash",
+          "type": "OpOverloadPacket",
+          "schema": "_C_cache_ops::reshape_and_cache_flash(Tensor key, Tensor value, Tensor($0! -> ) key_cache, Tensor($1! -> ) value_cache, Tensor slot_mapping, str kv_cache_dtype, Tensor k_scale, Tensor v_scale) -> ()",
+          "vllm_api": "torch.ops._C_cache_ops.reshape_and_cache_flash(...)",
+          "registration_prelude": "import vllm._custom_ops"
+        },
+        {
+          "name": "swap_blocks",
+          "qualified_name": "_C_cache_ops::swap_blocks",
+          "type": "OpOverloadPacket",
+          "schema": "_C_cache_ops::swap_blocks(Tensor src, Tensor($0! -> ) dst, int block_size_in_bytes, Tensor block_mapping) -> ()",
+          "vllm_api": "torch.ops._C_cache_ops.swap_blocks(...)",
+          "registration_prelude": "import vllm._custom_ops"
+        }
+      ],
+      "errors": []
+    },
+    "torch.ops._C_cpu": {
+      "present": true,
+      "count": 0,
+      "ops": [],
+      "errors": []
+    },
+    "torch.ops._C_cuda_utils": {
+      "present": true,
+      "count": 2,
+      "ops": [
+        {
+          "name": "get_device_attribute",
+          "qualified_name": "_C_cuda_utils::get_device_attribute",
+          "type": "OpOverloadPacket",
+          "schema": "_C_cuda_utils::get_device_attribute(int attribute, int device_id) -> int",
+          "vllm_api": "torch.ops._C_cuda_utils.get_device_attribute(...)",
+          "registration_prelude": "import vllm._custom_ops"
+        },
+        {
+          "name": "get_max_shared_memory_per_block_device_attribute",
+          "qualified_name": "_C_cuda_utils::get_max_shared_memory_per_block_device_attribute",
+          "type": "OpOverloadPacket",
+          "schema": "_C_cuda_utils::get_max_shared_memory_per_block_device_attribute(int device_id) -> int",
+          "vllm_api": "torch.ops._C_cuda_utils.get_max_shared_memory_per_block_device_attribute(...)",
+          "registration_prelude": "import vllm._custom_ops"
+        }
+      ],
+      "errors": []
+    },
+    "torch.ops._C_custom_ar": {
+      "present": true,
+      "count": 10,
+      "ops": [
+        {
+          "name": "all_reduce",
+          "qualified_name": "_C_custom_ar::all_reduce",
+          "type": "OpOverloadPacket",
+          "schema": "_C_custom_ar::all_reduce(int fa, Tensor inp, Tensor($0! -> ) out, int reg_buffer, int reg_buffer_sz_bytes) -> ()",
+          "vllm_api": "torch.ops._C_custom_ar.all_reduce(...)",
+          "registration_prelude": "import vllm._custom_ops"
+        },
+        {
+          "name": "allocate_shared_buffer_and_handle",
+          "qualified_name": "_C_custom_ar::allocate_shared_buffer_and_handle",
+          "type": "OpOverloadPacket",
+          "schema": "_C_custom_ar::allocate_shared_buffer_and_handle(int _0) -> (int _0, Tensor _1)",
+          "vllm_api": "torch.ops._C_custom_ar.allocate_shared_buffer_and_handle(...)",
+          "registration_prelude": "import vllm._custom_ops"
+        },
+        {
+          "name": "dispose",
+          "qualified_name": "_C_custom_ar::dispose",
+          "type": "OpOverloadPacket",
+          "schema": "_C_custom_ar::dispose(int _0) -> ()",
+          "vllm_api": "torch.ops._C_custom_ar.dispose(...)",
+          "registration_prelude": "import vllm._custom_ops"
+        },
+        {
+          "name": "free_shared_buffer",
+          "qualified_name": "_C_custom_ar::free_shared_buffer",
+          "type": "OpOverloadPacket",
+          "schema": "_C_custom_ar::free_shared_buffer(int _0) -> ()",
+          "vllm_api": "torch.ops._C_custom_ar.free_shared_buffer(...)",
+          "registration_prelude": "import vllm._custom_ops"
+        },
+        {
+          "name": "get_graph_buffer_ipc_meta",
+          "qualified_name": "_C_custom_ar::get_graph_buffer_ipc_meta",
+          "type": "OpOverloadPacket",
+          "schema": "_C_custom_ar::get_graph_buffer_ipc_meta(int _0) -> (int[] _0, int[] _1)",
+          "vllm_api": "torch.ops._C_custom_ar.get_graph_buffer_ipc_meta(...)",
+          "registration_prelude": "import vllm._custom_ops"
+        },
+        {
+          "name": "init_custom_ar",
+          "qualified_name": "_C_custom_ar::init_custom_ar",
+          "type": "OpOverloadPacket",
+          "schema": "_C_custom_ar::init_custom_ar(int[] ipc_tensors, Tensor rank_data, int rank, bool fully_connected) -> int",
+          "vllm_api": "torch.ops._C_custom_ar.init_custom_ar(...)",
+          "registration_prelude": "import vllm._custom_ops"
+        },
+        {
+          "name": "meta_size",
+          "qualified_name": "_C_custom_ar::meta_size",
+          "type": "OpOverloadPacket",
+          "schema": "_C_custom_ar::meta_size() -> int _0",
+          "vllm_api": "torch.ops._C_custom_ar.meta_size(...)",
+          "registration_prelude": "import vllm._custom_ops"
+        },
+        {
+          "name": "open_mem_handle",
+          "qualified_name": "_C_custom_ar::open_mem_handle",
+          "type": "OpOverloadPacket",
+          "schema": "_C_custom_ar::open_mem_handle(Tensor mem_handle) -> int",
+          "vllm_api": "torch.ops._C_custom_ar.open_mem_handle(...)",
+          "registration_prelude": "import vllm._custom_ops"
+        },
+        {
+          "name": "register_buffer",
+          "qualified_name": "_C_custom_ar::register_buffer",
+          "type": "OpOverloadPacket",
+          "schema": "_C_custom_ar::register_buffer(int _0, int[] _1) -> ()",
+          "vllm_api": "torch.ops._C_custom_ar.register_buffer(...)",
+          "registration_prelude": "import vllm._custom_ops"
+        },
+        {
+          "name": "register_graph_buffers",
+          "qualified_name": "_C_custom_ar::register_graph_buffers",
+          "type": "OpOverloadPacket",
+          "schema": "_C_custom_ar::register_graph_buffers(int _0, int[][] _1, int[][] _2) -> ()",
+          "vllm_api": "torch.ops._C_custom_ar.register_graph_buffers(...)",
+          "registration_prelude": "import vllm._custom_ops"
+        }
+      ],
+      "errors": []
+    },
+    "torch.ops._moe_C": {
+      "present": true,
+      "count": 14,
+      "ops": [
+        {
+          "name": "batched_moe_align_block_size",
+          "qualified_name": "_moe_C::batched_moe_align_block_size",
+          "type": "OpOverloadPacket",
+          "schema": "_moe_C::batched_moe_align_block_size(int max_tokens_per_batch, int block_size, Tensor expert_num_tokens, Tensor($0! -> ) sorted_token_ids, Tensor($1! -> ) experts_ids, Tensor($2! -> ) num_tokens_post_pad) -> ()",
+          "vllm_api": "torch.ops._moe_C.batched_moe_align_block_size(...)",
+          "registration_prelude": "import vllm._custom_ops"
+        },
+        {
+          "name": "grouped_topk",
+          "qualified_name": "_moe_C::grouped_topk",
+          "type": "OpOverloadPacket",
+          "schema": "_moe_C::grouped_topk(Tensor scores, int n_group, int topk_group, int topk, bool renormalize, float routed_scaling_factor, Tensor bias, int scoring_func) -> (Tensor, Tensor)",
+          "vllm_api": "torch.ops._moe_C.grouped_topk(...)",
+          "registration_prelude": "import vllm._custom_ops"
+        },
+        {
+          "name": "marlin_gemm_moe",
+          "qualified_name": "_moe_C::marlin_gemm_moe",
+          "type": "OpOverloadPacket",
+          "schema": "_moe_C::marlin_gemm_moe(Tensor($0! -> ) a, Tensor($1! -> ) b_q_weights, Tensor($2! -> ) sorted_ids, Tensor($3! -> ) topk_weights, Tensor($4! -> ) topk_ids, Tensor($5! -> ) b_scales, Tensor($6! -> ) b_zeros, Tensor($7! -> ) g_idx, Tensor($8! -> ) perm, Tensor($9! -> ) workspace, int b_q_type, SymInt size_m, SymInt size_n, SymInt size_k, bool is_k_full, int num_experts, int topk, int moe_block_size, bool replicate_input, bool apply_weights) -> Tensor",
+          "vllm_api": "torch.ops._moe_C.marlin_gemm_moe(...)",
+          "registration_prelude": "import vllm._custom_ops"
+        },
+        {
+          "name": "moe_align_block_size",
+          "qualified_name": "_moe_C::moe_align_block_size",
+          "type": "OpOverloadPacket",
+          "schema": "_moe_C::moe_align_block_size(Tensor topk_ids, int num_experts, int block_size, Tensor($0! -> ) sorted_token_ids, Tensor($1! -> ) experts_ids, Tensor($2! -> ) num_tokens_post_pad, Tensor? maybe_expert_map) -> ()",
+          "vllm_api": "torch.ops._moe_C.moe_align_block_size(...)",
+          "registration_prelude": "import vllm._custom_ops"
+        },
+        {
+          "name": "moe_lora_align_block_size",
+          "qualified_name": "_moe_C::moe_lora_align_block_size",
+          "type": "OpOverloadPacket",
+          "schema": "_moe_C::moe_lora_align_block_size(Tensor topk_ids, Tensor token_lora_mapping, int num_experts, int block_size, int max_loras, int max_num_tokens_padded, int max_num_m_blocks, Tensor($0! -> ) sorted_token_ids, Tensor($1! -> ) experts_ids, Tensor($2! -> ) num_tokens_post_pad, Tensor($3! -> ) adapter_enabled, Tensor($4! -> ) lora_ids, Tensor? maybe_expert_map) -> ()",
+          "vllm_api": "torch.ops._moe_C.moe_lora_align_block_size(...)",
+          "registration_prelude": "import vllm._custom_ops"
+        },
+        {
+          "name": "moe_permute",
+          "qualified_name": "_moe_C::moe_permute",
+          "type": "OpOverloadPacket",
+          "schema": "_moe_C::moe_permute(Tensor input, Tensor topk_ids, Tensor token_expert_indices, Tensor? expert_map, int n_expert, int n_local_expert, int topk, int? align_block_size, Tensor($0! -> ) permuted_input, Tensor($1! -> ) expert_first_token_offset, Tensor($2! -> ) inv_permuted_idx, Tensor($3! -> ) permuted_idx, Tensor($4! -> ) m_indices) -> ()",
+          "vllm_api": "torch.ops._moe_C.moe_permute(...)",
+          "registration_prelude": "import vllm._custom_ops"
+        },
+        {
+          "name": "moe_permute_unpermute_supported",
+          "qualified_name": "_moe_C::moe_permute_unpermute_supported",
+          "type": "OpOverloadPacket",
+          "schema": "_moe_C::moe_permute_unpermute_supported() -> bool",
+          "vllm_api": "torch.ops._moe_C.moe_permute_unpermute_supported(...)",
+          "registration_prelude": "import vllm._custom_ops"
+        },
+        {
+          "name": "moe_sum",
+          "qualified_name": "_moe_C::moe_sum",
+          "type": "OpOverloadPacket",
+          "schema": "_moe_C::moe_sum(Tensor input, Tensor($0! -> ) output) -> ()",
+          "vllm_api": "torch.ops._moe_C.moe_sum(...)",
+          "registration_prelude": "import vllm._custom_ops"
+        },
+        {
+          "name": "moe_unpermute",
+          "qualified_name": "_moe_C::moe_unpermute",
+          "type": "OpOverloadPacket",
+          "schema": "_moe_C::moe_unpermute(Tensor permuted_hidden_states, Tensor topk_weights, Tensor inv_permuted_idx, Tensor? expert_first_token_offset, int topk, Tensor($0! -> ) hidden_states) -> ()",
+          "vllm_api": "torch.ops._moe_C.moe_unpermute(...)",
+          "registration_prelude": "import vllm._custom_ops"
+        },
+        {
+          "name": "moe_wna16_gemm",
+          "qualified_name": "_moe_C::moe_wna16_gemm",
+          "type": "OpOverloadPacket",
+          "schema": "_moe_C::moe_wna16_gemm(Tensor input, Tensor($0! -> ) output, Tensor b_qweight, Tensor b_scales, Tensor? b_qzeros, Tensor? topk_weights, Tensor sorted_token_ids, Tensor expert_ids, Tensor num_tokens_post_pad, int top_k, int BLOCK_SIZE_M, int BLOCK_SIZE_N, int BLOCK_SIZE_K, int bit) -> Tensor",
+          "vllm_api": "torch.ops._moe_C.moe_wna16_gemm(...)",
+          "registration_prelude": "import vllm._custom_ops"
+        },
+        {
+          "name": "moe_wna16_marlin_gemm",
+          "qualified_name": "_moe_C::moe_wna16_marlin_gemm",
+          "type": "OpOverloadPacket",
+          "schema": "_moe_C::moe_wna16_marlin_gemm(Tensor($0! -> ) a, Tensor? c_or_none, Tensor($1! -> ) b_q_weight, Tensor? b_bias_or_none, Tensor($2! -> ) b_scales, Tensor? a_scales, Tensor? global_scale, Tensor? b_zeros_or_none, Tensor? g_idx_or_none, Tensor? perm_or_none, Tensor($3! -> ) workspace, Tensor sorted_token_ids, Tensor($4! -> ) expert_ids, Tensor($5! -> ) num_tokens_past_padded, Tensor($6! -> ) topk_weights, int moe_block_size, int top_k, bool mul_topk_weights, int b_type_id, int size_m, int size_n, int size_k, bool is_full_k, bool use_atomic_add, bool use_fp32_reduce, bool is_zp_float, int thread_k, int thread_n, int blocks_per_sm) -> Tensor",
+          "vllm_api": "torch.ops._moe_C.moe_wna16_marlin_gemm(...)",
+          "registration_prelude": "import vllm._custom_ops"
+        },
+        {
+          "name": "shuffle_rows",
+          "qualified_name": "_moe_C::shuffle_rows",
+          "type": "OpOverloadPacket",
+          "schema": "_moe_C::shuffle_rows(Tensor input_tensor, Tensor dst2src_map, Tensor($0! -> ) output_tensor) -> ()",
+          "vllm_api": "torch.ops._moe_C.shuffle_rows(...)",
+          "registration_prelude": "import vllm._custom_ops"
+        },
+        {
+          "name": "topk_sigmoid",
+          "qualified_name": "_moe_C::topk_sigmoid",
+          "type": "OpOverloadPacket",
+          "schema": "_moe_C::topk_sigmoid(Tensor($0! -> ) topk_weights, Tensor($1! -> ) topk_indices, Tensor($2! -> ) token_expert_indices, Tensor gating_output, bool renormalize, Tensor? bias) -> ()",
+          "vllm_api": "torch.ops._moe_C.topk_sigmoid(...)",
+          "registration_prelude": "import vllm._custom_ops"
+        },
+        {
+          "name": "topk_softmax",
+          "qualified_name": "_moe_C::topk_softmax",
+          "type": "OpOverloadPacket",
+          "schema": "_moe_C::topk_softmax(Tensor($0! -> ) topk_weights, Tensor($1! -> ) topk_indices, Tensor($2! -> ) token_expert_indices, Tensor gating_output, bool renormalize, Tensor? bias) -> ()",
+          "vllm_api": "torch.ops._moe_C.topk_softmax(...)",
+          "registration_prelude": "import vllm._custom_ops"
+        }
+      ],
+      "errors": []
+    },
+    "torch.ops._qutlass_C": {
+      "present": true,
+      "count": 6,
+      "ops": [
+        {
+          "name": "fusedQuantizeMxAbsMax",
+          "qualified_name": "_qutlass_C::fusedQuantizeMxAbsMax",
+          "type": "OpOverloadPacket",
+          "schema": "_qutlass_C::fusedQuantizeMxAbsMax(Tensor A, Tensor R, Tensor OUT, Tensor OUT_sf) -> (Tensor, Tensor)",
+          "vllm_api": "torch.ops._qutlass_C.fusedQuantizeMxAbsMax(...)",
+          "registration_prelude": "import vllm._custom_ops"
+        },
+        {
+          "name": "fusedQuantizeMxQuest",
+          "qualified_name": "_qutlass_C::fusedQuantizeMxQuest",
+          "type": "OpOverloadPacket",
+          "schema": "_qutlass_C::fusedQuantizeMxQuest(Tensor A, Tensor R, Tensor OUT, Tensor OUT_sf) -> (Tensor, Tensor)",
+          "vllm_api": "torch.ops._qutlass_C.fusedQuantizeMxQuest(...)",
+          "registration_prelude": "import vllm._custom_ops"
+        },
+        {
+          "name": "fusedQuantizeNv",
+          "qualified_name": "_qutlass_C::fusedQuantizeNv",
+          "type": "OpOverloadPacket",
+          "schema": "_qutlass_C::fusedQuantizeNv(Tensor A, Tensor R, Tensor OUT, Tensor OUT_sf, Tensor global_scale) -> (Tensor, Tensor)",
+          "vllm_api": "torch.ops._qutlass_C.fusedQuantizeNv(...)",
+          "registration_prelude": "import vllm._custom_ops"
+        },
+        {
+          "name": "matmul_ada_mxf4_bf16_tn",
+          "qualified_name": "_qutlass_C::matmul_ada_mxf4_bf16_tn",
+          "type": "OpOverloadPacket",
+          "schema": "_qutlass_C::matmul_ada_mxf4_bf16_tn(Tensor A, Tensor B, Tensor A_sf, Tensor B_sf, Tensor alpha) -> Tensor",
+          "vllm_api": "torch.ops._qutlass_C.matmul_ada_mxf4_bf16_tn(...)",
+          "registration_prelude": "import vllm._custom_ops"
+        },
+        {
+          "name": "matmul_mxf4_bf16_tn",
+          "qualified_name": "_qutlass_C::matmul_mxf4_bf16_tn",
+          "type": "OpOverloadPacket",
+          "schema": "_qutlass_C::matmul_mxf4_bf16_tn(Tensor A, Tensor B, Tensor A_sf, Tensor B_sf, Tensor alpha) -> Tensor",
+          "vllm_api": "torch.ops._qutlass_C.matmul_mxf4_bf16_tn(...)",
+          "registration_prelude": "import vllm._custom_ops"
+        },
+        {
+          "name": "matmul_nvf4_bf16_tn",
+          "qualified_name": "_qutlass_C::matmul_nvf4_bf16_tn",
+          "type": "OpOverloadPacket",
+          "schema": "_qutlass_C::matmul_nvf4_bf16_tn(Tensor A, Tensor B, Tensor A_sf, Tensor B_sf, Tensor alpha) -> Tensor",
+          "vllm_api": "torch.ops._qutlass_C.matmul_nvf4_bf16_tn(...)",
+          "registration_prelude": "import vllm._custom_ops"
+        }
+      ],
+      "errors": []
+    },
+    "torch.ops._rocm_C": {
+      "present": true,
+      "count": 0,
+      "ops": [],
+      "errors": []
+    }
+  },
+  "wrappers": {
+    "module": "vllm._custom_ops",
+    "count": 127,
+    "functions": [
+      {
+        "name": "LLMM1",
+        "signature": "(a: torch.Tensor, b: torch.Tensor, rows_per_block: int) -> torch.Tensor",
+        "torch_ops_calls": [
+          {
+            "namespace": "_rocm_C",
+            "op": "LLMM1"
+          }
+        ],
+        "source_head": "def LLMM1(a: torch.Tensor, b: torch.Tensor, rows_per_block: int) -> torch.Tensor:",
+        "vllm_api": "from vllm import _custom_ops; _custom_ops.LLMM1(...)"
+      },
+      {
+        "name": "all_reduce",
+        "signature": "(fa: int, inp: torch.Tensor, out: torch.Tensor, reg_buffer: int, reg_buffer_sz_bytes: int) -> None",
+        "torch_ops_calls": [
+          {
+            "namespace": "_C_custom_ar",
+            "op": "all_reduce"
+          }
+        ],
+        "source_head": "def all_reduce(",
+        "vllm_api": "from vllm import _custom_ops; _custom_ops.all_reduce(...)"
+      },
+      {
+        "name": "allocate_shared_buffer_and_handle",
+        "signature": "(size: int) -> tuple",
+        "torch_ops_calls": [
+          {
+            "namespace": "_C_custom_ar",
+            "op": "allocate_shared_buffer_and_handle"
+          }
+        ],
+        "source_head": "def allocate_shared_buffer_and_handle(size: int) -> tuple[int, torch.Tensor]:",
+        "vllm_api": "from vllm import _custom_ops; _custom_ops.allocate_shared_buffer_and_handle(...)"
+      },
+      {
+        "name": "allspark_repack_weight",
+        "signature": "(qweight: torch.Tensor, scale: torch.Tensor, zero_point: torch.Tensor | None = None, has_zp: bool = False) -> tuple",
+        "torch_ops_calls": [
+          {
+            "namespace": "_C",
+            "op": "rearrange_kn_weight_as_n32k16_order"
+          }
+        ],
+        "source_head": "def allspark_repack_weight(",
+        "vllm_api": "from vllm import _custom_ops; _custom_ops.allspark_repack_weight(...)"
+      },
+      {
+        "name": "allspark_w8a16_gemm",
+        "signature": "(a: torch.Tensor, b_qweight: torch.Tensor, b_scales: torch.Tensor, b_qzeros: torch.Tensor | None, n: int, group_size: int, sm_count: int, sm_version: int, CUBLAS_M_THRESHOLD: int, has_zp: bool, n32k16_reorder: bool) -> torch.Tensor",
+        "torch_ops_calls": [
+          {
+            "namespace": "_C",
+            "op": "allspark_w8a16_gemm"
+          }
+        ],
+        "source_head": "def allspark_w8a16_gemm(",
+        "vllm_api": "from vllm import _custom_ops; _custom_ops.allspark_w8a16_gemm(...)"
+      },
+      {
+        "name": "apply_repetition_penalties_cuda",
+        "signature": "(logits: torch.Tensor, prompt_mask: torch.Tensor, output_mask: torch.Tensor, repetition_penalties: torch.Tensor) -> None",
+        "torch_ops_calls": [
+          {
+            "namespace": "_C",
+            "op": "apply_repetition_penalties_"
+          }
+        ],
+        "source_head": "def apply_repetition_penalties_cuda(",
+        "vllm_api": "from vllm import _custom_ops; _custom_ops.apply_repetition_penalties_cuda(...)"
+      },
+      {
+        "name": "awq_dequantize",
+        "signature": "(qweight: torch.Tensor, scales: torch.Tensor, zeros: torch.Tensor, split_k_iters: int, thx: int, thy: int) -> torch.Tensor",
+        "torch_ops_calls": [
+          {
+            "namespace": "_C",
+            "op": "awq_dequantize"
+          }
+        ],
+        "source_head": "def awq_dequantize(",
+        "vllm_api": "from vllm import _custom_ops; _custom_ops.awq_dequantize(...)"
+      },
+      {
+        "name": "awq_gemm",
+        "signature": "(input: torch.Tensor, qweight: torch.Tensor, scales: torch.Tensor, qzeros: torch.Tensor, split_k_iters: int) -> torch.Tensor",
+        "torch_ops_calls": [
+          {
+            "namespace": "_C",
+            "op": "awq_gemm"
+          }
+        ],
+        "source_head": "def awq_gemm(",
+        "vllm_api": "from vllm import _custom_ops; _custom_ops.awq_gemm(...)"
+      },
+      {
+        "name": "awq_marlin_moe_repack",
+        "signature": "(b_q_weight: torch.Tensor, perm: torch.Tensor, size_k: int, size_n: int, num_bits: int, is_a_8bit: bool = False) -> torch.Tensor",
+        "torch_ops_calls": [
+          {
+            "namespace": "_C",
+            "op": "awq_marlin_repack"
+          }
+        ],
+        "source_head": "def awq_marlin_moe_repack(",
+        "vllm_api": "from vllm import _custom_ops; _custom_ops.awq_marlin_moe_repack(...)"
+      },
+      {
+        "name": "awq_marlin_repack",
+        "signature": "(b_q_weight: torch.Tensor, size_k: int, size_n: int, num_bits: int, is_a_8bit: bool = False) -> torch.Tensor",
+        "torch_ops_calls": [
+          {
+            "namespace": "_C",
+            "op": "awq_marlin_repack"
+          }
+        ],
+        "source_head": "def awq_marlin_repack(",
+        "vllm_api": "from vllm import _custom_ops; _custom_ops.awq_marlin_repack(...)"
+      },
+      {
+        "name": "batched_moe_align_block_size",
+        "signature": "(max_tokens_per_batch: int, block_size: int, expert_num_tokens: torch.Tensor, sorted_ids: torch.Tensor, expert_ids: torch.Tensor, num_tokens_post_pad: torch.Tensor) -> None",
+        "torch_ops_calls": [
+          {
+            "namespace": "_moe_C",
+            "op": "batched_moe_align_block_size"
+          }
+        ],
+        "source_head": "def batched_moe_align_block_size(",
+        "vllm_api": "from vllm import _custom_ops; _custom_ops.batched_moe_align_block_size(...)"
+      },
+      {
+        "name": "concat_and_cache_mla",
+        "signature": "(kv_c: torch.Tensor, k_pe: torch.Tensor, kv_cache: torch.Tensor, slot_mapping: torch.Tensor, kv_cache_dtype: str, scale: torch.Tensor) -> None",
+        "torch_ops_calls": [
+          {
+            "namespace": "_C_cache_ops",
+            "op": "concat_and_cache_mla"
+          }
+        ],
+        "source_head": "def concat_and_cache_mla(",
+        "vllm_api": "from vllm import _custom_ops; _custom_ops.concat_and_cache_mla(...)"
+      },
+      {
+        "name": "concat_and_cache_mla_rope_fused",
+        "signature": "(positions: torch.Tensor, q_pe: torch.Tensor, k_pe: torch.Tensor, kv_c: torch.Tensor, cos_sin_cache: torch.Tensor, is_neox: bool, slot_mapping: torch.Tensor, kv_cache: torch.Tensor, kv_cache_dtype: str, kv_cache_scale: torch.Tensor) -> None",
+        "torch_ops_calls": [
+          {
+            "namespace": "_C_cache_ops",
+            "op": "concat_and_cache_mla_rope_fused"
+          }
+        ],
+        "source_head": "def concat_and_cache_mla_rope_fused(",
+        "vllm_api": "from vllm import _custom_ops; _custom_ops.concat_and_cache_mla_rope_fused(...)"
+      },
+      {
+        "name": "convert_fp8",
+        "signature": "(output: torch.Tensor, input: torch.Tensor, scale: float = 1.0, kv_dtype: str = 'fp8') -> None",
+        "torch_ops_calls": [
+          {
+            "namespace": "_C_cache_ops",
+            "op": "convert_fp8"
+          }
+        ],
+        "source_head": "def convert_fp8(",
+        "vllm_api": "from vllm import _custom_ops; _custom_ops.convert_fp8(...)"
+      },
+      {
+        "name": "convert_vertical_slash_indexes",
+        "signature": "(q_seqlens: torch.Tensor, kv_seqlens: torch.Tensor, vertical_indexes: torch.Tensor, slash_indexes: torch.Tensor, context_size: int, block_size_M: int, block_size_N: int, causal: bool = True) -> tuple",
+        "torch_ops_calls": [
+          {
+            "namespace": "_C",
+            "op": "convert_vertical_slash_indexes"
+          }
+        ],
+        "source_head": "def convert_vertical_slash_indexes(",
+        "vllm_api": "from vllm import _custom_ops; _custom_ops.convert_vertical_slash_indexes(...)"
+      },
+      {
+        "name": "convert_vertical_slash_indexes_mergehead",
+        "signature": "(q_seqlens: torch.Tensor, kv_seqlens: torch.Tensor, vertical_indexes: torch.Tensor, slash_indexes: torch.Tensor, vertical_indices_count: torch.Tensor, slash_indices_count: torch.Tensor, context_size: int, block_size_M: int, block_size_N: int, causal: bool = True) -> tuple",
+        "torch_ops_calls": [
+          {
+            "namespace": "_C",
+            "op": "convert_vertical_slash_indexes_mergehead"
+          }
+        ],
+        "source_head": "def convert_vertical_slash_indexes_mergehead(",
+        "vllm_api": "from vllm import _custom_ops; _custom_ops.convert_vertical_slash_indexes_mergehead(...)"
+      },
+      {
+        "name": "cp_gather_and_upconvert_fp8_kv_cache",
+        "signature": "(src_cache: torch.Tensor, dst: torch.Tensor, block_table: torch.Tensor, seq_lens: torch.Tensor, workspace_starts: torch.Tensor, batch_size: int) -> None",
+        "torch_ops_calls": [
+          {
+            "namespace": "_C_cache_ops",
+            "op": "cp_gather_and_upconvert_fp8_kv_cache"
+          }
+        ],
+        "source_head": "def cp_gather_and_upconvert_fp8_kv_cache(",
+        "vllm_api": "from vllm import _custom_ops; _custom_ops.cp_gather_and_upconvert_fp8_kv_cache(...)"
+      },
+      {
+        "name": "cp_gather_cache",
+        "signature": "(src_cache: torch.Tensor, dst: torch.Tensor, block_table: torch.Tensor, cu_seq_lens: torch.Tensor, batch_size: int, seq_starts: torch.Tensor | None = None) -> None",
+        "torch_ops_calls": [
+          {
+            "namespace": "_C_cache_ops",
+            "op": "cp_gather_cache"
+          }
+        ],
+        "source_head": "def cp_gather_cache(",
+        "vllm_api": "from vllm import _custom_ops; _custom_ops.cp_gather_cache(...)"
+      },
+      {
+        "name": "cp_gather_indexer_k_quant_cache",
+        "signature": "(kv_cache: torch.Tensor, dst_k: torch.Tensor, dst_scale: torch.Tensor, block_table: torch.Tensor, cu_seq_lens: torch.Tensor) -> None",
+        "torch_ops_calls": [
+          {
+            "namespace": "_C_cache_ops",
+            "op": "cp_gather_indexer_k_quant_cache"
+          }
+        ],
+        "source_head": "def cp_gather_indexer_k_quant_cache(",
+        "vllm_api": "from vllm import _custom_ops; _custom_ops.cp_gather_indexer_k_quant_cache(...)"
+      },
+      {
+        "name": "cpu_attention_with_kv_cache",
+        "signature": "(query: torch.Tensor, key_cache: torch.Tensor, value_cache: torch.Tensor, output: torch.Tensor, query_start_loc: torch.Tensor, seq_lens: torch.Tensor, scale: float, causal: bool, alibi_slopes: torch.Tensor | None, sliding_window: tuple, block_table: torch.Tensor, softcap: float, scheduler_metadata: torch.Tensor, s_aux: torch.Tensor | None) -> None",
+        "torch_ops_calls": [
+          {
+            "namespace": "_C",
+            "op": "cpu_attention_with_kv_cache"
+          }
+        ],
+        "source_head": "def cpu_attention_with_kv_cache(",
+        "vllm_api": "from vllm import _custom_ops; _custom_ops.cpu_attention_with_kv_cache(...)"
+      },
+      {
+        "name": "cpu_attn_get_scheduler_metadata",
+        "signature": "(num_reqs: int, num_heads: int, num_kv_heads: int, head_dim: int, seq_lens: torch.Tensor, dtype: torch.dtype, query_start_loc: torch.Tensor, causal: bool, sliding_window_size: int, isa: str, enable_kv_split: bool) -> torch.Tensor",
+        "torch_ops_calls": [
+          {
+            "namespace": "_C",
+            "op": "get_scheduler_metadata"
+          }
+        ],
+        "source_head": "def cpu_attn_get_scheduler_metadata(",
+        "vllm_api": "from vllm import _custom_ops; _custom_ops.cpu_attn_get_scheduler_metadata(...)"
+      },
+      {
+        "name": "cpu_attn_reshape_and_cache",
+        "signature": "(key: torch.Tensor, value: torch.Tensor, key_cache: torch.Tensor, value_cache: torch.Tensor, slot_mapping: torch.Tensor, isa: str) -> None",
+        "torch_ops_calls": [
+          {
+            "namespace": "_C",
+            "op": "cpu_attn_reshape_and_cache"
+          }
+        ],
+        "source_head": "def cpu_attn_reshape_and_cache(",
+        "vllm_api": "from vllm import _custom_ops; _custom_ops.cpu_attn_reshape_and_cache(...)"
+      },
+      {
+        "name": "cpu_fused_moe",
+        "signature": "(input: torch.Tensor, w13: torch.Tensor, w2: torch.Tensor, w13_bias: torch.Tensor | None, w2_bias: torch.Tensor | None, topk_weights: torch.Tensor, topk_ids: torch.Tensor, act: str, isa: str) -> torch.Tensor",
+        "torch_ops_calls": [
+          {
+            "namespace": "_C",
+            "op": "cpu_fused_moe"
+          }
+        ],
+        "source_head": "def cpu_fused_moe(",
+        "vllm_api": "from vllm import _custom_ops; _custom_ops.cpu_fused_moe(...)"
+      },
+      {
+        "name": "cpu_gemm_wna16",
+        "signature": "(input: torch.Tensor, q_weight: torch.Tensor, scales: torch.Tensor, zeros: torch.Tensor | None, g_idx: torch.Tensor | None, bias: torch.Tensor | None, pack_factor: int, isa_hint: str) -> torch.Tensor",
+        "torch_ops_calls": [
+          {
+            "namespace": "_C",
+            "op": "cpu_gemm_wna16"
+          }
+        ],
+        "source_head": "def cpu_gemm_wna16(",
+        "vllm_api": "from vllm import _custom_ops; _custom_ops.cpu_gemm_wna16(...)"
+      },
+      {
+        "name": "cpu_prepack_moe_weight",
+        "signature": "(weight: torch.Tensor, isa: str) -> torch.Tensor",
+        "torch_ops_calls": [
+          {
+            "namespace": "_C",
+            "op": "prepack_moe_weight"
+          }
+        ],
+        "source_head": "def cpu_prepack_moe_weight(",
+        "vllm_api": "from vllm import _custom_ops; _custom_ops.cpu_prepack_moe_weight(...)"
+      },
+      {
+        "name": "create_onednn_mm",
+        "signature": "(weight: torch.Tensor, primitive_cache_size: int = 128) -> vllm._custom_ops.CPUDNNLGEMMHandler",
+        "torch_ops_calls": [
+          {
+            "namespace": "_C",
+            "op": "create_onednn_mm_handler"
+          }
+        ],
+        "source_head": "def create_onednn_mm(",
+        "vllm_api": "from vllm import _custom_ops; _custom_ops.create_onednn_mm(...)"
+      },
+      {
+        "name": "create_onednn_scaled_mm",
+        "signature": "(weight: torch.Tensor, weight_scales: torch.Tensor, output_type: torch.dtype, dynamic_quant: bool, use_azp: bool, primitive_cache_size: int = 128) -> vllm._custom_ops.CPUDNNLGEMMHandler",
+        "torch_ops_calls": [
+          {
+            "namespace": "_C",
+            "op": "create_onednn_scaled_mm_handler"
+          }
+        ],
+        "source_head": "def create_onednn_scaled_mm(",
+        "vllm_api": "from vllm import _custom_ops; _custom_ops.create_onednn_scaled_mm(...)"
+      },
+      {
+        "name": "cutlass_encode_and_reorder_int4b",
+        "signature": "(b: torch.Tensor) -> torch.Tensor",
+        "torch_ops_calls": [
+          {
+            "namespace": "_C",
+            "op": "cutlass_encode_and_reorder_int4b"
+          }
+        ],
+        "source_head": "def cutlass_encode_and_reorder_int4b(b: torch.Tensor) -> torch.Tensor:",
+        "vllm_api": "from vllm import _custom_ops; _custom_ops.cutlass_encode_and_reorder_int4b(...)"
+      },
+      {
+        "name": "cutlass_encode_and_reorder_int4b_grouped",
+        "signature": "(b_tensors: torch.Tensor) -> tuple",
+        "torch_ops_calls": [
+          {
+            "namespace": "_C",
+            "op": "cutlass_encode_and_reorder_int4b_grouped"
+          }
+        ],
+        "source_head": "def cutlass_encode_and_reorder_int4b_grouped(",
+        "vllm_api": "from vllm import _custom_ops; _custom_ops.cutlass_encode_and_reorder_int4b_grouped(...)"
+      },
+      {
+        "name": "cutlass_fp4_moe_mm",
+        "signature": "(out_tensors: torch.Tensor, a_tensors: torch.Tensor, b_tensors: torch.Tensor, a_scales: torch.Tensor, b_scales: torch.Tensor, alphas: torch.Tensor, problem_sizes: torch.Tensor, expert_offsets: torch.Tensor, sf_offsets: torch.Tensor)",
+        "torch_ops_calls": [
+          {
+            "namespace": "_C",
+            "op": "cutlass_fp4_group_mm"
+          }
+        ],
+        "source_head": "def cutlass_fp4_moe_mm(",
+        "vllm_api": "from vllm import _custom_ops; _custom_ops.cutlass_fp4_moe_mm(...)"
+      },
+      {
+        "name": "cutlass_group_gemm_supported",
+        "signature": "(cuda_device_capability: int) -> bool",
+        "torch_ops_calls": [
+          {
+            "namespace": "_C",
+            "op": "cutlass_group_gemm_supported"
+          }
+        ],
+        "source_head": "def cutlass_group_gemm_supported(cuda_device_capability: int) -> bool:",
+        "vllm_api": "from vllm import _custom_ops; _custom_ops.cutlass_group_gemm_supported(...)"
+      },
+      {
+        "name": "cutlass_moe_mm",
+        "signature": "(out_tensors: torch.Tensor, a_tensors: torch.Tensor, b_tensors: torch.Tensor, a_scales: torch.Tensor, b_scales: torch.Tensor, expert_offsets: torch.Tensor, problem_sizes: torch.Tensor, a_strides: torch.Tensor, b_strides: torch.Tensor, c_strides: torch.Tensor, per_act_token: bool, per_out_ch: bool)",
+        "torch_ops_calls": [
+          {
+            "namespace": "_C",
+            "op": "cutlass_moe_mm"
+          }
+        ],
+        "source_head": "def cutlass_moe_mm(",
+        "vllm_api": "from vllm import _custom_ops; _custom_ops.cutlass_moe_mm(...)"
+      },
+      {
+        "name": "cutlass_pack_scale_fp8",
+        "signature": "(scales: torch.Tensor) -> torch.Tensor",
+        "torch_ops_calls": [
+          {
+            "namespace": "_C",
+            "op": "cutlass_pack_scale_fp8"
+          }
+        ],
+        "source_head": "def cutlass_pack_scale_fp8(scales: torch.Tensor) -> torch.Tensor:",
+        "vllm_api": "from vllm import _custom_ops; _custom_ops.cutlass_pack_scale_fp8(...)"
+      },
+      {
+        "name": "cutlass_scaled_fp4_mm",
+        "signature": "(a: torch.Tensor, b: torch.Tensor, block_scale_a: torch.Tensor, block_scale_b: torch.Tensor, alpha: torch.Tensor, out_dtype: torch.dtype) -> torch.Tensor",
+        "torch_ops_calls": [
+          {
+            "namespace": "_C",
+            "op": "cutlass_scaled_fp4_mm"
+          }
+        ],
+        "source_head": "def cutlass_scaled_fp4_mm(",
+        "vllm_api": "from vllm import _custom_ops; _custom_ops.cutlass_scaled_fp4_mm(...)"
+      },
+      {
+        "name": "cutlass_scaled_mm",
+        "signature": "(a: torch.Tensor, b: torch.Tensor, scale_a: torch.Tensor, scale_b: torch.Tensor, out_dtype: torch.dtype, bias: torch.Tensor | None = None) -> torch.Tensor",
+        "torch_ops_calls": [
+          {
+            "namespace": "_C",
+            "op": "cutlass_scaled_mm"
+          }
+        ],
+        "source_head": "def cutlass_scaled_mm(",
+        "vllm_api": "from vllm import _custom_ops; _custom_ops.cutlass_scaled_mm(...)"
+      },
+      {
+        "name": "cutlass_scaled_mm_azp",
+        "signature": "(a: torch.Tensor, b: torch.Tensor, scale_a: torch.Tensor, scale_b: torch.Tensor, out_dtype: torch.dtype, azp_adj: torch.Tensor, azp: torch.Tensor | None = None, bias: torch.Tensor | None = None) -> torch.Tensor",
+        "torch_ops_calls": [
+          {
+            "namespace": "_C",
+            "op": "cutlass_scaled_mm_azp"
+          }
+        ],
+        "source_head": "def cutlass_scaled_mm_azp(",
+        "vllm_api": "from vllm import _custom_ops; _custom_ops.cutlass_scaled_mm_azp(...)"
+      },
+      {
+        "name": "cutlass_scaled_mm_supports_block_fp8",
+        "signature": "(cuda_device_capability: int) -> bool",
+        "torch_ops_calls": [
+          {
+            "namespace": "_C",
+            "op": "cutlass_scaled_mm_supports_block_fp8"
+          }
+        ],
+        "source_head": "def cutlass_scaled_mm_supports_block_fp8(cuda_device_capability: int) -> bool:",
+        "vllm_api": "from vllm import _custom_ops; _custom_ops.cutlass_scaled_mm_supports_block_fp8(...)"
+      },
+      {
+        "name": "cutlass_scaled_mm_supports_fp4",
+        "signature": "(cuda_device_capability: int) -> bool",
+        "torch_ops_calls": [
+          {
+            "namespace": "_C",
+            "op": "cutlass_scaled_mm_supports_fp4"
+          }
+        ],
+        "source_head": "def cutlass_scaled_mm_supports_fp4(cuda_device_capability: int) -> bool:",
+        "vllm_api": "from vllm import _custom_ops; _custom_ops.cutlass_scaled_mm_supports_fp4(...)"
+      },
+      {
+        "name": "cutlass_scaled_mm_supports_fp8",
+        "signature": "(cuda_device_capability: int) -> bool",
+        "torch_ops_calls": [
+          {
+            "namespace": "_C",
+            "op": "cutlass_scaled_mm_supports_fp8"
+          }
+        ],
+        "source_head": "def cutlass_scaled_mm_supports_fp8(cuda_device_capability: int) -> bool:",
+        "vllm_api": "from vllm import _custom_ops; _custom_ops.cutlass_scaled_mm_supports_fp8(...)"
+      },
+      {
+        "name": "cutlass_scaled_sparse_mm",
+        "signature": "(a: torch.Tensor, bt_nzs: torch.Tensor, bt_meta: torch.Tensor, scale_a: torch.Tensor, scale_b: torch.Tensor, out_dtype: torch.dtype, bias: torch.Tensor | None = None) -> torch.Tensor",
+        "torch_ops_calls": [
+          {
+            "namespace": "_C",
+            "op": "cutlass_scaled_sparse_mm"
+          }
+        ],
+        "source_head": "def cutlass_scaled_sparse_mm(",
+        "vllm_api": "from vllm import _custom_ops; _custom_ops.cutlass_scaled_sparse_mm(...)"
+      },
+      {
+        "name": "cutlass_sparse_compress",
+        "signature": "(a: torch.Tensor) -> tuple",
+        "torch_ops_calls": [
+          {
+            "namespace": "_C",
+            "op": "cutlass_sparse_compress"
+          }
+        ],
+        "source_head": "def cutlass_sparse_compress(a: torch.Tensor) -> tuple[torch.Tensor, torch.Tensor]:",
+        "vllm_api": "from vllm import _custom_ops; _custom_ops.cutlass_sparse_compress(...)"
+      },
+      {
+        "name": "cutlass_sparse_scaled_mm_supported",
+        "signature": "(cuda_device_capability: int) -> bool",
+        "torch_ops_calls": [
+          {
+            "namespace": "_C",
+            "op": "cutlass_sparse_scaled_mm_supported"
+          }
+        ],
+        "source_head": "def cutlass_sparse_scaled_mm_supported(cuda_device_capability: int) -> bool:",
+        "vllm_api": "from vllm import _custom_ops; _custom_ops.cutlass_sparse_scaled_mm_supported(...)"
+      },
+      {
+        "name": "cutlass_w4a8_mm",
+        "signature": "(a: torch.Tensor, b_q: torch.Tensor, b_group_scales: torch.Tensor, b_group_size: int, b_channel_scales: torch.Tensor, a_token_scales: torch.Tensor, out_type: torch.dtype | None = None, maybe_schedule: str | None = None) -> torch.Tensor",
+        "torch_ops_calls": [
+          {
+            "namespace": "_C",
+            "op": "cutlass_w4a8_mm"
+          }
+        ],
+        "source_head": "def cutlass_w4a8_mm(",
+        "vllm_api": "from vllm import _custom_ops; _custom_ops.cutlass_w4a8_mm(...)"
+      },
+      {
+        "name": "cutlass_w4a8_moe_mm",
+        "signature": "(out_tensors: torch.Tensor, a_tensors: torch.Tensor, b_tensors: torch.Tensor, a_scales: torch.Tensor, b_scales: torch.Tensor, b_group_scales: torch.Tensor, b_group_size: int, expert_offsets: torch.Tensor, problem_sizes: torch.Tensor, a_strides: torch.Tensor, b_strides: torch.Tensor, c_strides: torch.Tensor, group_scale_strides: torch.Tensor, maybe_schedule: str | None = None)",
+        "torch_ops_calls": [
+          {
+            "namespace": "_C",
+            "op": "cutlass_w4a8_moe_mm"
+          }
+        ],
+        "source_head": "def cutlass_w4a8_moe_mm(",
+        "vllm_api": "from vllm import _custom_ops; _custom_ops.cutlass_w4a8_moe_mm(...)"
+      },
+      {
+        "name": "dispose",
+        "signature": "(fa: int) -> None",
+        "torch_ops_calls": [
+          {
+            "namespace": "_C_custom_ar",
+            "op": "dispose"
+          }
+        ],
+        "source_head": "def dispose(fa: int) -> None:",
+        "vllm_api": "from vllm import _custom_ops; _custom_ops.dispose(...)"
+      },
+      {
+        "name": "flash_mla_with_kvcache",
+        "signature": "(q: torch.Tensor, k_cache: torch.Tensor, block_table: torch.Tensor, cache_seqlens: torch.Tensor, head_dim_v: int, tile_scheduler_metadata: torch.Tensor, num_splits: torch.Tensor, softmax_scale: float | None = None, causal: bool = False) -> tuple",
+        "torch_ops_calls": [
+          {
+            "namespace": "_C",
+            "op": "flash_mla_fwd_kvcache"
+          }
+        ],
+        "source_head": "def flash_mla_with_kvcache(",
+        "vllm_api": "from vllm import _custom_ops; _custom_ops.flash_mla_with_kvcache(...)"
+      },
+      {
+        "name": "free_shared_buffer",
+        "signature": "(ptr: int) -> None",
+        "torch_ops_calls": [
+          {
+            "namespace": "_C_custom_ar",
+            "op": "free_shared_buffer"
+          }
+        ],
+        "source_head": "def free_shared_buffer(ptr: int) -> None:",
+        "vllm_api": "from vllm import _custom_ops; _custom_ops.free_shared_buffer(...)"
+      },
+      {
+        "name": "fusedQuantizeMx",
+        "signature": "(a: torch.Tensor, b: torch.Tensor, *, method: Literal['quest', 'abs_max'] = 'quest') -> tuple",
+        "torch_ops_calls": [
+          {
+            "namespace": "_qutlass_C",
+            "op": "fusedQuantizeMxAbsMax"
+          },
+          {
+            "namespace": "_qutlass_C",
+            "op": "fusedQuantizeMxQuest"
+          }
+        ],
+        "source_head": "def fusedQuantizeMx(",
+        "vllm_api": "from vllm import _custom_ops; _custom_ops.fusedQuantizeMx(...)"
+      },
+      {
+        "name": "fusedQuantizeNv",
+        "signature": "(a: torch.Tensor, b: torch.Tensor, global_scale: torch.Tensor) -> tuple",
+        "torch_ops_calls": [
+          {
+            "namespace": "_qutlass_C",
+            "op": "fusedQuantizeNv"
+          }
+        ],
+        "source_head": "def fusedQuantizeNv(",
+        "vllm_api": "from vllm import _custom_ops; _custom_ops.fusedQuantizeNv(...)"
+      },
+      {
+        "name": "fused_add_rms_norm",
+        "signature": "(input: torch.Tensor, residual: torch.Tensor, weight: torch.Tensor, epsilon: float) -> None",
+        "torch_ops_calls": [
+          {
+            "namespace": "_C",
+            "op": "fused_add_rms_norm"
+          }
+        ],
+        "source_head": "def fused_add_rms_norm(",
+        "vllm_api": "from vllm import _custom_ops; _custom_ops.fused_add_rms_norm(...)"
+      },
+      {
+        "name": "fused_qk_norm_rope",
+        "signature": "(qkv: torch.Tensor, num_heads_q: int, num_heads_k: int, num_heads_v: int, head_dim: int, eps: float, q_weight: torch.Tensor, k_weight: torch.Tensor, cos_sin_cache: torch.Tensor, is_neox: bool, position_ids: torch.Tensor) -> None",
+        "torch_ops_calls": [
+          {
+            "namespace": "_C",
+            "op": "fused_qk_norm_rope"
+          }
+        ],
+        "source_head": "def fused_qk_norm_rope(",
+        "vllm_api": "from vllm import _custom_ops; _custom_ops.fused_qk_norm_rope(...)"
+      },
+      {
+        "name": "gather_and_maybe_dequant_cache",
+        "signature": "(src_cache: torch.Tensor, dst: torch.Tensor, block_table: torch.Tensor, cu_seq_lens: torch.Tensor, token_to_seq: torch.Tensor, num_tokens: int, kv_cache_dtype: str, scale: torch.Tensor, seq_starts: torch.Tensor | None = None) -> None",
+        "torch_ops_calls": [
+          {
+            "namespace": "_C_cache_ops",
+            "op": "gather_and_maybe_dequant_cache"
+          }
+        ],
+        "source_head": "def gather_and_maybe_dequant_cache(",
+        "vllm_api": "from vllm import _custom_ops; _custom_ops.gather_and_maybe_dequant_cache(...)"
+      },
+      {
+        "name": "get_cutlass_moe_mm_data",
+        "signature": "(topk_ids: torch.Tensor, expert_offsets: torch.Tensor, problem_sizes1: torch.Tensor, problem_sizes2: torch.Tensor, input_permutation: torch.Tensor, output_permutation: torch.Tensor, num_experts: int, n: int, k: int, blockscale_offsets: torch.Tensor | None = None)",
+        "torch_ops_calls": [
+          {
+            "namespace": "_C",
+            "op": "get_cutlass_moe_mm_data"
+          }
+        ],
+        "source_head": "def get_cutlass_moe_mm_data(",
+        "vllm_api": "from vllm import _custom_ops; _custom_ops.get_cutlass_moe_mm_data(...)"
+      },
+      {
+        "name": "get_cutlass_moe_mm_problem_sizes_from_expert_offsets",
+        "signature": "(expert_first_token_offset: torch.Tensor, problem_sizes1: torch.Tensor, problem_sizes2: torch.Tensor, n: int, k: int, swap_ab: bool)",
+        "torch_ops_calls": [
+          {
+            "namespace": "_C",
+            "op": "get_cutlass_moe_mm_problem_sizes_from_expert_offsets"
+          }
+        ],
+        "source_head": "def get_cutlass_moe_mm_problem_sizes_from_expert_offsets(",
+        "vllm_api": "from vllm import _custom_ops; _custom_ops.get_cutlass_moe_mm_problem_sizes_from_expert_offsets(...)"
+      },
+      {
+        "name": "get_cutlass_pplx_moe_mm_data",
+        "signature": "(expert_offsets: torch.Tensor, problem_sizes1: torch.Tensor, problem_sizes2: torch.Tensor, expert_num_tokens: torch.Tensor, num_local_experts: int, padded_m: int, n: int, k: int)",
+        "torch_ops_calls": [
+          {
+            "namespace": "_C",
+            "op": "get_cutlass_pplx_moe_mm_data"
+          }
+        ],
+        "source_head": "def get_cutlass_pplx_moe_mm_data(",
+        "vllm_api": "from vllm import _custom_ops; _custom_ops.get_cutlass_pplx_moe_mm_data(...)"
+      },
+      {
+        "name": "get_device_attribute",
+        "signature": "(attribute: int, device: int) -> int",
+        "torch_ops_calls": [
+          {
+            "namespace": "_C_cuda_utils",
+            "op": "get_device_attribute"
+          }
+        ],
+        "source_head": "def get_device_attribute(attribute: int, device: int) -> int:",
+        "vllm_api": "from vllm import _custom_ops; _custom_ops.get_device_attribute(...)"
+      },
+      {
+        "name": "get_flash_mla_metadata",
+        "signature": "(cache_seqlens: torch.Tensor, num_heads_per_head_k: int, num_heads_k: int) -> tuple",
+        "torch_ops_calls": [
+          {
+            "namespace": "_C",
+            "op": "get_flash_mla_metadata"
+          }
+        ],
+        "source_head": "def get_flash_mla_metadata(",
+        "vllm_api": "from vllm import _custom_ops; _custom_ops.get_flash_mla_metadata(...)"
+      },
+      {
+        "name": "get_graph_buffer_ipc_meta",
+        "signature": "(fa: int) -> tuple",
+        "torch_ops_calls": [
+          {
+            "namespace": "_C_custom_ar",
+            "op": "get_graph_buffer_ipc_meta"
+          }
+        ],
+        "source_head": "def get_graph_buffer_ipc_meta(fa: int) -> tuple[list[int], list[int]]:",
+        "vllm_api": "from vllm import _custom_ops; _custom_ops.get_graph_buffer_ipc_meta(...)"
+      },
+      {
+        "name": "get_max_shared_memory_per_block_device_attribute",
+        "signature": "(device: int) -> int",
+        "torch_ops_calls": [
+          {
+            "namespace": "_C_cuda_utils",
+            "op": "get_max_shared_memory_per_block_device_attribute"
+          }
+        ],
+        "source_head": "def get_max_shared_memory_per_block_device_attribute(device: int) -> int:",
+        "vllm_api": "from vllm import _custom_ops; _custom_ops.get_max_shared_memory_per_block_device_attribute(...)"
+      },
+      {
+        "name": "ggml_dequantize",
+        "signature": "(W: torch.Tensor, quant_type: int, m: int, n: int, dtype: torch.dtype | None) -> torch.Tensor",
+        "torch_ops_calls": [
+          {
+            "namespace": "_C",
+            "op": "ggml_dequantize"
+          }
+        ],
+        "source_head": "def ggml_dequantize(",
+        "vllm_api": "from vllm import _custom_ops; _custom_ops.ggml_dequantize(...)"
+      },
+      {
+        "name": "ggml_moe_a8",
+        "signature": "(X: torch.Tensor, W: torch.Tensor, sorted_token_ids: torch.Tensor, expert_ids: torch.Tensor, num_tokens_post_padded: torch.Tensor, quant_type: int, row: int, top_k: int, tokens: int) -> torch.Tensor",
+        "torch_ops_calls": [
+          {
+            "namespace": "_C",
+            "op": "ggml_moe_a8"
+          }
+        ],
+        "source_head": "def ggml_moe_a8(",
+        "vllm_api": "from vllm import _custom_ops; _custom_ops.ggml_moe_a8(...)"
+      },
+      {
+        "name": "ggml_moe_a8_vec",
+        "signature": "(X: torch.Tensor, W: torch.Tensor, topk_ids: torch.Tensor, top_k: int, quant_type: int, row: torch.SymInt, tokens: torch.SymInt) -> torch.Tensor",
+        "torch_ops_calls": [
+          {
+            "namespace": "_C",
+            "op": "ggml_moe_a8_vec"
+          }
+        ],
+        "source_head": "def ggml_moe_a8_vec(",
+        "vllm_api": "from vllm import _custom_ops; _custom_ops.ggml_moe_a8_vec(...)"
+      },
+      {
+        "name": "ggml_moe_get_block_size",
+        "signature": "(quant_type: int) -> int",
+        "torch_ops_calls": [
+          {
+            "namespace": "_C",
+            "op": "ggml_moe_get_block_size"
+          }
+        ],
+        "source_head": "def ggml_moe_get_block_size(quant_type: int) -> int:",
+        "vllm_api": "from vllm import _custom_ops; _custom_ops.ggml_moe_get_block_size(...)"
+      },
+      {
+        "name": "ggml_mul_mat_a8",
+        "signature": "(W: torch.Tensor, X: torch.Tensor, quant_type: int, row: int) -> torch.Tensor",
+        "torch_ops_calls": [
+          {
+            "namespace": "_C",
+            "op": "ggml_mul_mat_a8"
+          }
+        ],
+        "source_head": "def ggml_mul_mat_a8(",
+        "vllm_api": "from vllm import _custom_ops; _custom_ops.ggml_mul_mat_a8(...)"
+      },
+      {
+        "name": "ggml_mul_mat_vec_a8",
+        "signature": "(W: torch.Tensor, X: torch.Tensor, quant_type: int, row: int) -> torch.Tensor",
+        "torch_ops_calls": [
+          {
+            "namespace": "_C",
+            "op": "ggml_mul_mat_vec_a8"
+          }
+        ],
+        "source_head": "def ggml_mul_mat_vec_a8(",
+        "vllm_api": "from vllm import _custom_ops; _custom_ops.ggml_mul_mat_vec_a8(...)"
+      },
+      {
+        "name": "gptq_gemm",
+        "signature": "(a: torch.Tensor, b_q_weight: torch.Tensor, b_gptq_qzeros: torch.Tensor, b_gptq_scales: torch.Tensor, b_g_idx: torch.Tensor, use_exllama: bool, use_v2_format: bool, bit: int) -> torch.Tensor",
+        "torch_ops_calls": [
+          {
+            "namespace": "_C",
+            "op": "gptq_gemm"
+          }
+        ],
+        "source_head": "def gptq_gemm(",
+        "vllm_api": "from vllm import _custom_ops; _custom_ops.gptq_gemm(...)"
+      },
+      {
+        "name": "gptq_marlin_24_gemm",
+        "signature": "(a: torch.Tensor, b_q_weight: torch.Tensor, b_meta: torch.Tensor, b_scales: torch.Tensor, workspace: torch.Tensor, b_q_type: vllm.scalar_type.ScalarType, size_m: int, size_n: int, size_k: int) -> torch.Tensor",
+        "torch_ops_calls": [
+          {
+            "namespace": "_C",
+            "op": "gptq_marlin_24_gemm"
+          }
+        ],
+        "source_head": "def gptq_marlin_24_gemm(",
+        "vllm_api": "from vllm import _custom_ops; _custom_ops.gptq_marlin_24_gemm(...)"
+      },
+      {
+        "name": "gptq_marlin_moe_repack",
+        "signature": "(b_q_weight: torch.Tensor, perm: torch.Tensor, size_k: int, size_n: int, num_bits: int, is_a_8bit: bool = False) -> torch.Tensor",
+        "torch_ops_calls": [
+          {
+            "namespace": "_C",
+            "op": "gptq_marlin_repack"
+          }
+        ],
+        "source_head": "def gptq_marlin_moe_repack(",
+        "vllm_api": "from vllm import _custom_ops; _custom_ops.gptq_marlin_moe_repack(...)"
+      },
+      {
+        "name": "gptq_marlin_repack",
+        "signature": "(b_q_weight: torch.Tensor, perm: torch.Tensor, size_k: int, size_n: int, num_bits: int, is_a_8bit: bool = False) -> torch.Tensor",
+        "torch_ops_calls": [
+          {
+            "namespace": "_C",
+            "op": "gptq_marlin_repack"
+          }
+        ],
+        "source_head": "def gptq_marlin_repack(",
+        "vllm_api": "from vllm import _custom_ops; _custom_ops.gptq_marlin_repack(...)"
+      },
+      {
+        "name": "gptq_shuffle",
+        "signature": "(q_weight: torch.Tensor, q_perm: torch.Tensor, bit: int) -> None",
+        "torch_ops_calls": [
+          {
+            "namespace": "_C",
+            "op": "gptq_shuffle"
+          }
+        ],
+        "source_head": "def gptq_shuffle(q_weight: torch.Tensor, q_perm: torch.Tensor, bit: int) -> None:",
+        "vllm_api": "from vllm import _custom_ops; _custom_ops.gptq_shuffle(...)"
+      },
+      {
+        "name": "grouped_topk",
+        "signature": "(scores: torch.Tensor, num_expert_group: int, topk_group: int, topk: int, renormalize: bool, routed_scaling_factor: float, bias: torch.Tensor, scoring_func: int = 0)",
+        "torch_ops_calls": [
+          {
+            "namespace": "_moe_C",
+            "op": "grouped_topk"
+          }
+        ],
+        "source_head": "def grouped_topk(",
+        "vllm_api": "from vllm import _custom_ops; _custom_ops.grouped_topk(...)"
+      },
+      {
+        "name": "hadacore_transform",
+        "signature": "(x: torch.Tensor, inplace: bool = True) -> torch.Tensor",
+        "torch_ops_calls": [
+          {
+            "namespace": "_C",
+            "op": "hadacore_transform"
+          }
+        ],
+        "source_head": "def hadacore_transform(x: torch.Tensor, inplace: bool = True) -> torch.Tensor:",
+        "vllm_api": "from vllm import _custom_ops; _custom_ops.hadacore_transform(...)"
+      },
+      {
+        "name": "indexer_k_quant_and_cache",
+        "signature": "(k: torch.Tensor, kv_cache: torch.Tensor, slot_mapping: torch.Tensor, quant_block_size: int, kv_cache_dtype: str) -> None",
+        "torch_ops_calls": [
+          {
+            "namespace": "_C_cache_ops",
+            "op": "indexer_k_quant_and_cache"
+          }
+        ],
+        "source_head": "def indexer_k_quant_and_cache(",
+        "vllm_api": "from vllm import _custom_ops; _custom_ops.indexer_k_quant_and_cache(...)"
+      },
+      {
+        "name": "init_custom_ar",
+        "signature": "(ipc_tensors: list, rank_data: torch.Tensor, rank: int, fully_connected: bool) -> int",
+        "torch_ops_calls": [
+          {
+            "namespace": "_C_custom_ar",
+            "op": "init_custom_ar"
+          }
+        ],
+        "source_head": "def init_custom_ar(",
+        "vllm_api": "from vllm import _custom_ops; _custom_ops.init_custom_ar(...)"
+      },
+      {
+        "name": "init_custom_qr",
+        "signature": "(rank: int, world_size: int, qr_max_size: int | None = None) -> int",
+        "torch_ops_calls": [
+          {
+            "namespace": "_C_custom_ar",
+            "op": "init_custom_qr"
+          }
+        ],
+        "source_head": "def init_custom_qr(rank: int, world_size: int, qr_max_size: int | None = None) -> int:",
+        "vllm_api": "from vllm import _custom_ops; _custom_ops.init_custom_qr(...)"
+      },
+      {
+        "name": "is_onednn_acl_supported",
+        "signature": "()",
+        "torch_ops_calls": [
+          {
+            "namespace": "_C",
+            "op": "is_onednn_acl_supported"
+          }
+        ],
+        "source_head": "def is_onednn_acl_supported():",
+        "vllm_api": "from vllm import _custom_ops; _custom_ops.is_onednn_acl_supported(...)"
+      },
+      {
+        "name": "machete_mm",
+        "signature": "(a: torch.Tensor, b_q: torch.Tensor, b_type: vllm.scalar_type.ScalarType, out_type: torch.dtype | None = None, b_group_scales: torch.Tensor | None = None, b_group_zeros: torch.Tensor | None = None, b_group_size: int | None = None, b_channel_scales: torch.Tensor | None = None, a_token_scales: torch.Tensor | None = None, schedule: str | None = None) -> torch.Tensor",
+        "torch_ops_calls": [
+          {
+            "namespace": "_C",
+            "op": "machete_mm"
+          }
+        ],
+        "source_head": "def machete_mm(",
+        "vllm_api": "from vllm import _custom_ops; _custom_ops.machete_mm(...)"
+      },
+      {
+        "name": "machete_prepack_B",
+        "signature": "(b_q_weight: torch.Tensor, a_type: torch.dtype, b_type: vllm.scalar_type.ScalarType, group_scales_type: torch.dtype | None) -> torch.Tensor",
+        "torch_ops_calls": [
+          {
+            "namespace": "_C",
+            "op": "machete_prepack_B"
+          }
+        ],
+        "source_head": "def machete_prepack_B(",
+        "vllm_api": "from vllm import _custom_ops; _custom_ops.machete_prepack_B(...)"
+      },
+      {
+        "name": "machete_supported_schedules",
+        "signature": "(a_type: torch.dtype, b_type: vllm.scalar_type.ScalarType, group_scales_type: torch.dtype | None, group_zeros_type: torch.dtype | None = None, channel_scales_type: torch.dtype | None = None, token_scales_type: torch.dtype | None = None, out_type: torch.dtype | None = None) -> list",
+        "torch_ops_calls": [
+          {
+            "namespace": "_C",
+            "op": "machete_supported_schedules"
+          }
+        ],
+        "source_head": "def machete_supported_schedules(",
+        "vllm_api": "from vllm import _custom_ops; _custom_ops.machete_supported_schedules(...)"
+      },
+      {
+        "name": "marlin_gemm",
+        "signature": "(a: torch.Tensor, c: torch.Tensor | None, b_q_weight: torch.Tensor, b_bias: torch.Tensor | None, b_scales: torch.Tensor, a_scales: torch.Tensor | None, global_scale: torch.Tensor | None, b_zeros: torch.Tensor | None, g_idx: torch.Tensor | None, perm: torch.Tensor | None, workspace: torch.Tensor, b_q_type: vllm.scalar_type.ScalarType, size_m: int, size_n: int, size_k: int, is_k_full: bool = True, use_atomic_add: bool = False, use_fp32_reduce: bool = False, is_zp_float: bool = False) -> torch.Tensor",
+        "torch_ops_calls": [
+          {
+            "namespace": "_C",
+            "op": "marlin_gemm"
+          }
+        ],
+        "source_head": "def marlin_gemm(",
+        "vllm_api": "from vllm import _custom_ops; _custom_ops.marlin_gemm(...)"
+      },
+      {
+        "name": "marlin_int4_fp8_preprocess",
+        "signature": "(qweight: torch.Tensor, qzeros_or_none: torch.Tensor | None = None, inplace: bool = False)",
+        "torch_ops_calls": [
+          {
+            "namespace": "_C",
+            "op": "marlin_int4_fp8_preprocess"
+          }
+        ],
+        "source_head": "def marlin_int4_fp8_preprocess(",
+        "vllm_api": "from vllm import _custom_ops; _custom_ops.marlin_int4_fp8_preprocess(...)"
+      },
+      {
+        "name": "matmul_ada_mxf4_bf16_tn",
+        "signature": "(a: torch.Tensor, b: torch.Tensor, a_sf: torch.Tensor, b_sf: torch.Tensor, alpha: torch.Tensor) -> torch.Tensor",
+        "torch_ops_calls": [
+          {
+            "namespace": "_qutlass_C",
+            "op": "matmul_ada_mxf4_bf16_tn"
+          }
+        ],
+        "source_head": "def matmul_ada_mxf4_bf16_tn(",
+        "vllm_api": "from vllm import _custom_ops; _custom_ops.matmul_ada_mxf4_bf16_tn(...)"
+      },
+      {
+        "name": "matmul_mxf4_bf16_tn",
+        "signature": "(a: torch.Tensor, b: torch.Tensor, a_sf: torch.Tensor, b_sf: torch.Tensor, alpha: torch.Tensor) -> torch.Tensor",
+        "torch_ops_calls": [
+          {
+            "namespace": "_qutlass_C",
+            "op": "matmul_mxf4_bf16_tn"
+          }
+        ],
+        "source_head": "def matmul_mxf4_bf16_tn(",
+        "vllm_api": "from vllm import _custom_ops; _custom_ops.matmul_mxf4_bf16_tn(...)"
+      },
+      {
+        "name": "merge_attn_states",
+        "signature": "(output: torch.Tensor, prefix_output: torch.Tensor, prefix_lse: torch.Tensor, suffix_output: torch.Tensor, suffix_lse: torch.Tensor, output_lse: torch.Tensor | None = None) -> None",
+        "torch_ops_calls": [
+          {
+            "namespace": "_C",
+            "op": "merge_attn_states"
+          }
+        ],
+        "source_head": "def merge_attn_states(",
+        "vllm_api": "from vllm import _custom_ops; _custom_ops.merge_attn_states(...)"
+      },
+      {
+        "name": "meta_size",
+        "signature": "() -> int",
+        "torch_ops_calls": [
+          {
+            "namespace": "_C_custom_ar",
+            "op": "meta_size"
+          }
+        ],
+        "source_head": "def meta_size() -> int:",
+        "vllm_api": "from vllm import _custom_ops; _custom_ops.meta_size(...)"
+      },
+      {
+        "name": "mla_decode_kvcache_cpu",
+        "signature": "(out: torch.Tensor, query: torch.Tensor, kv_cache: torch.Tensor, scale: float, block_tables: torch.Tensor, seq_lens: torch.Tensor) -> None",
+        "torch_ops_calls": [
+          {
+            "namespace": "_C_cpu",
+            "op": "mla_decode_kvcache"
+          }
+        ],
+        "source_head": "def mla_decode_kvcache_cpu(",
+        "vllm_api": "from vllm import _custom_ops; _custom_ops.mla_decode_kvcache_cpu(...)"
+      },
+      {
+        "name": "moe_align_block_size",
+        "signature": "(topk_ids: torch.Tensor, num_experts: int, block_size: int, sorted_token_ids: torch.Tensor, experts_ids: torch.Tensor, num_tokens_post_pad: torch.Tensor, expert_map: torch.Tensor | None = None) -> None",
+        "torch_ops_calls": [
+          {
+            "namespace": "_moe_C",
+            "op": "moe_align_block_size"
+          }
+        ],
+        "source_head": "def moe_align_block_size(",
+        "vllm_api": "from vllm import _custom_ops; _custom_ops.moe_align_block_size(...)"
+      },
+      {
+        "name": "moe_lora_align_block_size",
+        "signature": "(topk_ids: torch.Tensor, token_lora_mapping: torch.Tensor, num_experts: int, block_size: int, max_loras: int, max_num_tokens_padded: int, max_num_m_blocks: int, sorted_token_ids: torch.Tensor, experts_ids: torch.Tensor, num_tokens_post_pad: torch.Tensor, adapter_enabled: torch.Tensor, lora_ids: torch.Tensor, expert_map: torch.Tensor | None = None) -> None",
+        "torch_ops_calls": [
+          {
+            "namespace": "_moe_C",
+            "op": "moe_lora_align_block_size"
+          }
+        ],
+        "source_head": "def moe_lora_align_block_size(",
+        "vllm_api": "from vllm import _custom_ops; _custom_ops.moe_lora_align_block_size(...)"
+      },
+      {
+        "name": "moe_sum",
+        "signature": "(input: torch.Tensor, output: torch.Tensor)",
+        "torch_ops_calls": [
+          {
+            "namespace": "_moe_C",
+            "op": "moe_sum"
+          }
+        ],
+        "source_head": "def moe_sum(input: torch.Tensor, output: torch.Tensor):",
+        "vllm_api": "from vllm import _custom_ops; _custom_ops.moe_sum(...)"
+      },
+      {
+        "name": "moe_wna16_gemm",
+        "signature": "(input: torch.Tensor, output: torch.Tensor, b_qweight: torch.Tensor, b_scales: torch.Tensor, b_qzeros: torch.Tensor | None, topk_weights: torch.Tensor | None, sorted_token_ids: torch.Tensor, experts_ids: torch.Tensor, num_tokens_post_pad: torch.Tensor, top_k: int, BLOCK_SIZE_M: int, BLOCK_SIZE_N: int, BLOCK_SIZE_K: int, bit: int) -> torch.Tensor",
+        "torch_ops_calls": [
+          {
+            "namespace": "_moe_C",
+            "op": "moe_wna16_gemm"
+          }
+        ],
+        "source_head": "def moe_wna16_gemm(",
+        "vllm_api": "from vllm import _custom_ops; _custom_ops.moe_wna16_gemm(...)"
+      },
+      {
+        "name": "moe_wna16_marlin_gemm",
+        "signature": "(input: torch.Tensor, output: torch.Tensor | None, b_qweight: torch.Tensor, b_bias: torch.Tensor | None, b_scales: torch.Tensor, a_scales: torch.Tensor | None, global_scale: torch.Tensor | None, b_qzeros: torch.Tensor | None, g_idx: torch.Tensor | None, perm: torch.Tensor | None, workspace: torch.Tensor, sorted_token_ids: torch.Tensor, expert_ids: torch.Tensor, num_tokens_past_padded: torch.Tensor, topk_weights: torch.Tensor, moe_block_size: int, top_k: int, mul_topk_weights: bool, b_q_type: vllm.scalar_type.ScalarType, size_m: int, size_n: int, size_k: int, is_k_full: bool, use_atomic_add: bool, use_fp32_reduce: bool, is_zp_float: bool, thread_k: int = -1, thread_n: int = -1, blocks_per_sm: int = -1) -> torch.Tensor",
+        "torch_ops_calls": [
+          {
+            "namespace": "_moe_C",
+            "op": "moe_wna16_marlin_gemm"
+          }
+        ],
+        "source_head": "def moe_wna16_marlin_gemm(",
+        "vllm_api": "from vllm import _custom_ops; _custom_ops.moe_wna16_marlin_gemm(...)"
+      },
+      {
+        "name": "onednn_mm",
+        "signature": "(dnnl_handler: vllm._custom_ops.CPUDNNLGEMMHandler, x: torch.Tensor, bias: torch.Tensor | None) -> torch.Tensor",
+        "torch_ops_calls": [
+          {
+            "namespace": "_C",
+            "op": "onednn_mm"
+          }
+        ],
+        "source_head": "def onednn_mm(",
+        "vllm_api": "from vllm import _custom_ops; _custom_ops.onednn_mm(...)"
+      },
+      {
+        "name": "onednn_scaled_int8_quant",
+        "signature": "(input: torch.Tensor, scale: torch.Tensor | None = None, azp: torch.Tensor | None = None, symmetric: bool = True)",
+        "torch_ops_calls": [
+          {
+            "namespace": "_C",
+            "op": "dynamic_scaled_int8_quant"
+          },
+          {
+            "namespace": "_C",
+            "op": "static_scaled_int8_quant"
+          }
+        ],
+        "source_head": "def onednn_scaled_int8_quant(",
+        "vllm_api": "from vllm import _custom_ops; _custom_ops.onednn_scaled_int8_quant(...)"
+      },
+      {
+        "name": "onednn_scaled_mm",
+        "signature": "(dnnl_handler: vllm._custom_ops.CPUDNNLGEMMHandler, x: torch.Tensor, output: torch.Tensor, input_scale: torch.Tensor | None, input_zp: torch.Tensor | None, input_zp_adj: torch.Tensor | None, bias: torch.Tensor | None) -> torch.Tensor",
+        "torch_ops_calls": [
+          {
+            "namespace": "_C",
+            "op": "onednn_scaled_mm"
+          }
+        ],
+        "source_head": "def onednn_scaled_mm(",
+        "vllm_api": "from vllm import _custom_ops; _custom_ops.onednn_scaled_mm(...)"
+      },
+      {
+        "name": "open_mem_handle",
+        "signature": "(mem_handle: torch.Tensor)",
+        "torch_ops_calls": [
+          {
+            "namespace": "_C_custom_ar",
+            "op": "open_mem_handle"
+          }
+        ],
+        "source_head": "def open_mem_handle(mem_handle: torch.Tensor):",
+        "vllm_api": "from vllm import _custom_ops; _custom_ops.open_mem_handle(...)"
+      },
+      {
+        "name": "paged_attention_rocm",
+        "signature": "(out: torch.Tensor, exp_sum: torch.Tensor, max_logits: torch.Tensor, tmp_out: torch.Tensor, query: torch.Tensor, key_cache: torch.Tensor, value_cache: torch.Tensor, num_kv_heads: int, scale: float, block_tables: torch.Tensor, seq_lens: torch.Tensor, query_start_loc: torch.Tensor | None, block_size: int, max_seq_len: int, alibi_slopes: torch.Tensor | None, kv_cache_dtype: str, k_scale: torch.Tensor, v_scale: torch.Tensor, fp8_out_scale: torch.Tensor | None = None, mfma_type: str = 'f16') -> None",
+        "torch_ops_calls": [
+          {
+            "namespace": "_rocm_C",
+            "op": "paged_attention"
+          }
+        ],
+        "source_head": "def paged_attention_rocm(",
+        "vllm_api": "from vllm import _custom_ops; _custom_ops.paged_attention_rocm(...)"
+      },
+      {
+        "name": "paged_attention_v1",
+        "signature": "(out: torch.Tensor, query: torch.Tensor, key_cache: torch.Tensor, value_cache: torch.Tensor, num_kv_heads: int, scale: float, block_tables: torch.Tensor, seq_lens: torch.Tensor, block_size: int, max_seq_len: int, alibi_slopes: torch.Tensor | None, kv_cache_dtype: str, k_scale: torch.Tensor, v_scale: torch.Tensor, tp_rank: int = 0, blocksparse_local_blocks: int = 0, blocksparse_vert_stride: int = 0, blocksparse_block_size: int = 64, blocksparse_head_sliding_step: int = 0) -> None",
+        "torch_ops_calls": [
+          {
+            "namespace": "_C",
+            "op": "paged_attention_v1"
+          }
+        ],
+        "source_head": "def paged_attention_v1(",
+        "vllm_api": "from vllm import _custom_ops; _custom_ops.paged_attention_v1(...)"
+      },
+      {
+        "name": "paged_attention_v2",
+        "signature": "(out: torch.Tensor, exp_sum: torch.Tensor, max_logits: torch.Tensor, tmp_out: torch.Tensor, query: torch.Tensor, key_cache: torch.Tensor, value_cache: torch.Tensor, num_kv_heads: int, scale: float, block_tables: torch.Tensor, seq_lens: torch.Tensor, block_size: int, max_seq_len: int, alibi_slopes: torch.Tensor | None, kv_cache_dtype: str, k_scale: torch.Tensor, v_scale: torch.Tensor, tp_rank: int = 0, blocksparse_local_blocks: int = 0, blocksparse_vert_stride: int = 0, blocksparse_block_size: int = 64, blocksparse_head_sliding_step: int = 0) -> None",
+        "torch_ops_calls": [
+          {
+            "namespace": "_C",
+            "op": "paged_attention_v2"
+          }
+        ],
+        "source_head": "def paged_attention_v2(",
+        "vllm_api": "from vllm import _custom_ops; _custom_ops.paged_attention_v2(...)"
+      },
+      {
+        "name": "permute_cols",
+        "signature": "(a: torch.Tensor, perm: torch.Tensor) -> torch.Tensor",
+        "torch_ops_calls": [
+          {
+            "namespace": "_C",
+            "op": "permute_cols"
+          }
+        ],
+        "source_head": "def permute_cols(a: torch.Tensor, perm: torch.Tensor) -> torch.Tensor:",
+        "vllm_api": "from vllm import _custom_ops; _custom_ops.permute_cols(...)"
+      },
+      {
+        "name": "qr_all_reduce",
+        "signature": "(fa: int, inp: torch.Tensor, out: torch.Tensor, quant_level: int, cast_bf2half: bool = False) -> None",
+        "torch_ops_calls": [
+          {
+            "namespace": "_C_custom_ar",
+            "op": "qr_all_reduce"
+          }
+        ],
+        "source_head": "def qr_all_reduce(",
+        "vllm_api": "from vllm import _custom_ops; _custom_ops.qr_all_reduce(...)"
+      },
+      {
+        "name": "qr_destroy",
+        "signature": "(fa: int) -> None",
+        "torch_ops_calls": [
+          {
+            "namespace": "_C_custom_ar",
+            "op": "qr_destroy"
+          }
+        ],
+        "source_head": "def qr_destroy(fa: int) -> None:",
+        "vllm_api": "from vllm import _custom_ops; _custom_ops.qr_destroy(...)"
+      },
+      {
+        "name": "qr_get_handle",
+        "signature": "(fa: int) -> torch.Tensor",
+        "torch_ops_calls": [
+          {
+            "namespace": "_C_custom_ar",
+            "op": "qr_get_handle"
+          }
+        ],
+        "source_head": "def qr_get_handle(fa: int) -> torch.Tensor:",
+        "vllm_api": "from vllm import _custom_ops; _custom_ops.qr_get_handle(...)"
+      },
+      {
+        "name": "qr_max_size",
+        "signature": "() -> int",
+        "torch_ops_calls": [
+          {
+            "namespace": "_C_custom_ar",
+            "op": "qr_max_size"
+          }
+        ],
+        "source_head": "def qr_max_size() -> int:",
+        "vllm_api": "from vllm import _custom_ops; _custom_ops.qr_max_size(...)"
+      },
+      {
+        "name": "qr_open_handles",
+        "signature": "(fa: int, handles: list) -> None",
+        "torch_ops_calls": [
+          {
+            "namespace": "_C_custom_ar",
+            "op": "qr_open_handles"
+          }
+        ],
+        "source_head": "def qr_open_handles(fa: int, handles: list[torch.Tensor]) -> None:",
+        "vllm_api": "from vllm import _custom_ops; _custom_ops.qr_open_handles(...)"
+      },
+      {
+        "name": "register_buffer",
+        "signature": "(fa: int, ipc_tensors: list) -> None",
+        "torch_ops_calls": [
+          {
+            "namespace": "_C_custom_ar",
+            "op": "register_buffer"
+          }
+        ],
+        "source_head": "def register_buffer(fa: int, ipc_tensors: list[int]) -> None:",
+        "vllm_api": "from vllm import _custom_ops; _custom_ops.register_buffer(...)"
+      },
+      {
+        "name": "register_graph_buffers",
+        "signature": "(fa: int, handles: list, offsets: list) -> None",
+        "torch_ops_calls": [
+          {
+            "namespace": "_C_custom_ar",
+            "op": "register_graph_buffers"
+          }
+        ],
+        "source_head": "def register_graph_buffers(",
+        "vllm_api": "from vllm import _custom_ops; _custom_ops.register_graph_buffers(...)"
+      },
+      {
+        "name": "reshape_and_cache",
+        "signature": "(key: torch.Tensor, value: torch.Tensor, key_cache: torch.Tensor, value_cache: torch.Tensor, slot_mapping: torch.Tensor, kv_cache_dtype: str, k_scale: torch.Tensor, v_scale: torch.Tensor) -> None",
+        "torch_ops_calls": [
+          {
+            "namespace": "_C_cache_ops",
+            "op": "reshape_and_cache"
+          }
+        ],
+        "source_head": "def reshape_and_cache(",
+        "vllm_api": "from vllm import _custom_ops; _custom_ops.reshape_and_cache(...)"
+      },
+      {
+        "name": "reshape_and_cache_flash",
+        "signature": "(key: torch.Tensor, value: torch.Tensor, key_cache: torch.Tensor, value_cache: torch.Tensor, slot_mapping: torch.Tensor, kv_cache_dtype: str, k_scale: torch.Tensor, v_scale: torch.Tensor) -> None",
+        "torch_ops_calls": [
+          {
+            "namespace": "_C_cache_ops",
+            "op": "reshape_and_cache_flash"
+          }
+        ],
+        "source_head": "def reshape_and_cache_flash(",
+        "vllm_api": "from vllm import _custom_ops; _custom_ops.reshape_and_cache_flash(...)"
+      },
+      {
+        "name": "rms_norm",
+        "signature": "(out: torch.Tensor, input: torch.Tensor, weight: torch.Tensor, epsilon: float) -> None",
+        "torch_ops_calls": [
+          {
+            "namespace": "_C",
+            "op": "rms_norm"
+          }
+        ],
+        "source_head": "def rms_norm(",
+        "vllm_api": "from vllm import _custom_ops; _custom_ops.rms_norm(...)"
+      },
+      {
+        "name": "rms_norm_dynamic_per_token_quant",
+        "signature": "(input: torch.Tensor, weight: torch.Tensor, epsilon: float, quant_dtype: torch.dtype, scale_ub: torch.Tensor | None = None, residual: torch.Tensor | None = None) -> tuple",
+        "torch_ops_calls": [
+          {
+            "namespace": "_C",
+            "op": "rms_norm_dynamic_per_token_quant"
+          }
+        ],
+        "source_head": "def rms_norm_dynamic_per_token_quant(",
+        "vllm_api": "from vllm import _custom_ops; _custom_ops.rms_norm_dynamic_per_token_quant(...)"
+      },
+      {
+        "name": "rms_norm_per_block_quant",
+        "signature": "(input: torch.Tensor, weight: torch.Tensor, epsilon: float, quant_dtype: torch.dtype, group_size: list, scale_ub: torch.Tensor | None = None, residual: torch.Tensor | None = None, is_scale_transposed: bool = False) -> tuple",
+        "torch_ops_calls": [
+          {
+            "namespace": "_C",
+            "op": "rms_norm_per_block_quant"
+          }
+        ],
+        "source_head": "def rms_norm_per_block_quant(",
+        "vllm_api": "from vllm import _custom_ops; _custom_ops.rms_norm_per_block_quant(...)"
+      },
+      {
+        "name": "rotary_embedding",
+        "signature": "(positions: torch.Tensor, query: torch.Tensor, key: torch.Tensor | None, head_size: int, cos_sin_cache: torch.Tensor, is_neox: bool) -> None",
+        "torch_ops_calls": [
+          {
+            "namespace": "_C",
+            "op": "rotary_embedding"
+          }
+        ],
+        "source_head": "def rotary_embedding(",
+        "vllm_api": "from vllm import _custom_ops; _custom_ops.rotary_embedding(...)"
+      },
+      {
+        "name": "scaled_fp4_experts_quant",
+        "signature": "(input_tensor: torch.Tensor, input_global_scale: torch.Tensor, expert_offsets: torch.Tensor, blockscale_offsets: torch.Tensor, topk: int) -> tuple",
+        "torch_ops_calls": [
+          {
+            "namespace": "_C",
+            "op": "scaled_fp4_experts_quant"
+          }
+        ],
+        "source_head": "def scaled_fp4_experts_quant(",
+        "vllm_api": "from vllm import _custom_ops; _custom_ops.scaled_fp4_experts_quant(...)"
+      },
+      {
+        "name": "scaled_fp4_quant",
+        "signature": "(input: torch.Tensor, input_global_scale: torch.Tensor, is_sf_swizzled_layout: bool = True, backend: str = 'none') -> tuple",
+        "torch_ops_calls": [
+          {
+            "namespace": "_C",
+            "op": "scaled_fp4_quant"
+          }
+        ],
+        "source_head": "def scaled_fp4_quant(",
+        "vllm_api": "from vllm import _custom_ops; _custom_ops.scaled_fp4_quant(...)"
+      },
+      {
+        "name": "scaled_fp8_quant",
+        "signature": "(input: torch.Tensor, scale: torch.Tensor | None = None, num_token_padding: int | None = None, scale_ub: torch.Tensor | None = None, use_per_token_if_dynamic: bool = False, output: torch.Tensor | None = None, group_shape: tuple[int, int] | None = None) -> tuple",
+        "torch_ops_calls": [
+          {
+            "namespace": "_C",
+            "op": "dynamic_per_token_scaled_fp8_quant"
+          },
+          {
+            "namespace": "_C",
+            "op": "dynamic_scaled_fp8_quant"
+          },
+          {
+            "namespace": "_C",
+            "op": "static_scaled_fp8_quant"
+          }
+        ],
+        "source_head": "def scaled_fp8_quant(",
+        "vllm_api": "from vllm import _custom_ops; _custom_ops.scaled_fp8_quant(...)"
+      },
+      {
+        "name": "scaled_int8_quant",
+        "signature": "(input: torch.Tensor, scale: torch.Tensor | None = None, azp: torch.Tensor | None = None, symmetric: bool = True) -> tuple",
+        "torch_ops_calls": [
+          {
+            "namespace": "_C",
+            "op": "dynamic_scaled_int8_quant"
+          },
+          {
+            "namespace": "_C",
+            "op": "static_scaled_int8_quant"
+          }
+        ],
+        "source_head": "def scaled_int8_quant(",
+        "vllm_api": "from vllm import _custom_ops; _custom_ops.scaled_int8_quant(...)"
+      },
+      {
+        "name": "selective_scan_fwd",
+        "signature": "(u: torch.Tensor, delta: torch.Tensor, A: torch.Tensor, B: torch.Tensor, C: torch.Tensor, D_: torch.Tensor | None, z_: torch.Tensor | None, delta_bias_: torch.Tensor | None, delta_softplus: bool, query_start_loc: torch.Tensor | None, cache_indices: torch.Tensor | None, has_initial_state: torch.Tensor | None, ssm_states: torch.Tensor, pad_slot_id: int, block_size: int = 1024, block_idx_first_scheduled_token: torch.Tensor | None = None, block_idx_last_scheduled_token: torch.Tensor | None = None, initial_state_idx: torch.Tensor | None = None)",
+        "torch_ops_calls": [
+          {
+            "namespace": "_C",
+            "op": "selective_scan_fwd"
+          }
+        ],
+        "source_head": "def selective_scan_fwd(",
+        "vllm_api": "from vllm import _custom_ops; _custom_ops.selective_scan_fwd(...)"
+      },
+      {
+        "name": "shuffle_rows",
+        "signature": "(input_tensor: torch.Tensor, dst2src_map: torch.Tensor)",
+        "torch_ops_calls": [
+          {
+            "namespace": "_moe_C",
+            "op": "shuffle_rows"
+          }
+        ],
+        "source_head": "def shuffle_rows(input_tensor: torch.Tensor, dst2src_map: torch.Tensor):",
+        "vllm_api": "from vllm import _custom_ops; _custom_ops.shuffle_rows(...)"
+      },
+      {
+        "name": "silu_and_mul_scaled_fp4_experts_quant",
+        "signature": "(input_tensor: torch.Tensor, input_global_scale: torch.Tensor, expert_offsets: torch.Tensor, blockscale_offsets: torch.Tensor, topk: int) -> tuple",
+        "torch_ops_calls": [
+          {
+            "namespace": "_C",
+            "op": "silu_and_mul_scaled_fp4_experts_quant"
+          }
+        ],
+        "source_head": "def silu_and_mul_scaled_fp4_experts_quant(",
+        "vllm_api": "from vllm import _custom_ops; _custom_ops.silu_and_mul_scaled_fp4_experts_quant(...)"
+      },
+      {
+        "name": "sm100_cutlass_mla_decode",
+        "signature": "(out: torch.Tensor, lse: torch.Tensor, q_nope: torch.Tensor, q_pe: torch.Tensor, kv_c_and_k_pe_cache: torch.Tensor, seq_lens: torch.Tensor, page_table: torch.Tensor, workspace: torch.Tensor, scale: float, num_kv_splits: int) -> torch.Tensor",
+        "torch_ops_calls": [
+          {
+            "namespace": "_C",
+            "op": "sm100_cutlass_mla_decode"
+          }
+        ],
+        "source_head": "def sm100_cutlass_mla_decode(",
+        "vllm_api": "from vllm import _custom_ops; _custom_ops.sm100_cutlass_mla_decode(...)"
+      },
+      {
+        "name": "sm100_cutlass_mla_get_workspace_size",
+        "signature": "(max_seq_len: int, num_batches: int, sm_count: int, num_kv_splits: int) -> int",
+        "torch_ops_calls": [
+          {
+            "namespace": "_C",
+            "op": "sm100_cutlass_mla_get_workspace_size"
+          }
+        ],
+        "source_head": "def sm100_cutlass_mla_get_workspace_size(",
+        "vllm_api": "from vllm import _custom_ops; _custom_ops.sm100_cutlass_mla_get_workspace_size(...)"
+      },
+      {
+        "name": "swap_blocks",
+        "signature": "(src: torch.Tensor, dst: torch.Tensor, block_size_in_bytes: int, block_mapping: torch.Tensor) -> None",
+        "torch_ops_calls": [
+          {
+            "namespace": "_C_cache_ops",
+            "op": "swap_blocks"
+          }
+        ],
+        "source_head": "def swap_blocks(",
+        "vllm_api": "from vllm import _custom_ops; _custom_ops.swap_blocks(...)"
+      },
+      {
+        "name": "topk_sigmoid",
+        "signature": "(topk_weights: torch.Tensor, topk_ids: torch.Tensor, token_expert_indices: torch.Tensor, gating_output: torch.Tensor, renormalize: bool = False, e_score_correction_bias: torch.Tensor | None = None) -> None",
+        "torch_ops_calls": [
+          {
+            "namespace": "_moe_C",
+            "op": "topk_sigmoid"
+          }
+        ],
+        "source_head": "def topk_sigmoid(",
+        "vllm_api": "from vllm import _custom_ops; _custom_ops.topk_sigmoid(...)"
+      },
+      {
+        "name": "topk_softmax",
+        "signature": "(topk_weights: torch.Tensor, topk_ids: torch.Tensor, token_expert_indices: torch.Tensor, gating_output: torch.Tensor, renormalize: bool = False, e_score_correction_bias: torch.Tensor | None = None) -> None",
+        "torch_ops_calls": [
+          {
+            "namespace": "_moe_C",
+            "op": "topk_softmax"
+          }
+        ],
+        "source_head": "def topk_softmax(",
+        "vllm_api": "from vllm import _custom_ops; _custom_ops.topk_softmax(...)"
+      },
+      {
+        "name": "wvSplitK",
+        "signature": "(a: torch.Tensor, b: torch.Tensor, cu_count: int, bias: torch.Tensor = None) -> torch.Tensor",
+        "torch_ops_calls": [
+          {
+            "namespace": "_rocm_C",
+            "op": "wvSplitK"
+          }
+        ],
+        "source_head": "def wvSplitK(",
+        "vllm_api": "from vllm import _custom_ops; _custom_ops.wvSplitK(...)"
+      },
+      {
+        "name": "wvSplitKQ",
+        "signature": "(a: torch.Tensor, b: torch.Tensor, out_dtype: torch.dtype, scale_a: torch.Tensor, scale_b: torch.Tensor, cu_count: int, bias: torch.Tensor = None) -> torch.Tensor",
+        "torch_ops_calls": [
+          {
+            "namespace": "_rocm_C",
+            "op": "wvSplitKQ"
+          }
+        ],
+        "source_head": "def wvSplitKQ(",
+        "vllm_api": "from vllm import _custom_ops; _custom_ops.wvSplitKQ(...)"
+      },
+      {
+        "name": "wvSplitKrc",
+        "signature": "(a: torch.Tensor, b: torch.Tensor, cu_count: int, bias: torch.Tensor = None) -> torch.Tensor",
+        "torch_ops_calls": [
+          {
+            "namespace": "_rocm_C",
+            "op": "wvSplitKrc"
+          }
+        ],
+        "source_head": "def wvSplitKrc(",
+        "vllm_api": "from vllm import _custom_ops; _custom_ops.wvSplitKrc(...)"
+      }
+    ]
+  }
+}

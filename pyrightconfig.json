@@ -1,0 +1,73 @@
+{
+  "include": [
+    "src"
+  ],
+  "exclude": [
+    "**/__pycache__",
+    "**/node_modules",
+    "**/.*"
+  ],
+  "reportMissingImports": true,
+  "reportMissingTypeStubs": false,
+  "reportUnusedImport": true,
+  "reportUnusedClass": true,
+  "reportUnusedFunction": true,
+  "reportUnusedVariable": true,
+  "reportDuplicateImport": true,
+  "reportOptionalSubscript": true,
+  "reportOptionalMemberAccess": true,
+  "reportOptionalCall": true,
+  "reportOptionalIterable": true,
+  "reportOptionalContextManager": true,
+  "reportOptionalOperand": true,
+  "reportGeneralTypeIssues": true,
+  "reportPrivateImportUsage": true,
+  "reportConstantRedefinition": true,
+  "reportIncompatibleMethodOverride": true,
+  "reportIncompatibleVariableOverride": true,
+  "reportInconsistentConstructor": true,
+  "reportOverlappingOverload": true,
+  "reportMissingSuperCall": true,
+  "reportUninitializedInstanceVariable": true,
+  "reportInvalidStringEscapeSequence": true,
+  "reportUnknownParameterType": true,
+  "reportUnknownArgumentType": true,
+  "reportUnknownLambdaType": true,
+  "reportUnknownVariableType": true,
+  "reportUnknownMemberType": true,
+  "reportMissingParameterType": true,
+  "reportMissingTypeArgument": true,
+  "reportInvalidTypeVarUse": true,
+  "reportCallInDefaultInitializer": true,
+  "reportUnnecessaryIsInstance": true,
+  "reportUnnecessaryCast": true,
+  "reportUnnecessaryComparison": true,
+  "reportAssertAlwaysTrue": true,
+  "reportSelfClsParameterName": true,
+  "reportImplicitStringConcatenation": false,
+  "reportUnusedCallResult": true,
+  "reportUnusedExpression": true,
+  "reportUnnecessaryTypeIgnoreComment": true,
+  "reportMatchNotExhaustive": true,
+  "reportShadowedImports": true,
+  "reportIncompatibleMethodOverride": true,
+  "reportIncompatibleVariableOverride": true,
+  "strictListInference": true,
+  "strictDictionaryInference": true,
+  "strictSetInference": true,
+  "strictParameterNoneValue": true,
+  "typeCheckingMode": "basic",
+  "pythonVersion": "3.8",
+  "pythonPlatform": "Linux",
+  "executionEnvironments": [
+    {
+      "root": "src",
+      "pythonVersion": "3.8",
+      "pythonPlatform": "Linux",
+      "extraPaths": [
+        "src"
+      ]
+    }
+  ]
+}
+

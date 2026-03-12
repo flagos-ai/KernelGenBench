@@ -16,17 +16,20 @@ class AntiHackRunner:
     """Runs anti-hack checks on operators with three-layer detection."""
 
     def __init__(self, dataset: str, verify_config: VerifyConfig,
-                 custom_test_modules: Optional[List[str]] = None):
+                 custom_test_modules: Optional[List[str]] = None,
+                 max_test_cases: int = 1):
         """Initialize anti-hack runner.
 
         Args:
             dataset: Dataset name (e.g., "v2_1", "KernelGenBench", "cupy")
             verify_config: Base verify config for Layer 2/3 checks
             custom_test_modules: Test modules to load (avoids test case bloat)
+            max_test_cases: Max test cases to run for L2/L3 checks (default: 1)
         """
         self.dataset = dataset
         self.verify_config = verify_config
         self.custom_test_modules = custom_test_modules
+        self.max_test_cases = max_test_cases
 
     def get_backend(self, op_name: str) -> str:
         """Determine anti-hack backend from operator name.
@@ -116,6 +119,7 @@ class AntiHackRunner:
                 acc_timeout=self.verify_config.acc_timeout,
                 save_log=False,
                 manage_device_visibility=False,
+                max_test_cases=self.max_test_cases,
             ))
 
             if self.custom_test_modules:

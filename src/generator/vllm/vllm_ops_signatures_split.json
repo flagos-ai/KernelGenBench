@@ -1,0 +1,1421 @@
+{
+  "_meta": {
+    "source": "vllm._custom_ops",
+    "extraction": "inspect.signature + __text_signature__ + __doc__",
+    "call_pattern": "from vllm import _custom_ops; _custom_ops.<op>(...) ",
+    "operator_count": 129,
+    "transform": "split signature into input_parameters (before ->) and output_parameters (after ->)",
+    "split_note": "If signature has no ->, output_parameters is null.",
+    "vllm_api_field": "_custom_ops.<op>(...)",
+    "vllm_api_note": "auto-added per operator (import from vllm separately)",
+    "selection_criteria": {
+      "public_ops_definition": "Top-level keys (excluding _meta) enumerate public, non-underscore callable symbols in vllm._custom_ops. This matches: from vllm import _custom_ops; _custom_ops.<op>(...).",
+      "private_ops_definition": "Underscore-prefixed callables in vllm._custom_ops are captured under _private_ops (typically fake/test/fallback helpers).",
+      "noncallable_symbols_definition": "Non-callable public symbols (classes/modules/constants) are captured under _symbols for completeness; they are not ops."
+    },
+    "operator_count_public": 129,
+    "operator_count_private": 20,
+    "symbol_count_noncallable": 8,
+    "cpu_filtered": {
+      "enabled": true,
+      "rules": [
+        "name startswith 'cpu_'",
+        "name endswith '_cpu'",
+        "name contains 'onednn' (case-insensitive)"
+      ],
+      "removed_ops_count": 13,
+      "removed_ops": [
+        "cpu_attention_with_kv_cache",
+        "cpu_attn_get_scheduler_metadata",
+        "cpu_attn_reshape_and_cache",
+        "cpu_fused_moe",
+        "cpu_gemm_wna16",
+        "cpu_prepack_moe_weight",
+        "create_onednn_mm",
+        "create_onednn_scaled_mm",
+        "is_onednn_acl_supported",
+        "mla_decode_kvcache_cpu",
+        "onednn_mm",
+        "onednn_scaled_int8_quant",
+        "onednn_scaled_mm"
+      ]
+    }
+  },
+  "LLMM1": {
+    "callable": true,
+    "signature": "(a: torch.Tensor, b: torch.Tensor, rows_per_block: int) -> torch.Tensor",
+    "text_signature": null,
+    "doc": null,
+    "input_parameters": "(a: torch.Tensor, b: torch.Tensor, rows_per_block: int)",
+    "output_parameters": "torch.Tensor",
+    "vllm_api": "_custom_ops.LLMM1(...)"
+  },
+  "all_reduce": {
+    "callable": true,
+    "signature": "(fa: int, inp: torch.Tensor, out: torch.Tensor, reg_buffer: int, reg_buffer_sz_bytes: int) -> None",
+    "text_signature": null,
+    "doc": null,
+    "input_parameters": "(fa: int, inp: torch.Tensor, out: torch.Tensor, reg_buffer: int, reg_buffer_sz_bytes: int)",
+    "output_parameters": "None",
+    "vllm_api": "_custom_ops.all_reduce(...)"
+  },
+  "allocate_shared_buffer_and_handle": {
+    "callable": true,
+    "signature": "(size: int) -> tuple",
+    "text_signature": null,
+    "doc": null,
+    "input_parameters": "(size: int)",
+    "output_parameters": "tuple",
+    "vllm_api": "_custom_ops.allocate_shared_buffer_and_handle(...)"
+  },
+  "allspark_repack_weight": {
+    "callable": true,
+    "signature": "(qweight: torch.Tensor, scale: torch.Tensor, zero_point: torch.Tensor | None = None, has_zp: bool = False) -> tuple",
+    "text_signature": null,
+    "doc": "\n    Rearrange qweight, scale, and zero_point(if asymmetric) to n32k16 format\n    for Ampere W8A16 Fused Gemm kernel\n\n    Args:\n        qweight: uint8 weight tensor, original k x n format.\n        scale: fp16/bf16 weight scale tensor, 1 x n format.\n        zero_point: fp16/bf16 weight zero_point tensor, 1 x n format.\n            Must be provided for asymmetric quantization.\n        has_zp: if use symmetric quantization, has_zp = False.\n            if use asymmetric quantization, has_zp = True.\n\n    Returns:\n        tuple[torch.Tensor, torch.Tensor, torch.Tensor | None] :\n            rearranged weight, scale, and optionally zero_point.\n    ",
+    "input_parameters": "(qweight: torch.Tensor, scale: torch.Tensor, zero_point: torch.Tensor | None = None, has_zp: bool = False)",
+    "output_parameters": "tuple",
+    "vllm_api": "_custom_ops.allspark_repack_weight(...)"
+  },
+  "allspark_w8a16_gemm": {
+    "callable": true,
+    "signature": "(a: torch.Tensor, b_qweight: torch.Tensor, b_scales: torch.Tensor, b_qzeros: torch.Tensor | None, n: int, group_size: int, sm_count: int, sm_version: int, CUBLAS_M_THRESHOLD: int, has_zp: bool, n32k16_reorder: bool) -> torch.Tensor",
+    "text_signature": null,
+    "doc": null,
+    "input_parameters": "(a: torch.Tensor, b_qweight: torch.Tensor, b_scales: torch.Tensor, b_qzeros: torch.Tensor | None, n: int, group_size: int, sm_count: int, sm_version: int, CUBLAS_M_THRESHOLD: int, has_zp: bool, n32k16_reorder: bool)",
+    "output_parameters": "torch.Tensor",
+    "vllm_api": "_custom_ops.allspark_w8a16_gemm(...)"
+  },
+  "apply_repetition_penalties": {
+    "callable": true,
+    "signature": "(logits: torch.Tensor, prompt_mask: torch.Tensor, output_mask: torch.Tensor, repetition_penalties: torch.Tensor) -> None",
+    "text_signature": null,
+    "doc": "Apply repetition penalties to logits in-place.\n\n    Args:\n        logits: The logits tensor of shape [num_seqs, vocab_size].\n        prompt_mask: A boolean tensor indicating which tokens appear in the prompt.\n        output_mask: A boolean tensor indicating which tokens appear in the output.\n        repetition_penalties: The repetition penalties of shape (num_seqs, ).\n    ",
+    "input_parameters": "(logits: torch.Tensor, prompt_mask: torch.Tensor, output_mask: torch.Tensor, repetition_penalties: torch.Tensor)",
+    "output_parameters": "None",
+    "vllm_api": "_custom_ops.apply_repetition_penalties(...)"
+  },
+  "apply_repetition_penalties_cuda": {
+    "callable": true,
+    "signature": "(logits: torch.Tensor, prompt_mask: torch.Tensor, output_mask: torch.Tensor, repetition_penalties: torch.Tensor) -> None",
+    "text_signature": null,
+    "doc": null,
+    "input_parameters": "(logits: torch.Tensor, prompt_mask: torch.Tensor, output_mask: torch.Tensor, repetition_penalties: torch.Tensor)",
+    "output_parameters": "None",
+    "vllm_api": "_custom_ops.apply_repetition_penalties_cuda(...)"
+  },
+  "apply_repetition_penalties_torch": {
+    "callable": true,
+    "signature": "(logits: torch.Tensor, prompt_mask: torch.Tensor, output_mask: torch.Tensor, repetition_penalties: torch.Tensor) -> None",
+    "text_signature": null,
+    "doc": null,
+    "input_parameters": "(logits: torch.Tensor, prompt_mask: torch.Tensor, output_mask: torch.Tensor, repetition_penalties: torch.Tensor)",
+    "output_parameters": "None",
+    "vllm_api": "_custom_ops.apply_repetition_penalties_torch(...)"
+  },
+  "awq_dequantize": {
+    "callable": true,
+    "signature": "(qweight: torch.Tensor, scales: torch.Tensor, zeros: torch.Tensor, split_k_iters: int, thx: int, thy: int) -> torch.Tensor",
+    "text_signature": null,
+    "doc": null,
+    "input_parameters": "(qweight: torch.Tensor, scales: torch.Tensor, zeros: torch.Tensor, split_k_iters: int, thx: int, thy: int)",
+    "output_parameters": "torch.Tensor",
+    "vllm_api": "_custom_ops.awq_dequantize(...)"
+  },
+  "awq_gemm": {
+    "callable": true,
+    "signature": "(input: torch.Tensor, qweight: torch.Tensor, scales: torch.Tensor, qzeros: torch.Tensor, split_k_iters: int) -> torch.Tensor",
+    "text_signature": null,
+    "doc": null,
+    "input_parameters": "(input: torch.Tensor, qweight: torch.Tensor, scales: torch.Tensor, qzeros: torch.Tensor, split_k_iters: int)",
+    "output_parameters": "torch.Tensor",
+    "vllm_api": "_custom_ops.awq_gemm(...)"
+  },
+  "awq_marlin_moe_repack": {
+    "callable": true,
+    "signature": "(b_q_weight: torch.Tensor, perm: torch.Tensor, size_k: int, size_n: int, num_bits: int, is_a_8bit: bool = False) -> torch.Tensor",
+    "text_signature": null,
+    "doc": null,
+    "input_parameters": "(b_q_weight: torch.Tensor, perm: torch.Tensor, size_k: int, size_n: int, num_bits: int, is_a_8bit: bool = False)",
+    "output_parameters": "torch.Tensor",
+    "vllm_api": "_custom_ops.awq_marlin_moe_repack(...)"
+  },
+  "awq_marlin_repack": {
+    "callable": true,
+    "signature": "(b_q_weight: torch.Tensor, size_k: int, size_n: int, num_bits: int, is_a_8bit: bool = False) -> torch.Tensor",
+    "text_signature": null,
+    "doc": null,
+    "input_parameters": "(b_q_weight: torch.Tensor, size_k: int, size_n: int, num_bits: int, is_a_8bit: bool = False)",
+    "output_parameters": "torch.Tensor",
+    "vllm_api": "_custom_ops.awq_marlin_repack(...)"
+  },
+  "batched_moe_align_block_size": {
+    "callable": true,
+    "signature": "(max_tokens_per_batch: int, block_size: int, expert_num_tokens: torch.Tensor, sorted_ids: torch.Tensor, expert_ids: torch.Tensor, num_tokens_post_pad: torch.Tensor) -> None",
+    "text_signature": null,
+    "doc": null,
+    "input_parameters": "(max_tokens_per_batch: int, block_size: int, expert_num_tokens: torch.Tensor, sorted_ids: torch.Tensor, expert_ids: torch.Tensor, num_tokens_post_pad: torch.Tensor)",
+    "output_parameters": "None",
+    "vllm_api": "_custom_ops.batched_moe_align_block_size(...)"
+  },
+  "cdiv": {
+    "callable": true,
+    "signature": "(a: int, b: int) -> int",
+    "text_signature": null,
+    "doc": "Ceiling division.",
+    "input_parameters": "(a: int, b: int)",
+    "output_parameters": "int",
+    "vllm_api": "_custom_ops.cdiv(...)"
+  },
+  "concat_and_cache_mla": {
+    "callable": true,
+    "signature": "(kv_c: torch.Tensor, k_pe: torch.Tensor, kv_cache: torch.Tensor, slot_mapping: torch.Tensor, kv_cache_dtype: str, scale: torch.Tensor) -> None",
+    "text_signature": null,
+    "doc": null,
+    "input_parameters": "(kv_c: torch.Tensor, k_pe: torch.Tensor, kv_cache: torch.Tensor, slot_mapping: torch.Tensor, kv_cache_dtype: str, scale: torch.Tensor)",
+    "output_parameters": "None",
+    "vllm_api": "_custom_ops.concat_and_cache_mla(...)"
+  },
+  "concat_and_cache_mla_rope_fused": {
+    "callable": true,
+    "signature": "(positions: torch.Tensor, q_pe: torch.Tensor, k_pe: torch.Tensor, kv_c: torch.Tensor, cos_sin_cache: torch.Tensor, is_neox: bool, slot_mapping: torch.Tensor, kv_cache: torch.Tensor, kv_cache_dtype: str, kv_cache_scale: torch.Tensor) -> None",
+    "text_signature": null,
+    "doc": null,
+    "input_parameters": "(positions: torch.Tensor, q_pe: torch.Tensor, k_pe: torch.Tensor, kv_c: torch.Tensor, cos_sin_cache: torch.Tensor, is_neox: bool, slot_mapping: torch.Tensor, kv_cache: torch.Tensor, kv_cache_dtype: str, kv_cache_scale: torch.Tensor)",
+    "output_parameters": "None",
+    "vllm_api": "_custom_ops.concat_and_cache_mla_rope_fused(...)"
+  },
+  "convert_fp8": {
+    "callable": true,
+    "signature": "(output: torch.Tensor, input: torch.Tensor, scale: float = 1.0, kv_dtype: str = 'fp8') -> None",
+    "text_signature": null,
+    "doc": null,
+    "input_parameters": "(output: torch.Tensor, input: torch.Tensor, scale: float = 1.0, kv_dtype: str = 'fp8')",
+    "output_parameters": "None",
+    "vllm_api": "_custom_ops.convert_fp8(...)"
+  },
+  "convert_vertical_slash_indexes": {
+    "callable": true,
+    "signature": "(q_seqlens: torch.Tensor, kv_seqlens: torch.Tensor, vertical_indexes: torch.Tensor, slash_indexes: torch.Tensor, context_size: int, block_size_M: int, block_size_N: int, causal: bool = True) -> tuple",
+    "text_signature": null,
+    "doc": null,
+    "input_parameters": "(q_seqlens: torch.Tensor, kv_seqlens: torch.Tensor, vertical_indexes: torch.Tensor, slash_indexes: torch.Tensor, context_size: int, block_size_M: int, block_size_N: int, causal: bool = True)",
+    "output_parameters": "tuple",
+    "vllm_api": "_custom_ops.convert_vertical_slash_indexes(...)"
+  },
+  "convert_vertical_slash_indexes_mergehead": {
+    "callable": true,
+    "signature": "(q_seqlens: torch.Tensor, kv_seqlens: torch.Tensor, vertical_indexes: torch.Tensor, slash_indexes: torch.Tensor, vertical_indices_count: torch.Tensor, slash_indices_count: torch.Tensor, context_size: int, block_size_M: int, block_size_N: int, causal: bool = True) -> tuple",
+    "text_signature": null,
+    "doc": null,
+    "input_parameters": "(q_seqlens: torch.Tensor, kv_seqlens: torch.Tensor, vertical_indexes: torch.Tensor, slash_indexes: torch.Tensor, vertical_indices_count: torch.Tensor, slash_indices_count: torch.Tensor, context_size: int, block_size_M: int, block_size_N: int, causal: bool = True)",
+    "output_parameters": "tuple",
+    "vllm_api": "_custom_ops.convert_vertical_slash_indexes_mergehead(...)"
+  },
+  "cp_gather_and_upconvert_fp8_kv_cache": {
+    "callable": true,
+    "signature": "(src_cache: torch.Tensor, dst: torch.Tensor, block_table: torch.Tensor, seq_lens: torch.Tensor, workspace_starts: torch.Tensor, batch_size: int) -> None",
+    "text_signature": null,
+    "doc": "Gather and upconvert FP8 KV cache to BF16 workspace.\n\n    Args:\n        src_cache: FP8 KV cache [num_blocks, block_size, 656]\n        dst: BF16 output workspace [total_tokens, 576]\n        block_table: Block indices [num_reqs, max_blocks]\n        seq_lens: Sequence lengths [num_reqs]\n        workspace_starts: Workspace start offsets [num_reqs]\n        batch_size: Number of requests\n    ",
+    "input_parameters": "(src_cache: torch.Tensor, dst: torch.Tensor, block_table: torch.Tensor, seq_lens: torch.Tensor, workspace_starts: torch.Tensor, batch_size: int)",
+    "output_parameters": "None",
+    "vllm_api": "_custom_ops.cp_gather_and_upconvert_fp8_kv_cache(...)"
+  },
+  "cp_gather_cache": {
+    "callable": true,
+    "signature": "(src_cache: torch.Tensor, dst: torch.Tensor, block_table: torch.Tensor, cu_seq_lens: torch.Tensor, batch_size: int, seq_starts: torch.Tensor | None = None) -> None",
+    "text_signature": null,
+    "doc": null,
+    "input_parameters": "(src_cache: torch.Tensor, dst: torch.Tensor, block_table: torch.Tensor, cu_seq_lens: torch.Tensor, batch_size: int, seq_starts: torch.Tensor | None = None)",
+    "output_parameters": "None",
+    "vllm_api": "_custom_ops.cp_gather_cache(...)"
+  },
+  "cp_gather_indexer_k_quant_cache": {
+    "callable": true,
+    "signature": "(kv_cache: torch.Tensor, dst_k: torch.Tensor, dst_scale: torch.Tensor, block_table: torch.Tensor, cu_seq_lens: torch.Tensor) -> None",
+    "text_signature": null,
+    "doc": null,
+    "input_parameters": "(kv_cache: torch.Tensor, dst_k: torch.Tensor, dst_scale: torch.Tensor, block_table: torch.Tensor, cu_seq_lens: torch.Tensor)",
+    "output_parameters": "None",
+    "vllm_api": "_custom_ops.cp_gather_indexer_k_quant_cache(...)"
+  },
+  "cutlass_encode_and_reorder_int4b": {
+    "callable": true,
+    "signature": "(b: torch.Tensor) -> torch.Tensor",
+    "text_signature": null,
+    "doc": null,
+    "input_parameters": "(b: torch.Tensor)",
+    "output_parameters": "torch.Tensor",
+    "vllm_api": "_custom_ops.cutlass_encode_and_reorder_int4b(...)"
+  },
+  "cutlass_encode_and_reorder_int4b_fake": {
+    "callable": true,
+    "signature": "(b: torch.Tensor) -> torch.Tensor",
+    "text_signature": null,
+    "doc": null,
+    "input_parameters": "(b: torch.Tensor)",
+    "output_parameters": "torch.Tensor",
+    "vllm_api": "_custom_ops.cutlass_encode_and_reorder_int4b_fake(...)"
+  },
+  "cutlass_encode_and_reorder_int4b_grouped": {
+    "callable": true,
+    "signature": "(b_tensors: torch.Tensor) -> tuple",
+    "text_signature": null,
+    "doc": null,
+    "input_parameters": "(b_tensors: torch.Tensor)",
+    "output_parameters": "tuple",
+    "vllm_api": "_custom_ops.cutlass_encode_and_reorder_int4b_grouped(...)"
+  },
+  "cutlass_encode_and_reorder_int4b_grouped_fake": {
+    "callable": true,
+    "signature": "(b: torch.Tensor) -> torch.Tensor",
+    "text_signature": null,
+    "doc": null,
+    "input_parameters": "(b: torch.Tensor)",
+    "output_parameters": "torch.Tensor",
+    "vllm_api": "_custom_ops.cutlass_encode_and_reorder_int4b_grouped_fake(...)"
+  },
+  "cutlass_fp4_moe_mm": {
+    "callable": true,
+    "signature": "(out_tensors: torch.Tensor, a_tensors: torch.Tensor, b_tensors: torch.Tensor, a_scales: torch.Tensor, b_scales: torch.Tensor, alphas: torch.Tensor, problem_sizes: torch.Tensor, expert_offsets: torch.Tensor, sf_offsets: torch.Tensor)",
+    "text_signature": null,
+    "doc": "\n    An FP4 Blockscaled Group Gemm that takes in  a_tensors, b_tensors and runs\n    the gemms for each combination based on the specified problem sizes.\n\n    This is used as the MoE gemm during NVFP4 Quantized FusedMoE forward.\n    - a/b_tensors: the NVFP4 a_ptrs and b_ptrs tensors which are quantized\n                     input and expert weights.\n    - a_/b_scales: The blockscales in FP8-E4M3 precision\n    - expert_offsets/sf_offsets: Indices that mark at which token index\n                    each expert begins its computation. The number of tokens\n                    computed with expert E is expert_offsets[E + 1] -\n                    expert_offsets[E] And the sf_size per expert is\n                    sf_offset[E+1] - sf_offset[E]\n    - problem_sizes: MxNxK sizes of each expert's multiplication in two grouped\n                     MMs used in the fused MoE operation.\n    ",
+    "input_parameters": "(out_tensors: torch.Tensor, a_tensors: torch.Tensor, b_tensors: torch.Tensor, a_scales: torch.Tensor, b_scales: torch.Tensor, alphas: torch.Tensor, problem_sizes: torch.Tensor, expert_offsets: torch.Tensor, sf_offsets: torch.Tensor)",
+    "output_parameters": null,
+    "vllm_api": "_custom_ops.cutlass_fp4_moe_mm(...)"
+  },
+  "cutlass_group_gemm_supported": {
+    "callable": true,
+    "signature": "(cuda_device_capability: int) -> bool",
+    "text_signature": null,
+    "doc": null,
+    "input_parameters": "(cuda_device_capability: int)",
+    "output_parameters": "bool",
+    "vllm_api": "_custom_ops.cutlass_group_gemm_supported(...)"
+  },
+  "cutlass_moe_mm": {
+    "callable": true,
+    "signature": "(out_tensors: torch.Tensor, a_tensors: torch.Tensor, b_tensors: torch.Tensor, a_scales: torch.Tensor, b_scales: torch.Tensor, expert_offsets: torch.Tensor, problem_sizes: torch.Tensor, a_strides: torch.Tensor, b_strides: torch.Tensor, c_strides: torch.Tensor, per_act_token: bool, per_out_ch: bool)",
+    "text_signature": null,
+    "doc": "\n    A single grouped matrix multiplication used in CUTLASS-based fused MoE.\n    The function executes fp8-quantized OUT = AB matrix multiplication.\n\n    - expert_offsets: Indices that mark at which token index each expert begins\n                      its computation. The number of tokens computed with\n                      expert E is expert_offsets[E + 1] - expert_offsets[E]\n    - problem_sizes: MxNxK sizes of each expert's multiplication in two grouped\n                     MMs used in the fused MoE operation.\n    - a/b/c_strides: The data strides passed to grouped matrix multiplication.\n    ",
+    "input_parameters": "(out_tensors: torch.Tensor, a_tensors: torch.Tensor, b_tensors: torch.Tensor, a_scales: torch.Tensor, b_scales: torch.Tensor, expert_offsets: torch.Tensor, problem_sizes: torch.Tensor, a_strides: torch.Tensor, b_strides: torch.Tensor, c_strides: torch.Tensor, per_act_token: bool, per_out_ch: bool)",
+    "output_parameters": null,
+    "vllm_api": "_custom_ops.cutlass_moe_mm(...)"
+  },
+  "cutlass_pack_scale_fp8": {
+    "callable": true,
+    "signature": "(scales: torch.Tensor) -> torch.Tensor",
+    "text_signature": null,
+    "doc": null,
+    "input_parameters": "(scales: torch.Tensor)",
+    "output_parameters": "torch.Tensor",
+    "vllm_api": "_custom_ops.cutlass_pack_scale_fp8(...)"
+  },
+  "cutlass_pack_scale_fp8_fake": {
+    "callable": true,
+    "signature": "(scales: torch.Tensor) -> torch.Tensor",
+    "text_signature": null,
+    "doc": null,
+    "input_parameters": "(scales: torch.Tensor)",
+    "output_parameters": "torch.Tensor",
+    "vllm_api": "_custom_ops.cutlass_pack_scale_fp8_fake(...)"
+  },
+  "cutlass_scaled_fp4_mm": {
+    "callable": true,
+    "signature": "(a: torch.Tensor, b: torch.Tensor, block_scale_a: torch.Tensor, block_scale_b: torch.Tensor, alpha: torch.Tensor, out_dtype: torch.dtype) -> torch.Tensor",
+    "text_signature": null,
+    "doc": null,
+    "input_parameters": "(a: torch.Tensor, b: torch.Tensor, block_scale_a: torch.Tensor, block_scale_b: torch.Tensor, alpha: torch.Tensor, out_dtype: torch.dtype)",
+    "output_parameters": "torch.Tensor",
+    "vllm_api": "_custom_ops.cutlass_scaled_fp4_mm(...)"
+  },
+  "cutlass_scaled_mm": {
+    "callable": true,
+    "signature": "(a: torch.Tensor, b: torch.Tensor, scale_a: torch.Tensor, scale_b: torch.Tensor, out_dtype: torch.dtype, bias: torch.Tensor | None = None) -> torch.Tensor",
+    "text_signature": null,
+    "doc": "\n    `cutlass_scaled_mm` implements a fused version of\n        `output = torch.mm((scale_a * a), (scale_b * b)).to(out_dtype)`\n    where scale_a * a and scale_b * b are implemented using numpy-style\n    broadcasting.\n\n    In order to support blockwise scaling like found in DeepSeek V3 we also\n    support extended \"group\" broadcast rules. We extend the numpy-style\n    broadcasting rules with the following rule:\n        \"if the extent of a dimension in the source shape is between 1 and\n        corresponding extent in the target shape we repeat each element along\n        that dimension  src_shape[dim] // target_shape[dim] times consecutively\"\n    example if we have:\n          a = [[1, 2], and target_shape = (2, 4)\n               [3, 4]]\n    then we would expand a to:\n          a = [[1, 1, 2, 2],\n               [3, 3, 4, 4]]\n    currently we only support the case:\n        scale_a.shape * [1, 128] == a.shape\n        scale_b.shape * [128, 128] == b.shape\n    ",
+    "input_parameters": "(a: torch.Tensor, b: torch.Tensor, scale_a: torch.Tensor, scale_b: torch.Tensor, out_dtype: torch.dtype, bias: torch.Tensor | None = None)",
+    "output_parameters": "torch.Tensor",
+    "vllm_api": "_custom_ops.cutlass_scaled_mm(...)"
+  },
+  "cutlass_scaled_mm_azp": {
+    "callable": true,
+    "signature": "(a: torch.Tensor, b: torch.Tensor, scale_a: torch.Tensor, scale_b: torch.Tensor, out_dtype: torch.dtype, azp_adj: torch.Tensor, azp: torch.Tensor | None = None, bias: torch.Tensor | None = None) -> torch.Tensor",
+    "text_signature": null,
+    "doc": "\n    :param azp_adj: In the per-tensor case, this should include the azp.\n    Always per-channel.\n    :param azp: Only set in the per-token case. Per-token if set.\n    ",
+    "input_parameters": "(a: torch.Tensor, b: torch.Tensor, scale_a: torch.Tensor, scale_b: torch.Tensor, out_dtype: torch.dtype, azp_adj: torch.Tensor, azp: torch.Tensor | None = None, bias: torch.Tensor | None = None)",
+    "output_parameters": "torch.Tensor",
+    "vllm_api": "_custom_ops.cutlass_scaled_mm_azp(...)"
+  },
+  "cutlass_scaled_mm_supports_block_fp8": {
+    "callable": true,
+    "signature": "(cuda_device_capability: int) -> bool",
+    "text_signature": null,
+    "doc": null,
+    "input_parameters": "(cuda_device_capability: int)",
+    "output_parameters": "bool",
+    "vllm_api": "_custom_ops.cutlass_scaled_mm_supports_block_fp8(...)"
+  },
+  "cutlass_scaled_mm_supports_fp4": {
+    "callable": true,
+    "signature": "(cuda_device_capability: int) -> bool",
+    "text_signature": null,
+    "doc": null,
+    "input_parameters": "(cuda_device_capability: int)",
+    "output_parameters": "bool",
+    "vllm_api": "_custom_ops.cutlass_scaled_mm_supports_fp4(...)"
+  },
+  "cutlass_scaled_mm_supports_fp8": {
+    "callable": true,
+    "signature": "(cuda_device_capability: int) -> bool",
+    "text_signature": null,
+    "doc": null,
+    "input_parameters": "(cuda_device_capability: int)",
+    "output_parameters": "bool",
+    "vllm_api": "_custom_ops.cutlass_scaled_mm_supports_fp8(...)"
+  },
+  "cutlass_scaled_sparse_mm": {
+    "callable": true,
+    "signature": "(a: torch.Tensor, bt_nzs: torch.Tensor, bt_meta: torch.Tensor, scale_a: torch.Tensor, scale_b: torch.Tensor, out_dtype: torch.dtype, bias: torch.Tensor | None = None) -> torch.Tensor",
+    "text_signature": null,
+    "doc": "\n    Performs a scaled sparse matrix multiplication using Cutlass.\n\n    Steps:\n    1. Create a dense matrix `a` of shape (m, k) on the CUDA device:\n    `a = torch.randn((m, k), device='cuda')`.\n\n    2. Create a dense matrix `b` of shape (k, n) on the CUDA device:\n    `b = torch.randn((k, n), device='cuda')`.\n\n    3. Prune matrix `b` to 2:4 sparsity along the specified dimension:\n    `b = prune_to_2_4(b, dim=0)`.\n\n    4. Compress the transposed sparse matrix `b.t()`:\n    `bt_nzs, bt_meta = cutlass_sparse_compress(b.t())`.\n\n    5. Perform sparse matrix multiplication using the compressed matrix,\n    applying scaling factors for `a` and `b`, and the output data type:\n    `out = cutlass_scaled_sparse_mm(a, bt_nzs, bt_meta, scale_a, scale_b, out_dtype)`.\n\n    Returns:\n    - The result of the scaled sparse matrix multiplication.\n    ",
+    "input_parameters": "(a: torch.Tensor, bt_nzs: torch.Tensor, bt_meta: torch.Tensor, scale_a: torch.Tensor, scale_b: torch.Tensor, out_dtype: torch.dtype, bias: torch.Tensor | None = None)",
+    "output_parameters": "torch.Tensor",
+    "vllm_api": "_custom_ops.cutlass_scaled_sparse_mm(...)"
+  },
+  "cutlass_sparse_compress": {
+    "callable": true,
+    "signature": "(a: torch.Tensor) -> tuple",
+    "text_signature": null,
+    "doc": "\n    Compresses a sparse matrix for use with Cutlass sparse operations.\n\n    This function takes a dense tensor and compresses it into two components:\n    non-zero elements and metadata. The compressed representation is compatible\n    with Cutlass sparse kernels.\n\n    Args:\n        a (torch.Tensor):\n            The input tensor to be compressed. Must have one of the following data types:\n            - `torch.int8`\n            - `torch.float8_e4m3fn`\n            - `torch.bfloat16`\n            - `torch.float16`\n\n    Returns:\n        tuple[torch.Tensor, torch.Tensor]:\n            A tuple containing:\n            - `a_nzs` (torch.Tensor): A tensor containing non-zero elements of `a`.\n            - `a_meta` (torch.Tensor): A tensor containing metadata for the sparse representation.\n\n    Raises:\n        ValueError: If the compression operation fails.\n\n    Notes:\n        - The `a_meta` tensor has a data type of `torch.uint8`.\n        - Each metadata element encodes the sparsity of 4 non-zero elements (i.e., `elemsPerMetaElem = 4`).\n        - The shape of `a_nzs` is `(m, k // 2)`, where `m` and `k` are the dimensions of the input tensor.\n        - The shape of `a_meta` is `(m, k // 2 // elemsPerMetaElem)`.\n    ",
+    "input_parameters": "(a: torch.Tensor)",
+    "output_parameters": "tuple",
+    "vllm_api": "_custom_ops.cutlass_sparse_compress(...)"
+  },
+  "cutlass_sparse_scaled_mm_supported": {
+    "callable": true,
+    "signature": "(cuda_device_capability: int) -> bool",
+    "text_signature": null,
+    "doc": null,
+    "input_parameters": "(cuda_device_capability: int)",
+    "output_parameters": "bool",
+    "vllm_api": "_custom_ops.cutlass_sparse_scaled_mm_supported(...)"
+  },
+  "cutlass_w4a8_mm": {
+    "callable": true,
+    "signature": "(a: torch.Tensor, b_q: torch.Tensor, b_group_scales: torch.Tensor, b_group_size: int, b_channel_scales: torch.Tensor, a_token_scales: torch.Tensor, out_type: torch.dtype | None = None, maybe_schedule: str | None = None) -> torch.Tensor",
+    "text_signature": null,
+    "doc": null,
+    "input_parameters": "(a: torch.Tensor, b_q: torch.Tensor, b_group_scales: torch.Tensor, b_group_size: int, b_channel_scales: torch.Tensor, a_token_scales: torch.Tensor, out_type: torch.dtype | None = None, maybe_schedule: str | None = None)",
+    "output_parameters": "torch.Tensor",
+    "vllm_api": "_custom_ops.cutlass_w4a8_mm(...)"
+  },
+  "cutlass_w4a8_mm_fake": {
+    "callable": true,
+    "signature": "(a: torch.Tensor, b_q: torch.Tensor, b_group_scales: torch.Tensor, b_group_size: int, b_channel_scales: torch.Tensor, a_token_scales: torch.Tensor, out_type: torch.dtype | None = None, maybe_schedule: str | None = None) -> torch.Tensor",
+    "text_signature": null,
+    "doc": null,
+    "input_parameters": "(a: torch.Tensor, b_q: torch.Tensor, b_group_scales: torch.Tensor, b_group_size: int, b_channel_scales: torch.Tensor, a_token_scales: torch.Tensor, out_type: torch.dtype | None = None, maybe_schedule: str | None = None)",
+    "output_parameters": "torch.Tensor",
+    "vllm_api": "_custom_ops.cutlass_w4a8_mm_fake(...)"
+  },
+  "cutlass_w4a8_moe_mm": {
+    "callable": true,
+    "signature": "(out_tensors: torch.Tensor, a_tensors: torch.Tensor, b_tensors: torch.Tensor, a_scales: torch.Tensor, b_scales: torch.Tensor, b_group_scales: torch.Tensor, b_group_size: int, expert_offsets: torch.Tensor, problem_sizes: torch.Tensor, a_strides: torch.Tensor, b_strides: torch.Tensor, c_strides: torch.Tensor, group_scale_strides: torch.Tensor, maybe_schedule: str | None = None)",
+    "text_signature": null,
+    "doc": "\n    Executes the CUTLASS-based fused-MoE grouped matrix multiplication for the\n    W4A8 quantization scheme. Uses group-wise quantization (INT4 -> FP8)\n    and both per-channel + per-token scaling in the epilogue.\n\n    Args:\n        out_tensors:\n            Output buffer for all experts (updated in-place).\n        a_tensors:\n            FP8 (E4M3FN) activations for all experts.\n        b_tensors:\n            INT4-packed weight matrix for all experts, packed to INT32\n        a_scales:\n            Per-token FP8 activation scales, applied in the epilogue.\n        b_scales:\n            Per-channel FP8 weight scales for each expert, applied in the epilogue.\n        b_group_scales:\n            FP8 scale values for group-wise INT4 weight blocks.\n        b_group_size:\n            Number of elements grouped under each entry of b_group_scales.\n        expert_offsets:\n            Cumulative token offsets\n        problem_sizes:\n            Per-expert (M, N, K) GEMM sizes used by the grouped GEMM launcher.\n        a/b/c/group_scale_strides:\n            Strides describing the memory layout of the input tensors.\n        maybe_schedule:\n            Optional override to choose a specific kernel or epilogue schedule.\n\n    Returns:\n        out_tensors updated in-place with the dequantized INT4xFP8 grouped GEMM result.\n    ",
+    "input_parameters": "(out_tensors: torch.Tensor, a_tensors: torch.Tensor, b_tensors: torch.Tensor, a_scales: torch.Tensor, b_scales: torch.Tensor, b_group_scales: torch.Tensor, b_group_size: int, expert_offsets: torch.Tensor, problem_sizes: torch.Tensor, a_strides: torch.Tensor, b_strides: torch.Tensor, c_strides: torch.Tensor, group_scale_strides: torch.Tensor, maybe_schedule: str | None = None)",
+    "output_parameters": null,
+    "vllm_api": "_custom_ops.cutlass_w4a8_moe_mm(...)"
+  },
+  "dispose": {
+    "callable": true,
+    "signature": "(fa: int) -> None",
+    "text_signature": null,
+    "doc": null,
+    "input_parameters": "(fa: int)",
+    "output_parameters": "None",
+    "vllm_api": "_custom_ops.dispose(...)"
+  },
+  "flash_mla_with_kvcache": {
+    "callable": true,
+    "signature": "(q: torch.Tensor, k_cache: torch.Tensor, block_table: torch.Tensor, cache_seqlens: torch.Tensor, head_dim_v: int, tile_scheduler_metadata: torch.Tensor, num_splits: torch.Tensor, softmax_scale: float | None = None, causal: bool = False) -> tuple",
+    "text_signature": null,
+    "doc": "\n    Arguments:\n        q: (batch_size, seq_len_q, num_heads_q, head_dim).\n        k_cache: (num_blocks, page_block_size, num_heads_k, head_dim).\n        block_table: (batch_size, max_num_blocks_per_seq), torch.int32.\n        cache_seqlens: (batch_size), torch.int32.\n        head_dim_v: Head_dim of v.\n        tile_scheduler_metadata: (num_sm_parts, TileSchedulerMetaDataSize), torch.int32, return by get_mla_metadata.\n        num_splits: (batch_size + 1), torch.int32, return by get_mla_metadata.\n        softmax_scale: float. The scaling of QK^T before applying softmax. Default to 1 / sqrt(head_dim).\n        causal: bool. Whether to apply causal attention mask.\n\n    Return:\n        out: (batch_size, seq_len_q, num_heads_q, head_dim_v).\n        softmax_lse: (batch_size, num_heads_q, seq_len_q), torch.float32.\n    ",
+    "input_parameters": "(q: torch.Tensor, k_cache: torch.Tensor, block_table: torch.Tensor, cache_seqlens: torch.Tensor, head_dim_v: int, tile_scheduler_metadata: torch.Tensor, num_splits: torch.Tensor, softmax_scale: float | None = None, causal: bool = False)",
+    "output_parameters": "tuple",
+    "vllm_api": "_custom_ops.flash_mla_with_kvcache(...)"
+  },
+  "flashinfer_quant_nvfp4_8x4_sf_layout": {
+    "callable": true,
+    "signature": "(a: torch.Tensor, a_global_sf: torch.Tensor) -> tuple",
+    "text_signature": null,
+    "doc": null,
+    "input_parameters": "(a: torch.Tensor, a_global_sf: torch.Tensor)",
+    "output_parameters": "tuple",
+    "vllm_api": "_custom_ops.flashinfer_quant_nvfp4_8x4_sf_layout(...)"
+  },
+  "free_shared_buffer": {
+    "callable": true,
+    "signature": "(ptr: int) -> None",
+    "text_signature": null,
+    "doc": null,
+    "input_parameters": "(ptr: int)",
+    "output_parameters": "None",
+    "vllm_api": "_custom_ops.free_shared_buffer(...)"
+  },
+  "fusedQuantizeMx": {
+    "callable": true,
+    "signature": "(a: torch.Tensor, b: torch.Tensor, *, method: Literal['quest', 'abs_max'] = 'quest') -> tuple",
+    "text_signature": null,
+    "doc": null,
+    "input_parameters": "(a: torch.Tensor, b: torch.Tensor, *, method: Literal['quest', 'abs_max'] = 'quest')",
+    "output_parameters": "tuple",
+    "vllm_api": "_custom_ops.fusedQuantizeMx(...)"
+  },
+  "fusedQuantizeNv": {
+    "callable": true,
+    "signature": "(a: torch.Tensor, b: torch.Tensor, global_scale: torch.Tensor) -> tuple",
+    "text_signature": null,
+    "doc": null,
+    "input_parameters": "(a: torch.Tensor, b: torch.Tensor, global_scale: torch.Tensor)",
+    "output_parameters": "tuple",
+    "vllm_api": "_custom_ops.fusedQuantizeNv(...)"
+  },
+  "fused_add_rms_norm": {
+    "callable": true,
+    "signature": "(input: torch.Tensor, residual: torch.Tensor, weight: torch.Tensor, epsilon: float) -> None",
+    "text_signature": null,
+    "doc": null,
+    "input_parameters": "(input: torch.Tensor, residual: torch.Tensor, weight: torch.Tensor, epsilon: float)",
+    "output_parameters": "None",
+    "vllm_api": "_custom_ops.fused_add_rms_norm(...)"
+  },
+  "fused_qk_norm_rope": {
+    "callable": true,
+    "signature": "(qkv: torch.Tensor, num_heads_q: int, num_heads_k: int, num_heads_v: int, head_dim: int, eps: float, q_weight: torch.Tensor, k_weight: torch.Tensor, cos_sin_cache: torch.Tensor, is_neox: bool, position_ids: torch.Tensor) -> None",
+    "text_signature": null,
+    "doc": null,
+    "input_parameters": "(qkv: torch.Tensor, num_heads_q: int, num_heads_k: int, num_heads_v: int, head_dim: int, eps: float, q_weight: torch.Tensor, k_weight: torch.Tensor, cos_sin_cache: torch.Tensor, is_neox: bool, position_ids: torch.Tensor)",
+    "output_parameters": "None",
+    "vllm_api": "_custom_ops.fused_qk_norm_rope(...)"
+  },
+  "gather_and_maybe_dequant_cache": {
+    "callable": true,
+    "signature": "(src_cache: torch.Tensor, dst: torch.Tensor, block_table: torch.Tensor, cu_seq_lens: torch.Tensor, token_to_seq: torch.Tensor, num_tokens: int, kv_cache_dtype: str, scale: torch.Tensor, seq_starts: torch.Tensor | None = None) -> None",
+    "text_signature": null,
+    "doc": null,
+    "input_parameters": "(src_cache: torch.Tensor, dst: torch.Tensor, block_table: torch.Tensor, cu_seq_lens: torch.Tensor, token_to_seq: torch.Tensor, num_tokens: int, kv_cache_dtype: str, scale: torch.Tensor, seq_starts: torch.Tensor | None = None)",
+    "output_parameters": "None",
+    "vllm_api": "_custom_ops.gather_and_maybe_dequant_cache(...)"
+  },
+  "get_cutlass_moe_mm_data": {
+    "callable": true,
+    "signature": "(topk_ids: torch.Tensor, expert_offsets: torch.Tensor, problem_sizes1: torch.Tensor, problem_sizes2: torch.Tensor, input_permutation: torch.Tensor, output_permutation: torch.Tensor, num_experts: int, n: int, k: int, blockscale_offsets: torch.Tensor | None = None)",
+    "text_signature": null,
+    "doc": "\n    Prepare data necessary to perform CUTLASS grouped matrix multiplications\n    used in CUTLASS-based fused MoE.\n\n    The function takes in topk_ids (token-expert mapping) and uses it to\n    compute:\n    - expert_offsets: Indices that mark at which token index each expert begins\n                      its computation after the input is sorted with\n                      input_permutation. The number of tokens computed with\n                      expert E is expert_offsets[E + 1] - expert_offsets[E]\n    - problem_sizes1, problem_sizes2: MxNxK sizes of each expert's\n                                      multiplication in two grouped MMs used in\n                                      the fused MoE operation.\n    - input_permutation: Permutation that must be used to shuffle the input\n                         before executing the MMs.\n    - output_permutation: Permutation that must be used to shuffle the output\n                          after executing the MMs.\n    - blockscale_offsets: Optional argument passed for fp4 moe. Indices that\n                          mark at which block scale index each expert begins\n                          its computation. The number of block scale rows\n                          computed with expert E is blockscale_offsets[E + 1] -\n                          blockscale_offsets[E]\n    ",
+    "input_parameters": "(topk_ids: torch.Tensor, expert_offsets: torch.Tensor, problem_sizes1: torch.Tensor, problem_sizes2: torch.Tensor, input_permutation: torch.Tensor, output_permutation: torch.Tensor, num_experts: int, n: int, k: int, blockscale_offsets: torch.Tensor | None = None)",
+    "output_parameters": null,
+    "vllm_api": "_custom_ops.get_cutlass_moe_mm_data(...)"
+  },
+  "get_cutlass_moe_mm_problem_sizes_from_expert_offsets": {
+    "callable": true,
+    "signature": "(expert_first_token_offset: torch.Tensor, problem_sizes1: torch.Tensor, problem_sizes2: torch.Tensor, n: int, k: int, swap_ab: bool)",
+    "text_signature": null,
+    "doc": "Compute per-expert (M, N, K) problem sizes from expert_first_token_offset",
+    "input_parameters": "(expert_first_token_offset: torch.Tensor, problem_sizes1: torch.Tensor, problem_sizes2: torch.Tensor, n: int, k: int, swap_ab: bool)",
+    "output_parameters": null,
+    "vllm_api": "_custom_ops.get_cutlass_moe_mm_problem_sizes_from_expert_offsets(...)"
+  },
+  "get_cutlass_pplx_moe_mm_data": {
+    "callable": true,
+    "signature": "(expert_offsets: torch.Tensor, problem_sizes1: torch.Tensor, problem_sizes2: torch.Tensor, expert_num_tokens: torch.Tensor, num_local_experts: int, padded_m: int, n: int, k: int)",
+    "text_signature": null,
+    "doc": "\n    Prepare data necessary to perform CUTLASS grouped matrix multiplications\n    used in CUTLASS-based fused MoE.\n\n    The function takes in expert_num_tokens (token count per expert) and\n    non_zero_expert_idxs (consecutive indices of experts with non-zero token\n    counts) and uses them to compute:\n    - expert_offsets: Indices that mark at which token index each expert begins\n                      its computation.\n    - problem_sizes1, problem_sizes2: MxNxK sizes of each expert's\n                                      multiplication in two grouped MMs used in\n                                      the fused MoE operation.\n    ",
+    "input_parameters": "(expert_offsets: torch.Tensor, problem_sizes1: torch.Tensor, problem_sizes2: torch.Tensor, expert_num_tokens: torch.Tensor, num_local_experts: int, padded_m: int, n: int, k: int)",
+    "output_parameters": null,
+    "vllm_api": "_custom_ops.get_cutlass_pplx_moe_mm_data(...)"
+  },
+  "get_device_attribute": {
+    "callable": true,
+    "signature": "(attribute: int, device: int) -> int",
+    "text_signature": null,
+    "doc": null,
+    "input_parameters": "(attribute: int, device: int)",
+    "output_parameters": "int",
+    "vllm_api": "_custom_ops.get_device_attribute(...)"
+  },
+  "get_flash_mla_metadata": {
+    "callable": true,
+    "signature": "(cache_seqlens: torch.Tensor, num_heads_per_head_k: int, num_heads_k: int) -> tuple",
+    "text_signature": null,
+    "doc": "\n    Arguments:\n        cache_seqlens: (batch_size), dtype torch.int32.\n        num_heads_per_head_k: Equals to seq_len_q * num_heads_q // num_heads_k.\n        num_heads_k: num_heads_k.\n\n    Return:\n        tile_scheduler_metadata: (num_sm_parts, TileSchedulerMetaDataSize), dtype torch.int32.\n        num_splits: (batch_size + 1), dtype torch.int32.\n    ",
+    "input_parameters": "(cache_seqlens: torch.Tensor, num_heads_per_head_k: int, num_heads_k: int)",
+    "output_parameters": "tuple",
+    "vllm_api": "_custom_ops.get_flash_mla_metadata(...)"
+  },
+  "get_graph_buffer_ipc_meta": {
+    "callable": true,
+    "signature": "(fa: int) -> tuple",
+    "text_signature": null,
+    "doc": null,
+    "input_parameters": "(fa: int)",
+    "output_parameters": "tuple",
+    "vllm_api": "_custom_ops.get_graph_buffer_ipc_meta(...)"
+  },
+  "get_max_shared_memory_per_block_device_attribute": {
+    "callable": true,
+    "signature": "(device: int) -> int",
+    "text_signature": null,
+    "doc": null,
+    "input_parameters": "(device: int)",
+    "output_parameters": "int",
+    "vllm_api": "_custom_ops.get_max_shared_memory_per_block_device_attribute(...)"
+  },
+  "ggml_dequantize": {
+    "callable": true,
+    "signature": "(W: torch.Tensor, quant_type: int, m: int, n: int, dtype: torch.dtype | None) -> torch.Tensor",
+    "text_signature": null,
+    "doc": null,
+    "input_parameters": "(W: torch.Tensor, quant_type: int, m: int, n: int, dtype: torch.dtype | None)",
+    "output_parameters": "torch.Tensor",
+    "vllm_api": "_custom_ops.ggml_dequantize(...)"
+  },
+  "ggml_moe_a8": {
+    "callable": true,
+    "signature": "(X: torch.Tensor, W: torch.Tensor, sorted_token_ids: torch.Tensor, expert_ids: torch.Tensor, num_tokens_post_padded: torch.Tensor, quant_type: int, row: int, top_k: int, tokens: int) -> torch.Tensor",
+    "text_signature": null,
+    "doc": null,
+    "input_parameters": "(X: torch.Tensor, W: torch.Tensor, sorted_token_ids: torch.Tensor, expert_ids: torch.Tensor, num_tokens_post_padded: torch.Tensor, quant_type: int, row: int, top_k: int, tokens: int)",
+    "output_parameters": "torch.Tensor",
+    "vllm_api": "_custom_ops.ggml_moe_a8(...)"
+  },
+  "ggml_moe_a8_vec": {
+    "callable": true,
+    "signature": "(X: torch.Tensor, W: torch.Tensor, topk_ids: torch.Tensor, top_k: int, quant_type: int, row: torch.SymInt, tokens: torch.SymInt) -> torch.Tensor",
+    "text_signature": null,
+    "doc": null,
+    "input_parameters": "(X: torch.Tensor, W: torch.Tensor, topk_ids: torch.Tensor, top_k: int, quant_type: int, row: torch.SymInt, tokens: torch.SymInt)",
+    "output_parameters": "torch.Tensor",
+    "vllm_api": "_custom_ops.ggml_moe_a8_vec(...)"
+  },
+  "ggml_moe_get_block_size": {
+    "callable": true,
+    "signature": "(quant_type: int) -> int",
+    "text_signature": null,
+    "doc": null,
+    "input_parameters": "(quant_type: int)",
+    "output_parameters": "int",
+    "vllm_api": "_custom_ops.ggml_moe_get_block_size(...)"
+  },
+  "ggml_mul_mat_a8": {
+    "callable": true,
+    "signature": "(W: torch.Tensor, X: torch.Tensor, quant_type: int, row: int) -> torch.Tensor",
+    "text_signature": null,
+    "doc": null,
+    "input_parameters": "(W: torch.Tensor, X: torch.Tensor, quant_type: int, row: int)",
+    "output_parameters": "torch.Tensor",
+    "vllm_api": "_custom_ops.ggml_mul_mat_a8(...)"
+  },
+  "ggml_mul_mat_vec_a8": {
+    "callable": true,
+    "signature": "(W: torch.Tensor, X: torch.Tensor, quant_type: int, row: int) -> torch.Tensor",
+    "text_signature": null,
+    "doc": null,
+    "input_parameters": "(W: torch.Tensor, X: torch.Tensor, quant_type: int, row: int)",
+    "output_parameters": "torch.Tensor",
+    "vllm_api": "_custom_ops.ggml_mul_mat_vec_a8(...)"
+  },
+  "gptq_gemm": {
+    "callable": true,
+    "signature": "(a: torch.Tensor, b_q_weight: torch.Tensor, b_gptq_qzeros: torch.Tensor, b_gptq_scales: torch.Tensor, b_g_idx: torch.Tensor, use_exllama: bool, use_v2_format: bool, bit: int) -> torch.Tensor",
+    "text_signature": null,
+    "doc": null,
+    "input_parameters": "(a: torch.Tensor, b_q_weight: torch.Tensor, b_gptq_qzeros: torch.Tensor, b_gptq_scales: torch.Tensor, b_g_idx: torch.Tensor, use_exllama: bool, use_v2_format: bool, bit: int)",
+    "output_parameters": "torch.Tensor",
+    "vllm_api": "_custom_ops.gptq_gemm(...)"
+  },
+  "gptq_marlin_24_gemm": {
+    "callable": true,
+    "signature": "(a: torch.Tensor, b_q_weight: torch.Tensor, b_meta: torch.Tensor, b_scales: torch.Tensor, workspace: torch.Tensor, b_q_type: vllm.scalar_type.ScalarType, size_m: int, size_n: int, size_k: int) -> torch.Tensor",
+    "text_signature": null,
+    "doc": null,
+    "input_parameters": "(a: torch.Tensor, b_q_weight: torch.Tensor, b_meta: torch.Tensor, b_scales: torch.Tensor, workspace: torch.Tensor, b_q_type: vllm.scalar_type.ScalarType, size_m: int, size_n: int, size_k: int)",
+    "output_parameters": "torch.Tensor",
+    "vllm_api": "_custom_ops.gptq_marlin_24_gemm(...)"
+  },
+  "gptq_marlin_moe_repack": {
+    "callable": true,
+    "signature": "(b_q_weight: torch.Tensor, perm: torch.Tensor, size_k: int, size_n: int, num_bits: int, is_a_8bit: bool = False) -> torch.Tensor",
+    "text_signature": null,
+    "doc": null,
+    "input_parameters": "(b_q_weight: torch.Tensor, perm: torch.Tensor, size_k: int, size_n: int, num_bits: int, is_a_8bit: bool = False)",
+    "output_parameters": "torch.Tensor",
+    "vllm_api": "_custom_ops.gptq_marlin_moe_repack(...)"
+  },
+  "gptq_marlin_repack": {
+    "callable": true,
+    "signature": "(b_q_weight: torch.Tensor, perm: torch.Tensor, size_k: int, size_n: int, num_bits: int, is_a_8bit: bool = False) -> torch.Tensor",
+    "text_signature": null,
+    "doc": null,
+    "input_parameters": "(b_q_weight: torch.Tensor, perm: torch.Tensor, size_k: int, size_n: int, num_bits: int, is_a_8bit: bool = False)",
+    "output_parameters": "torch.Tensor",
+    "vllm_api": "_custom_ops.gptq_marlin_repack(...)"
+  },
+  "gptq_shuffle": {
+    "callable": true,
+    "signature": "(q_weight: torch.Tensor, q_perm: torch.Tensor, bit: int) -> None",
+    "text_signature": null,
+    "doc": null,
+    "input_parameters": "(q_weight: torch.Tensor, q_perm: torch.Tensor, bit: int)",
+    "output_parameters": "None",
+    "vllm_api": "_custom_ops.gptq_shuffle(...)"
+  },
+  "grouped_topk": {
+    "callable": true,
+    "signature": "(scores: torch.Tensor, num_expert_group: int, topk_group: int, topk: int, renormalize: bool, routed_scaling_factor: float, bias: torch.Tensor, scoring_func: int = 0)",
+    "text_signature": null,
+    "doc": "\n    Perform grouped top-k routing for mixture of experts.\n\n    Args:\n        scores: Raw inputs (logits if scoring_func=1, scores if scoring_func=0)\n        num_expert_group: Number of expert groups\n        topk_group: Number of groups to select\n        topk: Number of experts to select per token\n        renormalize: Whether to renormalize the output weights\n        routed_scaling_factor: Scaling factor for routing weights\n        bias: Bias tensor (e_score_correction_bias). Always fused in kernel.\n        scoring_func: 0=none (no activation), 1=sigmoid\n    ",
+    "input_parameters": "(scores: torch.Tensor, num_expert_group: int, topk_group: int, topk: int, renormalize: bool, routed_scaling_factor: float, bias: torch.Tensor, scoring_func: int = 0)",
+    "output_parameters": null,
+    "vllm_api": "_custom_ops.grouped_topk(...)"
+  },
+  "hadacore_transform": {
+    "callable": true,
+    "signature": "(x: torch.Tensor, inplace: bool = True) -> torch.Tensor",
+    "text_signature": null,
+    "doc": "\n    Perform Hadamard transforms using [Hadacore](https://arxiv.org/abs/2412.08832)\n    kernels. Note that these kernels exploit the recursive properties of\n    Sylvester Hadamards, and therefore do not require transform weight data\n\n    Note that sylvester hadamard transforms are also symmetric, which means that\n    this function is also applies the (transpose <=> inverse) transform.\n\n    :param x: value to be transformed inplace\n    :param inplace: modify value in place\n    :return: value after transformation\n    ",
+    "input_parameters": "(x: torch.Tensor, inplace: bool = True)",
+    "output_parameters": "torch.Tensor",
+    "vllm_api": "_custom_ops.hadacore_transform(...)"
+  },
+  "indexer_k_quant_and_cache": {
+    "callable": true,
+    "signature": "(k: torch.Tensor, kv_cache: torch.Tensor, slot_mapping: torch.Tensor, quant_block_size: int, kv_cache_dtype: str) -> None",
+    "text_signature": null,
+    "doc": null,
+    "input_parameters": "(k: torch.Tensor, kv_cache: torch.Tensor, slot_mapping: torch.Tensor, quant_block_size: int, kv_cache_dtype: str)",
+    "output_parameters": "None",
+    "vllm_api": "_custom_ops.indexer_k_quant_and_cache(...)"
+  },
+  "init_custom_ar": {
+    "callable": true,
+    "signature": "(ipc_tensors: list, rank_data: torch.Tensor, rank: int, fully_connected: bool) -> int",
+    "text_signature": null,
+    "doc": null,
+    "input_parameters": "(ipc_tensors: list, rank_data: torch.Tensor, rank: int, fully_connected: bool)",
+    "output_parameters": "int",
+    "vllm_api": "_custom_ops.init_custom_ar(...)"
+  },
+  "init_custom_qr": {
+    "callable": true,
+    "signature": "(rank: int, world_size: int, qr_max_size: int | None = None) -> int",
+    "text_signature": null,
+    "doc": null,
+    "input_parameters": "(rank: int, world_size: int, qr_max_size: int | None = None)",
+    "output_parameters": "int",
+    "vllm_api": "_custom_ops.init_custom_qr(...)"
+  },
+  "init_logger": {
+    "callable": true,
+    "signature": "(name: str) -> vllm.logger._VllmLogger",
+    "text_signature": null,
+    "doc": "The main purpose of this function is to ensure that loggers are\n    retrieved in such a way that we can be sure the root vllm logger has\n    already been configured.",
+    "input_parameters": "(name: str)",
+    "output_parameters": "vllm.logger._VllmLogger",
+    "vllm_api": "_custom_ops.init_logger(...)"
+  },
+  "machete_mm": {
+    "callable": true,
+    "signature": "(a: torch.Tensor, b_q: torch.Tensor, b_type: vllm.scalar_type.ScalarType, out_type: torch.dtype | None = None, b_group_scales: torch.Tensor | None = None, b_group_zeros: torch.Tensor | None = None, b_group_size: int | None = None, b_channel_scales: torch.Tensor | None = None, a_token_scales: torch.Tensor | None = None, schedule: str | None = None) -> torch.Tensor",
+    "text_signature": null,
+    "doc": null,
+    "input_parameters": "(a: torch.Tensor, b_q: torch.Tensor, b_type: vllm.scalar_type.ScalarType, out_type: torch.dtype | None = None, b_group_scales: torch.Tensor | None = None, b_group_zeros: torch.Tensor | None = None, b_group_size: int | None = None, b_channel_scales: torch.Tensor | None = None, a_token_scales: torch.Tensor | None = None, schedule: str | None = None)",
+    "output_parameters": "torch.Tensor",
+    "vllm_api": "_custom_ops.machete_mm(...)"
+  },
+  "machete_mm_fake": {
+    "callable": true,
+    "signature": "(a: torch.Tensor, b_q: torch.Tensor, b_type: vllm.scalar_type.ScalarType, out_type: torch.dtype | None = None, b_group_scales: torch.Tensor | None = None, b_group_zeros: torch.Tensor | None = None, b_group_size: int | None = None, b_channel_scales: torch.Tensor | None = None, a_token_scales: torch.Tensor | None = None, schedule: str | None = None) -> torch.Tensor",
+    "text_signature": null,
+    "doc": null,
+    "input_parameters": "(a: torch.Tensor, b_q: torch.Tensor, b_type: vllm.scalar_type.ScalarType, out_type: torch.dtype | None = None, b_group_scales: torch.Tensor | None = None, b_group_zeros: torch.Tensor | None = None, b_group_size: int | None = None, b_channel_scales: torch.Tensor | None = None, a_token_scales: torch.Tensor | None = None, schedule: str | None = None)",
+    "output_parameters": "torch.Tensor",
+    "vllm_api": "_custom_ops.machete_mm_fake(...)"
+  },
+  "machete_prepack_B": {
+    "callable": true,
+    "signature": "(b_q_weight: torch.Tensor, a_type: torch.dtype, b_type: vllm.scalar_type.ScalarType, group_scales_type: torch.dtype | None) -> torch.Tensor",
+    "text_signature": null,
+    "doc": null,
+    "input_parameters": "(b_q_weight: torch.Tensor, a_type: torch.dtype, b_type: vllm.scalar_type.ScalarType, group_scales_type: torch.dtype | None)",
+    "output_parameters": "torch.Tensor",
+    "vllm_api": "_custom_ops.machete_prepack_B(...)"
+  },
+  "machete_prepack_B_fake": {
+    "callable": true,
+    "signature": "(b_q_weight: torch.Tensor, a_type: torch.dtype, b_type: vllm.scalar_type.ScalarType, group_scales_type: torch.dtype | None) -> torch.Tensor",
+    "text_signature": null,
+    "doc": null,
+    "input_parameters": "(b_q_weight: torch.Tensor, a_type: torch.dtype, b_type: vllm.scalar_type.ScalarType, group_scales_type: torch.dtype | None)",
+    "output_parameters": "torch.Tensor",
+    "vllm_api": "_custom_ops.machete_prepack_B_fake(...)"
+  },
+  "machete_supported_schedules": {
+    "callable": true,
+    "signature": "(a_type: torch.dtype, b_type: vllm.scalar_type.ScalarType, group_scales_type: torch.dtype | None, group_zeros_type: torch.dtype | None = None, channel_scales_type: torch.dtype | None = None, token_scales_type: torch.dtype | None = None, out_type: torch.dtype | None = None) -> list",
+    "text_signature": null,
+    "doc": null,
+    "input_parameters": "(a_type: torch.dtype, b_type: vllm.scalar_type.ScalarType, group_scales_type: torch.dtype | None, group_zeros_type: torch.dtype | None = None, channel_scales_type: torch.dtype | None = None, token_scales_type: torch.dtype | None = None, out_type: torch.dtype | None = None)",
+    "output_parameters": "list",
+    "vllm_api": "_custom_ops.machete_supported_schedules(...)"
+  },
+  "marlin_gemm": {
+    "callable": true,
+    "signature": "(a: torch.Tensor, c: torch.Tensor | None, b_q_weight: torch.Tensor, b_bias: torch.Tensor | None, b_scales: torch.Tensor, a_scales: torch.Tensor | None, global_scale: torch.Tensor | None, b_zeros: torch.Tensor | None, g_idx: torch.Tensor | None, perm: torch.Tensor | None, workspace: torch.Tensor, b_q_type: vllm.scalar_type.ScalarType, size_m: int, size_n: int, size_k: int, is_k_full: bool = True, use_atomic_add: bool = False, use_fp32_reduce: bool = False, is_zp_float: bool = False) -> torch.Tensor",
+    "text_signature": null,
+    "doc": null,
+    "input_parameters": "(a: torch.Tensor, c: torch.Tensor | None, b_q_weight: torch.Tensor, b_bias: torch.Tensor | None, b_scales: torch.Tensor, a_scales: torch.Tensor | None, global_scale: torch.Tensor | None, b_zeros: torch.Tensor | None, g_idx: torch.Tensor | None, perm: torch.Tensor | None, workspace: torch.Tensor, b_q_type: vllm.scalar_type.ScalarType, size_m: int, size_n: int, size_k: int, is_k_full: bool = True, use_atomic_add: bool = False, use_fp32_reduce: bool = False, is_zp_float: bool = False)",
+    "output_parameters": "torch.Tensor",
+    "vllm_api": "_custom_ops.marlin_gemm(...)"
+  },
+  "marlin_gemm_moe_fake": {
+    "callable": true,
+    "signature": "(a: torch.Tensor, b_q_weights: torch.Tensor, sorted_ids: torch.Tensor, topk_weights: torch.Tensor, topk_ids: torch.Tensor, b_scales: torch.Tensor, b_zero_points: torch.Tensor, g_idx: torch.Tensor, perm: torch.Tensor, workspace: torch.Tensor, b_q_type: vllm.scalar_type.ScalarType, size_m: torch.SymInt, size_n: torch.SymInt, size_k: torch.SymInt, is_k_full: bool, num_experts: int, topk: int, moe_block_size: int, replicate_input: bool, apply_weights: bool) -> torch.Tensor",
+    "text_signature": null,
+    "doc": null,
+    "input_parameters": "(a: torch.Tensor, b_q_weights: torch.Tensor, sorted_ids: torch.Tensor, topk_weights: torch.Tensor, topk_ids: torch.Tensor, b_scales: torch.Tensor, b_zero_points: torch.Tensor, g_idx: torch.Tensor, perm: torch.Tensor, workspace: torch.Tensor, b_q_type: vllm.scalar_type.ScalarType, size_m: torch.SymInt, size_n: torch.SymInt, size_k: torch.SymInt, is_k_full: bool, num_experts: int, topk: int, moe_block_size: int, replicate_input: bool, apply_weights: bool)",
+    "output_parameters": "torch.Tensor",
+    "vllm_api": "_custom_ops.marlin_gemm_moe_fake(...)"
+  },
+  "marlin_int4_fp8_preprocess": {
+    "callable": true,
+    "signature": "(qweight: torch.Tensor, qzeros_or_none: torch.Tensor | None = None, inplace: bool = False)",
+    "text_signature": null,
+    "doc": null,
+    "input_parameters": "(qweight: torch.Tensor, qzeros_or_none: torch.Tensor | None = None, inplace: bool = False)",
+    "output_parameters": null,
+    "vllm_api": "_custom_ops.marlin_int4_fp8_preprocess(...)"
+  },
+  "matmul_ada_mxf4_bf16_tn": {
+    "callable": true,
+    "signature": "(a: torch.Tensor, b: torch.Tensor, a_sf: torch.Tensor, b_sf: torch.Tensor, alpha: torch.Tensor) -> torch.Tensor",
+    "text_signature": null,
+    "doc": null,
+    "input_parameters": "(a: torch.Tensor, b: torch.Tensor, a_sf: torch.Tensor, b_sf: torch.Tensor, alpha: torch.Tensor)",
+    "output_parameters": "torch.Tensor",
+    "vllm_api": "_custom_ops.matmul_ada_mxf4_bf16_tn(...)"
+  },
+  "matmul_mxf4_bf16_tn": {
+    "callable": true,
+    "signature": "(a: torch.Tensor, b: torch.Tensor, a_sf: torch.Tensor, b_sf: torch.Tensor, alpha: torch.Tensor) -> torch.Tensor",
+    "text_signature": null,
+    "doc": null,
+    "input_parameters": "(a: torch.Tensor, b: torch.Tensor, a_sf: torch.Tensor, b_sf: torch.Tensor, alpha: torch.Tensor)",
+    "output_parameters": "torch.Tensor",
+    "vllm_api": "_custom_ops.matmul_mxf4_bf16_tn(...)"
+  },
+  "merge_attn_states": {
+    "callable": true,
+    "signature": "(output: torch.Tensor, prefix_output: torch.Tensor, prefix_lse: torch.Tensor, suffix_output: torch.Tensor, suffix_lse: torch.Tensor, output_lse: torch.Tensor | None = None) -> None",
+    "text_signature": null,
+    "doc": null,
+    "input_parameters": "(output: torch.Tensor, prefix_output: torch.Tensor, prefix_lse: torch.Tensor, suffix_output: torch.Tensor, suffix_lse: torch.Tensor, output_lse: torch.Tensor | None = None)",
+    "output_parameters": "None",
+    "vllm_api": "_custom_ops.merge_attn_states(...)"
+  },
+  "meta_size": {
+    "callable": true,
+    "signature": "() -> int",
+    "text_signature": null,
+    "doc": null,
+    "input_parameters": "()",
+    "output_parameters": "int",
+    "vllm_api": "_custom_ops.meta_size(...)"
+  },
+  "moe_align_block_size": {
+    "callable": true,
+    "signature": "(topk_ids: torch.Tensor, num_experts: int, block_size: int, sorted_token_ids: torch.Tensor, experts_ids: torch.Tensor, num_tokens_post_pad: torch.Tensor, expert_map: torch.Tensor | None = None) -> None",
+    "text_signature": null,
+    "doc": null,
+    "input_parameters": "(topk_ids: torch.Tensor, num_experts: int, block_size: int, sorted_token_ids: torch.Tensor, experts_ids: torch.Tensor, num_tokens_post_pad: torch.Tensor, expert_map: torch.Tensor | None = None)",
+    "output_parameters": "None",
+    "vllm_api": "_custom_ops.moe_align_block_size(...)"
+  },
+  "moe_lora_align_block_size": {
+    "callable": true,
+    "signature": "(topk_ids: torch.Tensor, token_lora_mapping: torch.Tensor, num_experts: int, block_size: int, max_loras: int, max_num_tokens_padded: int, max_num_m_blocks: int, sorted_token_ids: torch.Tensor, experts_ids: torch.Tensor, num_tokens_post_pad: torch.Tensor, adapter_enabled: torch.Tensor, lora_ids: torch.Tensor, expert_map: torch.Tensor | None = None) -> None",
+    "text_signature": null,
+    "doc": null,
+    "input_parameters": "(topk_ids: torch.Tensor, token_lora_mapping: torch.Tensor, num_experts: int, block_size: int, max_loras: int, max_num_tokens_padded: int, max_num_m_blocks: int, sorted_token_ids: torch.Tensor, experts_ids: torch.Tensor, num_tokens_post_pad: torch.Tensor, adapter_enabled: torch.Tensor, lora_ids: torch.Tensor, expert_map: torch.Tensor | None = None)",
+    "output_parameters": "None",
+    "vllm_api": "_custom_ops.moe_lora_align_block_size(...)"
+  },
+  "moe_sum": {
+    "callable": true,
+    "signature": "(input: torch.Tensor, output: torch.Tensor)",
+    "text_signature": null,
+    "doc": null,
+    "input_parameters": "(input: torch.Tensor, output: torch.Tensor)",
+    "output_parameters": null,
+    "vllm_api": "_custom_ops.moe_sum(...)"
+  },
+  "moe_wna16_gemm": {
+    "callable": true,
+    "signature": "(input: torch.Tensor, output: torch.Tensor, b_qweight: torch.Tensor, b_scales: torch.Tensor, b_qzeros: torch.Tensor | None, topk_weights: torch.Tensor | None, sorted_token_ids: torch.Tensor, experts_ids: torch.Tensor, num_tokens_post_pad: torch.Tensor, top_k: int, BLOCK_SIZE_M: int, BLOCK_SIZE_N: int, BLOCK_SIZE_K: int, bit: int) -> torch.Tensor",
+    "text_signature": null,
+    "doc": null,
+    "input_parameters": "(input: torch.Tensor, output: torch.Tensor, b_qweight: torch.Tensor, b_scales: torch.Tensor, b_qzeros: torch.Tensor | None, topk_weights: torch.Tensor | None, sorted_token_ids: torch.Tensor, experts_ids: torch.Tensor, num_tokens_post_pad: torch.Tensor, top_k: int, BLOCK_SIZE_M: int, BLOCK_SIZE_N: int, BLOCK_SIZE_K: int, bit: int)",
+    "output_parameters": "torch.Tensor",
+    "vllm_api": "_custom_ops.moe_wna16_gemm(...)"
+  },
+  "moe_wna16_marlin_gemm": {
+    "callable": true,
+    "signature": "(input: torch.Tensor, output: torch.Tensor | None, b_qweight: torch.Tensor, b_bias: torch.Tensor | None, b_scales: torch.Tensor, a_scales: torch.Tensor | None, global_scale: torch.Tensor | None, b_qzeros: torch.Tensor | None, g_idx: torch.Tensor | None, perm: torch.Tensor | None, workspace: torch.Tensor, sorted_token_ids: torch.Tensor, expert_ids: torch.Tensor, num_tokens_past_padded: torch.Tensor, topk_weights: torch.Tensor, moe_block_size: int, top_k: int, mul_topk_weights: bool, b_q_type: vllm.scalar_type.ScalarType, size_m: int, size_n: int, size_k: int, is_k_full: bool, use_atomic_add: bool, use_fp32_reduce: bool, is_zp_float: bool, thread_k: int = -1, thread_n: int = -1, blocks_per_sm: int = -1) -> torch.Tensor",
+    "text_signature": null,
+    "doc": null,
+    "input_parameters": "(input: torch.Tensor, output: torch.Tensor | None, b_qweight: torch.Tensor, b_bias: torch.Tensor | None, b_scales: torch.Tensor, a_scales: torch.Tensor | None, global_scale: torch.Tensor | None, b_qzeros: torch.Tensor | None, g_idx: torch.Tensor | None, perm: torch.Tensor | None, workspace: torch.Tensor, sorted_token_ids: torch.Tensor, expert_ids: torch.Tensor, num_tokens_past_padded: torch.Tensor, topk_weights: torch.Tensor, moe_block_size: int, top_k: int, mul_topk_weights: bool, b_q_type: vllm.scalar_type.ScalarType, size_m: int, size_n: int, size_k: int, is_k_full: bool, use_atomic_add: bool, use_fp32_reduce: bool, is_zp_float: bool, thread_k: int = -1, thread_n: int = -1, blocks_per_sm: int = -1)",
+    "output_parameters": "torch.Tensor",
+    "vllm_api": "_custom_ops.moe_wna16_marlin_gemm(...)"
+  },
+  "moe_wna16_marlin_gemm_fake": {
+    "callable": true,
+    "signature": "(input: torch.Tensor, output: torch.Tensor | None, b_qweight: torch.Tensor, b_bias: torch.Tensor | None, b_scales: torch.Tensor, a_scales: torch.Tensor | None, global_scale: torch.Tensor | None, b_qzeros: torch.Tensor | None, g_idx: torch.Tensor | None, perm: torch.Tensor | None, workspace: torch.Tensor, sorted_token_ids: torch.Tensor, expert_ids: torch.Tensor, num_tokens_past_padded: torch.Tensor, topk_weights: torch.Tensor, moe_block_size: int, top_k: int, mul_topk_weights: bool, b_q_type: vllm.scalar_type.ScalarType, size_m: int, size_n: int, size_k: int, is_k_full: bool, use_atomic_add: bool, use_fp32_reduce: bool, is_zp_float: bool)",
+    "text_signature": null,
+    "doc": null,
+    "input_parameters": "(input: torch.Tensor, output: torch.Tensor | None, b_qweight: torch.Tensor, b_bias: torch.Tensor | None, b_scales: torch.Tensor, a_scales: torch.Tensor | None, global_scale: torch.Tensor | None, b_qzeros: torch.Tensor | None, g_idx: torch.Tensor | None, perm: torch.Tensor | None, workspace: torch.Tensor, sorted_token_ids: torch.Tensor, expert_ids: torch.Tensor, num_tokens_past_padded: torch.Tensor, topk_weights: torch.Tensor, moe_block_size: int, top_k: int, mul_topk_weights: bool, b_q_type: vllm.scalar_type.ScalarType, size_m: int, size_n: int, size_k: int, is_k_full: bool, use_atomic_add: bool, use_fp32_reduce: bool, is_zp_float: bool)",
+    "output_parameters": null,
+    "vllm_api": "_custom_ops.moe_wna16_marlin_gemm_fake(...)"
+  },
+  "open_mem_handle": {
+    "callable": true,
+    "signature": "(mem_handle: torch.Tensor)",
+    "text_signature": null,
+    "doc": null,
+    "input_parameters": "(mem_handle: torch.Tensor)",
+    "output_parameters": null,
+    "vllm_api": "_custom_ops.open_mem_handle(...)"
+  },
+  "paged_attention_rocm": {
+    "callable": true,
+    "signature": "(out: torch.Tensor, exp_sum: torch.Tensor, max_logits: torch.Tensor, tmp_out: torch.Tensor, query: torch.Tensor, key_cache: torch.Tensor, value_cache: torch.Tensor, num_kv_heads: int, scale: float, block_tables: torch.Tensor, seq_lens: torch.Tensor, query_start_loc: torch.Tensor | None, block_size: int, max_seq_len: int, alibi_slopes: torch.Tensor | None, kv_cache_dtype: str, k_scale: torch.Tensor, v_scale: torch.Tensor, fp8_out_scale: torch.Tensor | None = None, mfma_type: str = 'f16') -> None",
+    "text_signature": null,
+    "doc": null,
+    "input_parameters": "(out: torch.Tensor, exp_sum: torch.Tensor, max_logits: torch.Tensor, tmp_out: torch.Tensor, query: torch.Tensor, key_cache: torch.Tensor, value_cache: torch.Tensor, num_kv_heads: int, scale: float, block_tables: torch.Tensor, seq_lens: torch.Tensor, query_start_loc: torch.Tensor | None, block_size: int, max_seq_len: int, alibi_slopes: torch.Tensor | None, kv_cache_dtype: str, k_scale: torch.Tensor, v_scale: torch.Tensor, fp8_out_scale: torch.Tensor | None = None, mfma_type: str = 'f16')",
+    "output_parameters": "None",
+    "vllm_api": "_custom_ops.paged_attention_rocm(...)"
+  },
+  "paged_attention_v1": {
+    "callable": true,
+    "signature": "(out: torch.Tensor, query: torch.Tensor, key_cache: torch.Tensor, value_cache: torch.Tensor, num_kv_heads: int, scale: float, block_tables: torch.Tensor, seq_lens: torch.Tensor, block_size: int, max_seq_len: int, alibi_slopes: torch.Tensor | None, kv_cache_dtype: str, k_scale: torch.Tensor, v_scale: torch.Tensor, tp_rank: int = 0, blocksparse_local_blocks: int = 0, blocksparse_vert_stride: int = 0, blocksparse_block_size: int = 64, blocksparse_head_sliding_step: int = 0) -> None",
+    "text_signature": null,
+    "doc": null,
+    "input_parameters": "(out: torch.Tensor, query: torch.Tensor, key_cache: torch.Tensor, value_cache: torch.Tensor, num_kv_heads: int, scale: float, block_tables: torch.Tensor, seq_lens: torch.Tensor, block_size: int, max_seq_len: int, alibi_slopes: torch.Tensor | None, kv_cache_dtype: str, k_scale: torch.Tensor, v_scale: torch.Tensor, tp_rank: int = 0, blocksparse_local_blocks: int = 0, blocksparse_vert_stride: int = 0, blocksparse_block_size: int = 64, blocksparse_head_sliding_step: int = 0)",
+    "output_parameters": "None",
+    "vllm_api": "_custom_ops.paged_attention_v1(...)"
+  },
+  "paged_attention_v2": {
+    "callable": true,
+    "signature": "(out: torch.Tensor, exp_sum: torch.Tensor, max_logits: torch.Tensor, tmp_out: torch.Tensor, query: torch.Tensor, key_cache: torch.Tensor, value_cache: torch.Tensor, num_kv_heads: int, scale: float, block_tables: torch.Tensor, seq_lens: torch.Tensor, block_size: int, max_seq_len: int, alibi_slopes: torch.Tensor | None, kv_cache_dtype: str, k_scale: torch.Tensor, v_scale: torch.Tensor, tp_rank: int = 0, blocksparse_local_blocks: int = 0, blocksparse_vert_stride: int = 0, blocksparse_block_size: int = 64, blocksparse_head_sliding_step: int = 0) -> None",
+    "text_signature": null,
+    "doc": null,
+    "input_parameters": "(out: torch.Tensor, exp_sum: torch.Tensor, max_logits: torch.Tensor, tmp_out: torch.Tensor, query: torch.Tensor, key_cache: torch.Tensor, value_cache: torch.Tensor, num_kv_heads: int, scale: float, block_tables: torch.Tensor, seq_lens: torch.Tensor, block_size: int, max_seq_len: int, alibi_slopes: torch.Tensor | None, kv_cache_dtype: str, k_scale: torch.Tensor, v_scale: torch.Tensor, tp_rank: int = 0, blocksparse_local_blocks: int = 0, blocksparse_vert_stride: int = 0, blocksparse_block_size: int = 64, blocksparse_head_sliding_step: int = 0)",
+    "output_parameters": "None",
+    "vllm_api": "_custom_ops.paged_attention_v2(...)"
+  },
+  "permute_cols": {
+    "callable": true,
+    "signature": "(a: torch.Tensor, perm: torch.Tensor) -> torch.Tensor",
+    "text_signature": null,
+    "doc": null,
+    "input_parameters": "(a: torch.Tensor, perm: torch.Tensor)",
+    "output_parameters": "torch.Tensor",
+    "vllm_api": "_custom_ops.permute_cols(...)"
+  },
+  "qr_all_reduce": {
+    "callable": true,
+    "signature": "(fa: int, inp: torch.Tensor, out: torch.Tensor, quant_level: int, cast_bf2half: bool = False) -> None",
+    "text_signature": null,
+    "doc": null,
+    "input_parameters": "(fa: int, inp: torch.Tensor, out: torch.Tensor, quant_level: int, cast_bf2half: bool = False)",
+    "output_parameters": "None",
+    "vllm_api": "_custom_ops.qr_all_reduce(...)"
+  },
+  "qr_destroy": {
+    "callable": true,
+    "signature": "(fa: int) -> None",
+    "text_signature": null,
+    "doc": null,
+    "input_parameters": "(fa: int)",
+    "output_parameters": "None",
+    "vllm_api": "_custom_ops.qr_destroy(...)"
+  },
+  "qr_get_handle": {
+    "callable": true,
+    "signature": "(fa: int) -> torch.Tensor",
+    "text_signature": null,
+    "doc": null,
+    "input_parameters": "(fa: int)",
+    "output_parameters": "torch.Tensor",
+    "vllm_api": "_custom_ops.qr_get_handle(...)"
+  },
+  "qr_max_size": {
+    "callable": true,
+    "signature": "() -> int",
+    "text_signature": null,
+    "doc": null,
+    "input_parameters": "()",
+    "output_parameters": "int",
+    "vllm_api": "_custom_ops.qr_max_size(...)"
+  },
+  "qr_open_handles": {
+    "callable": true,
+    "signature": "(fa: int, handles: list) -> None",
+    "text_signature": null,
+    "doc": null,
+    "input_parameters": "(fa: int, handles: list)",
+    "output_parameters": "None",
+    "vllm_api": "_custom_ops.qr_open_handles(...)"
+  },
+  "register_buffer": {
+    "callable": true,
+    "signature": "(fa: int, ipc_tensors: list) -> None",
+    "text_signature": null,
+    "doc": null,
+    "input_parameters": "(fa: int, ipc_tensors: list)",
+    "output_parameters": "None",
+    "vllm_api": "_custom_ops.register_buffer(...)"
+  },
+  "register_fake": {
+    "callable": true,
+    "signature": "(op: Union[str, ForwardRef('torch._ops.OpOverload'), ForwardRef('torch._library.custom_ops.CustomOpDef')], func: Optional[Callable] = None, /, *, lib: Optional[torch.library.Library] = None, _stacklevel: int = 1, allow_override: bool = False)",
+    "text_signature": null,
+    "doc": "Register a FakeTensor implementation (\"fake impl\") for this operator.\n\n    Also sometimes known as a \"meta kernel\", \"abstract impl\".\n\n    An \"FakeTensor implementation\" specifies the behavior of this operator on\n    Tensors that carry no data (\"FakeTensor\"). Given some input Tensors with\n    certain properties (sizes/strides/storage_offset/device), it specifies\n    what the properties of the output Tensors are.\n\n    The FakeTensor implementation has the same signature as the operator.\n    It is run for both FakeTensors and meta tensors. To write a FakeTensor\n    implementation, assume that all Tensor inputs to the operator are\n    regular CPU/CUDA/Meta tensors, but they do not have storage, and\n    you are trying to return regular CPU/CUDA/Meta tensor(s) as output.\n    The FakeTensor implementation must consist of only PyTorch operations\n    (and may not directly access the storage or data of any input or\n    intermediate Tensors).\n\n    This API may be used as a decorator (see examples).\n\n    For a detailed guide on custom ops, please see\n    https://pytorch.org/tutorials/advanced/custom_ops_landing_page.html\n\n    Args:\n        op_name: Operator name (along with the overload) or OpOverload object.\n        func: Fake tensor implementation.\n        lib (Optional[Library]): Library to register the fake tensor to.\n        allow_override: Flag controlling if we want to override an\n                        existing registered fake impl. This is by default off,\n                        and will error you're trying to register a fake impl to\n                        an operator that already has a fake impl. This also only\n                        applies if the custom operator was not created via\n                        torch.library.custom_op, as overriding and existing fake\n                        impl is already allowed.\n\n    Examples:\n        >>> import torch\n        >>> import numpy as np\n        >>> from torch import Tensor\n        >>>\n        >>> # Example 1: an operator without data-dependent output shape\n        >>> @torch.library.custom_op(\"mylib::custom_linear\", mutates_args=())\n        >>> def custom_linear(x: Tensor, weight: Tensor, bias: Tensor) -> Tensor:\n        >>>     raise NotImplementedError(\"Implementation goes here\")\n        >>>\n        >>> @torch.library.register_fake(\"mylib::custom_linear\")\n        >>> def _(x, weight, bias):\n        >>>     assert x.dim() == 2\n        >>>     assert weight.dim() == 2\n        >>>     assert bias.dim() == 1\n        >>>     assert x.shape[1] == weight.shape[1]\n        >>>     assert weight.shape[0] == bias.shape[0]\n        >>>     assert x.device == weight.device\n        >>>\n        >>>     return (x @ weight.t()) + bias\n        >>>\n        >>> with torch._subclasses.fake_tensor.FakeTensorMode():\n        >>>     x = torch.randn(2, 3)\n        >>>     w = torch.randn(3, 3)\n        >>>     b = torch.randn(3)\n        >>>     y = torch.ops.mylib.custom_linear(x, w, b)\n        >>>\n        >>> assert y.shape == (2, 3)\n        >>>\n        >>> # Example 2: an operator with data-dependent output shape\n        >>> @torch.library.custom_op(\"mylib::custom_nonzero\", mutates_args=())\n        >>> def custom_nonzero(x: Tensor) -> Tensor:\n        >>>     x_np = x.numpy(force=True)\n        >>>     res = np.stack(np.nonzero(x_np), axis=1)\n        >>>     return torch.tensor(res, device=x.device)\n        >>>\n        >>> @torch.library.register_fake(\"mylib::custom_nonzero\")\n        >>> def _(x):\n        >>> # Number of nonzero-elements is data-dependent.\n        >>> # Since we cannot peek at the data in an fake impl,\n        >>> # we use the ctx object to construct a new symint that\n        >>> # represents the data-dependent size.\n        >>>     ctx = torch.library.get_ctx()\n        >>>     nnz = ctx.new_dynamic_size()\n        >>>     shape = [nnz, x.dim()]\n        >>>     result = x.new_empty(shape, dtype=torch.int64)\n        >>>     return result\n        >>>\n        >>> from torch.fx.experimental.proxy_tensor import make_fx\n        >>>\n        >>> x = torch.tensor([0, 1, 2, 3, 4, 0])\n        >>> trace = make_fx(torch.ops.mylib.custom_nonzero, tracing_mode=\"symbolic\")(x)\n        >>> trace.print_readable()\n        >>>\n        >>> assert torch.allclose(trace(x), torch.ops.mylib.custom_nonzero(x))\n\n    ",
+    "input_parameters": "(op: Union[str, ForwardRef('torch._ops.OpOverload'), ForwardRef('torch._library.custom_ops.CustomOpDef')], func: Optional[Callable] = None, /, *, lib: Optional[torch.library.Library] = None, _stacklevel: int = 1, allow_override: bool = False)",
+    "output_parameters": null,
+    "vllm_api": "_custom_ops.register_fake(...)"
+  },
+  "register_graph_buffers": {
+    "callable": true,
+    "signature": "(fa: int, handles: list, offsets: list) -> None",
+    "text_signature": null,
+    "doc": null,
+    "input_parameters": "(fa: int, handles: list, offsets: list)",
+    "output_parameters": "None",
+    "vllm_api": "_custom_ops.register_graph_buffers(...)"
+  },
+  "reshape_and_cache": {
+    "callable": true,
+    "signature": "(key: torch.Tensor, value: torch.Tensor, key_cache: torch.Tensor, value_cache: torch.Tensor, slot_mapping: torch.Tensor, kv_cache_dtype: str, k_scale: torch.Tensor, v_scale: torch.Tensor) -> None",
+    "text_signature": null,
+    "doc": null,
+    "input_parameters": "(key: torch.Tensor, value: torch.Tensor, key_cache: torch.Tensor, value_cache: torch.Tensor, slot_mapping: torch.Tensor, kv_cache_dtype: str, k_scale: torch.Tensor, v_scale: torch.Tensor)",
+    "output_parameters": "None",
+    "vllm_api": "_custom_ops.reshape_and_cache(...)"
+  },
+  "reshape_and_cache_flash": {
+    "callable": true,
+    "signature": "(key: torch.Tensor, value: torch.Tensor, key_cache: torch.Tensor, value_cache: torch.Tensor, slot_mapping: torch.Tensor, kv_cache_dtype: str, k_scale: torch.Tensor, v_scale: torch.Tensor) -> None",
+    "text_signature": null,
+    "doc": null,
+    "input_parameters": "(key: torch.Tensor, value: torch.Tensor, key_cache: torch.Tensor, value_cache: torch.Tensor, slot_mapping: torch.Tensor, kv_cache_dtype: str, k_scale: torch.Tensor, v_scale: torch.Tensor)",
+    "output_parameters": "None",
+    "vllm_api": "_custom_ops.reshape_and_cache_flash(...)"
+  },
+  "rms_norm": {
+    "callable": true,
+    "signature": "(out: torch.Tensor, input: torch.Tensor, weight: torch.Tensor, epsilon: float) -> None",
+    "text_signature": null,
+    "doc": null,
+    "input_parameters": "(out: torch.Tensor, input: torch.Tensor, weight: torch.Tensor, epsilon: float)",
+    "output_parameters": "None",
+    "vllm_api": "_custom_ops.rms_norm(...)"
+  },
+  "rms_norm_dynamic_per_token_quant": {
+    "callable": true,
+    "signature": "(input: torch.Tensor, weight: torch.Tensor, epsilon: float, quant_dtype: torch.dtype, scale_ub: torch.Tensor | None = None, residual: torch.Tensor | None = None) -> tuple",
+    "text_signature": null,
+    "doc": null,
+    "input_parameters": "(input: torch.Tensor, weight: torch.Tensor, epsilon: float, quant_dtype: torch.dtype, scale_ub: torch.Tensor | None = None, residual: torch.Tensor | None = None)",
+    "output_parameters": "tuple",
+    "vllm_api": "_custom_ops.rms_norm_dynamic_per_token_quant(...)"
+  },
+  "rms_norm_per_block_quant": {
+    "callable": true,
+    "signature": "(input: torch.Tensor, weight: torch.Tensor, epsilon: float, quant_dtype: torch.dtype, group_size: list, scale_ub: torch.Tensor | None = None, residual: torch.Tensor | None = None, is_scale_transposed: bool = False) -> tuple",
+    "text_signature": null,
+    "doc": null,
+    "input_parameters": "(input: torch.Tensor, weight: torch.Tensor, epsilon: float, quant_dtype: torch.dtype, group_size: list, scale_ub: torch.Tensor | None = None, residual: torch.Tensor | None = None, is_scale_transposed: bool = False)",
+    "output_parameters": "tuple",
+    "vllm_api": "_custom_ops.rms_norm_per_block_quant(...)"
+  },
+  "rocm_enforce_contiguous_skinny_gemm_inputs": {
+    "callable": true,
+    "signature": "(a: torch.Tensor, b: torch.Tensor) -> tuple",
+    "text_signature": null,
+    "doc": null,
+    "input_parameters": "(a: torch.Tensor, b: torch.Tensor)",
+    "output_parameters": "tuple",
+    "vllm_api": "_custom_ops.rocm_enforce_contiguous_skinny_gemm_inputs(...)"
+  },
+  "rotary_embedding": {
+    "callable": true,
+    "signature": "(positions: torch.Tensor, query: torch.Tensor, key: torch.Tensor | None, head_size: int, cos_sin_cache: torch.Tensor, is_neox: bool) -> None",
+    "text_signature": null,
+    "doc": null,
+    "input_parameters": "(positions: torch.Tensor, query: torch.Tensor, key: torch.Tensor | None, head_size: int, cos_sin_cache: torch.Tensor, is_neox: bool)",
+    "output_parameters": "None",
+    "vllm_api": "_custom_ops.rotary_embedding(...)"
+  },
+  "scaled_fp4_experts_quant": {
+    "callable": true,
+    "signature": "(input_tensor: torch.Tensor, input_global_scale: torch.Tensor, expert_offsets: torch.Tensor, blockscale_offsets: torch.Tensor, topk: int) -> tuple",
+    "text_signature": null,
+    "doc": "\n    Quantize input tensor to NVFP4 and return quantized tensor and scale, for\n    packed MoE Inputs.\n    Args:\n        input_tensor: The input tensor to be quantized to NVFP4\n        input_global_scale: A scalar scaling factor for the entire tensor.\n        expert_offsets: The expert offsets tensor\n        blockscale_offsets: The blockscale offsets tensor\n    Outputs:\n        output: The quantized tensor in NVFP4\n        output_scales: The blockscale tensor in FP8-E4M3\n    ",
+    "input_parameters": "(input_tensor: torch.Tensor, input_global_scale: torch.Tensor, expert_offsets: torch.Tensor, blockscale_offsets: torch.Tensor, topk: int)",
+    "output_parameters": "tuple",
+    "vllm_api": "_custom_ops.scaled_fp4_experts_quant(...)"
+  },
+  "scaled_fp4_quant": {
+    "callable": true,
+    "signature": "(input: torch.Tensor, input_global_scale: torch.Tensor, is_sf_swizzled_layout: bool = True, backend: str = 'none') -> tuple",
+    "text_signature": null,
+    "doc": "\n    Quantize input tensor to FP4 and return quantized tensor and scale.\n\n    This function quantizes the last dimension of the given tensor `input`. For\n    every 16 consecutive elements, a single dynamically computed scaling factor\n    is shared. This scaling factor is quantized using the `input_global_scale`\n    and is stored in a swizzled layout (see\n    https://docs.nvidia.com/cuda/parallel-thread-execution/#tcgen05-mma-scale-factor-b-layout-4x).\n\n    Args:\n        input: The input tensor to be quantized to FP4\n        input_global_scale: A scalar scaling factor for the entire tensor.\n        use_8x4_sf_layout: Whether to use the 8x4 or 128x4 layout for the scaling\n\n    Returns:\n        tuple[torch.Tensor, torch.Tensor]: The output tensor in FP4 but every\n            two values are packed into a uint8 and float8_e4m3 scaling factors\n            in the sizzled layout.\n    ",
+    "input_parameters": "(input: torch.Tensor, input_global_scale: torch.Tensor, is_sf_swizzled_layout: bool = True, backend: str = 'none')",
+    "output_parameters": "tuple",
+    "vllm_api": "_custom_ops.scaled_fp4_quant(...)"
+  },
+  "scaled_fp8_quant": {
+    "callable": true,
+    "signature": "(input: torch.Tensor, scale: torch.Tensor | None = None, num_token_padding: int | None = None, scale_ub: torch.Tensor | None = None, use_per_token_if_dynamic: bool = False, output: torch.Tensor | None = None, group_shape: tuple[int, int] | None = None) -> tuple",
+    "text_signature": null,
+    "doc": "\n    Quantize input tensor to FP8 and return quantized tensor and scale.\n\n    This function supports both static and dynamic quantization: If you\n    provide the scale, it will use static scaling and if you omit it,\n    the scale will be determined dynamically. The function also allows\n    optional padding of the output tensors for downstream kernels that\n    will benefit from padding.\n\n    Args:\n        input: The input tensor to be quantized to FP8 (must be 2D: [M, N])\n        scale: Optional scaling factor for the FP8 quantization. Supports:\n            - 0D or [1]: per-tensor scaling\n            - 1D: requires explicit group_shape to disambiguate per-channel\n              vs per-token (use (-1, 1) for per-channel, (1, -1) for per-token)\n            - 2D [M/group_m, N/group_n]: group scaling (e.g. [M, N/128] for\n              DeepSeek-style (1,128) groups, or [M/128, N/128] for (128,128))\n        scale_ub: Optional upper bound for scaling factor in dynamic\n            per token case\n        num_token_padding: If specified, pad the first dimension\n            of the output to at least this value.\n        use_per_token_if_dynamic: Whether to do per_tensor or per_token\n            in the dynamic quantization case.\n        group_shape: Optional tuple (group_m, group_n) specifying the group\n            shape for static quantization. Use -1 for \"full extent\" (e.g.,\n            (-1, -1) for per-tensor, (-1, 1) for per-channel, etc.)\n            Required for 1D scales; optional for 2D scales.\n\n    Returns:\n        tuple[torch.Tensor, torch.Tensor]: The output tensor in FP8 and\n            scaling factor.\n    ",
+    "input_parameters": "(input: torch.Tensor, scale: torch.Tensor | None = None, num_token_padding: int | None = None, scale_ub: torch.Tensor | None = None, use_per_token_if_dynamic: bool = False, output: torch.Tensor | None = None, group_shape: tuple[int, int] | None = None)",
+    "output_parameters": "tuple",
+    "vllm_api": "_custom_ops.scaled_fp8_quant(...)"
+  },
+  "scaled_int8_quant": {
+    "callable": true,
+    "signature": "(input: torch.Tensor, scale: torch.Tensor | None = None, azp: torch.Tensor | None = None, symmetric: bool = True) -> tuple",
+    "text_signature": null,
+    "doc": "\n    Quantize the input tensor to int8 and return the quantized tensor and scale, and maybe azp.\n\n    Args:\n        input: The input tensor to be quantized to int8.\n        scale: Optional scaling factor for the int8 quantization.\n            When not provided, we invoke dynamic-per-token quantization.\n        azp: Optional zero-point for the int8 quantization.\n            Must be provided for asymmetric quantization if `scale` is provided.\n        symmetric: Whether to use symmetric quantization (scale only, azp ignored).\n\n    Returns:\n      tuple[torch.Tensor, torch.Tensor, torch.Tensor | None] : Output int8 tensor, scales, and optionally azp.\n    ",
+    "input_parameters": "(input: torch.Tensor, scale: torch.Tensor | None = None, azp: torch.Tensor | None = None, symmetric: bool = True)",
+    "output_parameters": "tuple",
+    "vllm_api": "_custom_ops.scaled_int8_quant(...)"
+  },
+  "selective_scan_fwd": {
+    "callable": true,
+    "signature": "(u: torch.Tensor, delta: torch.Tensor, A: torch.Tensor, B: torch.Tensor, C: torch.Tensor, D_: torch.Tensor | None, z_: torch.Tensor | None, delta_bias_: torch.Tensor | None, delta_softplus: bool, query_start_loc: torch.Tensor | None, cache_indices: torch.Tensor | None, has_initial_state: torch.Tensor | None, ssm_states: torch.Tensor, pad_slot_id: int, block_size: int = 1024, block_idx_first_scheduled_token: torch.Tensor | None = None, block_idx_last_scheduled_token: torch.Tensor | None = None, initial_state_idx: torch.Tensor | None = None)",
+    "text_signature": null,
+    "doc": null,
+    "input_parameters": "(u: torch.Tensor, delta: torch.Tensor, A: torch.Tensor, B: torch.Tensor, C: torch.Tensor, D_: torch.Tensor | None, z_: torch.Tensor | None, delta_bias_: torch.Tensor | None, delta_softplus: bool, query_start_loc: torch.Tensor | None, cache_indices: torch.Tensor | None, has_initial_state: torch.Tensor | None, ssm_states: torch.Tensor, pad_slot_id: int, block_size: int = 1024, block_idx_first_scheduled_token: torch.Tensor | None = None, block_idx_last_scheduled_token: torch.Tensor | None = None, initial_state_idx: torch.Tensor | None = None)",
+    "output_parameters": null,
+    "vllm_api": "_custom_ops.selective_scan_fwd(...)"
+  },
+  "shuffle_rows": {
+    "callable": true,
+    "signature": "(input_tensor: torch.Tensor, dst2src_map: torch.Tensor)",
+    "text_signature": null,
+    "doc": "\n    Shuffle and expand the input tensor according to the dst2src_map and store the result in output_tensor.\n    This is used in MoE to permute the input tensor before performing grouped matrix multiplications.\n    ",
+    "input_parameters": "(input_tensor: torch.Tensor, dst2src_map: torch.Tensor)",
+    "output_parameters": null,
+    "vllm_api": "_custom_ops.shuffle_rows(...)"
+  },
+  "silu_and_mul_scaled_fp4_experts_quant": {
+    "callable": true,
+    "signature": "(input_tensor: torch.Tensor, input_global_scale: torch.Tensor, expert_offsets: torch.Tensor, blockscale_offsets: torch.Tensor, topk: int) -> tuple",
+    "text_signature": null,
+    "doc": "\n    Fused SiLU+Mul+NVFP4 quantization for MoE intermediate activations.\n\n    Args:\n        input_tensor: The input tensor with gate || up layout [m_topk, k*2]\n        input_global_scale: A per-expert scaling factor [n_experts]\n        expert_offsets: The expert offsets tensor [n_experts+1]\n        blockscale_offsets: The blockscale offsets tensor [n_experts+1]\n        topk: Number of top-k experts selected\n    Outputs:\n        output: The quantized tensor in NVFP4 [m_topk, k/2]\n        output_scales: The blockscale tensor in FP8-E4M3\n    ",
+    "input_parameters": "(input_tensor: torch.Tensor, input_global_scale: torch.Tensor, expert_offsets: torch.Tensor, blockscale_offsets: torch.Tensor, topk: int)",
+    "output_parameters": "tuple",
+    "vllm_api": "_custom_ops.silu_and_mul_scaled_fp4_experts_quant(...)"
+  },
+  "sm100_cutlass_mla_decode": {
+    "callable": true,
+    "signature": "(out: torch.Tensor, lse: torch.Tensor, q_nope: torch.Tensor, q_pe: torch.Tensor, kv_c_and_k_pe_cache: torch.Tensor, seq_lens: torch.Tensor, page_table: torch.Tensor, workspace: torch.Tensor, scale: float, num_kv_splits: int) -> torch.Tensor",
+    "text_signature": null,
+    "doc": null,
+    "input_parameters": "(out: torch.Tensor, lse: torch.Tensor, q_nope: torch.Tensor, q_pe: torch.Tensor, kv_c_and_k_pe_cache: torch.Tensor, seq_lens: torch.Tensor, page_table: torch.Tensor, workspace: torch.Tensor, scale: float, num_kv_splits: int)",
+    "output_parameters": "torch.Tensor",
+    "vllm_api": "_custom_ops.sm100_cutlass_mla_decode(...)"
+  },
+  "sm100_cutlass_mla_get_workspace_size": {
+    "callable": true,
+    "signature": "(max_seq_len: int, num_batches: int, sm_count: int, num_kv_splits: int) -> int",
+    "text_signature": null,
+    "doc": null,
+    "input_parameters": "(max_seq_len: int, num_batches: int, sm_count: int, num_kv_splits: int)",
+    "output_parameters": "int",
+    "vllm_api": "_custom_ops.sm100_cutlass_mla_get_workspace_size(...)"
+  },
+  "swap_blocks": {
+    "callable": true,
+    "signature": "(src: torch.Tensor, dst: torch.Tensor, block_size_in_bytes: int, block_mapping: torch.Tensor) -> None",
+    "text_signature": null,
+    "doc": "\n    Copy specific blocks from one tensor to another.\n\n    This method assumes each of the two input tensors is composed of\n    consecutive contiguous blocks, of size block_size_in_bytes.\n    i.e. the memory layout for each tensor is:\n    [block0] [block1] ... [block N]\n\n    block_mapping determines the subset of blocks to copy of the source tensor,\n    and their matching destination block number on the destination tensor.\n    block_mapping is expected to be a tensor of shape (num_blocks_to_copy, 2)\n    where each block_mapping[i] represents a single copy operation, copying\n    block #block_mapping[i][0] from the source tensor\n    to block #block_mapping[i][1] on the destination tensor.\n    block_mapping should have dtype int64.\n\n    The source and the destination tensors can be either on cpu or gpu,\n    but not both on cpu.\n    the block mapping tensor must on cpu.\n    ",
+    "input_parameters": "(src: torch.Tensor, dst: torch.Tensor, block_size_in_bytes: int, block_mapping: torch.Tensor)",
+    "output_parameters": "None",
+    "vllm_api": "_custom_ops.swap_blocks(...)"
+  },
+  "topk_sigmoid": {
+    "callable": true,
+    "signature": "(topk_weights: torch.Tensor, topk_ids: torch.Tensor, token_expert_indices: torch.Tensor, gating_output: torch.Tensor, renormalize: bool = False, e_score_correction_bias: torch.Tensor | None = None) -> None",
+    "text_signature": null,
+    "doc": null,
+    "input_parameters": "(topk_weights: torch.Tensor, topk_ids: torch.Tensor, token_expert_indices: torch.Tensor, gating_output: torch.Tensor, renormalize: bool = False, e_score_correction_bias: torch.Tensor | None = None)",
+    "output_parameters": "None",
+    "vllm_api": "_custom_ops.topk_sigmoid(...)"
+  },
+  "topk_softmax": {
+    "callable": true,
+    "signature": "(topk_weights: torch.Tensor, topk_ids: torch.Tensor, token_expert_indices: torch.Tensor, gating_output: torch.Tensor, renormalize: bool = False, e_score_correction_bias: torch.Tensor | None = None) -> None",
+    "text_signature": null,
+    "doc": null,
+    "input_parameters": "(topk_weights: torch.Tensor, topk_ids: torch.Tensor, token_expert_indices: torch.Tensor, gating_output: torch.Tensor, renormalize: bool = False, e_score_correction_bias: torch.Tensor | None = None)",
+    "output_parameters": "None",
+    "vllm_api": "_custom_ops.topk_softmax(...)"
+  },
+  "wvSplitK": {
+    "callable": true,
+    "signature": "(a: torch.Tensor, b: torch.Tensor, cu_count: int, bias: torch.Tensor = None) -> torch.Tensor",
+    "text_signature": null,
+    "doc": null,
+    "input_parameters": "(a: torch.Tensor, b: torch.Tensor, cu_count: int, bias: torch.Tensor = None)",
+    "output_parameters": "torch.Tensor",
+    "vllm_api": "_custom_ops.wvSplitK(...)"
+  },
+  "wvSplitKQ": {
+    "callable": true,
+    "signature": "(a: torch.Tensor, b: torch.Tensor, out_dtype: torch.dtype, scale_a: torch.Tensor, scale_b: torch.Tensor, cu_count: int, bias: torch.Tensor = None) -> torch.Tensor",
+    "text_signature": null,
+    "doc": null,
+    "input_parameters": "(a: torch.Tensor, b: torch.Tensor, out_dtype: torch.dtype, scale_a: torch.Tensor, scale_b: torch.Tensor, cu_count: int, bias: torch.Tensor = None)",
+    "output_parameters": "torch.Tensor",
+    "vllm_api": "_custom_ops.wvSplitKQ(...)"
+  },
+  "wvSplitKrc": {
+    "callable": true,
+    "signature": "(a: torch.Tensor, b: torch.Tensor, cu_count: int, bias: torch.Tensor = None) -> torch.Tensor",
+    "text_signature": null,
+    "doc": null,
+    "input_parameters": "(a: torch.Tensor, b: torch.Tensor, cu_count: int, bias: torch.Tensor = None)",
+    "output_parameters": "torch.Tensor",
+    "vllm_api": "_custom_ops.wvSplitKrc(...)"
+  },
+  "_private_ops": {
+    "_allspark_w8a16_gemm_fake": {
+      "callable": true,
+      "signature": "(a: torch.Tensor, b_qweight: torch.Tensor, b_scales: torch.Tensor, b_qzeros: torch.Tensor | None, n: torch.SymInt, group_size: torch.SymInt, sm_count: torch.SymInt, sm_version: torch.SymInt, CUBLAS_M_THRESHOLD: torch.SymInt, has_zp: bool, n32k16_reorder: bool) -> torch.Tensor",
+      "text_signature": null,
+      "doc": null,
+      "input_parameters": "(a: torch.Tensor, b_qweight: torch.Tensor, b_scales: torch.Tensor, b_qzeros: torch.Tensor | None, n: torch.SymInt, group_size: torch.SymInt, sm_count: torch.SymInt, sm_version: torch.SymInt, CUBLAS_M_THRESHOLD: torch.SymInt, has_zp: bool, n32k16_reorder: bool)",
+      "output_parameters": "torch.Tensor",
+      "vllm_api": "_custom_ops._allspark_w8a16_gemm_fake(...)"
+    },
+    "_awq_dequantize_fake": {
+      "callable": true,
+      "signature": "(qweight: torch.Tensor, scales: torch.Tensor, zeros: torch.Tensor, split_k_iters: torch.SymInt, thx: int, thy: int) -> torch.Tensor",
+      "text_signature": null,
+      "doc": null,
+      "input_parameters": "(qweight: torch.Tensor, scales: torch.Tensor, zeros: torch.Tensor, split_k_iters: torch.SymInt, thx: int, thy: int)",
+      "output_parameters": "torch.Tensor",
+      "vllm_api": "_custom_ops._awq_dequantize_fake(...)"
+    },
+    "_awq_gemm_fake": {
+      "callable": true,
+      "signature": "(input: torch.Tensor, qweight: torch.Tensor, scales: torch.Tensor, qzeros: torch.Tensor, split_k_iters: torch.SymInt) -> torch.Tensor",
+      "text_signature": null,
+      "doc": null,
+      "input_parameters": "(input: torch.Tensor, qweight: torch.Tensor, scales: torch.Tensor, qzeros: torch.Tensor, split_k_iters: torch.SymInt)",
+      "output_parameters": "torch.Tensor",
+      "vllm_api": "_custom_ops._awq_gemm_fake(...)"
+    },
+    "_awq_marlin_repack_fake": {
+      "callable": true,
+      "signature": "(b_q_weight: torch.Tensor, size_k: torch.SymInt, size_n: torch.SymInt, num_bits: int, is_a_8bit: bool = False) -> torch.Tensor",
+      "text_signature": null,
+      "doc": null,
+      "input_parameters": "(b_q_weight: torch.Tensor, size_k: torch.SymInt, size_n: torch.SymInt, num_bits: int, is_a_8bit: bool = False)",
+      "output_parameters": "torch.Tensor",
+      "vllm_api": "_custom_ops._awq_marlin_repack_fake(...)"
+    },
+    "_fake_fused_quantize_mx_absmax": {
+      "callable": true,
+      "signature": "(a: torch.Tensor, b: torch.Tensor, xh_e2m1: torch.Tensor, xh_e8m0: torch.Tensor)",
+      "text_signature": null,
+      "doc": null,
+      "input_parameters": "(a: torch.Tensor, b: torch.Tensor, xh_e2m1: torch.Tensor, xh_e8m0: torch.Tensor)",
+      "output_parameters": null,
+      "vllm_api": "_custom_ops._fake_fused_quantize_mx_absmax(...)"
+    },
+    "_fake_fused_quantize_mx_quest": {
+      "callable": true,
+      "signature": "(a: torch.Tensor, b: torch.Tensor, xh_e2m1: torch.Tensor, xh_e8m0: torch.Tensor)",
+      "text_signature": null,
+      "doc": null,
+      "input_parameters": "(a: torch.Tensor, b: torch.Tensor, xh_e2m1: torch.Tensor, xh_e8m0: torch.Tensor)",
+      "output_parameters": null,
+      "vllm_api": "_custom_ops._fake_fused_quantize_mx_quest(...)"
+    },
+    "_fake_fused_quantize_nv": {
+      "callable": true,
+      "signature": "(a: torch.Tensor, b: torch.Tensor, xh_e2m1: torch.Tensor, xh_e4m3: torch.Tensor, global_scale: torch.Tensor)",
+      "text_signature": null,
+      "doc": null,
+      "input_parameters": "(a: torch.Tensor, b: torch.Tensor, xh_e2m1: torch.Tensor, xh_e4m3: torch.Tensor, global_scale: torch.Tensor)",
+      "output_parameters": null,
+      "vllm_api": "_custom_ops._fake_fused_quantize_nv(...)"
+    },
+    "_fake_matmul_ada_mxf4_bf16_tn": {
+      "callable": true,
+      "signature": "(a: torch.Tensor, b: torch.Tensor, a_sf: torch.Tensor, b_sf: torch.Tensor, alpha: torch.Tensor)",
+      "text_signature": null,
+      "doc": null,
+      "input_parameters": "(a: torch.Tensor, b: torch.Tensor, a_sf: torch.Tensor, b_sf: torch.Tensor, alpha: torch.Tensor)",
+      "output_parameters": null,
+      "vllm_api": "_custom_ops._fake_matmul_ada_mxf4_bf16_tn(...)"
+    },
+    "_fake_matmul_mxf4_bf16_tn": {
+      "callable": true,
+      "signature": "(a: torch.Tensor, b: torch.Tensor, a_sf: torch.Tensor, b_sf: torch.Tensor, alpha: torch.Tensor)",
+      "text_signature": null,
+      "doc": null,
+      "input_parameters": "(a: torch.Tensor, b: torch.Tensor, a_sf: torch.Tensor, b_sf: torch.Tensor, alpha: torch.Tensor)",
+      "output_parameters": null,
+      "vllm_api": "_custom_ops._fake_matmul_mxf4_bf16_tn(...)"
+    },
+    "_ggml_dequantize_fake": {
+      "callable": true,
+      "signature": "(W: torch.Tensor, quant_type: int, m: torch.SymInt, n: torch.SymInt, dtype: torch.dtype | None = None) -> torch.Tensor",
+      "text_signature": null,
+      "doc": null,
+      "input_parameters": "(W: torch.Tensor, quant_type: int, m: torch.SymInt, n: torch.SymInt, dtype: torch.dtype | None = None)",
+      "output_parameters": "torch.Tensor",
+      "vllm_api": "_custom_ops._ggml_dequantize_fake(...)"
+    },
+    "_ggml_moe_a8_fake": {
+      "callable": true,
+      "signature": "(X: torch.Tensor, W: torch.Tensor, sorted_token_ids: torch.Tensor, expert_ids: torch.Tensor, num_tokens_post_padded: torch.Tensor, quant_type: int, row: torch.SymInt, top_k: torch.SymInt, tokens: torch.SymInt) -> torch.Tensor",
+      "text_signature": null,
+      "doc": null,
+      "input_parameters": "(X: torch.Tensor, W: torch.Tensor, sorted_token_ids: torch.Tensor, expert_ids: torch.Tensor, num_tokens_post_padded: torch.Tensor, quant_type: int, row: torch.SymInt, top_k: torch.SymInt, tokens: torch.SymInt)",
+      "output_parameters": "torch.Tensor",
+      "vllm_api": "_custom_ops._ggml_moe_a8_fake(...)"
+    },
+    "_ggml_moe_a8_vec_fake": {
+      "callable": true,
+      "signature": "(X: torch.Tensor, W: torch.Tensor, topk_ids: torch.Tensor, top_k: int, quant_type: int, row: torch.SymInt, tokens: torch.SymInt) -> torch.Tensor",
+      "text_signature": null,
+      "doc": null,
+      "input_parameters": "(X: torch.Tensor, W: torch.Tensor, topk_ids: torch.Tensor, top_k: int, quant_type: int, row: torch.SymInt, tokens: torch.SymInt)",
+      "output_parameters": "torch.Tensor",
+      "vllm_api": "_custom_ops._ggml_moe_a8_vec_fake(...)"
+    },
+    "_ggml_mul_mat_a8_fake": {
+      "callable": true,
+      "signature": "(W: torch.Tensor, X: torch.Tensor, quant_type: int, row: torch.SymInt) -> torch.Tensor",
+      "text_signature": null,
+      "doc": null,
+      "input_parameters": "(W: torch.Tensor, X: torch.Tensor, quant_type: int, row: torch.SymInt)",
+      "output_parameters": "torch.Tensor",
+      "vllm_api": "_custom_ops._ggml_mul_mat_a8_fake(...)"
+    },
+    "_ggml_mul_mat_vec_a8_fake": {
+      "callable": true,
+      "signature": "(W: torch.Tensor, X: torch.Tensor, quant_type: int, row: torch.SymInt) -> torch.Tensor",
+      "text_signature": null,
+      "doc": null,
+      "input_parameters": "(W: torch.Tensor, X: torch.Tensor, quant_type: int, row: torch.SymInt)",
+      "output_parameters": "torch.Tensor",
+      "vllm_api": "_custom_ops._ggml_mul_mat_vec_a8_fake(...)"
+    },
+    "_gptq_gemm_fake": {
+      "callable": true,
+      "signature": "(a: torch.Tensor, b_q_weight: torch.Tensor, b_gptq_qzeros: torch.Tensor, b_gptq_scales: torch.Tensor, b_g_idx: torch.Tensor, use_exllama: bool, use_v2_format: bool, bit: int) -> torch.Tensor",
+      "text_signature": null,
+      "doc": null,
+      "input_parameters": "(a: torch.Tensor, b_q_weight: torch.Tensor, b_gptq_qzeros: torch.Tensor, b_gptq_scales: torch.Tensor, b_g_idx: torch.Tensor, use_exllama: bool, use_v2_format: bool, bit: int)",
+      "output_parameters": "torch.Tensor",
+      "vllm_api": "_custom_ops._gptq_gemm_fake(...)"
+    },
+    "_gptq_marlin_24_gemm_fake": {
+      "callable": true,
+      "signature": "(a: torch.Tensor, b_q_weight: torch.Tensor, b_meta: torch.Tensor, b_scales: torch.Tensor, workspace: torch.Tensor, b_q_type: vllm.scalar_type.ScalarType, size_m: torch.SymInt, size_n: torch.SymInt, size_k: torch.SymInt) -> torch.Tensor",
+      "text_signature": null,
+      "doc": null,
+      "input_parameters": "(a: torch.Tensor, b_q_weight: torch.Tensor, b_meta: torch.Tensor, b_scales: torch.Tensor, workspace: torch.Tensor, b_q_type: vllm.scalar_type.ScalarType, size_m: torch.SymInt, size_n: torch.SymInt, size_k: torch.SymInt)",
+      "output_parameters": "torch.Tensor",
+      "vllm_api": "_custom_ops._gptq_marlin_24_gemm_fake(...)"
+    },
+    "_gptq_marlin_repack_fake": {
+      "callable": true,
+      "signature": "(b_q_weight: torch.Tensor, perm: torch.Tensor, size_k: torch.SymInt, size_n: torch.SymInt, num_bits: int, is_a_8bit: bool = False) -> torch.Tensor",
+      "text_signature": null,
+      "doc": null,
+      "input_parameters": "(b_q_weight: torch.Tensor, perm: torch.Tensor, size_k: torch.SymInt, size_n: torch.SymInt, num_bits: int, is_a_8bit: bool = False)",
+      "output_parameters": "torch.Tensor",
+      "vllm_api": "_custom_ops._gptq_marlin_repack_fake(...)"
+    },
+    "_hadacore_transform_fake": {
+      "callable": true,
+      "signature": "(x: torch.Tensor, inplace: bool) -> torch.Tensor",
+      "text_signature": null,
+      "doc": null,
+      "input_parameters": "(x: torch.Tensor, inplace: bool)",
+      "output_parameters": "torch.Tensor",
+      "vllm_api": "_custom_ops._hadacore_transform_fake(...)"
+    },
+    "_marlin_gemm_fake": {
+      "callable": true,
+      "signature": "(a: torch.Tensor, c: torch.Tensor | None, b_q_weight: torch.Tensor, b_bias: torch.Tensor | None, b_scales: torch.Tensor, a_scales: torch.Tensor | None, global_scale: torch.Tensor | None, b_zeros: torch.Tensor | None, g_idx: torch.Tensor | None, perm: torch.Tensor | None, workspace: torch.Tensor, b_q_type_id: int, size_m: torch.SymInt, size_n: torch.SymInt, size_k: torch.SymInt, is_k_full: bool = True, use_atomic_add: bool = False, use_fp32_reduce: bool = False, is_zp_float: bool = False) -> torch.Tensor",
+      "text_signature": null,
+      "doc": null,
+      "input_parameters": "(a: torch.Tensor, c: torch.Tensor | None, b_q_weight: torch.Tensor, b_bias: torch.Tensor | None, b_scales: torch.Tensor, a_scales: torch.Tensor | None, global_scale: torch.Tensor | None, b_zeros: torch.Tensor | None, g_idx: torch.Tensor | None, perm: torch.Tensor | None, workspace: torch.Tensor, b_q_type_id: int, size_m: torch.SymInt, size_n: torch.SymInt, size_k: torch.SymInt, is_k_full: bool = True, use_atomic_add: bool = False, use_fp32_reduce: bool = False, is_zp_float: bool = False)",
+      "output_parameters": "torch.Tensor",
+      "vllm_api": "_custom_ops._marlin_gemm_fake(...)"
+    },
+    "_permute_cols_fake": {
+      "callable": true,
+      "signature": "(a: torch.Tensor, perm: torch.Tensor) -> torch.Tensor",
+      "text_signature": null,
+      "doc": null,
+      "input_parameters": "(a: torch.Tensor, perm: torch.Tensor)",
+      "output_parameters": "torch.Tensor",
+      "vllm_api": "_custom_ops._permute_cols_fake(...)"
+    }
+  },
+  "_symbols": [
+    {
+      "name": "CPUDNNLGEMMHandler",
+      "type": "type"
+    },
+    {
+      "name": "Literal",
+      "type": "_LiteralSpecialForm"
+    },
+    {
+      "name": "ScalarType",
+      "type": "type"
+    },
+    {
+      "name": "TYPE_CHECKING",
+      "type": "bool"
+    },
+    {
+      "name": "current_platform",
+      "type": "NvmlCudaPlatform"
+    },
+    {
+      "name": "envs",
+      "type": "module"
+    },
+    {
+      "name": "logger",
+      "type": "Logger"
+    },
+    {
+      "name": "torch",
+      "type": "module"
+    }
+  ]
+}

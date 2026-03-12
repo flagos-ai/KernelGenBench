@@ -1,0 +1,61 @@
+You are a skilled GPU programmer proficient in Triton. Your task is to generate a Triton kernel function.
+Here is an example of a K1 CUDA wrapper function and its corresponding Triton kernel implementation:
+K1 CUDA wrapper function:
+inline void cuda_add(dim3 Gr, dim3 Bl, double* mat, double value, MatrixDim d) {
+    cudaD_add(Gr, Bl, mat, value, d);
+}
+Triton kernel implementation:
+import triton
+import triton.language as tl
+import torch
+
+@triton.jit
+def add_kernel(mat_ptr,  # *Pointer* to input matrix.
+            value,  # Scalar value to add.
+            num_rows,  # Number of rows in the matrix.
+            num_cols,  # Number of columns in the matrix.
+            row_stride,  # Stride between rows.
+            BLOCK_SIZE: tl.constexpr,  # Number of elements each program should process.
+            # NOTE: `constexpr` so it can be used as a shape value.
+            ):
+    pid = tl.program_id(axis=0)  # We use a 1D launch grid so axis is 0.
+    if pid >= num_rows:
+        return
+    row_start = pid * row_stride
+    col_offsets = tl.arange(0, BLOCK_SIZE)
+    offsets = row_start + col_offsets
+    mask = col_offsets < num_cols
+    mat = tl.load(mat_ptr + offsets, mask=mask)
+    result = mat + value
+    tl.store(mat_ptr + offsets, result, mask=mask)
+
+def add(mat: torch.Tensor, value: float):
+    assert mat.is_cuda, "Input tensor must be on CUDA"
+    num_rows, num_cols = mat.shape
+    row_stride = mat.stride(0)
+    grid = lambda meta: (num_rows,)
+    add_kernel[grid](mat, value, num_rows, num_cols, row_stride, BLOCK_SIZE=1024)
+    return mat
+You must strictly adhere to the following specifications:
+The Triton kernel should implement the same functionality as the following K1 CUDA wrapper function:
+```python
+# K1 CUDA Wrapper: cuda_add_row_sum_mat
+# Description: 计算矩阵的行和并更新结果向量，result = alpha * row_sum(mat) + beta * result
+```
+The Triton kernel function name should be add_row_sum_mat.
+
+The input and output args of the function are as follows:
+Input Args: [InputArg(arg_name='result', arg_type='double*', arg_value=None, arg_default=(None,), arg_desc=''), InputArg(arg_name='mat', arg_type='const double*', arg_value=None, arg_default=(None,), arg_desc=''), InputArg(arg_name='scratch', arg_type='void*', arg_value=None, arg_default=(None,), arg_desc=''), InputArg(arg_name='d', arg_type='const MatrixDim', arg_value=None, arg_default=(None,), arg_desc=''), InputArg(arg_name='alpha', arg_type='const double', arg_value=None, arg_default=(None,), arg_desc=''), InputArg(arg_name='beta', arg_type='const double', arg_value=None, arg_default=(None,), arg_desc='')]
+Output Args: [OutputArg(arg_type='void', arg_value=None, arg_desc='')]
+The generated code should include both the Triton kernel definition (with @triton.jit) and the Python wrapper function(s) that launch the kernel.
+The wrapper function name must be exactly the same as the provided function name: add_row_sum_mat
+
+IMPORTANT: Convert C++ types to Python/Triton equivalents:
+- double* / float* → torch.Tensor (on CUDA device)
+- const double* / const float* → torch.Tensor (read-only)
+- MatrixDim → extract num_rows, num_cols, stride from tensor shape
+- dim3 Gr, Bl → calculate grid dimensions from tensor shape
+- int, double, float → Python int, float
+- void* → torch.Tensor or None (depending on context)
+You must generate the valid Triton code directly without any explanations or additional text, and ensure no testing or benchmarking code is included. The code must be complete and ready to run.
+You must use ```python ... ``` to format the code block.

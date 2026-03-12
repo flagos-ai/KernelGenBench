@@ -49,6 +49,7 @@ class VerifyConfig:
     perf_timeout: int = 600    # seconds
     manage_device_visibility: bool = True  # Whether to set device visibility env var
     anti_hack: bool = False  # Enable anti-hack Layer 2/3 runtime checks
+    max_test_cases: int = 0  # Max test cases to run (0 = all)
 
 @dataclass
 class Source:
@@ -427,12 +428,13 @@ class Verifier:
         return check_result
 
     def run_tests(
-        self, 
-        name, 
-        json_path: str=None, 
-        max_failures: str | int = "all", 
-        seed=42, 
-        strict_check=False
+        self,
+        name,
+        json_path: str=None,
+        max_failures: str | int = "all",
+        seed=42,
+        strict_check=False,
+        max_test_cases: int = 0
     ) -> VerifyResult:
         set_seed(seed)
         # get api name from op_mark if it contains "::"
@@ -460,7 +462,11 @@ class Verifier:
                 console.print(f"[red][bold]Fail[/bold][/red] Test function {func_name} not found")
                 return VerifyResult(op_name=report_name, success=False, traceback=f"Test function {func_name} not found")
             params = get_params(func_name, mark)
-            for combo in ([{}] if not params else expand_params(params)):
+            all_combos = [{}] if not params else expand_params(params)
+            # Limit test cases if max_test_cases > 0
+            if max_test_cases > 0 and len(all_combos) > max_test_cases:
+                all_combos = all_combos[:max_test_cases]
+            for combo in all_combos:
                 total += 1
                 success = True
                 tb_str = None
@@ -632,8 +638,9 @@ class Verifier:
             delete_after = True
 
         verifyresult = self.run_tests(
-            name=op_mark, 
-            json_path=json_path, 
+            name=op_mark,
+            json_path=json_path,
+            max_test_cases=config.max_test_cases, 
             max_failures="all",
             seed=config.seed, 
             strict_check=config.strict_check,

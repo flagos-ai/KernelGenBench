@@ -1,0 +1,2187 @@
+{
+  "summary": {
+    "total": 239,
+    "with_cupy": 47,
+    "without_cupy": 192,
+    "unknown": 0,
+    "coverage_percentage": 19.665271966527197
+  },
+  "operations": {
+    "loggerconfigure": {
+      "total": 1,
+      "with_cupy": 0,
+      "without_cupy": 1,
+      "functions": [
+        {
+          "name": "cublasLoggerConfigure",
+          "has_cupy": false,
+          "dtype": "unknown"
+        }
+      ]
+    },
+    "etloggercallback": {
+      "total": 1,
+      "with_cupy": 0,
+      "without_cupy": 1,
+      "functions": [
+        {
+          "name": "cublasSetLoggerCallback",
+          "has_cupy": false,
+          "dtype": "float32"
+        }
+      ]
+    },
+    "getloggercallback": {
+      "total": 1,
+      "with_cupy": 0,
+      "without_cupy": 1,
+      "functions": [
+        {
+          "name": "cublasGetLoggerCallback",
+          "has_cupy": false,
+          "dtype": "unknown"
+        }
+      ]
+    },
+    "nrm2ex": {
+      "total": 1,
+      "with_cupy": 0,
+      "without_cupy": 1,
+      "functions": [
+        {
+          "name": "cublasNrm2Ex",
+          "has_cupy": false,
+          "dtype": "unknown"
+        }
+      ]
+    },
+    "nrm2": {
+      "total": 2,
+      "with_cupy": 2,
+      "without_cupy": 0,
+      "functions": [
+        {
+          "name": "cublasSnrm2_v2",
+          "has_cupy": true,
+          "dtype": "float32"
+        },
+        {
+          "name": "cublasDnrm2_v2",
+          "has_cupy": true,
+          "dtype": "float64"
+        }
+      ]
+    },
+    "cnrm2": {
+      "total": 1,
+      "with_cupy": 0,
+      "without_cupy": 1,
+      "functions": [
+        {
+          "name": "cublasScnrm2_v2",
+          "has_cupy": false,
+          "dtype": "float32"
+        }
+      ]
+    },
+    "znrm2": {
+      "total": 1,
+      "with_cupy": 0,
+      "without_cupy": 1,
+      "functions": [
+        {
+          "name": "cublasDznrm2_v2",
+          "has_cupy": false,
+          "dtype": "float64"
+        }
+      ]
+    },
+    "otex": {
+      "total": 1,
+      "with_cupy": 0,
+      "without_cupy": 1,
+      "functions": [
+        {
+          "name": "cublasDotEx",
+          "has_cupy": false,
+          "dtype": "float64"
+        }
+      ]
+    },
+    "otcex": {
+      "total": 1,
+      "with_cupy": 0,
+      "without_cupy": 1,
+      "functions": [
+        {
+          "name": "cublasDotcEx",
+          "has_cupy": false,
+          "dtype": "float64"
+        }
+      ]
+    },
+    "dot": {
+      "total": 2,
+      "with_cupy": 2,
+      "without_cupy": 0,
+      "functions": [
+        {
+          "name": "cublasSdot_v2",
+          "has_cupy": true,
+          "dtype": "float32"
+        },
+        {
+          "name": "cublasDdot_v2",
+          "has_cupy": true,
+          "dtype": "float64"
+        }
+      ]
+    },
+    "dotu": {
+      "total": 2,
+      "with_cupy": 2,
+      "without_cupy": 0,
+      "functions": [
+        {
+          "name": "cublasCdotu_v2",
+          "has_cupy": true,
+          "dtype": "complex64"
+        },
+        {
+          "name": "cublasZdotu_v2",
+          "has_cupy": true,
+          "dtype": "complex128"
+        }
+      ]
+    },
+    "dotc": {
+      "total": 2,
+      "with_cupy": 2,
+      "without_cupy": 0,
+      "functions": [
+        {
+          "name": "cublasCdotc_v2",
+          "has_cupy": true,
+          "dtype": "complex64"
+        },
+        {
+          "name": "cublasZdotc_v2",
+          "has_cupy": true,
+          "dtype": "complex128"
+        }
+      ]
+    },
+    "calex": {
+      "total": 1,
+      "with_cupy": 0,
+      "without_cupy": 1,
+      "functions": [
+        {
+          "name": "cublasScalEx",
+          "has_cupy": false,
+          "dtype": "float32"
+        }
+      ]
+    },
+    "scal": {
+      "total": 4,
+      "with_cupy": 4,
+      "without_cupy": 0,
+      "functions": [
+        {
+          "name": "cublasSscal_v2",
+          "has_cupy": true,
+          "dtype": "float32"
+        },
+        {
+          "name": "cublasDscal_v2",
+          "has_cupy": true,
+          "dtype": "float64"
+        },
+        {
+          "name": "cublasCscal_v2",
+          "has_cupy": true,
+          "dtype": "complex64"
+        },
+        {
+          "name": "cublasZscal_v2",
+          "has_cupy": true,
+          "dtype": "complex128"
+        }
+      ]
+    },
+    "sscal": {
+      "total": 1,
+      "with_cupy": 0,
+      "without_cupy": 1,
+      "functions": [
+        {
+          "name": "cublasCsscal_v2",
+          "has_cupy": false,
+          "dtype": "complex64"
+        }
+      ]
+    },
+    "dscal": {
+      "total": 1,
+      "with_cupy": 0,
+      "without_cupy": 1,
+      "functions": [
+        {
+          "name": "cublasZdscal_v2",
+          "has_cupy": false,
+          "dtype": "complex128"
+        }
+      ]
+    },
+    "axpyex": {
+      "total": 1,
+      "with_cupy": 0,
+      "without_cupy": 1,
+      "functions": [
+        {
+          "name": "cublasAxpyEx",
+          "has_cupy": false,
+          "dtype": "unknown"
+        }
+      ]
+    },
+    "axpy": {
+      "total": 4,
+      "with_cupy": 4,
+      "without_cupy": 0,
+      "functions": [
+        {
+          "name": "cublasSaxpy_v2",
+          "has_cupy": true,
+          "dtype": "float32"
+        },
+        {
+          "name": "cublasDaxpy_v2",
+          "has_cupy": true,
+          "dtype": "float64"
+        },
+        {
+          "name": "cublasCaxpy_v2",
+          "has_cupy": true,
+          "dtype": "complex64"
+        },
+        {
+          "name": "cublasZaxpy_v2",
+          "has_cupy": true,
+          "dtype": "complex128"
+        }
+      ]
+    },
+    "opyex": {
+      "total": 1,
+      "with_cupy": 0,
+      "without_cupy": 1,
+      "functions": [
+        {
+          "name": "cublasCopyEx",
+          "has_cupy": false,
+          "dtype": "complex64"
+        }
+      ]
+    },
+    "copy": {
+      "total": 4,
+      "with_cupy": 0,
+      "without_cupy": 4,
+      "functions": [
+        {
+          "name": "cublasScopy_v2",
+          "has_cupy": false,
+          "dtype": "float32"
+        },
+        {
+          "name": "cublasDcopy_v2",
+          "has_cupy": false,
+          "dtype": "float64"
+        },
+        {
+          "name": "cublasCcopy_v2",
+          "has_cupy": false,
+          "dtype": "complex64"
+        },
+        {
+          "name": "cublasZcopy_v2",
+          "has_cupy": false,
+          "dtype": "complex128"
+        }
+      ]
+    },
+    "swap": {
+      "total": 4,
+      "with_cupy": 0,
+      "without_cupy": 4,
+      "functions": [
+        {
+          "name": "cublasSswap_v2",
+          "has_cupy": false,
+          "dtype": "float32"
+        },
+        {
+          "name": "cublasDswap_v2",
+          "has_cupy": false,
+          "dtype": "float64"
+        },
+        {
+          "name": "cublasCswap_v2",
+          "has_cupy": false,
+          "dtype": "complex64"
+        },
+        {
+          "name": "cublasZswap_v2",
+          "has_cupy": false,
+          "dtype": "complex128"
+        }
+      ]
+    },
+    "wapex": {
+      "total": 1,
+      "with_cupy": 0,
+      "without_cupy": 1,
+      "functions": [
+        {
+          "name": "cublasSwapEx",
+          "has_cupy": false,
+          "dtype": "float32"
+        }
+      ]
+    },
+    "amaxex": {
+      "total": 1,
+      "with_cupy": 0,
+      "without_cupy": 1,
+      "functions": [
+        {
+          "name": "cublasIamaxEx",
+          "has_cupy": false,
+          "dtype": "unknown"
+        }
+      ]
+    },
+    "aminex": {
+      "total": 1,
+      "with_cupy": 0,
+      "without_cupy": 1,
+      "functions": [
+        {
+          "name": "cublasIaminEx",
+          "has_cupy": false,
+          "dtype": "unknown"
+        }
+      ]
+    },
+    "asumex": {
+      "total": 1,
+      "with_cupy": 0,
+      "without_cupy": 1,
+      "functions": [
+        {
+          "name": "cublasAsumEx",
+          "has_cupy": false,
+          "dtype": "unknown"
+        }
+      ]
+    },
+    "asum": {
+      "total": 2,
+      "with_cupy": 2,
+      "without_cupy": 0,
+      "functions": [
+        {
+          "name": "cublasSasum_v2",
+          "has_cupy": true,
+          "dtype": "float32"
+        },
+        {
+          "name": "cublasDasum_v2",
+          "has_cupy": true,
+          "dtype": "float64"
+        }
+      ]
+    },
+    "casum": {
+      "total": 1,
+      "with_cupy": 0,
+      "without_cupy": 1,
+      "functions": [
+        {
+          "name": "cublasScasum_v2",
+          "has_cupy": false,
+          "dtype": "float32"
+        }
+      ]
+    },
+    "zasum": {
+      "total": 1,
+      "with_cupy": 0,
+      "without_cupy": 1,
+      "functions": [
+        {
+          "name": "cublasDzasum_v2",
+          "has_cupy": false,
+          "dtype": "float64"
+        }
+      ]
+    },
+    "rot": {
+      "total": 4,
+      "with_cupy": 0,
+      "without_cupy": 4,
+      "functions": [
+        {
+          "name": "cublasSrot_v2",
+          "has_cupy": false,
+          "dtype": "float32"
+        },
+        {
+          "name": "cublasDrot_v2",
+          "has_cupy": false,
+          "dtype": "float64"
+        },
+        {
+          "name": "cublasCrot_v2",
+          "has_cupy": false,
+          "dtype": "complex64"
+        },
+        {
+          "name": "cublasZrot_v2",
+          "has_cupy": false,
+          "dtype": "complex128"
+        }
+      ]
+    },
+    "srot": {
+      "total": 1,
+      "with_cupy": 0,
+      "without_cupy": 1,
+      "functions": [
+        {
+          "name": "cublasCsrot_v2",
+          "has_cupy": false,
+          "dtype": "complex64"
+        }
+      ]
+    },
+    "drot": {
+      "total": 1,
+      "with_cupy": 0,
+      "without_cupy": 1,
+      "functions": [
+        {
+          "name": "cublasZdrot_v2",
+          "has_cupy": false,
+          "dtype": "complex128"
+        }
+      ]
+    },
+    "rotex": {
+      "total": 1,
+      "with_cupy": 0,
+      "without_cupy": 1,
+      "functions": [
+        {
+          "name": "cublasRotEx",
+          "has_cupy": false,
+          "dtype": "unknown"
+        }
+      ]
+    },
+    "rotg": {
+      "total": 4,
+      "with_cupy": 0,
+      "without_cupy": 4,
+      "functions": [
+        {
+          "name": "cublasSrotg_v2",
+          "has_cupy": false,
+          "dtype": "float32"
+        },
+        {
+          "name": "cublasDrotg_v2",
+          "has_cupy": false,
+          "dtype": "float64"
+        },
+        {
+          "name": "cublasCrotg_v2",
+          "has_cupy": false,
+          "dtype": "complex64"
+        },
+        {
+          "name": "cublasZrotg_v2",
+          "has_cupy": false,
+          "dtype": "complex128"
+        }
+      ]
+    },
+    "rotgex": {
+      "total": 1,
+      "with_cupy": 0,
+      "without_cupy": 1,
+      "functions": [
+        {
+          "name": "cublasRotgEx",
+          "has_cupy": false,
+          "dtype": "unknown"
+        }
+      ]
+    },
+    "rotm": {
+      "total": 2,
+      "with_cupy": 0,
+      "without_cupy": 2,
+      "functions": [
+        {
+          "name": "cublasSrotm_v2",
+          "has_cupy": false,
+          "dtype": "float32"
+        },
+        {
+          "name": "cublasDrotm_v2",
+          "has_cupy": false,
+          "dtype": "float64"
+        }
+      ]
+    },
+    "rotmex": {
+      "total": 1,
+      "with_cupy": 0,
+      "without_cupy": 1,
+      "functions": [
+        {
+          "name": "cublasRotmEx",
+          "has_cupy": false,
+          "dtype": "unknown"
+        }
+      ]
+    },
+    "rotmg": {
+      "total": 2,
+      "with_cupy": 0,
+      "without_cupy": 2,
+      "functions": [
+        {
+          "name": "cublasSrotmg_v2",
+          "has_cupy": false,
+          "dtype": "float32"
+        },
+        {
+          "name": "cublasDrotmg_v2",
+          "has_cupy": false,
+          "dtype": "float64"
+        }
+      ]
+    },
+    "rotmgex": {
+      "total": 1,
+      "with_cupy": 0,
+      "without_cupy": 1,
+      "functions": [
+        {
+          "name": "cublasRotmgEx",
+          "has_cupy": false,
+          "dtype": "unknown"
+        }
+      ]
+    },
+    "gemv": {
+      "total": 4,
+      "with_cupy": 4,
+      "without_cupy": 0,
+      "functions": [
+        {
+          "name": "cublasSgemv_v2",
+          "has_cupy": true,
+          "dtype": "float32"
+        },
+        {
+          "name": "cublasDgemv_v2",
+          "has_cupy": true,
+          "dtype": "float64"
+        },
+        {
+          "name": "cublasCgemv_v2",
+          "has_cupy": true,
+          "dtype": "complex64"
+        },
+        {
+          "name": "cublasZgemv_v2",
+          "has_cupy": true,
+          "dtype": "complex128"
+        }
+      ]
+    },
+    "gbmv": {
+      "total": 4,
+      "with_cupy": 0,
+      "without_cupy": 4,
+      "functions": [
+        {
+          "name": "cublasSgbmv_v2",
+          "has_cupy": false,
+          "dtype": "float32"
+        },
+        {
+          "name": "cublasDgbmv_v2",
+          "has_cupy": false,
+          "dtype": "float64"
+        },
+        {
+          "name": "cublasCgbmv_v2",
+          "has_cupy": false,
+          "dtype": "complex64"
+        },
+        {
+          "name": "cublasZgbmv_v2",
+          "has_cupy": false,
+          "dtype": "complex128"
+        }
+      ]
+    },
+    "trmv": {
+      "total": 4,
+      "with_cupy": 0,
+      "without_cupy": 4,
+      "functions": [
+        {
+          "name": "cublasStrmv_v2",
+          "has_cupy": false,
+          "dtype": "float32"
+        },
+        {
+          "name": "cublasDtrmv_v2",
+          "has_cupy": false,
+          "dtype": "float64"
+        },
+        {
+          "name": "cublasCtrmv_v2",
+          "has_cupy": false,
+          "dtype": "complex64"
+        },
+        {
+          "name": "cublasZtrmv_v2",
+          "has_cupy": false,
+          "dtype": "complex128"
+        }
+      ]
+    },
+    "tbmv": {
+      "total": 4,
+      "with_cupy": 0,
+      "without_cupy": 4,
+      "functions": [
+        {
+          "name": "cublasStbmv_v2",
+          "has_cupy": false,
+          "dtype": "float32"
+        },
+        {
+          "name": "cublasDtbmv_v2",
+          "has_cupy": false,
+          "dtype": "float64"
+        },
+        {
+          "name": "cublasCtbmv_v2",
+          "has_cupy": false,
+          "dtype": "complex64"
+        },
+        {
+          "name": "cublasZtbmv_v2",
+          "has_cupy": false,
+          "dtype": "complex128"
+        }
+      ]
+    },
+    "tpmv": {
+      "total": 4,
+      "with_cupy": 0,
+      "without_cupy": 4,
+      "functions": [
+        {
+          "name": "cublasStpmv_v2",
+          "has_cupy": false,
+          "dtype": "float32"
+        },
+        {
+          "name": "cublasDtpmv_v2",
+          "has_cupy": false,
+          "dtype": "float64"
+        },
+        {
+          "name": "cublasCtpmv_v2",
+          "has_cupy": false,
+          "dtype": "complex64"
+        },
+        {
+          "name": "cublasZtpmv_v2",
+          "has_cupy": false,
+          "dtype": "complex128"
+        }
+      ]
+    },
+    "trsv": {
+      "total": 4,
+      "with_cupy": 0,
+      "without_cupy": 4,
+      "functions": [
+        {
+          "name": "cublasStrsv_v2",
+          "has_cupy": false,
+          "dtype": "float32"
+        },
+        {
+          "name": "cublasDtrsv_v2",
+          "has_cupy": false,
+          "dtype": "float64"
+        },
+        {
+          "name": "cublasCtrsv_v2",
+          "has_cupy": false,
+          "dtype": "complex64"
+        },
+        {
+          "name": "cublasZtrsv_v2",
+          "has_cupy": false,
+          "dtype": "complex128"
+        }
+      ]
+    },
+    "tpsv": {
+      "total": 4,
+      "with_cupy": 0,
+      "without_cupy": 4,
+      "functions": [
+        {
+          "name": "cublasStpsv_v2",
+          "has_cupy": false,
+          "dtype": "float32"
+        },
+        {
+          "name": "cublasDtpsv_v2",
+          "has_cupy": false,
+          "dtype": "float64"
+        },
+        {
+          "name": "cublasCtpsv_v2",
+          "has_cupy": false,
+          "dtype": "complex64"
+        },
+        {
+          "name": "cublasZtpsv_v2",
+          "has_cupy": false,
+          "dtype": "complex128"
+        }
+      ]
+    },
+    "tbsv": {
+      "total": 4,
+      "with_cupy": 0,
+      "without_cupy": 4,
+      "functions": [
+        {
+          "name": "cublasStbsv_v2",
+          "has_cupy": false,
+          "dtype": "float32"
+        },
+        {
+          "name": "cublasDtbsv_v2",
+          "has_cupy": false,
+          "dtype": "float64"
+        },
+        {
+          "name": "cublasCtbsv_v2",
+          "has_cupy": false,
+          "dtype": "complex64"
+        },
+        {
+          "name": "cublasZtbsv_v2",
+          "has_cupy": false,
+          "dtype": "complex128"
+        }
+      ]
+    },
+    "symv": {
+      "total": 4,
+      "with_cupy": 0,
+      "without_cupy": 4,
+      "functions": [
+        {
+          "name": "cublasSsymv_v2",
+          "has_cupy": false,
+          "dtype": "float32"
+        },
+        {
+          "name": "cublasDsymv_v2",
+          "has_cupy": false,
+          "dtype": "float64"
+        },
+        {
+          "name": "cublasCsymv_v2",
+          "has_cupy": false,
+          "dtype": "complex64"
+        },
+        {
+          "name": "cublasZsymv_v2",
+          "has_cupy": false,
+          "dtype": "complex128"
+        }
+      ]
+    },
+    "hemv": {
+      "total": 2,
+      "with_cupy": 0,
+      "without_cupy": 2,
+      "functions": [
+        {
+          "name": "cublasChemv_v2",
+          "has_cupy": false,
+          "dtype": "complex64"
+        },
+        {
+          "name": "cublasZhemv_v2",
+          "has_cupy": false,
+          "dtype": "complex128"
+        }
+      ]
+    },
+    "sbmv": {
+      "total": 2,
+      "with_cupy": 2,
+      "without_cupy": 0,
+      "functions": [
+        {
+          "name": "cublasSsbmv_v2",
+          "has_cupy": true,
+          "dtype": "float32"
+        },
+        {
+          "name": "cublasDsbmv_v2",
+          "has_cupy": true,
+          "dtype": "float64"
+        }
+      ]
+    },
+    "hbmv": {
+      "total": 2,
+      "with_cupy": 0,
+      "without_cupy": 2,
+      "functions": [
+        {
+          "name": "cublasChbmv_v2",
+          "has_cupy": false,
+          "dtype": "complex64"
+        },
+        {
+          "name": "cublasZhbmv_v2",
+          "has_cupy": false,
+          "dtype": "complex128"
+        }
+      ]
+    },
+    "spmv": {
+      "total": 2,
+      "with_cupy": 0,
+      "without_cupy": 2,
+      "functions": [
+        {
+          "name": "cublasSspmv_v2",
+          "has_cupy": false,
+          "dtype": "float32"
+        },
+        {
+          "name": "cublasDspmv_v2",
+          "has_cupy": false,
+          "dtype": "float64"
+        }
+      ]
+    },
+    "hpmv": {
+      "total": 2,
+      "with_cupy": 0,
+      "without_cupy": 2,
+      "functions": [
+        {
+          "name": "cublasChpmv_v2",
+          "has_cupy": false,
+          "dtype": "complex64"
+        },
+        {
+          "name": "cublasZhpmv_v2",
+          "has_cupy": false,
+          "dtype": "complex128"
+        }
+      ]
+    },
+    "ger": {
+      "total": 2,
+      "with_cupy": 2,
+      "without_cupy": 0,
+      "functions": [
+        {
+          "name": "cublasSger_v2",
+          "has_cupy": true,
+          "dtype": "float32"
+        },
+        {
+          "name": "cublasDger_v2",
+          "has_cupy": true,
+          "dtype": "float64"
+        }
+      ]
+    },
+    "geru": {
+      "total": 2,
+      "with_cupy": 2,
+      "without_cupy": 0,
+      "functions": [
+        {
+          "name": "cublasCgeru_v2",
+          "has_cupy": true,
+          "dtype": "complex64"
+        },
+        {
+          "name": "cublasZgeru_v2",
+          "has_cupy": true,
+          "dtype": "complex128"
+        }
+      ]
+    },
+    "gerc": {
+      "total": 2,
+      "with_cupy": 2,
+      "without_cupy": 0,
+      "functions": [
+        {
+          "name": "cublasCgerc_v2",
+          "has_cupy": true,
+          "dtype": "complex64"
+        },
+        {
+          "name": "cublasZgerc_v2",
+          "has_cupy": true,
+          "dtype": "complex128"
+        }
+      ]
+    },
+    "syr": {
+      "total": 4,
+      "with_cupy": 0,
+      "without_cupy": 4,
+      "functions": [
+        {
+          "name": "cublasSsyr_v2",
+          "has_cupy": false,
+          "dtype": "float32"
+        },
+        {
+          "name": "cublasDsyr_v2",
+          "has_cupy": false,
+          "dtype": "float64"
+        },
+        {
+          "name": "cublasCsyr_v2",
+          "has_cupy": false,
+          "dtype": "complex64"
+        },
+        {
+          "name": "cublasZsyr_v2",
+          "has_cupy": false,
+          "dtype": "complex128"
+        }
+      ]
+    },
+    "her": {
+      "total": 2,
+      "with_cupy": 0,
+      "without_cupy": 2,
+      "functions": [
+        {
+          "name": "cublasCher_v2",
+          "has_cupy": false,
+          "dtype": "complex64"
+        },
+        {
+          "name": "cublasZher_v2",
+          "has_cupy": false,
+          "dtype": "complex128"
+        }
+      ]
+    },
+    "spr": {
+      "total": 2,
+      "with_cupy": 0,
+      "without_cupy": 2,
+      "functions": [
+        {
+          "name": "cublasSspr_v2",
+          "has_cupy": false,
+          "dtype": "float32"
+        },
+        {
+          "name": "cublasDspr_v2",
+          "has_cupy": false,
+          "dtype": "float64"
+        }
+      ]
+    },
+    "hpr": {
+      "total": 2,
+      "with_cupy": 0,
+      "without_cupy": 2,
+      "functions": [
+        {
+          "name": "cublasChpr_v2",
+          "has_cupy": false,
+          "dtype": "complex64"
+        },
+        {
+          "name": "cublasZhpr_v2",
+          "has_cupy": false,
+          "dtype": "complex128"
+        }
+      ]
+    },
+    "syr2": {
+      "total": 4,
+      "with_cupy": 0,
+      "without_cupy": 4,
+      "functions": [
+        {
+          "name": "cublasSsyr2_v2",
+          "has_cupy": false,
+          "dtype": "float32"
+        },
+        {
+          "name": "cublasDsyr2_v2",
+          "has_cupy": false,
+          "dtype": "float64"
+        },
+        {
+          "name": "cublasCsyr2_v2",
+          "has_cupy": false,
+          "dtype": "complex64"
+        },
+        {
+          "name": "cublasZsyr2_v2",
+          "has_cupy": false,
+          "dtype": "complex128"
+        }
+      ]
+    },
+    "her2": {
+      "total": 2,
+      "with_cupy": 0,
+      "without_cupy": 2,
+      "functions": [
+        {
+          "name": "cublasCher2_v2",
+          "has_cupy": false,
+          "dtype": "complex64"
+        },
+        {
+          "name": "cublasZher2_v2",
+          "has_cupy": false,
+          "dtype": "complex128"
+        }
+      ]
+    },
+    "spr2": {
+      "total": 2,
+      "with_cupy": 0,
+      "without_cupy": 2,
+      "functions": [
+        {
+          "name": "cublasSspr2_v2",
+          "has_cupy": false,
+          "dtype": "float32"
+        },
+        {
+          "name": "cublasDspr2_v2",
+          "has_cupy": false,
+          "dtype": "float64"
+        }
+      ]
+    },
+    "hpr2": {
+      "total": 2,
+      "with_cupy": 0,
+      "without_cupy": 2,
+      "functions": [
+        {
+          "name": "cublasChpr2_v2",
+          "has_cupy": false,
+          "dtype": "complex64"
+        },
+        {
+          "name": "cublasZhpr2_v2",
+          "has_cupy": false,
+          "dtype": "complex128"
+        }
+      ]
+    },
+    "gemvbatched": {
+      "total": 4,
+      "with_cupy": 0,
+      "without_cupy": 4,
+      "functions": [
+        {
+          "name": "cublasSgemvBatched",
+          "has_cupy": false,
+          "dtype": "float32"
+        },
+        {
+          "name": "cublasDgemvBatched",
+          "has_cupy": false,
+          "dtype": "float64"
+        },
+        {
+          "name": "cublasCgemvBatched",
+          "has_cupy": false,
+          "dtype": "complex64"
+        },
+        {
+          "name": "cublasZgemvBatched",
+          "has_cupy": false,
+          "dtype": "complex128"
+        }
+      ]
+    },
+    "shgemvbatched": {
+      "total": 1,
+      "with_cupy": 0,
+      "without_cupy": 1,
+      "functions": [
+        {
+          "name": "cublasHSHgemvBatched",
+          "has_cupy": false,
+          "dtype": "float16"
+        }
+      ]
+    },
+    "ssgemvbatched": {
+      "total": 1,
+      "with_cupy": 0,
+      "without_cupy": 1,
+      "functions": [
+        {
+          "name": "cublasHSSgemvBatched",
+          "has_cupy": false,
+          "dtype": "float16"
+        }
+      ]
+    },
+    "tstgemvbatched": {
+      "total": 1,
+      "with_cupy": 0,
+      "without_cupy": 1,
+      "functions": [
+        {
+          "name": "cublasTSTgemvBatched",
+          "has_cupy": false,
+          "dtype": "unknown"
+        }
+      ]
+    },
+    "tssgemvbatched": {
+      "total": 1,
+      "with_cupy": 0,
+      "without_cupy": 1,
+      "functions": [
+        {
+          "name": "cublasTSSgemvBatched",
+          "has_cupy": false,
+          "dtype": "unknown"
+        }
+      ]
+    },
+    "gemvstridedbatched": {
+      "total": 4,
+      "with_cupy": 0,
+      "without_cupy": 4,
+      "functions": [
+        {
+          "name": "cublasSgemvStridedBatched",
+          "has_cupy": false,
+          "dtype": "float32"
+        },
+        {
+          "name": "cublasDgemvStridedBatched",
+          "has_cupy": false,
+          "dtype": "float64"
+        },
+        {
+          "name": "cublasCgemvStridedBatched",
+          "has_cupy": false,
+          "dtype": "complex64"
+        },
+        {
+          "name": "cublasZgemvStridedBatched",
+          "has_cupy": false,
+          "dtype": "complex128"
+        }
+      ]
+    },
+    "shgemvstridedbatched": {
+      "total": 1,
+      "with_cupy": 0,
+      "without_cupy": 1,
+      "functions": [
+        {
+          "name": "cublasHSHgemvStridedBatched",
+          "has_cupy": false,
+          "dtype": "float16"
+        }
+      ]
+    },
+    "ssgemvstridedbatched": {
+      "total": 1,
+      "with_cupy": 0,
+      "without_cupy": 1,
+      "functions": [
+        {
+          "name": "cublasHSSgemvStridedBatched",
+          "has_cupy": false,
+          "dtype": "float16"
+        }
+      ]
+    },
+    "tstgemvstridedbatched": {
+      "total": 1,
+      "with_cupy": 0,
+      "without_cupy": 1,
+      "functions": [
+        {
+          "name": "cublasTSTgemvStridedBatched",
+          "has_cupy": false,
+          "dtype": "unknown"
+        }
+      ]
+    },
+    "tssgemvstridedbatched": {
+      "total": 1,
+      "with_cupy": 0,
+      "without_cupy": 1,
+      "functions": [
+        {
+          "name": "cublasTSSgemvStridedBatched",
+          "has_cupy": false,
+          "dtype": "unknown"
+        }
+      ]
+    },
+    "gemm": {
+      "total": 5,
+      "with_cupy": 5,
+      "without_cupy": 0,
+      "functions": [
+        {
+          "name": "cublasSgemm_v2",
+          "has_cupy": true,
+          "dtype": "float32"
+        },
+        {
+          "name": "cublasDgemm_v2",
+          "has_cupy": true,
+          "dtype": "float64"
+        },
+        {
+          "name": "cublasCgemm_v2",
+          "has_cupy": true,
+          "dtype": "complex64"
+        },
+        {
+          "name": "cublasZgemm_v2",
+          "has_cupy": true,
+          "dtype": "complex128"
+        },
+        {
+          "name": "cublasHgemm",
+          "has_cupy": true,
+          "dtype": "float16"
+        }
+      ]
+    },
+    "gemm3m": {
+      "total": 2,
+      "with_cupy": 0,
+      "without_cupy": 2,
+      "functions": [
+        {
+          "name": "cublasCgemm3m",
+          "has_cupy": false,
+          "dtype": "complex64"
+        },
+        {
+          "name": "cublasZgemm3m",
+          "has_cupy": false,
+          "dtype": "complex128"
+        }
+      ]
+    },
+    "gemm3mex": {
+      "total": 1,
+      "with_cupy": 0,
+      "without_cupy": 1,
+      "functions": [
+        {
+          "name": "cublasCgemm3mEx",
+          "has_cupy": false,
+          "dtype": "complex64"
+        }
+      ]
+    },
+    "gemmex": {
+      "total": 3,
+      "with_cupy": 0,
+      "without_cupy": 3,
+      "functions": [
+        {
+          "name": "cublasSgemmEx",
+          "has_cupy": false,
+          "dtype": "float32"
+        },
+        {
+          "name": "cublasGemmEx",
+          "has_cupy": false,
+          "dtype": "unknown"
+        },
+        {
+          "name": "cublasCgemmEx",
+          "has_cupy": false,
+          "dtype": "complex64"
+        }
+      ]
+    },
+    "syrk": {
+      "total": 4,
+      "with_cupy": 4,
+      "without_cupy": 0,
+      "functions": [
+        {
+          "name": "cublasSsyrk_v2",
+          "has_cupy": true,
+          "dtype": "float32"
+        },
+        {
+          "name": "cublasDsyrk_v2",
+          "has_cupy": true,
+          "dtype": "float64"
+        },
+        {
+          "name": "cublasCsyrk_v2",
+          "has_cupy": true,
+          "dtype": "complex64"
+        },
+        {
+          "name": "cublasZsyrk_v2",
+          "has_cupy": true,
+          "dtype": "complex128"
+        }
+      ]
+    },
+    "syrkex": {
+      "total": 1,
+      "with_cupy": 0,
+      "without_cupy": 1,
+      "functions": [
+        {
+          "name": "cublasCsyrkEx",
+          "has_cupy": false,
+          "dtype": "complex64"
+        }
+      ]
+    },
+    "syrk3mex": {
+      "total": 1,
+      "with_cupy": 0,
+      "without_cupy": 1,
+      "functions": [
+        {
+          "name": "cublasCsyrk3mEx",
+          "has_cupy": false,
+          "dtype": "complex64"
+        }
+      ]
+    },
+    "herk": {
+      "total": 2,
+      "with_cupy": 0,
+      "without_cupy": 2,
+      "functions": [
+        {
+          "name": "cublasCherk_v2",
+          "has_cupy": false,
+          "dtype": "complex64"
+        },
+        {
+          "name": "cublasZherk_v2",
+          "has_cupy": false,
+          "dtype": "complex128"
+        }
+      ]
+    },
+    "herkex": {
+      "total": 1,
+      "with_cupy": 0,
+      "without_cupy": 1,
+      "functions": [
+        {
+          "name": "cublasCherkEx",
+          "has_cupy": false,
+          "dtype": "complex64"
+        }
+      ]
+    },
+    "herk3mex": {
+      "total": 1,
+      "with_cupy": 0,
+      "without_cupy": 1,
+      "functions": [
+        {
+          "name": "cublasCherk3mEx",
+          "has_cupy": false,
+          "dtype": "complex64"
+        }
+      ]
+    },
+    "syr2k": {
+      "total": 4,
+      "with_cupy": 0,
+      "without_cupy": 4,
+      "functions": [
+        {
+          "name": "cublasSsyr2k_v2",
+          "has_cupy": false,
+          "dtype": "float32"
+        },
+        {
+          "name": "cublasDsyr2k_v2",
+          "has_cupy": false,
+          "dtype": "float64"
+        },
+        {
+          "name": "cublasCsyr2k_v2",
+          "has_cupy": false,
+          "dtype": "complex64"
+        },
+        {
+          "name": "cublasZsyr2k_v2",
+          "has_cupy": false,
+          "dtype": "complex128"
+        }
+      ]
+    },
+    "her2k": {
+      "total": 2,
+      "with_cupy": 0,
+      "without_cupy": 2,
+      "functions": [
+        {
+          "name": "cublasCher2k_v2",
+          "has_cupy": false,
+          "dtype": "complex64"
+        },
+        {
+          "name": "cublasZher2k_v2",
+          "has_cupy": false,
+          "dtype": "complex128"
+        }
+      ]
+    },
+    "syrkx": {
+      "total": 4,
+      "with_cupy": 0,
+      "without_cupy": 4,
+      "functions": [
+        {
+          "name": "cublasSsyrkx",
+          "has_cupy": false,
+          "dtype": "float32"
+        },
+        {
+          "name": "cublasDsyrkx",
+          "has_cupy": false,
+          "dtype": "float64"
+        },
+        {
+          "name": "cublasCsyrkx",
+          "has_cupy": false,
+          "dtype": "complex64"
+        },
+        {
+          "name": "cublasZsyrkx",
+          "has_cupy": false,
+          "dtype": "complex128"
+        }
+      ]
+    },
+    "herkx": {
+      "total": 2,
+      "with_cupy": 0,
+      "without_cupy": 2,
+      "functions": [
+        {
+          "name": "cublasCherkx",
+          "has_cupy": false,
+          "dtype": "complex64"
+        },
+        {
+          "name": "cublasZherkx",
+          "has_cupy": false,
+          "dtype": "complex128"
+        }
+      ]
+    },
+    "symm": {
+      "total": 4,
+      "with_cupy": 0,
+      "without_cupy": 4,
+      "functions": [
+        {
+          "name": "cublasSsymm_v2",
+          "has_cupy": false,
+          "dtype": "float32"
+        },
+        {
+          "name": "cublasDsymm_v2",
+          "has_cupy": false,
+          "dtype": "float64"
+        },
+        {
+          "name": "cublasCsymm_v2",
+          "has_cupy": false,
+          "dtype": "complex64"
+        },
+        {
+          "name": "cublasZsymm_v2",
+          "has_cupy": false,
+          "dtype": "complex128"
+        }
+      ]
+    },
+    "hemm": {
+      "total": 2,
+      "with_cupy": 0,
+      "without_cupy": 2,
+      "functions": [
+        {
+          "name": "cublasChemm_v2",
+          "has_cupy": false,
+          "dtype": "complex64"
+        },
+        {
+          "name": "cublasZhemm_v2",
+          "has_cupy": false,
+          "dtype": "complex128"
+        }
+      ]
+    },
+    "trsm": {
+      "total": 4,
+      "with_cupy": 0,
+      "without_cupy": 4,
+      "functions": [
+        {
+          "name": "cublasStrsm_v2",
+          "has_cupy": false,
+          "dtype": "float32"
+        },
+        {
+          "name": "cublasDtrsm_v2",
+          "has_cupy": false,
+          "dtype": "float64"
+        },
+        {
+          "name": "cublasCtrsm_v2",
+          "has_cupy": false,
+          "dtype": "complex64"
+        },
+        {
+          "name": "cublasZtrsm_v2",
+          "has_cupy": false,
+          "dtype": "complex128"
+        }
+      ]
+    },
+    "trmm": {
+      "total": 4,
+      "with_cupy": 0,
+      "without_cupy": 4,
+      "functions": [
+        {
+          "name": "cublasStrmm_v2",
+          "has_cupy": false,
+          "dtype": "float32"
+        },
+        {
+          "name": "cublasDtrmm_v2",
+          "has_cupy": false,
+          "dtype": "float64"
+        },
+        {
+          "name": "cublasCtrmm_v2",
+          "has_cupy": false,
+          "dtype": "complex64"
+        },
+        {
+          "name": "cublasZtrmm_v2",
+          "has_cupy": false,
+          "dtype": "complex128"
+        }
+      ]
+    },
+    "gemmbatched": {
+      "total": 5,
+      "with_cupy": 0,
+      "without_cupy": 5,
+      "functions": [
+        {
+          "name": "cublasHgemmBatched",
+          "has_cupy": false,
+          "dtype": "float16"
+        },
+        {
+          "name": "cublasSgemmBatched",
+          "has_cupy": false,
+          "dtype": "float32"
+        },
+        {
+          "name": "cublasDgemmBatched",
+          "has_cupy": false,
+          "dtype": "float64"
+        },
+        {
+          "name": "cublasCgemmBatched",
+          "has_cupy": false,
+          "dtype": "complex64"
+        },
+        {
+          "name": "cublasZgemmBatched",
+          "has_cupy": false,
+          "dtype": "complex128"
+        }
+      ]
+    },
+    "gemm3mbatched": {
+      "total": 1,
+      "with_cupy": 0,
+      "without_cupy": 1,
+      "functions": [
+        {
+          "name": "cublasCgemm3mBatched",
+          "has_cupy": false,
+          "dtype": "complex64"
+        }
+      ]
+    },
+    "gemmstridedbatched": {
+      "total": 5,
+      "with_cupy": 0,
+      "without_cupy": 5,
+      "functions": [
+        {
+          "name": "cublasHgemmStridedBatched",
+          "has_cupy": false,
+          "dtype": "float16"
+        },
+        {
+          "name": "cublasSgemmStridedBatched",
+          "has_cupy": false,
+          "dtype": "float32"
+        },
+        {
+          "name": "cublasDgemmStridedBatched",
+          "has_cupy": false,
+          "dtype": "float64"
+        },
+        {
+          "name": "cublasCgemmStridedBatched",
+          "has_cupy": false,
+          "dtype": "complex64"
+        },
+        {
+          "name": "cublasZgemmStridedBatched",
+          "has_cupy": false,
+          "dtype": "complex128"
+        }
+      ]
+    },
+    "gemm3mstridedbatched": {
+      "total": 1,
+      "with_cupy": 0,
+      "without_cupy": 1,
+      "functions": [
+        {
+          "name": "cublasCgemm3mStridedBatched",
+          "has_cupy": false,
+          "dtype": "complex64"
+        }
+      ]
+    },
+    "gemmbatchedex": {
+      "total": 1,
+      "with_cupy": 0,
+      "without_cupy": 1,
+      "functions": [
+        {
+          "name": "cublasGemmBatchedEx",
+          "has_cupy": false,
+          "dtype": "unknown"
+        }
+      ]
+    },
+    "gemmstridedbatchedex": {
+      "total": 1,
+      "with_cupy": 0,
+      "without_cupy": 1,
+      "functions": [
+        {
+          "name": "cublasGemmStridedBatchedEx",
+          "has_cupy": false,
+          "dtype": "unknown"
+        }
+      ]
+    },
+    "gemmgroupedbatched": {
+      "total": 2,
+      "with_cupy": 0,
+      "without_cupy": 2,
+      "functions": [
+        {
+          "name": "cublasSgemmGroupedBatched",
+          "has_cupy": false,
+          "dtype": "float32"
+        },
+        {
+          "name": "cublasDgemmGroupedBatched",
+          "has_cupy": false,
+          "dtype": "float64"
+        }
+      ]
+    },
+    "geam": {
+      "total": 4,
+      "with_cupy": 4,
+      "without_cupy": 0,
+      "functions": [
+        {
+          "name": "cublasSgeam",
+          "has_cupy": true,
+          "dtype": "float32"
+        },
+        {
+          "name": "cublasDgeam",
+          "has_cupy": true,
+          "dtype": "float64"
+        },
+        {
+          "name": "cublasCgeam",
+          "has_cupy": true,
+          "dtype": "complex64"
+        },
+        {
+          "name": "cublasZgeam",
+          "has_cupy": true,
+          "dtype": "complex128"
+        }
+      ]
+    },
+    "trsmbatched": {
+      "total": 4,
+      "with_cupy": 0,
+      "without_cupy": 4,
+      "functions": [
+        {
+          "name": "cublasStrsmBatched",
+          "has_cupy": false,
+          "dtype": "float32"
+        },
+        {
+          "name": "cublasDtrsmBatched",
+          "has_cupy": false,
+          "dtype": "float64"
+        },
+        {
+          "name": "cublasCtrsmBatched",
+          "has_cupy": false,
+          "dtype": "complex64"
+        },
+        {
+          "name": "cublasZtrsmBatched",
+          "has_cupy": false,
+          "dtype": "complex128"
+        }
+      ]
+    },
+    "dgmm": {
+      "total": 4,
+      "with_cupy": 4,
+      "without_cupy": 0,
+      "functions": [
+        {
+          "name": "cublasSdgmm",
+          "has_cupy": true,
+          "dtype": "float32"
+        },
+        {
+          "name": "cublasDdgmm",
+          "has_cupy": true,
+          "dtype": "float64"
+        },
+        {
+          "name": "cublasCdgmm",
+          "has_cupy": true,
+          "dtype": "complex64"
+        },
+        {
+          "name": "cublasZdgmm",
+          "has_cupy": true,
+          "dtype": "complex128"
+        }
+      ]
+    },
+    "getrfbatched": {
+      "total": 4,
+      "with_cupy": 0,
+      "without_cupy": 4,
+      "functions": [
+        {
+          "name": "cublasSgetrfBatched",
+          "has_cupy": false,
+          "dtype": "float32"
+        },
+        {
+          "name": "cublasDgetrfBatched",
+          "has_cupy": false,
+          "dtype": "float64"
+        },
+        {
+          "name": "cublasCgetrfBatched",
+          "has_cupy": false,
+          "dtype": "complex64"
+        },
+        {
+          "name": "cublasZgetrfBatched",
+          "has_cupy": false,
+          "dtype": "complex128"
+        }
+      ]
+    },
+    "getribatched": {
+      "total": 4,
+      "with_cupy": 0,
+      "without_cupy": 4,
+      "functions": [
+        {
+          "name": "cublasSgetriBatched",
+          "has_cupy": false,
+          "dtype": "float32"
+        },
+        {
+          "name": "cublasDgetriBatched",
+          "has_cupy": false,
+          "dtype": "float64"
+        },
+        {
+          "name": "cublasCgetriBatched",
+          "has_cupy": false,
+          "dtype": "complex64"
+        },
+        {
+          "name": "cublasZgetriBatched",
+          "has_cupy": false,
+          "dtype": "complex128"
+        }
+      ]
+    },
+    "getrsbatched": {
+      "total": 4,
+      "with_cupy": 0,
+      "without_cupy": 4,
+      "functions": [
+        {
+          "name": "cublasSgetrsBatched",
+          "has_cupy": false,
+          "dtype": "float32"
+        },
+        {
+          "name": "cublasDgetrsBatched",
+          "has_cupy": false,
+          "dtype": "float64"
+        },
+        {
+          "name": "cublasCgetrsBatched",
+          "has_cupy": false,
+          "dtype": "complex64"
+        },
+        {
+          "name": "cublasZgetrsBatched",
+          "has_cupy": false,
+          "dtype": "complex128"
+        }
+      ]
+    },
+    "uint8gemmbias": {
+      "total": 1,
+      "with_cupy": 0,
+      "without_cupy": 1,
+      "functions": [
+        {
+          "name": "cublasUint8gemmBias",
+          "has_cupy": false,
+          "dtype": "unknown"
+        }
+      ]
+    }
+  },
+  "functions": {
+    "with_cupy": [
+      "cublasSnrm2_v2",
+      "cublasDnrm2_v2",
+      "cublasSdot_v2",
+      "cublasDdot_v2",
+      "cublasCdotu_v2",
+      "cublasCdotc_v2",
+      "cublasZdotu_v2",
+      "cublasZdotc_v2",
+      "cublasSscal_v2",
+      "cublasDscal_v2",
+      "cublasCscal_v2",
+      "cublasZscal_v2",
+      "cublasSaxpy_v2",
+      "cublasDaxpy_v2",
+      "cublasCaxpy_v2",
+      "cublasZaxpy_v2",
+      "cublasSasum_v2",
+      "cublasDasum_v2",
+      "cublasSgemv_v2",
+      "cublasDgemv_v2",
+      "cublasCgemv_v2",
+      "cublasZgemv_v2",
+      "cublasSsbmv_v2",
+      "cublasDsbmv_v2",
+      "cublasSger_v2",
+      "cublasDger_v2",
+      "cublasCgeru_v2",
+      "cublasCgerc_v2",
+      "cublasZgeru_v2",
+      "cublasZgerc_v2",
+      "cublasSgemm_v2",
+      "cublasDgemm_v2",
+      "cublasCgemm_v2",
+      "cublasZgemm_v2",
+      "cublasHgemm",
+      "cublasSsyrk_v2",
+      "cublasDsyrk_v2",
+      "cublasCsyrk_v2",
+      "cublasZsyrk_v2",
+      "cublasSgeam",
+      "cublasDgeam",
+      "cublasCgeam",
+      "cublasZgeam",
+      "cublasSdgmm",
+      "cublasDdgmm",
+      "cublasCdgmm",
+      "cublasZdgmm"
+    ],
+    "without_cupy": [
+      "cublasLoggerConfigure",
+      "cublasSetLoggerCallback",
+      "cublasGetLoggerCallback",
+      "cublasNrm2Ex",
+      "cublasScnrm2_v2",
+      "cublasDznrm2_v2",
+      "cublasDotEx",
+      "cublasDotcEx",
+      "cublasScalEx",
+      "cublasCsscal_v2",
+      "cublasZdscal_v2",
+      "cublasAxpyEx",
+      "cublasCopyEx",
+      "cublasScopy_v2",
+      "cublasDcopy_v2",
+      "cublasCcopy_v2",
+      "cublasZcopy_v2",
+      "cublasSswap_v2",
+      "cublasDswap_v2",
+      "cublasCswap_v2",
+      "cublasZswap_v2",
+      "cublasSwapEx",
+      "cublasIamaxEx",
+      "cublasIaminEx",
+      "cublasAsumEx",
+      "cublasScasum_v2",
+      "cublasDzasum_v2",
+      "cublasSrot_v2",
+      "cublasDrot_v2",
+      "cublasCrot_v2",
+      "cublasCsrot_v2",
+      "cublasZrot_v2",
+      "cublasZdrot_v2",
+      "cublasRotEx",
+      "cublasSrotg_v2",
+      "cublasDrotg_v2",
+      "cublasCrotg_v2",
+      "cublasZrotg_v2",
+      "cublasRotgEx",
+      "cublasSrotm_v2",
+      "cublasDrotm_v2",
+      "cublasRotmEx",
+      "cublasSrotmg_v2",
+      "cublasDrotmg_v2",
+      "cublasRotmgEx",
+      "cublasSgbmv_v2",
+      "cublasDgbmv_v2",
+      "cublasCgbmv_v2",
+      "cublasZgbmv_v2",
+      "cublasStrmv_v2",
+      "cublasDtrmv_v2",
+      "cublasCtrmv_v2",
+      "cublasZtrmv_v2",
+      "cublasStbmv_v2",
+      "cublasDtbmv_v2",
+      "cublasCtbmv_v2",
+      "cublasZtbmv_v2",
+      "cublasStpmv_v2",
+      "cublasDtpmv_v2",
+      "cublasCtpmv_v2",
+      "cublasZtpmv_v2",
+      "cublasStrsv_v2",
+      "cublasDtrsv_v2",
+      "cublasCtrsv_v2",
+      "cublasZtrsv_v2",
+      "cublasStpsv_v2",
+      "cublasDtpsv_v2",
+      "cublasCtpsv_v2",
+      "cublasZtpsv_v2",
+      "cublasStbsv_v2",
+      "cublasDtbsv_v2",
+      "cublasCtbsv_v2",
+      "cublasZtbsv_v2",
+      "cublasSsymv_v2",
+      "cublasDsymv_v2",
+      "cublasCsymv_v2",
+      "cublasZsymv_v2",
+      "cublasChemv_v2",
+      "cublasZhemv_v2",
+      "cublasChbmv_v2",
+      "cublasZhbmv_v2",
+      "cublasSspmv_v2",
+      "cublasDspmv_v2",
+      "cublasChpmv_v2",
+      "cublasZhpmv_v2",
+      "cublasSsyr_v2",
+      "cublasDsyr_v2",
+      "cublasCsyr_v2",
+      "cublasZsyr_v2",
+      "cublasCher_v2",
+      "cublasZher_v2",
+      "cublasSspr_v2",
+      "cublasDspr_v2",
+      "cublasChpr_v2",
+      "cublasZhpr_v2",
+      "cublasSsyr2_v2",
+      "cublasDsyr2_v2",
+      "cublasCsyr2_v2",
+      "cublasZsyr2_v2",
+      "cublasCher2_v2",
+      "cublasZher2_v2",
+      "cublasSspr2_v2",
+      "cublasDspr2_v2",
+      "cublasChpr2_v2",
+      "cublasZhpr2_v2",
+      "cublasSgemvBatched",
+      "cublasDgemvBatched",
+      "cublasCgemvBatched",
+      "cublasZgemvBatched",
+      "cublasHSHgemvBatched",
+      "cublasHSSgemvBatched",
+      "cublasTSTgemvBatched",
+      "cublasTSSgemvBatched",
+      "cublasSgemvStridedBatched",
+      "cublasDgemvStridedBatched",
+      "cublasCgemvStridedBatched",
+      "cublasZgemvStridedBatched",
+      "cublasHSHgemvStridedBatched",
+      "cublasHSSgemvStridedBatched",
+      "cublasTSTgemvStridedBatched",
+      "cublasTSSgemvStridedBatched",
+      "cublasCgemm3m",
+      "cublasCgemm3mEx",
+      "cublasZgemm3m",
+      "cublasSgemmEx",
+      "cublasGemmEx",
+      "cublasCgemmEx",
+      "cublasCsyrkEx",
+      "cublasCsyrk3mEx",
+      "cublasCherk_v2",
+      "cublasZherk_v2",
+      "cublasCherkEx",
+      "cublasCherk3mEx",
+      "cublasSsyr2k_v2",
+      "cublasDsyr2k_v2",
+      "cublasCsyr2k_v2",
+      "cublasZsyr2k_v2",
+      "cublasCher2k_v2",
+      "cublasZher2k_v2",
+      "cublasSsyrkx",
+      "cublasDsyrkx",
+      "cublasCsyrkx",
+      "cublasZsyrkx",
+      "cublasCherkx",
+      "cublasZherkx",
+      "cublasSsymm_v2",
+      "cublasDsymm_v2",
+      "cublasCsymm_v2",
+      "cublasZsymm_v2",
+      "cublasChemm_v2",
+      "cublasZhemm_v2",
+      "cublasStrsm_v2",
+      "cublasDtrsm_v2",
+      "cublasCtrsm_v2",
+      "cublasZtrsm_v2",
+      "cublasStrmm_v2",
+      "cublasDtrmm_v2",
+      "cublasCtrmm_v2",
+      "cublasZtrmm_v2",
+      "cublasHgemmBatched",
+      "cublasSgemmBatched",
+      "cublasDgemmBatched",
+      "cublasCgemmBatched",
+      "cublasCgemm3mBatched",
+      "cublasZgemmBatched",
+      "cublasHgemmStridedBatched",
+      "cublasSgemmStridedBatched",
+      "cublasDgemmStridedBatched",
+      "cublasCgemmStridedBatched",
+      "cublasCgemm3mStridedBatched",
+      "cublasZgemmStridedBatched",
+      "cublasGemmBatchedEx",
+      "cublasGemmStridedBatchedEx",
+      "cublasSgemmGroupedBatched",
+      "cublasDgemmGroupedBatched",
+      "cublasStrsmBatched",
+      "cublasDtrsmBatched",
+      "cublasCtrsmBatched",
+      "cublasZtrsmBatched",
+      "cublasSgetrfBatched",
+      "cublasDgetrfBatched",
+      "cublasCgetrfBatched",
+      "cublasZgetrfBatched",
+      "cublasSgetriBatched",
+      "cublasDgetriBatched",
+      "cublasCgetriBatched",
+      "cublasZgetriBatched",
+      "cublasSgetrsBatched",
+      "cublasDgetrsBatched",
+      "cublasCgetrsBatched",
+      "cublasZgetrsBatched",
+      "cublasUint8gemmBias"
+    ],
+    "unknown": []
+  }
+}

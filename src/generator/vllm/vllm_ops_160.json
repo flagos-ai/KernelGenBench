@@ -1,0 +1,1462 @@
+{
+  "_meta": {
+    "source": "vllm_ops_api_reference.md",
+    "extraction": "markdown parsing + signature inference",
+    "call_pattern": "varies by operator type (triton direct import, _custom_ops, torch.ops._C)",
+    "operator_count": 160,
+    "transform": "split signature into input_parameters (before ->) and output_parameters (after ->)",
+    "split_note": "Output parameters inferred from operation type when not explicitly specified",
+    "vllm_api_field": "varies by operator type (triton direct import, _custom_ops, torch.ops._C)",
+    "vllm_api_note": "auto-added per operator based on MD documentation",
+    "selection_criteria": {
+      "triton_ops": "Direct import from vllm modules, 31 operators",
+      "cuda_a_class": "Through vllm._custom_ops, 104 operators",
+      "cuda_b_class": "Direct torch.ops._C calls, 25 operators",
+      "non_runnable": "Defined in source but not accessible via API, 4 operators (excluded)"
+    },
+    "operator_count_triton": 31,
+    "operator_count_cuda_a": 104,
+    "operator_count_cuda_b": 25,
+    "operator_count_total": 160
+  },
+  "triton_reshape_and_cache_flash": {
+    "callable": true,
+    "signature": "(key, value, key_cache, value_cache, slot_mapping, kv_cache_dtype, k_scale, v_scale) -> None",
+    "text_signature": null,
+    "doc": null,
+    "input_parameters": "(key, value, key_cache, value_cache, slot_mapping, kv_cache_dtype, k_scale, v_scale)",
+    "output_parameters": "None",
+    "vllm_api": "triton_import.triton_reshape_and_cache_flash(...)"
+  },
+  "fused_recurrent_gated_delta_rule_fwd": {
+    "callable": true,
+    "signature": "(q, k, v, g, beta, scale, initial_state, ...) -> None",
+    "text_signature": null,
+    "doc": null,
+    "input_parameters": "(q, k, v, g, beta, scale, initial_state, ...)",
+    "output_parameters": "None",
+    "vllm_api": "triton_import.fused_recurrent_gated_delta_rule_fwd(...)"
+  },
+  "awq_gemm_triton": {
+    "callable": true,
+    "signature": "(input, qweight, scales, qzeros, split_k_iters, block_size_m=32, block_size_n=32, block_size_k=32) -> None",
+    "text_signature": null,
+    "doc": null,
+    "input_parameters": "(input, qweight, scales, qzeros, split_k_iters, block_size_m=32, block_size_n=32, block_size_k=32)",
+    "output_parameters": "None",
+    "vllm_api": "triton_import.awq_gemm_triton(...)"
+  },
+  "triton_scaled_mm": {
+    "callable": true,
+    "signature": "(input, weight, scale_a, scale_b, out_dtype, bias=None, ...) -> None",
+    "text_signature": null,
+    "doc": null,
+    "input_parameters": "(input, weight, scale_a, scale_b, out_dtype, bias=None, ...)",
+    "output_parameters": "None",
+    "vllm_api": "triton_import.triton_scaled_mm(...)"
+  },
+  "fused_gdn_gating": {
+    "callable": true,
+    "signature": "(A_log, a, b, dt_bias, beta=1.0, threshold=20.0) -> None",
+    "text_signature": null,
+    "doc": null,
+    "input_parameters": "(A_log, a, b, dt_bias, beta=1.0, threshold=20.0)",
+    "output_parameters": "None",
+    "vllm_api": "triton_import.fused_gdn_gating(...)"
+  },
+  "triton_convert_req_index_to_global_index": {
+    "callable": true,
+    "signature": "(req_id, block_table, token_indices, ...) -> None",
+    "text_signature": null,
+    "doc": null,
+    "input_parameters": "(req_id, block_table, token_indices, ...)",
+    "output_parameters": "None",
+    "vllm_api": "triton_import.triton_convert_req_index_to_global_index(...)"
+  },
+  "zero_experts_compute_triton": {
+    "callable": true,
+    "signature": "(...) -> None",
+    "text_signature": null,
+    "doc": null,
+    "input_parameters": "(...)",
+    "output_parameters": "None",
+    "vllm_api": "triton_import.zero_experts_compute_triton(...)"
+  },
+  "linear_decode_forward_triton": {
+    "callable": true,
+    "signature": "(...) -> None",
+    "text_signature": null,
+    "doc": null,
+    "input_parameters": "(...)",
+    "output_parameters": "None",
+    "vllm_api": "triton_import.linear_decode_forward_triton(...)"
+  },
+  "awq_dequantize_triton": {
+    "callable": true,
+    "signature": "(qweight, scales, zeros, block_size_x=32, block_size_y=32) -> None",
+    "text_signature": null,
+    "doc": null,
+    "input_parameters": "(qweight, scales, zeros, block_size_x=32, block_size_y=32)",
+    "output_parameters": "None",
+    "vllm_api": "triton_import.awq_dequantize_triton(...)"
+  },
+  "pack_seq_triton": {
+    "callable": true,
+    "signature": "(...) -> None",
+    "text_signature": null,
+    "doc": null,
+    "input_parameters": "(...)",
+    "output_parameters": "None",
+    "vllm_api": "triton_import.pack_seq_triton(...)"
+  },
+  "triton_mrope": {
+    "callable": true,
+    "signature": "(q, k, cos, sin, mrope_section, head_size, rotary_dim, mrope_interleaved) -> None",
+    "text_signature": null,
+    "doc": null,
+    "input_parameters": "(q, k, cos, sin, mrope_section, head_size, rotary_dim, mrope_interleaved)",
+    "output_parameters": "None",
+    "vllm_api": "triton_import.triton_mrope(...)"
+  },
+  "unpack_seq_triton": {
+    "callable": true,
+    "signature": "(...) -> None",
+    "text_signature": null,
+    "doc": null,
+    "input_parameters": "(...)",
+    "output_parameters": "None",
+    "vllm_api": "triton_import.unpack_seq_triton(...)"
+  },
+  "chunk_scaled_dot_kkt_fwd": {
+    "callable": true,
+    "signature": "(...) -> None",
+    "text_signature": null,
+    "doc": null,
+    "input_parameters": "(...)",
+    "output_parameters": "None",
+    "vllm_api": "triton_import.chunk_scaled_dot_kkt_fwd(...)"
+  },
+  "_layer_norm_fwd": {
+    "callable": true,
+    "signature": "(x, weight, bias, eps, z=None, out=None, group_size=None, norm_before_gate=True, is_rms_norm=False) -> None",
+    "text_signature": null,
+    "doc": null,
+    "input_parameters": "(x, weight, bias, eps, z=None, out=None, group_size=None, norm_before_gate=True, is_rms_norm=False)",
+    "output_parameters": "None",
+    "vllm_api": "triton_import._layer_norm_fwd(...)"
+  },
+  "layer_norm_fwd": {
+    "callable": true,
+    "signature": "(...) -> None",
+    "text_signature": null,
+    "doc": null,
+    "input_parameters": "(...)",
+    "output_parameters": "None",
+    "vllm_api": "triton_import.layer_norm_fwd(...)"
+  },
+  "_bmm_chunk_fwd": {
+    "callable": true,
+    "signature": "(...) -> None",
+    "text_signature": null,
+    "doc": null,
+    "input_parameters": "(...)",
+    "output_parameters": "None",
+    "vllm_api": "triton_import._bmm_chunk_fwd(...)"
+  },
+  "_chunk_cumsum_fwd": {
+    "callable": true,
+    "signature": "(...) -> None",
+    "text_signature": null,
+    "doc": null,
+    "input_parameters": "(...)",
+    "output_parameters": "None",
+    "vllm_api": "triton_import._chunk_cumsum_fwd(...)"
+  },
+  "_chunk_scan_fwd": {
+    "callable": true,
+    "signature": "(...) -> None",
+    "text_signature": null,
+    "doc": null,
+    "input_parameters": "(...)",
+    "output_parameters": "None",
+    "vllm_api": "triton_import._chunk_scan_fwd(...)"
+  },
+  "_chunk_state_fwd": {
+    "callable": true,
+    "signature": "(...) -> None",
+    "text_signature": null,
+    "doc": null,
+    "input_parameters": "(...)",
+    "output_parameters": "None",
+    "vllm_api": "triton_import._chunk_state_fwd(...)"
+  },
+  "chunk_fwd_o": {
+    "callable": true,
+    "signature": "(...) -> None",
+    "text_signature": null,
+    "doc": null,
+    "input_parameters": "(...)",
+    "output_parameters": "None",
+    "vllm_api": "triton_import.chunk_fwd_o(...)"
+  },
+  "chunk_gated_delta_rule_fwd_h": {
+    "callable": true,
+    "signature": "(...) -> None",
+    "text_signature": null,
+    "doc": null,
+    "input_parameters": "(...)",
+    "output_parameters": "None",
+    "vllm_api": "triton_import.chunk_gated_delta_rule_fwd_h(...)"
+  },
+  "_decode_grouped_att_m_fwd": {
+    "callable": true,
+    "signature": "(q, k_buffer, v_buffer, att_out, Req_to_tokens, B_Seqlen, num_kv_splits, sm_scale, page_size, logit_cap) -> None",
+    "text_signature": null,
+    "doc": null,
+    "input_parameters": "(q, k_buffer, v_buffer, att_out, Req_to_tokens, B_Seqlen, num_kv_splits, sm_scale, page_size, logit_cap)",
+    "output_parameters": "None",
+    "vllm_api": "triton_import._decode_grouped_att_m_fwd(...)"
+  },
+  "_decode_softmax_reducev_fwd": {
+    "callable": true,
+    "signature": "(logits, q, o, lse, v_buffer, b_seq_len, num_kv_splits) -> None",
+    "text_signature": null,
+    "doc": null,
+    "input_parameters": "(logits, q, o, lse, v_buffer, b_seq_len, num_kv_splits)",
+    "output_parameters": "None",
+    "vllm_api": "triton_import._decode_softmax_reducev_fwd(...)"
+  },
+  "_decode_att_m_fwd": {
+    "callable": true,
+    "signature": "(q, k_buffer, v_buffer, att_out, Req_to_tokens, B_Seqlen, num_kv_splits, sm_scale, page_size, logit_cap) -> None",
+    "text_signature": null,
+    "doc": null,
+    "input_parameters": "(q, k_buffer, v_buffer, att_out, Req_to_tokens, B_Seqlen, num_kv_splits, sm_scale, page_size, logit_cap)",
+    "output_parameters": "None",
+    "vllm_api": "triton_import._decode_att_m_fwd(...)"
+  },
+  "_state_passing_fwd": {
+    "callable": true,
+    "signature": "(...) -> None",
+    "text_signature": null,
+    "doc": null,
+    "input_parameters": "(...)",
+    "output_parameters": "None",
+    "vllm_api": "triton_import._state_passing_fwd(...)"
+  },
+  "l2norm_fwd": {
+    "callable": true,
+    "signature": "(x, eps=1e-6, output_dtype=None) -> None",
+    "text_signature": null,
+    "doc": null,
+    "input_parameters": "(x, eps=1e-6, output_dtype=None)",
+    "output_parameters": "None",
+    "vllm_api": "triton_import.l2norm_fwd(...)"
+  },
+  "recompute_w_u_fwd": {
+    "callable": true,
+    "signature": "(k, v, beta, g_cumsum, A, cu_seqlens) -> None",
+    "text_signature": null,
+    "doc": null,
+    "input_parameters": "(k, v, beta, g_cumsum, A, cu_seqlens)",
+    "output_parameters": "None",
+    "vllm_api": "triton_import.recompute_w_u_fwd(...)"
+  },
+  "chunk_state_varlen": {
+    "callable": true,
+    "signature": "(B, x, dt, dA_cumsum, cu_seqlens, chunk_states, initial_states=None) -> None",
+    "text_signature": null,
+    "doc": null,
+    "input_parameters": "(B, x, dt, dA_cumsum, cu_seqlens, chunk_states, initial_states=None)",
+    "output_parameters": "None",
+    "vllm_api": "triton_import.chunk_state_varlen(...)"
+  },
+  "chunk_local_cumsum_scalar": {
+    "callable": true,
+    "signature": "(...) -> None",
+    "text_signature": null,
+    "doc": null,
+    "input_parameters": "(...)",
+    "output_parameters": "None",
+    "vllm_api": "triton_import.chunk_local_cumsum_scalar(...)"
+  },
+  "chunk_local_cumsum_vector": {
+    "callable": true,
+    "signature": "(...) -> None",
+    "text_signature": null,
+    "doc": null,
+    "input_parameters": "(...)",
+    "output_parameters": "None",
+    "vllm_api": "triton_import.chunk_local_cumsum_vector(...)"
+  },
+  "sample_recovered_tokens": {
+    "callable": true,
+    "signature": "(...) -> None",
+    "text_signature": null,
+    "doc": null,
+    "input_parameters": "(...)",
+    "output_parameters": "None",
+    "vllm_api": "triton_import.sample_recovered_tokens(...)"
+  },
+  "paged_attention_v1": {
+    "callable": true,
+    "signature": "(out, query, key_cache, value_cache, num_kv_heads, scale, block_tables, seq_lens, block_size, max_seq_len, alibi_slopes, kv_cache_dtype, k_scale, v_scale, tp_rank=0, blocksparse_local_blocks=0, blocksparse_vert_stride=0, blocksparse_block_size=64, blocksparse_head_sliding_step=0) -> None",
+    "text_signature": null,
+    "doc": null,
+    "input_parameters": "(out, query, key_cache, value_cache, num_kv_heads, scale, block_tables, seq_lens, block_size, max_seq_len, alibi_slopes, kv_cache_dtype, k_scale, v_scale, tp_rank=0, blocksparse_local_blocks=0, blocksparse_vert_stride=0, blocksparse_block_size=64, blocksparse_head_sliding_step=0)",
+    "output_parameters": "None",
+    "vllm_api": "_custom_ops.paged_attention_v1(...)"
+  },
+  "paged_attention_v2": {
+    "callable": true,
+    "signature": "(out, exp_sum, max_logits, tmp_out, query, key_cache, value_cache, num_kv_heads, scale, block_tables, seq_lens, block_size, max_seq_len, alibi_slopes, kv_cache_dtype, k_scale, v_scale, tp_rank=0, blocksparse_local_blocks=0, blocksparse_vert_stride=0, blocksparse_block_size=64, blocksparse_head_sliding_step=0) -> None",
+    "text_signature": null,
+    "doc": null,
+    "input_parameters": "(out, exp_sum, max_logits, tmp_out, query, key_cache, value_cache, num_kv_heads, scale, block_tables, seq_lens, block_size, max_seq_len, alibi_slopes, kv_cache_dtype, k_scale, v_scale, tp_rank=0, blocksparse_local_blocks=0, blocksparse_vert_stride=0, blocksparse_block_size=64, blocksparse_head_sliding_step=0)",
+    "output_parameters": "None",
+    "vllm_api": "_custom_ops.paged_attention_v2(...)"
+  },
+  "paged_attention_rocm": {
+    "callable": true,
+    "signature": "(out, exp_sum, max_logits, tmp_out, query, key_cache, value_cache, num_kv_heads, scale, block_tables, seq_lens, query_start_loc, block_size, max_seq_len, alibi_slopes, kv_cache_dtype, k_scale, v_scale, fp8_out_scale=None, mfma_type=\"f16\") -> torch.Tensor",
+    "text_signature": null,
+    "doc": null,
+    "input_parameters": "(out, exp_sum, max_logits, tmp_out, query, key_cache, value_cache, num_kv_heads, scale, block_tables, seq_lens, query_start_loc, block_size, max_seq_len, alibi_slopes, kv_cache_dtype, k_scale, v_scale, fp8_out_scale=None, mfma_type=\"f16\")",
+    "output_parameters": "torch.Tensor",
+    "vllm_api": "_custom_ops.paged_attention_rocm(...)"
+  },
+  "mla_decode_kvcache_cpu": {
+    "callable": true,
+    "signature": "(out, query, kv_cache, scale, block_tables, seq_lens) -> torch.Tensor",
+    "text_signature": null,
+    "doc": null,
+    "input_parameters": "(out, query, kv_cache, scale, block_tables, seq_lens)",
+    "output_parameters": "torch.Tensor",
+    "vllm_api": "_custom_ops.mla_decode_kvcache_cpu(...)"
+  },
+  "merge_attn_states": {
+    "callable": true,
+    "signature": "(output, prefix_output, prefix_lse, suffix_output, suffix_lse, output_lse=None) -> torch.Tensor",
+    "text_signature": null,
+    "doc": null,
+    "input_parameters": "(output, prefix_output, prefix_lse, suffix_output, suffix_lse, output_lse=None)",
+    "output_parameters": "torch.Tensor",
+    "vllm_api": "_custom_ops.merge_attn_states(...)"
+  },
+  "flash_mla_with_kvcache": {
+    "callable": true,
+    "signature": "(q, k_cache, block_table, cache_seqlens, head_dim_v, tile_scheduler_metadata, num_splits, softmax_scale=None, causal=False) -> torch.Tensor",
+    "text_signature": null,
+    "doc": null,
+    "input_parameters": "(q, k_cache, block_table, cache_seqlens, head_dim_v, tile_scheduler_metadata, num_splits, softmax_scale=None, causal=False)",
+    "output_parameters": "torch.Tensor",
+    "vllm_api": "_custom_ops.flash_mla_with_kvcache(...)"
+  },
+  "get_flash_mla_metadata": {
+    "callable": true,
+    "signature": "(cache_seqlens, num_heads_per_head_k, num_heads_k) -> bool",
+    "text_signature": null,
+    "doc": null,
+    "input_parameters": "(cache_seqlens, num_heads_per_head_k, num_heads_k)",
+    "output_parameters": "bool",
+    "vllm_api": "_custom_ops.get_flash_mla_metadata(...)"
+  },
+  "sm100_cutlass_mla_decode": {
+    "callable": true,
+    "signature": "(out, lse, q_nope, q_pe, kv_c_and_k_pe_cache, seq_lens, page_table, workspace, scale, num_kv_splits) -> torch.Tensor",
+    "text_signature": null,
+    "doc": null,
+    "input_parameters": "(out, lse, q_nope, q_pe, kv_c_and_k_pe_cache, seq_lens, page_table, workspace, scale, num_kv_splits)",
+    "output_parameters": "torch.Tensor",
+    "vllm_api": "_custom_ops.sm100_cutlass_mla_decode(...)"
+  },
+  "sm100_cutlass_mla_get_workspace_size": {
+    "callable": true,
+    "signature": "(max_seq_len, num_batches, sm_count, num_kv_splits) -> torch.Tensor",
+    "text_signature": null,
+    "doc": null,
+    "input_parameters": "(max_seq_len, num_batches, sm_count, num_kv_splits)",
+    "output_parameters": "torch.Tensor",
+    "vllm_api": "_custom_ops.sm100_cutlass_mla_get_workspace_size(...)"
+  },
+  "convert_vertical_slash_indexes": {
+    "callable": true,
+    "signature": "(q_seqlens, kv_seqlens, vertical_indexes, slash_indexes, context_size, block_size_M, block_size_N, causal=True) -> torch.Tensor",
+    "text_signature": null,
+    "doc": null,
+    "input_parameters": "(q_seqlens, kv_seqlens, vertical_indexes, slash_indexes, context_size, block_size_M, block_size_N, causal=True)",
+    "output_parameters": "torch.Tensor",
+    "vllm_api": "_custom_ops.convert_vertical_slash_indexes(...)"
+  },
+  "convert_vertical_slash_indexes_mergehead": {
+    "callable": true,
+    "signature": "(q_seqlens, kv_seqlens, vertical_indexes, slash_indexes, vertical_indices_count, slash_indices_count, context_size, block_size_M, block_size_N, causal=True) -> torch.Tensor",
+    "text_signature": null,
+    "doc": null,
+    "input_parameters": "(q_seqlens, kv_seqlens, vertical_indexes, slash_indexes, vertical_indices_count, slash_indices_count, context_size, block_size_M, block_size_N, causal=True)",
+    "output_parameters": "torch.Tensor",
+    "vllm_api": "_custom_ops.convert_vertical_slash_indexes_mergehead(...)"
+  },
+  "reshape_and_cache": {
+    "callable": true,
+    "signature": "(key, value, key_cache, value_cache, slot_mapping, kv_cache_dtype, k_scale, v_scale) -> torch.Tensor",
+    "text_signature": null,
+    "doc": null,
+    "input_parameters": "(key, value, key_cache, value_cache, slot_mapping, kv_cache_dtype, k_scale, v_scale)",
+    "output_parameters": "torch.Tensor",
+    "vllm_api": "_custom_ops.reshape_and_cache(...)"
+  },
+  "reshape_and_cache_flash": {
+    "callable": true,
+    "signature": "(key, value, key_cache, value_cache, slot_mapping, kv_cache_dtype, k_scale, v_scale) -> torch.Tensor",
+    "text_signature": null,
+    "doc": null,
+    "input_parameters": "(key, value, key_cache, value_cache, slot_mapping, kv_cache_dtype, k_scale, v_scale)",
+    "output_parameters": "torch.Tensor",
+    "vllm_api": "_custom_ops.reshape_and_cache_flash(...)"
+  },
+  "concat_and_cache_mla": {
+    "callable": true,
+    "signature": "(kv_c, k_pe, kv_cache, slot_mapping, kv_cache_dtype, scale) -> torch.Tensor",
+    "text_signature": null,
+    "doc": null,
+    "input_parameters": "(kv_c, k_pe, kv_cache, slot_mapping, kv_cache_dtype, scale)",
+    "output_parameters": "torch.Tensor",
+    "vllm_api": "_custom_ops.concat_and_cache_mla(...)"
+  },
+  "copy_blocks": {
+    "callable": true,
+    "signature": "(key_caches, value_caches, block_mapping) -> torch.Tensor",
+    "text_signature": null,
+    "doc": null,
+    "input_parameters": "(key_caches, value_caches, block_mapping)",
+    "output_parameters": "torch.Tensor",
+    "vllm_api": "_custom_ops.copy_blocks(...)"
+  },
+  "copy_blocks_mla": {
+    "callable": true,
+    "signature": "(kv_caches, block_mapping) -> torch.Tensor",
+    "text_signature": null,
+    "doc": null,
+    "input_parameters": "(kv_caches, block_mapping)",
+    "output_parameters": "torch.Tensor",
+    "vllm_api": "_custom_ops.copy_blocks_mla(...)"
+  },
+  "swap_blocks": {
+    "callable": true,
+    "signature": "(src, dst, block_mapping) -> torch.Tensor",
+    "text_signature": null,
+    "doc": null,
+    "input_parameters": "(src, dst, block_mapping)",
+    "output_parameters": "torch.Tensor",
+    "vllm_api": "_custom_ops.swap_blocks(...)"
+  },
+  "convert_fp8": {
+    "callable": true,
+    "signature": "(output, input, scale=1.0, kv_dtype=\"fp8\") -> torch.Tensor",
+    "text_signature": null,
+    "doc": null,
+    "input_parameters": "(output, input, scale=1.0, kv_dtype=\"fp8\")",
+    "output_parameters": "torch.Tensor",
+    "vllm_api": "_custom_ops.convert_fp8(...)"
+  },
+  "gather_and_maybe_dequant_cache": {
+    "callable": true,
+    "signature": "(src_cache, dst, block_table, cu_seq_lens, token_to_seq, num_tokens, kv_cache_dtype, scale, seq_starts=None) -> torch.Tensor",
+    "text_signature": null,
+    "doc": null,
+    "input_parameters": "(src_cache, dst, block_table, cu_seq_lens, token_to_seq, num_tokens, kv_cache_dtype, scale, seq_starts=None)",
+    "output_parameters": "torch.Tensor",
+    "vllm_api": "_custom_ops.gather_and_maybe_dequant_cache(...)"
+  },
+  "cp_gather_cache": {
+    "callable": true,
+    "signature": "(src_cache, dst, block_table, cu_seq_lens, batch_size, seq_starts=None) -> torch.Tensor",
+    "text_signature": null,
+    "doc": null,
+    "input_parameters": "(src_cache, dst, block_table, cu_seq_lens, batch_size, seq_starts=None)",
+    "output_parameters": "torch.Tensor",
+    "vllm_api": "_custom_ops.cp_gather_cache(...)"
+  },
+  "indexer_k_quant_and_cache": {
+    "callable": true,
+    "signature": "(k, kv_cache, slot_mapping, quant_block_size, kv_cache_dtype) -> torch.Tensor",
+    "text_signature": null,
+    "doc": null,
+    "input_parameters": "(k, kv_cache, slot_mapping, quant_block_size, kv_cache_dtype)",
+    "output_parameters": "torch.Tensor",
+    "vllm_api": "_custom_ops.indexer_k_quant_and_cache(...)"
+  },
+  "rms_norm": {
+    "callable": true,
+    "signature": "(out, input, weight, epsilon) -> torch.Tensor",
+    "text_signature": null,
+    "doc": null,
+    "input_parameters": "(out, input, weight, epsilon)",
+    "output_parameters": "torch.Tensor",
+    "vllm_api": "_custom_ops.rms_norm(...)"
+  },
+  "fused_add_rms_norm": {
+    "callable": true,
+    "signature": "(input, residual, weight, epsilon) -> torch.Tensor",
+    "text_signature": null,
+    "doc": null,
+    "input_parameters": "(input, residual, weight, epsilon)",
+    "output_parameters": "torch.Tensor",
+    "vllm_api": "_custom_ops.fused_add_rms_norm(...)"
+  },
+  "rms_norm_dynamic_per_token_quant": {
+    "callable": true,
+    "signature": "(input, weight, epsilon, quant_dtype, scale_ub=None, residual=None) -> torch.Tensor",
+    "text_signature": null,
+    "doc": null,
+    "input_parameters": "(input, weight, epsilon, quant_dtype, scale_ub=None, residual=None)",
+    "output_parameters": "torch.Tensor",
+    "vllm_api": "_custom_ops.rms_norm_dynamic_per_token_quant(...)"
+  },
+  "rms_norm_per_block_quant": {
+    "callable": true,
+    "signature": "(input, weight, epsilon, quant_dtype, group_size, scale_ub=None, residual=None, is_scale_transposed=False) -> torch.Tensor",
+    "text_signature": null,
+    "doc": null,
+    "input_parameters": "(input, weight, epsilon, quant_dtype, group_size, scale_ub=None, residual=None, is_scale_transposed=False)",
+    "output_parameters": "torch.Tensor",
+    "vllm_api": "_custom_ops.rms_norm_per_block_quant(...)"
+  },
+  "rotary_embedding": {
+    "callable": true,
+    "signature": "(positions, query, key, head_size, cos_sin_cache, is_neox) -> torch.Tensor",
+    "text_signature": null,
+    "doc": null,
+    "input_parameters": "(positions, query, key, head_size, cos_sin_cache, is_neox)",
+    "output_parameters": "torch.Tensor",
+    "vllm_api": "_custom_ops.rotary_embedding(...)"
+  },
+  "fused_qk_norm_rope": {
+    "callable": true,
+    "signature": "(qkv, num_heads_q, num_heads_k, num_heads_v, head_dim, eps, q_weight, k_weight, cos_sin_cache, is_neox, position_ids) -> torch.Tensor",
+    "text_signature": null,
+    "doc": null,
+    "input_parameters": "(qkv, num_heads_q, num_heads_k, num_heads_v, head_dim, eps, q_weight, k_weight, cos_sin_cache, is_neox, position_ids)",
+    "output_parameters": "torch.Tensor",
+    "vllm_api": "_custom_ops.fused_qk_norm_rope(...)"
+  },
+  "scaled_fp8_quant": {
+    "callable": true,
+    "signature": "(input, scale=None, num_token_padding=None, scale_ub=None, use_per_token_if_dynamic=False, output=None) -> torch.Tensor",
+    "text_signature": null,
+    "doc": null,
+    "input_parameters": "(input, scale=None, num_token_padding=None, scale_ub=None, use_per_token_if_dynamic=False, output=None)",
+    "output_parameters": "torch.Tensor",
+    "vllm_api": "_custom_ops.scaled_fp8_quant(...)"
+  },
+  "scaled_fp4_quant": {
+    "callable": true,
+    "signature": "(input, input_global_scale) -> torch.Tensor",
+    "text_signature": null,
+    "doc": null,
+    "input_parameters": "(input, input_global_scale)",
+    "output_parameters": "torch.Tensor",
+    "vllm_api": "_custom_ops.scaled_fp4_quant(...)"
+  },
+  "scaled_fp4_experts_quant": {
+    "callable": true,
+    "signature": "(input_tensor, input_global_scale, expert_offsets, blockscale_offsets, topk) -> torch.Tensor",
+    "text_signature": null,
+    "doc": null,
+    "input_parameters": "(input_tensor, input_global_scale, expert_offsets, blockscale_offsets, topk)",
+    "output_parameters": "torch.Tensor",
+    "vllm_api": "_custom_ops.scaled_fp4_experts_quant(...)"
+  },
+  "scaled_int8_quant": {
+    "callable": true,
+    "signature": "(input, scale=None, azp=None, symmetric=True) -> torch.Tensor",
+    "text_signature": null,
+    "doc": null,
+    "input_parameters": "(input, scale=None, azp=None, symmetric=True)",
+    "output_parameters": "torch.Tensor",
+    "vllm_api": "_custom_ops.scaled_int8_quant(...)"
+  },
+  "cutlass_pack_scale_fp8": {
+    "callable": true,
+    "signature": "(scales) -> torch.Tensor",
+    "text_signature": null,
+    "doc": null,
+    "input_parameters": "(scales)",
+    "output_parameters": "torch.Tensor",
+    "vllm_api": "_custom_ops.cutlass_pack_scale_fp8(...)"
+  },
+  "cutlass_scaled_mm": {
+    "callable": true,
+    "signature": "(a, b, scale_a, scale_b, out_dtype, bias=None) -> torch.Tensor",
+    "text_signature": null,
+    "doc": null,
+    "input_parameters": "(a, b, scale_a, scale_b, out_dtype, bias=None)",
+    "output_parameters": "torch.Tensor",
+    "vllm_api": "_custom_ops.cutlass_scaled_mm(...)"
+  },
+  "cutlass_scaled_mm_azp": {
+    "callable": true,
+    "signature": "(a, b, scale_a, scale_b, out_dtype, azp_adj, azp=None, bias=None) -> torch.Tensor",
+    "text_signature": null,
+    "doc": null,
+    "input_parameters": "(a, b, scale_a, scale_b, out_dtype, azp_adj, azp=None, bias=None)",
+    "output_parameters": "torch.Tensor",
+    "vllm_api": "_custom_ops.cutlass_scaled_mm_azp(...)"
+  },
+  "cutlass_scaled_fp4_mm": {
+    "callable": true,
+    "signature": "(a, b, block_scale_a, block_scale_b, alpha, out_dtype) -> torch.Tensor",
+    "text_signature": null,
+    "doc": null,
+    "input_parameters": "(a, b, block_scale_a, block_scale_b, alpha, out_dtype)",
+    "output_parameters": "torch.Tensor",
+    "vllm_api": "_custom_ops.cutlass_scaled_fp4_mm(...)"
+  },
+  "cutlass_scaled_sparse_mm": {
+    "callable": true,
+    "signature": "(a, bt_nzs, bt_meta, scale_a, scale_b, out_dtype, bias=None) -> torch.Tensor",
+    "text_signature": null,
+    "doc": null,
+    "input_parameters": "(a, bt_nzs, bt_meta, scale_a, scale_b, out_dtype, bias=None)",
+    "output_parameters": "torch.Tensor",
+    "vllm_api": "_custom_ops.cutlass_scaled_sparse_mm(...)"
+  },
+  "cutlass_blockwise_scaled_grouped_mm": {
+    "callable": true,
+    "signature": "(output, a, b, scales_a, scales_b, problem_sizes, expert_offsets) -> torch.Tensor",
+    "text_signature": null,
+    "doc": null,
+    "input_parameters": "(output, a, b, scales_a, scales_b, problem_sizes, expert_offsets)",
+    "output_parameters": "torch.Tensor",
+    "vllm_api": "_custom_ops.cutlass_blockwise_scaled_grouped_mm(...)"
+  },
+  "cutlass_w4a8_mm": {
+    "callable": true,
+    "signature": "(a, b_q, b_group_scales, b_group_size, b_channel_scales, a_token_scales, out_type=None, maybe_schedule=None) -> torch.Tensor",
+    "text_signature": null,
+    "doc": null,
+    "input_parameters": "(a, b_q, b_group_scales, b_group_size, b_channel_scales, a_token_scales, out_type=None, maybe_schedule=None)",
+    "output_parameters": "torch.Tensor",
+    "vllm_api": "_custom_ops.cutlass_w4a8_mm(...)"
+  },
+  "cutlass_sparse_compress": {
+    "callable": true,
+    "signature": "(a) -> torch.Tensor",
+    "text_signature": null,
+    "doc": null,
+    "input_parameters": "(a)",
+    "output_parameters": "torch.Tensor",
+    "vllm_api": "_custom_ops.cutlass_sparse_compress(...)"
+  },
+  "awq_gemm": {
+    "callable": true,
+    "signature": "(input, qweight, scales, qzeros, split_k_iters) -> torch.Tensor",
+    "text_signature": null,
+    "doc": null,
+    "input_parameters": "(input, qweight, scales, qzeros, split_k_iters)",
+    "output_parameters": "torch.Tensor",
+    "vllm_api": "_custom_ops.awq_gemm(...)"
+  },
+  "awq_dequantize": {
+    "callable": true,
+    "signature": "(qweight, scales, zeros, split_k_iters, thx, thy) -> torch.Tensor",
+    "text_signature": null,
+    "doc": null,
+    "input_parameters": "(qweight, scales, zeros, split_k_iters, thx, thy)",
+    "output_parameters": "torch.Tensor",
+    "vllm_api": "_custom_ops.awq_dequantize(...)"
+  },
+  "gptq_gemm": {
+    "callable": true,
+    "signature": "(a, b_q_weight, b_gptq_qzeros, b_gptq_scales, b_g_idx, use_exllama, use_v2_format, bit) -> torch.Tensor",
+    "text_signature": null,
+    "doc": null,
+    "input_parameters": "(a, b_q_weight, b_gptq_qzeros, b_gptq_scales, b_g_idx, use_exllama, use_v2_format, bit)",
+    "output_parameters": "torch.Tensor",
+    "vllm_api": "_custom_ops.gptq_gemm(...)"
+  },
+  "gptq_shuffle": {
+    "callable": true,
+    "signature": "(q_weight, q_perm, bit) -> torch.Tensor",
+    "text_signature": null,
+    "doc": null,
+    "input_parameters": "(q_weight, q_perm, bit)",
+    "output_parameters": "torch.Tensor",
+    "vllm_api": "_custom_ops.gptq_shuffle(...)"
+  },
+  "gptq_marlin_24_gemm": {
+    "callable": true,
+    "signature": "(a, b_q_weight, b_meta, b_scales, workspace, b_q_type, size_m, size_n, size_k) -> torch.Tensor",
+    "text_signature": null,
+    "doc": null,
+    "input_parameters": "(a, b_q_weight, b_meta, b_scales, workspace, b_q_type, size_m, size_n, size_k)",
+    "output_parameters": "torch.Tensor",
+    "vllm_api": "_custom_ops.gptq_marlin_24_gemm(...)"
+  },
+  "gptq_marlin_gemm": {
+    "callable": true,
+    "signature": "(a, c, b_q_weight, b_bias, b_scales, a_scales, global_scale, b_zeros, g_idx, perm, workspace, b_q_type, size_m, size_n, size_k, is_k_full=True, use_atomic_add=False, use_fp32_reduce=False, is_zp_float=False) -> torch.Tensor",
+    "text_signature": null,
+    "doc": null,
+    "input_parameters": "(a, c, b_q_weight, b_bias, b_scales, a_scales, global_scale, b_zeros, g_idx, perm, workspace, b_q_type, size_m, size_n, size_k, is_k_full=True, use_atomic_add=False, use_fp32_reduce=False, is_zp_float=False)",
+    "output_parameters": "torch.Tensor",
+    "vllm_api": "_custom_ops.gptq_marlin_gemm(...)"
+  },
+  "machete_mm": {
+    "callable": true,
+    "signature": "(a, b_q, b_type, out_type=None, b_group_scales=None, b_group_zeros=None, b_group_size=None, b_channel_scales=None, a_token_scales=None, schedule=None) -> torch.Tensor",
+    "text_signature": null,
+    "doc": null,
+    "input_parameters": "(a, b_q, b_type, out_type=None, b_group_scales=None, b_group_zeros=None, b_group_size=None, b_channel_scales=None, a_token_scales=None, schedule=None)",
+    "output_parameters": "torch.Tensor",
+    "vllm_api": "_custom_ops.machete_mm(...)"
+  },
+  "machete_prepack_B": {
+    "callable": true,
+    "signature": "(b_q_weight, a_type, b_type, group_scales_type) -> torch.Tensor",
+    "text_signature": null,
+    "doc": null,
+    "input_parameters": "(b_q_weight, a_type, b_type, group_scales_type)",
+    "output_parameters": "torch.Tensor",
+    "vllm_api": "_custom_ops.machete_prepack_B(...)"
+  },
+  "machete_supported_schedules": {
+    "callable": true,
+    "signature": "(a_type, b_type, group_scales_type, group_zeros_type=None, channel_scales_type=None, token_scales_type=None, out_type=None) -> torch.Tensor",
+    "text_signature": null,
+    "doc": null,
+    "input_parameters": "(a_type, b_type, group_scales_type, group_zeros_type=None, channel_scales_type=None, token_scales_type=None, out_type=None)",
+    "output_parameters": "torch.Tensor",
+    "vllm_api": "_custom_ops.machete_supported_schedules(...)"
+  },
+  "allspark_w8a16_gemm": {
+    "callable": true,
+    "signature": "(a, b_qweight, b_scales, b_qzeros, n, group_size, sm_count, sm_version, CUBLAS_M_THRESHOLD, has_zp, n32k16_reorder) -> torch.Tensor",
+    "text_signature": null,
+    "doc": null,
+    "input_parameters": "(a, b_qweight, b_scales, b_qzeros, n, group_size, sm_count, sm_version, CUBLAS_M_THRESHOLD, has_zp, n32k16_reorder)",
+    "output_parameters": "torch.Tensor",
+    "vllm_api": "_custom_ops.allspark_w8a16_gemm(...)"
+  },
+  "allspark_repack_weight": {
+    "callable": true,
+    "signature": "(qweight, scale, zero_point=None, has_zp=False) -> tuple",
+    "text_signature": null,
+    "doc": null,
+    "input_parameters": "(qweight, scale, zero_point=None, has_zp=False)",
+    "output_parameters": "tuple",
+    "vllm_api": "_custom_ops.allspark_repack_weight(...)"
+  },
+  "LLMM1": {
+    "callable": true,
+    "signature": "(a, b, rows_per_block) -> torch.Tensor",
+    "text_signature": null,
+    "doc": null,
+    "input_parameters": "(a, b, rows_per_block)",
+    "output_parameters": "torch.Tensor",
+    "vllm_api": "_custom_ops.LLMM1(...)"
+  },
+  "wvSplitK": {
+    "callable": true,
+    "signature": "(a, b, cu_count, bias=None) -> torch.Tensor",
+    "text_signature": null,
+    "doc": null,
+    "input_parameters": "(a, b, cu_count, bias=None)",
+    "output_parameters": "torch.Tensor",
+    "vllm_api": "_custom_ops.wvSplitK(...)"
+  },
+  "wvSplitKQ": {
+    "callable": true,
+    "signature": "(a, b, out_dtype, scale_a, scale_b, cu_count, bias=None) -> torch.Tensor",
+    "text_signature": null,
+    "doc": null,
+    "input_parameters": "(a, b, out_dtype, scale_a, scale_b, cu_count, bias=None)",
+    "output_parameters": "torch.Tensor",
+    "vllm_api": "_custom_ops.wvSplitKQ(...)"
+  },
+  "gptq_marlin_repack": {
+    "callable": true,
+    "signature": "(b_q_weight, perm, size_k, size_n, num_bits, is_a_8bit=False) -> torch.Tensor",
+    "text_signature": null,
+    "doc": null,
+    "input_parameters": "(b_q_weight, perm, size_k, size_n, num_bits, is_a_8bit=False)",
+    "output_parameters": "torch.Tensor",
+    "vllm_api": "_custom_ops.gptq_marlin_repack(...)"
+  },
+  "awq_marlin_repack": {
+    "callable": true,
+    "signature": "(b_q_weight, size_k, size_n, num_bits, is_a_8bit=False) -> torch.Tensor",
+    "text_signature": null,
+    "doc": null,
+    "input_parameters": "(b_q_weight, size_k, size_n, num_bits, is_a_8bit=False)",
+    "output_parameters": "torch.Tensor",
+    "vllm_api": "_custom_ops.awq_marlin_repack(...)"
+  },
+  "gptq_marlin_moe_repack": {
+    "callable": true,
+    "signature": "(b_q_weight, perm, size_k, size_n, num_bits, is_a_8bit=False) -> torch.Tensor",
+    "text_signature": null,
+    "doc": null,
+    "input_parameters": "(b_q_weight, perm, size_k, size_n, num_bits, is_a_8bit=False)",
+    "output_parameters": "torch.Tensor",
+    "vllm_api": "_custom_ops.gptq_marlin_moe_repack(...)"
+  },
+  "awq_marlin_moe_repack": {
+    "callable": true,
+    "signature": "(b_q_weight, perm, size_k, size_n, num_bits, is_a_8bit=False) -> torch.Tensor",
+    "text_signature": null,
+    "doc": null,
+    "input_parameters": "(b_q_weight, perm, size_k, size_n, num_bits, is_a_8bit=False)",
+    "output_parameters": "torch.Tensor",
+    "vllm_api": "_custom_ops.awq_marlin_moe_repack(...)"
+  },
+  "cutlass_encode_and_reorder_int4b": {
+    "callable": true,
+    "signature": "(b) -> torch.Tensor",
+    "text_signature": null,
+    "doc": null,
+    "input_parameters": "(b)",
+    "output_parameters": "torch.Tensor",
+    "vllm_api": "_custom_ops.cutlass_encode_and_reorder_int4b(...)"
+  },
+  "permute_cols": {
+    "callable": true,
+    "signature": "(a, perm) -> torch.Tensor",
+    "text_signature": null,
+    "doc": null,
+    "input_parameters": "(a, perm)",
+    "output_parameters": "torch.Tensor",
+    "vllm_api": "_custom_ops.permute_cols(...)"
+  },
+  "shuffle_rows": {
+    "callable": true,
+    "signature": "(input_tensor, dst2src_map) -> torch.Tensor",
+    "text_signature": null,
+    "doc": null,
+    "input_parameters": "(input_tensor, dst2src_map)",
+    "output_parameters": "torch.Tensor",
+    "vllm_api": "_custom_ops.shuffle_rows(...)"
+  },
+  "moe_align_block_size": {
+    "callable": true,
+    "signature": "(topk_ids, num_experts, block_size, sorted_token_ids, experts_ids, num_tokens_post_pad, expert_map=None) -> torch.Tensor",
+    "text_signature": null,
+    "doc": null,
+    "input_parameters": "(topk_ids, num_experts, block_size, sorted_token_ids, experts_ids, num_tokens_post_pad, expert_map=None)",
+    "output_parameters": "torch.Tensor",
+    "vllm_api": "_custom_ops.moe_align_block_size(...)"
+  },
+  "moe_sum": {
+    "callable": true,
+    "signature": "(input, output) -> torch.Tensor",
+    "text_signature": null,
+    "doc": null,
+    "input_parameters": "(input, output)",
+    "output_parameters": "torch.Tensor",
+    "vllm_api": "_custom_ops.moe_sum(...)"
+  },
+  "topk_softmax": {
+    "callable": true,
+    "signature": "(topk_weights, topk_ids, token_expert_indices, gating_output, renormalize=False) -> torch.Tensor",
+    "text_signature": null,
+    "doc": null,
+    "input_parameters": "(topk_weights, topk_ids, token_expert_indices, gating_output, renormalize=False)",
+    "output_parameters": "torch.Tensor",
+    "vllm_api": "_custom_ops.topk_softmax(...)"
+  },
+  "grouped_topk": {
+    "callable": true,
+    "signature": "(scores, num_expert_group, topk_group, topk, renormalize, routed_scaling_factor, bias, scoring_func=0) -> torch.Tensor",
+    "text_signature": null,
+    "doc": null,
+    "input_parameters": "(scores, num_expert_group, topk_group, topk, renormalize, routed_scaling_factor, bias, scoring_func=0)",
+    "output_parameters": "torch.Tensor",
+    "vllm_api": "_custom_ops.grouped_topk(...)"
+  },
+  "cutlass_moe_mm": {
+    "callable": true,
+    "signature": "(out_tensors, a_tensors, b_tensors, a_scales, b_scales, expert_offsets, problem_sizes, a_strides, b_strides, c_strides, per_act_token, per_out_ch) -> torch.Tensor",
+    "text_signature": null,
+    "doc": null,
+    "input_parameters": "(out_tensors, a_tensors, b_tensors, a_scales, b_scales, expert_offsets, problem_sizes, a_strides, b_strides, c_strides, per_act_token, per_out_ch)",
+    "output_parameters": "torch.Tensor",
+    "vllm_api": "_custom_ops.cutlass_moe_mm(...)"
+  },
+  "cutlass_fp4_moe_mm": {
+    "callable": true,
+    "signature": "(out_tensors, a_tensors, b_tensors, a_scales, b_scales, alphas, problem_sizes, expert_offsets, sf_offsets) -> torch.Tensor",
+    "text_signature": null,
+    "doc": null,
+    "input_parameters": "(out_tensors, a_tensors, b_tensors, a_scales, b_scales, alphas, problem_sizes, expert_offsets, sf_offsets)",
+    "output_parameters": "torch.Tensor",
+    "vllm_api": "_custom_ops.cutlass_fp4_moe_mm(...)"
+  },
+  "get_cutlass_moe_mm_data": {
+    "callable": true,
+    "signature": "(topk_ids, expert_offsets, problem_sizes1, problem_sizes2, input_permutation, output_permutation, num_experts, n, k, blockscale_offsets=None) -> torch.Tensor",
+    "text_signature": null,
+    "doc": null,
+    "input_parameters": "(topk_ids, expert_offsets, problem_sizes1, problem_sizes2, input_permutation, output_permutation, num_experts, n, k, blockscale_offsets=None)",
+    "output_parameters": "torch.Tensor",
+    "vllm_api": "_custom_ops.get_cutlass_moe_mm_data(...)"
+  },
+  "get_cutlass_moe_mm_problem_sizes": {
+    "callable": true,
+    "signature": "(topk_ids, problem_sizes1, problem_sizes2, num_experts, n, k, blockscale_offsets=None, force_swap_ab=None) -> torch.Tensor",
+    "text_signature": null,
+    "doc": null,
+    "input_parameters": "(topk_ids, problem_sizes1, problem_sizes2, num_experts, n, k, blockscale_offsets=None, force_swap_ab=None)",
+    "output_parameters": "torch.Tensor",
+    "vllm_api": "_custom_ops.get_cutlass_moe_mm_problem_sizes(...)"
+  },
+  "get_cutlass_pplx_moe_mm_data": {
+    "callable": true,
+    "signature": "(expert_offsets, problem_sizes1, problem_sizes2, expert_num_tokens, num_local_experts, padded_m, n, k) -> torch.Tensor",
+    "text_signature": null,
+    "doc": null,
+    "input_parameters": "(expert_offsets, problem_sizes1, problem_sizes2, expert_num_tokens, num_local_experts, padded_m, n, k)",
+    "output_parameters": "torch.Tensor",
+    "vllm_api": "_custom_ops.get_cutlass_pplx_moe_mm_data(...)"
+  },
+  "moe_wna16_gemm": {
+    "callable": true,
+    "signature": "(input, output, b_qweight, b_scales, b_qzeros, topk_weights, sorted_token_ids, experts_ids, num_tokens_post_pad, top_k, BLOCK_SIZE_M, BLOCK_SIZE_N, BLOCK_SIZE_K, bit) -> torch.Tensor",
+    "text_signature": null,
+    "doc": null,
+    "input_parameters": "(input, output, b_qweight, b_scales, b_qzeros, topk_weights, sorted_token_ids, experts_ids, num_tokens_post_pad, top_k, BLOCK_SIZE_M, BLOCK_SIZE_N, BLOCK_SIZE_K, bit)",
+    "output_parameters": "torch.Tensor",
+    "vllm_api": "_custom_ops.moe_wna16_gemm(...)"
+  },
+  "moe_wna16_marlin_gemm": {
+    "callable": true,
+    "signature": "(input, output, b_qweight, b_bias, b_scales, a_scales, global_scale, b_qzeros, g_idx, perm, workspace, sorted_token_ids, expert_ids, num_tokens_past_padded, topk_weights, moe_block_size, top_k, mul_topk_weights, is_ep, b_q_type, size_m, size_n, size_k, is_k_full, use_atomic_add, use_fp32_reduce, is_zp_float, thread_k=-1, thread_n=-1, blocks_per_sm=-1) -> torch.Tensor",
+    "text_signature": null,
+    "doc": null,
+    "input_parameters": "(input, output, b_qweight, b_bias, b_scales, a_scales, global_scale, b_qzeros, g_idx, perm, workspace, sorted_token_ids, expert_ids, num_tokens_past_padded, topk_weights, moe_block_size, top_k, mul_topk_weights, is_ep, b_q_type, size_m, size_n, size_k, is_k_full, use_atomic_add, use_fp32_reduce, is_zp_float, thread_k=-1, thread_n=-1, blocks_per_sm=-1)",
+    "output_parameters": "torch.Tensor",
+    "vllm_api": "_custom_ops.moe_wna16_marlin_gemm(...)"
+  },
+  "ggml_dequantize": {
+    "callable": true,
+    "signature": "(W, quant_type, m, n, dtype) -> torch.Tensor",
+    "text_signature": null,
+    "doc": null,
+    "input_parameters": "(W, quant_type, m, n, dtype)",
+    "output_parameters": "torch.Tensor",
+    "vllm_api": "_custom_ops.ggml_dequantize(...)"
+  },
+  "ggml_mul_mat_vec_a8": {
+    "callable": true,
+    "signature": "(W, X, quant_type, row) -> torch.Tensor",
+    "text_signature": null,
+    "doc": null,
+    "input_parameters": "(W, X, quant_type, row)",
+    "output_parameters": "torch.Tensor",
+    "vllm_api": "_custom_ops.ggml_mul_mat_vec_a8(...)"
+  },
+  "ggml_mul_mat_a8": {
+    "callable": true,
+    "signature": "(W, X, quant_type, row) -> torch.Tensor",
+    "text_signature": null,
+    "doc": null,
+    "input_parameters": "(W, X, quant_type, row)",
+    "output_parameters": "torch.Tensor",
+    "vllm_api": "_custom_ops.ggml_mul_mat_a8(...)"
+  },
+  "ggml_moe_a8": {
+    "callable": true,
+    "signature": "(X, W, sorted_token_ids, expert_ids, num_tokens_post_padded, quant_type, row, top_k, tokens) -> torch.Tensor",
+    "text_signature": null,
+    "doc": null,
+    "input_parameters": "(X, W, sorted_token_ids, expert_ids, num_tokens_post_padded, quant_type, row, top_k, tokens)",
+    "output_parameters": "torch.Tensor",
+    "vllm_api": "_custom_ops.ggml_moe_a8(...)"
+  },
+  "ggml_moe_a8_vec": {
+    "callable": true,
+    "signature": "(X, W, topk_ids, top_k, quant_type, row, tokens) -> torch.Tensor",
+    "text_signature": null,
+    "doc": null,
+    "input_parameters": "(X, W, topk_ids, top_k, quant_type, row, tokens)",
+    "output_parameters": "torch.Tensor",
+    "vllm_api": "_custom_ops.ggml_moe_a8_vec(...)"
+  },
+  "ggml_moe_get_block_size": {
+    "callable": true,
+    "signature": "(quant_type) -> torch.Tensor",
+    "text_signature": null,
+    "doc": null,
+    "input_parameters": "(quant_type)",
+    "output_parameters": "torch.Tensor",
+    "vllm_api": "_custom_ops.ggml_moe_get_block_size(...)"
+  },
+  "selective_scan_fwd": {
+    "callable": true,
+    "signature": "(u, delta, A, B, C, D_, z_, delta_bias_, delta_softplus, query_start_loc, cache_indices, has_initial_state, ssm_states, pad_slot_id, block_size=1024, block_idx_first_scheduled_token=None, block_idx_last_scheduled_token=None, initial_state_idx=None) -> torch.Tensor",
+    "text_signature": null,
+    "doc": null,
+    "input_parameters": "(u, delta, A, B, C, D_, z_, delta_bias_, delta_softplus, query_start_loc, cache_indices, has_initial_state, ssm_states, pad_slot_id, block_size=1024, block_idx_first_scheduled_token=None, block_idx_last_scheduled_token=None, initial_state_idx=None)",
+    "output_parameters": "torch.Tensor",
+    "vllm_api": "_custom_ops.selective_scan_fwd(...)"
+  },
+  "apply_repetition_penalties": {
+    "callable": true,
+    "signature": "(logits, prompt_mask, output_mask, repetition_penalties) -> None",
+    "text_signature": null,
+    "doc": null,
+    "input_parameters": "(logits, prompt_mask, output_mask, repetition_penalties)",
+    "output_parameters": "None",
+    "vllm_api": "_custom_ops.apply_repetition_penalties(...)"
+  },
+  "apply_repetition_penalties_cuda": {
+    "callable": true,
+    "signature": "(logits, prompt_mask, output_mask, repetition_penalties) -> None",
+    "text_signature": null,
+    "doc": null,
+    "input_parameters": "(logits, prompt_mask, output_mask, repetition_penalties)",
+    "output_parameters": "None",
+    "vllm_api": "_custom_ops.apply_repetition_penalties_cuda(...)"
+  },
+  "apply_repetition_penalties_torch": {
+    "callable": true,
+    "signature": "(logits, prompt_mask, output_mask, repetition_penalties) -> None",
+    "text_signature": null,
+    "doc": null,
+    "input_parameters": "(logits, prompt_mask, output_mask, repetition_penalties)",
+    "output_parameters": "None",
+    "vllm_api": "_custom_ops.apply_repetition_penalties_torch(...)"
+  },
+  "get_device_attribute": {
+    "callable": true,
+    "signature": "(attribute, device) -> bool",
+    "text_signature": null,
+    "doc": null,
+    "input_parameters": "(attribute, device)",
+    "output_parameters": "bool",
+    "vllm_api": "_custom_ops.get_device_attribute(...)"
+  },
+  "get_max_shared_memory_per_block_device_attribute": {
+    "callable": true,
+    "signature": "(device) -> bool",
+    "text_signature": null,
+    "doc": null,
+    "input_parameters": "(device)",
+    "output_parameters": "bool",
+    "vllm_api": "_custom_ops.get_max_shared_memory_per_block_device_attribute(...)"
+  },
+  "cutlass_scaled_mm_supports_fp8": {
+    "callable": true,
+    "signature": "(cuda_device_capability) -> torch.Tensor",
+    "text_signature": null,
+    "doc": null,
+    "input_parameters": "(cuda_device_capability)",
+    "output_parameters": "torch.Tensor",
+    "vllm_api": "_custom_ops.cutlass_scaled_mm_supports_fp8(...)"
+  },
+  "cutlass_scaled_mm_supports_fp4": {
+    "callable": true,
+    "signature": "(cuda_device_capability) -> torch.Tensor",
+    "text_signature": null,
+    "doc": null,
+    "input_parameters": "(cuda_device_capability)",
+    "output_parameters": "torch.Tensor",
+    "vllm_api": "_custom_ops.cutlass_scaled_mm_supports_fp4(...)"
+  },
+  "cutlass_scaled_mm_supports_block_fp8": {
+    "callable": true,
+    "signature": "(cuda_device_capability) -> torch.Tensor",
+    "text_signature": null,
+    "doc": null,
+    "input_parameters": "(cuda_device_capability)",
+    "output_parameters": "torch.Tensor",
+    "vllm_api": "_custom_ops.cutlass_scaled_mm_supports_block_fp8(...)"
+  },
+  "cutlass_sparse_scaled_mm_supported": {
+    "callable": true,
+    "signature": "(cuda_device_capability) -> torch.Tensor",
+    "text_signature": null,
+    "doc": null,
+    "input_parameters": "(cuda_device_capability)",
+    "output_parameters": "torch.Tensor",
+    "vllm_api": "_custom_ops.cutlass_sparse_scaled_mm_supported(...)"
+  },
+  "cutlass_group_gemm_supported": {
+    "callable": true,
+    "signature": "(cuda_device_capability) -> torch.Tensor",
+    "text_signature": null,
+    "doc": null,
+    "input_parameters": "(cuda_device_capability)",
+    "output_parameters": "torch.Tensor",
+    "vllm_api": "_custom_ops.cutlass_group_gemm_supported(...)"
+  },
+  "all_reduce": {
+    "callable": true,
+    "signature": "(fa, inp, out, reg_buffer, reg_buffer_sz_bytes) -> torch.Tensor",
+    "text_signature": null,
+    "doc": null,
+    "input_parameters": "(fa, inp, out, reg_buffer, reg_buffer_sz_bytes)",
+    "output_parameters": "torch.Tensor",
+    "vllm_api": "_custom_ops.all_reduce(...)"
+  },
+  "init_custom_ar": {
+    "callable": true,
+    "signature": "(ipc_tensors, rank_data, rank, fully_connected) -> torch.Tensor",
+    "text_signature": null,
+    "doc": null,
+    "input_parameters": "(ipc_tensors, rank_data, rank, fully_connected)",
+    "output_parameters": "torch.Tensor",
+    "vllm_api": "_custom_ops.init_custom_ar(...)"
+  },
+  "dispose": {
+    "callable": true,
+    "signature": "(fa) -> torch.Tensor",
+    "text_signature": null,
+    "doc": null,
+    "input_parameters": "(fa)",
+    "output_parameters": "torch.Tensor",
+    "vllm_api": "_custom_ops.dispose(...)"
+  },
+  "meta_size": {
+    "callable": true,
+    "signature": "() -> torch.Tensor",
+    "text_signature": null,
+    "doc": null,
+    "input_parameters": "()",
+    "output_parameters": "torch.Tensor",
+    "vllm_api": "_custom_ops.meta_size(...)"
+  },
+  "register_buffer": {
+    "callable": true,
+    "signature": "(fa, ipc_tensors) -> torch.Tensor",
+    "text_signature": null,
+    "doc": null,
+    "input_parameters": "(fa, ipc_tensors)",
+    "output_parameters": "torch.Tensor",
+    "vllm_api": "_custom_ops.register_buffer(...)"
+  },
+  "get_graph_buffer_ipc_meta": {
+    "callable": true,
+    "signature": "(fa) -> bool",
+    "text_signature": null,
+    "doc": null,
+    "input_parameters": "(fa)",
+    "output_parameters": "bool",
+    "vllm_api": "_custom_ops.get_graph_buffer_ipc_meta(...)"
+  },
+  "register_graph_buffers": {
+    "callable": true,
+    "signature": "(fa, handles, offsets) -> torch.Tensor",
+    "text_signature": null,
+    "doc": null,
+    "input_parameters": "(fa, handles, offsets)",
+    "output_parameters": "torch.Tensor",
+    "vllm_api": "_custom_ops.register_graph_buffers(...)"
+  },
+  "allocate_shared_buffer_and_handle": {
+    "callable": true,
+    "signature": "(size) -> tuple",
+    "text_signature": null,
+    "doc": null,
+    "input_parameters": "(size)",
+    "output_parameters": "tuple",
+    "vllm_api": "_custom_ops.allocate_shared_buffer_and_handle(...)"
+  },
+  "open_mem_handle": {
+    "callable": true,
+    "signature": "(mem_handle) -> torch.Tensor",
+    "text_signature": null,
+    "doc": null,
+    "input_parameters": "(mem_handle)",
+    "output_parameters": "torch.Tensor",
+    "vllm_api": "_custom_ops.open_mem_handle(...)"
+  },
+  "free_shared_buffer": {
+    "callable": true,
+    "signature": "(ptr) -> torch.Tensor",
+    "text_signature": null,
+    "doc": null,
+    "input_parameters": "(ptr)",
+    "output_parameters": "torch.Tensor",
+    "vllm_api": "_custom_ops.free_shared_buffer(...)"
+  },
+  "qr_all_reduce": {
+    "callable": true,
+    "signature": "(fa, inp, out, quant_level, cast_bf2half=False) -> torch.Tensor",
+    "text_signature": null,
+    "doc": null,
+    "input_parameters": "(fa, inp, out, quant_level, cast_bf2half=False)",
+    "output_parameters": "torch.Tensor",
+    "vllm_api": "_custom_ops.qr_all_reduce(...)"
+  },
+  "qr_get_handle": {
+    "callable": true,
+    "signature": "(fa) -> torch.Tensor",
+    "text_signature": null,
+    "doc": null,
+    "input_parameters": "(fa)",
+    "output_parameters": "torch.Tensor",
+    "vllm_api": "_custom_ops.qr_get_handle(...)"
+  },
+  "qr_open_handles": {
+    "callable": true,
+    "signature": "(fa, handles) -> torch.Tensor",
+    "text_signature": null,
+    "doc": null,
+    "input_parameters": "(fa, handles)",
+    "output_parameters": "torch.Tensor",
+    "vllm_api": "_custom_ops.qr_open_handles(...)"
+  },
+  "qr_max_size": {
+    "callable": true,
+    "signature": "() -> torch.Tensor",
+    "text_signature": null,
+    "doc": null,
+    "input_parameters": "()",
+    "output_parameters": "torch.Tensor",
+    "vllm_api": "_custom_ops.qr_max_size(...)"
+  },
+  "qr_destroy": {
+    "callable": true,
+    "signature": "(fa) -> torch.Tensor",
+    "text_signature": null,
+    "doc": null,
+    "input_parameters": "(fa)",
+    "output_parameters": "torch.Tensor",
+    "vllm_api": "_custom_ops.qr_destroy(...)"
+  },
+  "hadacore_transform": {
+    "callable": true,
+    "signature": "(x, inplace=True) -> torch.Tensor",
+    "text_signature": null,
+    "doc": null,
+    "input_parameters": "(x, inplace=True)",
+    "output_parameters": "torch.Tensor",
+    "vllm_api": "_custom_ops.hadacore_transform(...)"
+  },
+  "silu_and_mul": {
+    "callable": true,
+    "signature": "(out, x) -> None",
+    "text_signature": null,
+    "doc": null,
+    "input_parameters": "(out, x)",
+    "output_parameters": "None",
+    "vllm_api": "torch.ops._C.silu_and_mul(...)"
+  },
+  "gelu_and_mul": {
+    "callable": true,
+    "signature": "(out, x) -> None",
+    "text_signature": null,
+    "doc": null,
+    "input_parameters": "(out, x)",
+    "output_parameters": "None",
+    "vllm_api": "torch.ops._C.gelu_and_mul(...)"
+  },
+  "gelu_tanh_and_mul": {
+    "callable": true,
+    "signature": "(out, x) -> None",
+    "text_signature": null,
+    "doc": null,
+    "input_parameters": "(out, x)",
+    "output_parameters": "None",
+    "vllm_api": "torch.ops._C.gelu_tanh_and_mul(...)"
+  },
+  "mul_and_silu": {
+    "callable": true,
+    "signature": "(out, x) -> None",
+    "text_signature": null,
+    "doc": null,
+    "input_parameters": "(out, x)",
+    "output_parameters": "None",
+    "vllm_api": "torch.ops._C.mul_and_silu(...)"
+  },
+  "fatrelu_and_mul": {
+    "callable": true,
+    "signature": "(out, x, threshold) -> None",
+    "text_signature": null,
+    "doc": null,
+    "input_parameters": "(out, x, threshold)",
+    "output_parameters": "None",
+    "vllm_api": "torch.ops._C.fatrelu_and_mul(...)"
+  },
+  "swigluoai_and_mul": {
+    "callable": true,
+    "signature": "(out, x, alpha, limit) -> None",
+    "text_signature": null,
+    "doc": null,
+    "input_parameters": "(out, x, alpha, limit)",
+    "output_parameters": "None",
+    "vllm_api": "torch.ops._C.swigluoai_and_mul(...)"
+  },
+  "gelu_new": {
+    "callable": true,
+    "signature": "(out, x) -> None",
+    "text_signature": null,
+    "doc": null,
+    "input_parameters": "(out, x)",
+    "output_parameters": "None",
+    "vllm_api": "torch.ops._C.gelu_new(...)"
+  },
+  "gelu_fast": {
+    "callable": true,
+    "signature": "(out, x) -> None",
+    "text_signature": null,
+    "doc": null,
+    "input_parameters": "(out, x)",
+    "output_parameters": "None",
+    "vllm_api": "torch.ops._C.gelu_fast(...)"
+  },
+  "gelu_quick": {
+    "callable": true,
+    "signature": "(out, x) -> None",
+    "text_signature": null,
+    "doc": null,
+    "input_parameters": "(out, x)",
+    "output_parameters": "None",
+    "vllm_api": "torch.ops._C.gelu_quick(...)"
+  },
+  "silu_and_mul_quant": {
+    "callable": true,
+    "signature": "(out, input, scale) -> None",
+    "text_signature": null,
+    "doc": null,
+    "input_parameters": "(out, input, scale)",
+    "output_parameters": "None",
+    "vllm_api": "torch.ops._C.silu_and_mul_quant(...)"
+  },
+  "silu_and_mul_nvfp4_quant": {
+    "callable": true,
+    "signature": "(out, input, block_scale, global_scale) -> None",
+    "text_signature": null,
+    "doc": null,
+    "input_parameters": "(out, input, block_scale, global_scale)",
+    "output_parameters": "None",
+    "vllm_api": "torch.ops._C.silu_and_mul_nvfp4_quant(...)"
+  },
+  "fused_add_rms_norm_static_fp8_quant": {
+    "callable": true,
+    "signature": "(result, input, residual, weight, scale, epsilon) -> None",
+    "text_signature": null,
+    "doc": null,
+    "input_parameters": "(result, input, residual, weight, scale, epsilon)",
+    "output_parameters": "None",
+    "vllm_api": "torch.ops._C.fused_add_rms_norm_static_fp8_quant(...)"
+  },
+  "rms_norm_static_fp8_quant": {
+    "callable": true,
+    "signature": "(result, input, weight, scale, epsilon) -> None",
+    "text_signature": null,
+    "doc": null,
+    "input_parameters": "(result, input, weight, scale, epsilon)",
+    "output_parameters": "None",
+    "vllm_api": "torch.ops._C.rms_norm_static_fp8_quant(...)"
+  },
+  "dynamic_per_token_scaled_fp8_quant": {
+    "callable": true,
+    "signature": "(output, input, scale, scale_ub) -> None",
+    "text_signature": null,
+    "doc": null,
+    "input_parameters": "(output, input, scale, scale_ub)",
+    "output_parameters": "None",
+    "vllm_api": "torch.ops._C.dynamic_per_token_scaled_fp8_quant(...)"
+  },
+  "dynamic_scaled_fp8_quant": {
+    "callable": true,
+    "signature": "(output, input, scale) -> None",
+    "text_signature": null,
+    "doc": null,
+    "input_parameters": "(output, input, scale)",
+    "output_parameters": "None",
+    "vllm_api": "torch.ops._C.dynamic_scaled_fp8_quant(...)"
+  },
+  "static_scaled_fp8_quant": {
+    "callable": true,
+    "signature": "(output, input, scale) -> None",
+    "text_signature": null,
+    "doc": null,
+    "input_parameters": "(output, input, scale)",
+    "output_parameters": "None",
+    "vllm_api": "torch.ops._C.static_scaled_fp8_quant(...)"
+  },
+  "static_scaled_int8_quant": {
+    "callable": true,
+    "signature": "(output, input, scale, azp) -> None",
+    "text_signature": null,
+    "doc": null,
+    "input_parameters": "(output, input, scale, azp)",
+    "output_parameters": "None",
+    "vllm_api": "torch.ops._C.static_scaled_int8_quant(...)"
+  },
+  "dynamic_scaled_int8_quant": {
+    "callable": true,
+    "signature": "(output, input.contiguous() -> None",
+    "text_signature": null,
+    "doc": null,
+    "input_parameters": "(output, input.contiguous()",
+    "output_parameters": "None",
+    "vllm_api": "torch.ops._C.dynamic_scaled_int8_quant(...)"
+  },
+  "per_token_group_quant_int8": {
+    "callable": true,
+    "signature": "(x, x_q, x_s, group_size, eps, float(int8_min) -> None",
+    "text_signature": null,
+    "doc": null,
+    "input_parameters": "(x, x_q, x_s, group_size, eps, float(int8_min)",
+    "output_parameters": "None",
+    "vllm_api": "torch.ops._C.per_token_group_quant_int8(...)"
+  },
+  "top_k_per_row_prefill": {
+    "callable": true,
+    "signature": "(logits, cu_seqlen_ks, cu_seqlen_ke, topk_indices, num_rows, logits.stride(0) -> None",
+    "text_signature": null,
+    "doc": null,
+    "input_parameters": "(logits, cu_seqlen_ks, cu_seqlen_ke, topk_indices, num_rows, logits.stride(0)",
+    "output_parameters": "None",
+    "vllm_api": "torch.ops._C.top_k_per_row_prefill(...)"
+  },
+  "top_k_per_row_decode": {
+    "callable": true,
+    "signature": "(logits, next_n, seq_lens, topk_indices, num_rows, logits.stride(0) -> None",
+    "text_signature": null,
+    "doc": null,
+    "input_parameters": "(logits, next_n, seq_lens, topk_indices, num_rows, logits.stride(0)",
+    "output_parameters": "None",
+    "vllm_api": "torch.ops._C.top_k_per_row_decode(...)"
+  },
+  "apply_repetition_penalties_": {
+    "callable": true,
+    "signature": "(logits, prompt_mask, output_mask, repetition_penalties) -> None",
+    "text_signature": null,
+    "doc": null,
+    "input_parameters": "(logits, prompt_mask, output_mask, repetition_penalties)",
+    "output_parameters": "None",
+    "vllm_api": "torch.ops._C.apply_repetition_penalties_(...)"
+  },
+  "persistent_masked_m_silu_mul_quant": {
+    "callable": true,
+    "signature": "(y, tokens_per_expert, y_q, y_s, ceil_ue8m0) -> None",
+    "text_signature": null,
+    "doc": null,
+    "input_parameters": "(y, tokens_per_expert, y_q, y_s, ceil_ue8m0)",
+    "output_parameters": "None",
+    "vllm_api": "torch.ops._C.persistent_masked_m_silu_mul_quant(...)"
+  },
+  "cutlass_fp4_group_mm": {
+    "callable": true,
+    "signature": "(output, a, b, a_blockscale, b_blockscales, alphas, problem_sizes, expert_offsets, sf_offsets) -> None",
+    "text_signature": null,
+    "doc": null,
+    "input_parameters": "(output, a, b, a_blockscale, b_blockscales, alphas, problem_sizes, expert_offsets, sf_offsets)",
+    "output_parameters": "None",
+    "vllm_api": "torch.ops._C.cutlass_fp4_group_mm(...)"
+  },
+  "vllm_topk_softmax": {
+    "callable": true,
+    "signature": "(topk_weights, topk_ids, token_expert_indices, gating_output, renormalize) -> None",
+    "text_signature": null,
+    "doc": null,
+    "input_parameters": "(topk_weights, topk_ids, token_expert_indices, gating_output, renormalize)",
+    "output_parameters": "None",
+    "vllm_api": "torch.ops._C.vllm_topk_softmax(...)"
+  }
+}

@@ -1,0 +1,3427 @@
+{
+  "version": "1.0",
+  "source": "cublas_v2.h",
+  "total_functions": 50,
+  "functions": [
+    {
+      "name": "cublasSdot_v2",
+      "operation": "dot",
+      "dtype": "float32",
+      "args": [
+        {
+          "name": "handle",
+          "type": "cublasHandle_t",
+          "role": "context"
+        },
+        {
+          "name": "n",
+          "type": "int",
+          "role": "value"
+        },
+        {
+          "name": "x",
+          "type": "const float*",
+          "role": "input"
+        },
+        {
+          "name": "incx",
+          "type": "int",
+          "role": "value"
+        },
+        {
+          "name": "y",
+          "type": "const float*",
+          "role": "input"
+        },
+        {
+          "name": "incy",
+          "type": "int",
+          "role": "value"
+        },
+        {
+          "name": "result",
+          "type": "float*",
+          "role": "output"
+        }
+      ]
+    },
+    {
+      "name": "cublasCdotu_v2",
+      "operation": "dotu",
+      "dtype": "complex64",
+      "args": [
+        {
+          "name": "handle",
+          "type": "cublasHandle_t",
+          "role": "context"
+        },
+        {
+          "name": "n",
+          "type": "int",
+          "role": "value"
+        },
+        {
+          "name": "x",
+          "type": "const cuComplex*",
+          "role": "input"
+        },
+        {
+          "name": "incx",
+          "type": "int",
+          "role": "value"
+        },
+        {
+          "name": "y",
+          "type": "const cuComplex*",
+          "role": "input"
+        },
+        {
+          "name": "incy",
+          "type": "int",
+          "role": "value"
+        },
+        {
+          "name": "result",
+          "type": "cuComplex*",
+          "role": "output"
+        }
+      ]
+    },
+    {
+      "name": "cublasZdotc_v2",
+      "operation": "dotc",
+      "dtype": "complex128",
+      "args": [
+        {
+          "name": "handle",
+          "type": "cublasHandle_t",
+          "role": "context"
+        },
+        {
+          "name": "n",
+          "type": "int",
+          "role": "value"
+        },
+        {
+          "name": "x",
+          "type": "const cuDoubleComplex*",
+          "role": "input"
+        },
+        {
+          "name": "incx",
+          "type": "int",
+          "role": "value"
+        },
+        {
+          "name": "y",
+          "type": "const cuDoubleComplex*",
+          "role": "input"
+        },
+        {
+          "name": "incy",
+          "type": "int",
+          "role": "value"
+        },
+        {
+          "name": "result",
+          "type": "cuDoubleComplex*",
+          "role": "output"
+        }
+      ]
+    },
+    {
+      "name": "cublasSscal_v2",
+      "operation": "scal",
+      "dtype": "float32",
+      "args": [
+        {
+          "name": "handle",
+          "type": "cublasHandle_t",
+          "role": "context"
+        },
+        {
+          "name": "n",
+          "type": "int",
+          "role": "value"
+        },
+        {
+          "name": "alpha",
+          "type": "const float*",
+          "role": "scalar"
+        },
+        {
+          "name": "x",
+          "type": "float*",
+          "role": "inout"
+        },
+        {
+          "name": "incx",
+          "type": "int",
+          "role": "value"
+        }
+      ]
+    },
+    {
+      "name": "cublasSaxpy_v2",
+      "operation": "axpy",
+      "dtype": "float32",
+      "args": [
+        {
+          "name": "handle",
+          "type": "cublasHandle_t",
+          "role": "context"
+        },
+        {
+          "name": "n",
+          "type": "int",
+          "role": "value"
+        },
+        {
+          "name": "alpha",
+          "type": "const float*",
+          "role": "scalar"
+        },
+        {
+          "name": "x",
+          "type": "const float*",
+          "role": "input"
+        },
+        {
+          "name": "incx",
+          "type": "int",
+          "role": "value"
+        },
+        {
+          "name": "y",
+          "type": "float*",
+          "role": "inout"
+        },
+        {
+          "name": "incy",
+          "type": "int",
+          "role": "value"
+        }
+      ]
+    },
+    {
+      "name": "cublasDaxpy_v2",
+      "operation": "axpy",
+      "dtype": "float64",
+      "args": [
+        {
+          "name": "handle",
+          "type": "cublasHandle_t",
+          "role": "context"
+        },
+        {
+          "name": "n",
+          "type": "int",
+          "role": "value"
+        },
+        {
+          "name": "alpha",
+          "type": "const double*",
+          "role": "scalar"
+        },
+        {
+          "name": "x",
+          "type": "const double*",
+          "role": "input"
+        },
+        {
+          "name": "incx",
+          "type": "int",
+          "role": "value"
+        },
+        {
+          "name": "y",
+          "type": "double*",
+          "role": "inout"
+        },
+        {
+          "name": "incy",
+          "type": "int",
+          "role": "value"
+        }
+      ]
+    },
+    {
+      "name": "cublasDcopy_v2",
+      "operation": "copy",
+      "dtype": "float64",
+      "args": [
+        {
+          "name": "handle",
+          "type": "cublasHandle_t",
+          "role": "context"
+        },
+        {
+          "name": "n",
+          "type": "int",
+          "role": "value"
+        },
+        {
+          "name": "x",
+          "type": "const double*",
+          "role": "input"
+        },
+        {
+          "name": "incx",
+          "type": "int",
+          "role": "value"
+        },
+        {
+          "name": "y",
+          "type": "double*",
+          "role": "inout"
+        },
+        {
+          "name": "incy",
+          "type": "int",
+          "role": "value"
+        }
+      ]
+    },
+    {
+      "name": "cublasCcopy_v2",
+      "operation": "copy",
+      "dtype": "complex64",
+      "args": [
+        {
+          "name": "handle",
+          "type": "cublasHandle_t",
+          "role": "context"
+        },
+        {
+          "name": "n",
+          "type": "int",
+          "role": "value"
+        },
+        {
+          "name": "x",
+          "type": "const cuComplex*",
+          "role": "input"
+        },
+        {
+          "name": "incx",
+          "type": "int",
+          "role": "value"
+        },
+        {
+          "name": "y",
+          "type": "cuComplex*",
+          "role": "inout"
+        },
+        {
+          "name": "incy",
+          "type": "int",
+          "role": "value"
+        }
+      ]
+    },
+    {
+      "name": "cublasZswap_v2",
+      "operation": "swap",
+      "dtype": "complex128",
+      "args": [
+        {
+          "name": "handle",
+          "type": "cublasHandle_t",
+          "role": "context"
+        },
+        {
+          "name": "n",
+          "type": "int",
+          "role": "value"
+        },
+        {
+          "name": "x",
+          "type": "cuDoubleComplex*",
+          "role": "inout"
+        },
+        {
+          "name": "incx",
+          "type": "int",
+          "role": "value"
+        },
+        {
+          "name": "y",
+          "type": "cuDoubleComplex*",
+          "role": "inout"
+        },
+        {
+          "name": "incy",
+          "type": "int",
+          "role": "value"
+        }
+      ]
+    },
+    {
+      "name": "cublasDasum_v2",
+      "operation": "asum",
+      "dtype": "float64",
+      "args": [
+        {
+          "name": "handle",
+          "type": "cublasHandle_t",
+          "role": "context"
+        },
+        {
+          "name": "n",
+          "type": "int",
+          "role": "value"
+        },
+        {
+          "name": "x",
+          "type": "const double*",
+          "role": "input"
+        },
+        {
+          "name": "incx",
+          "type": "int",
+          "role": "value"
+        },
+        {
+          "name": "result",
+          "type": "double*",
+          "role": "output"
+        }
+      ]
+    },
+    {
+      "name": "cublasDgemv_v2",
+      "operation": "gemv",
+      "dtype": "float64",
+      "args": [
+        {
+          "name": "handle",
+          "type": "cublasHandle_t",
+          "role": "context"
+        },
+        {
+          "name": "trans",
+          "type": "cublasOperation_t",
+          "role": "value"
+        },
+        {
+          "name": "m",
+          "type": "int",
+          "role": "value"
+        },
+        {
+          "name": "n",
+          "type": "int",
+          "role": "value"
+        },
+        {
+          "name": "alpha",
+          "type": "const double*",
+          "role": "scalar"
+        },
+        {
+          "name": "A",
+          "type": "const double*",
+          "role": "input"
+        },
+        {
+          "name": "lda",
+          "type": "int",
+          "role": "value"
+        },
+        {
+          "name": "x",
+          "type": "const double*",
+          "role": "input"
+        },
+        {
+          "name": "incx",
+          "type": "int",
+          "role": "value"
+        },
+        {
+          "name": "beta",
+          "type": "const double*",
+          "role": "scalar"
+        },
+        {
+          "name": "y",
+          "type": "double*",
+          "role": "inout"
+        },
+        {
+          "name": "incy",
+          "type": "int",
+          "role": "value"
+        }
+      ]
+    },
+    {
+      "name": "cublasCgemv_v2",
+      "operation": "gemv",
+      "dtype": "complex64",
+      "args": [
+        {
+          "name": "handle",
+          "type": "cublasHandle_t",
+          "role": "context"
+        },
+        {
+          "name": "trans",
+          "type": "cublasOperation_t",
+          "role": "value"
+        },
+        {
+          "name": "m",
+          "type": "int",
+          "role": "value"
+        },
+        {
+          "name": "n",
+          "type": "int",
+          "role": "value"
+        },
+        {
+          "name": "alpha",
+          "type": "const cuComplex*",
+          "role": "scalar"
+        },
+        {
+          "name": "A",
+          "type": "const cuComplex*",
+          "role": "input"
+        },
+        {
+          "name": "lda",
+          "type": "int",
+          "role": "value"
+        },
+        {
+          "name": "x",
+          "type": "const cuComplex*",
+          "role": "input"
+        },
+        {
+          "name": "incx",
+          "type": "int",
+          "role": "value"
+        },
+        {
+          "name": "beta",
+          "type": "const cuComplex*",
+          "role": "scalar"
+        },
+        {
+          "name": "y",
+          "type": "cuComplex*",
+          "role": "inout"
+        },
+        {
+          "name": "incy",
+          "type": "int",
+          "role": "value"
+        }
+      ]
+    },
+    {
+      "name": "cublasStbmv_v2",
+      "operation": "tbmv",
+      "dtype": "float32",
+      "args": [
+        {
+          "name": "handle",
+          "type": "cublasHandle_t",
+          "role": "context"
+        },
+        {
+          "name": "uplo",
+          "type": "cublasFillMode_t",
+          "role": "value"
+        },
+        {
+          "name": "trans",
+          "type": "cublasOperation_t",
+          "role": "value"
+        },
+        {
+          "name": "diag",
+          "type": "cublasDiagType_t",
+          "role": "value"
+        },
+        {
+          "name": "n",
+          "type": "int",
+          "role": "value"
+        },
+        {
+          "name": "k",
+          "type": "int",
+          "role": "value"
+        },
+        {
+          "name": "A",
+          "type": "const float*",
+          "role": "input"
+        },
+        {
+          "name": "lda",
+          "type": "int",
+          "role": "value"
+        },
+        {
+          "name": "x",
+          "type": "float*",
+          "role": "inout"
+        },
+        {
+          "name": "incx",
+          "type": "int",
+          "role": "value"
+        }
+      ]
+    },
+    {
+      "name": "cublasStrsv_v2",
+      "operation": "trsv",
+      "dtype": "float32",
+      "args": [
+        {
+          "name": "handle",
+          "type": "cublasHandle_t",
+          "role": "context"
+        },
+        {
+          "name": "uplo",
+          "type": "cublasFillMode_t",
+          "role": "value"
+        },
+        {
+          "name": "trans",
+          "type": "cublasOperation_t",
+          "role": "value"
+        },
+        {
+          "name": "diag",
+          "type": "cublasDiagType_t",
+          "role": "value"
+        },
+        {
+          "name": "n",
+          "type": "int",
+          "role": "value"
+        },
+        {
+          "name": "A",
+          "type": "const float*",
+          "role": "input"
+        },
+        {
+          "name": "lda",
+          "type": "int",
+          "role": "value"
+        },
+        {
+          "name": "x",
+          "type": "float*",
+          "role": "inout"
+        },
+        {
+          "name": "incx",
+          "type": "int",
+          "role": "value"
+        }
+      ]
+    },
+    {
+      "name": "cublasCsymv_v2",
+      "operation": "symv",
+      "dtype": "complex64",
+      "args": [
+        {
+          "name": "handle",
+          "type": "cublasHandle_t",
+          "role": "context"
+        },
+        {
+          "name": "uplo",
+          "type": "cublasFillMode_t",
+          "role": "value"
+        },
+        {
+          "name": "n",
+          "type": "int",
+          "role": "value"
+        },
+        {
+          "name": "alpha",
+          "type": "const cuComplex*",
+          "role": "scalar"
+        },
+        {
+          "name": "A",
+          "type": "const cuComplex*",
+          "role": "input"
+        },
+        {
+          "name": "lda",
+          "type": "int",
+          "role": "value"
+        },
+        {
+          "name": "x",
+          "type": "const cuComplex*",
+          "role": "input"
+        },
+        {
+          "name": "incx",
+          "type": "int",
+          "role": "value"
+        },
+        {
+          "name": "beta",
+          "type": "const cuComplex*",
+          "role": "scalar"
+        },
+        {
+          "name": "y",
+          "type": "cuComplex*",
+          "role": "inout"
+        },
+        {
+          "name": "incy",
+          "type": "int",
+          "role": "value"
+        }
+      ]
+    },
+    {
+      "name": "cublasDsbmv_v2",
+      "operation": "sbmv",
+      "dtype": "float64",
+      "args": [
+        {
+          "name": "handle",
+          "type": "cublasHandle_t",
+          "role": "context"
+        },
+        {
+          "name": "uplo",
+          "type": "cublasFillMode_t",
+          "role": "value"
+        },
+        {
+          "name": "n",
+          "type": "int",
+          "role": "value"
+        },
+        {
+          "name": "k",
+          "type": "int",
+          "role": "value"
+        },
+        {
+          "name": "alpha",
+          "type": "const double*",
+          "role": "scalar"
+        },
+        {
+          "name": "A",
+          "type": "const double*",
+          "role": "input"
+        },
+        {
+          "name": "lda",
+          "type": "int",
+          "role": "value"
+        },
+        {
+          "name": "x",
+          "type": "const double*",
+          "role": "input"
+        },
+        {
+          "name": "incx",
+          "type": "int",
+          "role": "value"
+        },
+        {
+          "name": "beta",
+          "type": "const double*",
+          "role": "scalar"
+        },
+        {
+          "name": "y",
+          "type": "double*",
+          "role": "inout"
+        },
+        {
+          "name": "incy",
+          "type": "int",
+          "role": "value"
+        }
+      ]
+    },
+    {
+      "name": "cublasSger_v2",
+      "operation": "ger",
+      "dtype": "float32",
+      "args": [
+        {
+          "name": "handle",
+          "type": "cublasHandle_t",
+          "role": "context"
+        },
+        {
+          "name": "m",
+          "type": "int",
+          "role": "value"
+        },
+        {
+          "name": "n",
+          "type": "int",
+          "role": "value"
+        },
+        {
+          "name": "alpha",
+          "type": "const float*",
+          "role": "scalar"
+        },
+        {
+          "name": "x",
+          "type": "const float*",
+          "role": "input"
+        },
+        {
+          "name": "incx",
+          "type": "int",
+          "role": "value"
+        },
+        {
+          "name": "y",
+          "type": "const float*",
+          "role": "input"
+        },
+        {
+          "name": "incy",
+          "type": "int",
+          "role": "value"
+        },
+        {
+          "name": "A",
+          "type": "float*",
+          "role": "inout"
+        },
+        {
+          "name": "lda",
+          "type": "int",
+          "role": "value"
+        }
+      ]
+    },
+    {
+      "name": "cublasCgeru_v2",
+      "operation": "geru",
+      "dtype": "complex64",
+      "args": [
+        {
+          "name": "handle",
+          "type": "cublasHandle_t",
+          "role": "context"
+        },
+        {
+          "name": "m",
+          "type": "int",
+          "role": "value"
+        },
+        {
+          "name": "n",
+          "type": "int",
+          "role": "value"
+        },
+        {
+          "name": "alpha",
+          "type": "const cuComplex*",
+          "role": "scalar"
+        },
+        {
+          "name": "x",
+          "type": "const cuComplex*",
+          "role": "input"
+        },
+        {
+          "name": "incx",
+          "type": "int",
+          "role": "value"
+        },
+        {
+          "name": "y",
+          "type": "const cuComplex*",
+          "role": "input"
+        },
+        {
+          "name": "incy",
+          "type": "int",
+          "role": "value"
+        },
+        {
+          "name": "A",
+          "type": "cuComplex*",
+          "role": "inout"
+        },
+        {
+          "name": "lda",
+          "type": "int",
+          "role": "value"
+        }
+      ]
+    },
+    {
+      "name": "cublasZgerc_v2",
+      "operation": "gerc",
+      "dtype": "complex128",
+      "args": [
+        {
+          "name": "handle",
+          "type": "cublasHandle_t",
+          "role": "context"
+        },
+        {
+          "name": "m",
+          "type": "int",
+          "role": "value"
+        },
+        {
+          "name": "n",
+          "type": "int",
+          "role": "value"
+        },
+        {
+          "name": "alpha",
+          "type": "const cuDoubleComplex*",
+          "role": "scalar"
+        },
+        {
+          "name": "x",
+          "type": "const cuDoubleComplex*",
+          "role": "input"
+        },
+        {
+          "name": "incx",
+          "type": "int",
+          "role": "value"
+        },
+        {
+          "name": "y",
+          "type": "const cuDoubleComplex*",
+          "role": "input"
+        },
+        {
+          "name": "incy",
+          "type": "int",
+          "role": "value"
+        },
+        {
+          "name": "A",
+          "type": "cuDoubleComplex*",
+          "role": "inout"
+        },
+        {
+          "name": "lda",
+          "type": "int",
+          "role": "value"
+        }
+      ]
+    },
+    {
+      "name": "cublasDsyr2_v2",
+      "operation": "syr2",
+      "dtype": "float64",
+      "args": [
+        {
+          "name": "handle",
+          "type": "cublasHandle_t",
+          "role": "context"
+        },
+        {
+          "name": "uplo",
+          "type": "cublasFillMode_t",
+          "role": "value"
+        },
+        {
+          "name": "n",
+          "type": "int",
+          "role": "value"
+        },
+        {
+          "name": "alpha",
+          "type": "const double*",
+          "role": "scalar"
+        },
+        {
+          "name": "x",
+          "type": "const double*",
+          "role": "input"
+        },
+        {
+          "name": "incx",
+          "type": "int",
+          "role": "value"
+        },
+        {
+          "name": "y",
+          "type": "const double*",
+          "role": "input"
+        },
+        {
+          "name": "incy",
+          "type": "int",
+          "role": "value"
+        },
+        {
+          "name": "A",
+          "type": "double*",
+          "role": "inout"
+        },
+        {
+          "name": "lda",
+          "type": "int",
+          "role": "value"
+        }
+      ]
+    },
+    {
+      "name": "cublasSgemvBatched",
+      "operation": "gemvbatched",
+      "dtype": "float32",
+      "args": [
+        {
+          "name": "handle",
+          "type": "cublasHandle_t",
+          "role": "context"
+        },
+        {
+          "name": "trans",
+          "type": "cublasOperation_t",
+          "role": "value"
+        },
+        {
+          "name": "m",
+          "type": "int",
+          "role": "value"
+        },
+        {
+          "name": "n",
+          "type": "int",
+          "role": "value"
+        },
+        {
+          "name": "alpha",
+          "type": "const float*",
+          "role": "scalar"
+        },
+        {
+          "name": "Aarray",
+          "type": "const float* const",
+          "role": "input"
+        },
+        {
+          "name": "lda",
+          "type": "int",
+          "role": "value"
+        },
+        {
+          "name": "xarray",
+          "type": "const float* const",
+          "role": "input"
+        },
+        {
+          "name": "incx",
+          "type": "int",
+          "role": "value"
+        },
+        {
+          "name": "beta",
+          "type": "const float*",
+          "role": "scalar"
+        },
+        {
+          "name": "yarray",
+          "type": "float* const",
+          "role": "input"
+        },
+        {
+          "name": "incy",
+          "type": "int",
+          "role": "value"
+        },
+        {
+          "name": "batchCount",
+          "type": "int",
+          "role": "value"
+        }
+      ]
+    },
+    {
+      "name": "cublasDgemvBatched",
+      "operation": "gemvbatched",
+      "dtype": "float64",
+      "args": [
+        {
+          "name": "handle",
+          "type": "cublasHandle_t",
+          "role": "context"
+        },
+        {
+          "name": "trans",
+          "type": "cublasOperation_t",
+          "role": "value"
+        },
+        {
+          "name": "m",
+          "type": "int",
+          "role": "value"
+        },
+        {
+          "name": "n",
+          "type": "int",
+          "role": "value"
+        },
+        {
+          "name": "alpha",
+          "type": "const double*",
+          "role": "scalar"
+        },
+        {
+          "name": "Aarray",
+          "type": "const double* const",
+          "role": "input"
+        },
+        {
+          "name": "lda",
+          "type": "int",
+          "role": "value"
+        },
+        {
+          "name": "xarray",
+          "type": "const double* const",
+          "role": "input"
+        },
+        {
+          "name": "incx",
+          "type": "int",
+          "role": "value"
+        },
+        {
+          "name": "beta",
+          "type": "const double*",
+          "role": "scalar"
+        },
+        {
+          "name": "yarray",
+          "type": "double* const",
+          "role": "input"
+        },
+        {
+          "name": "incy",
+          "type": "int",
+          "role": "value"
+        },
+        {
+          "name": "batchCount",
+          "type": "int",
+          "role": "value"
+        }
+      ]
+    },
+    {
+      "name": "cublasZgemvBatched",
+      "operation": "gemvbatched",
+      "dtype": "complex128",
+      "args": [
+        {
+          "name": "handle",
+          "type": "cublasHandle_t",
+          "role": "context"
+        },
+        {
+          "name": "trans",
+          "type": "cublasOperation_t",
+          "role": "value"
+        },
+        {
+          "name": "m",
+          "type": "int",
+          "role": "value"
+        },
+        {
+          "name": "n",
+          "type": "int",
+          "role": "value"
+        },
+        {
+          "name": "alpha",
+          "type": "const cuDoubleComplex*",
+          "role": "scalar"
+        },
+        {
+          "name": "Aarray",
+          "type": "const cuDoubleComplex* const",
+          "role": "input"
+        },
+        {
+          "name": "lda",
+          "type": "int",
+          "role": "value"
+        },
+        {
+          "name": "xarray",
+          "type": "const cuDoubleComplex* const",
+          "role": "input"
+        },
+        {
+          "name": "incx",
+          "type": "int",
+          "role": "value"
+        },
+        {
+          "name": "beta",
+          "type": "const cuDoubleComplex*",
+          "role": "scalar"
+        },
+        {
+          "name": "yarray",
+          "type": "cuDoubleComplex* const",
+          "role": "input"
+        },
+        {
+          "name": "incy",
+          "type": "int",
+          "role": "value"
+        },
+        {
+          "name": "batchCount",
+          "type": "int",
+          "role": "value"
+        }
+      ]
+    },
+    {
+      "name": "cublasSgemvStridedBatched",
+      "operation": "gemvstridedbatched",
+      "dtype": "float32",
+      "args": [
+        {
+          "name": "handle",
+          "type": "cublasHandle_t",
+          "role": "context"
+        },
+        {
+          "name": "trans",
+          "type": "cublasOperation_t",
+          "role": "value"
+        },
+        {
+          "name": "m",
+          "type": "int",
+          "role": "value"
+        },
+        {
+          "name": "n",
+          "type": "int",
+          "role": "value"
+        },
+        {
+          "name": "alpha",
+          "type": "const float*",
+          "role": "scalar"
+        },
+        {
+          "name": "A",
+          "type": "const float*",
+          "role": "input"
+        },
+        {
+          "name": "lda",
+          "type": "int",
+          "role": "value"
+        },
+        {
+          "name": "strideA",
+          "type": "long long int",
+          "role": "value"
+        },
+        {
+          "name": "x",
+          "type": "const float*",
+          "role": "input"
+        },
+        {
+          "name": "incx",
+          "type": "int",
+          "role": "value"
+        },
+        {
+          "name": "stridex",
+          "type": "long long int",
+          "role": "value"
+        },
+        {
+          "name": "beta",
+          "type": "const float*",
+          "role": "scalar"
+        },
+        {
+          "name": "y",
+          "type": "float*",
+          "role": "inout"
+        },
+        {
+          "name": "incy",
+          "type": "int",
+          "role": "value"
+        },
+        {
+          "name": "stridey",
+          "type": "long long int",
+          "role": "value"
+        },
+        {
+          "name": "batchCount",
+          "type": "int",
+          "role": "value"
+        }
+      ]
+    },
+    {
+      "name": "cublasDgemvStridedBatched",
+      "operation": "gemvstridedbatched",
+      "dtype": "float64",
+      "args": [
+        {
+          "name": "handle",
+          "type": "cublasHandle_t",
+          "role": "context"
+        },
+        {
+          "name": "trans",
+          "type": "cublasOperation_t",
+          "role": "value"
+        },
+        {
+          "name": "m",
+          "type": "int",
+          "role": "value"
+        },
+        {
+          "name": "n",
+          "type": "int",
+          "role": "value"
+        },
+        {
+          "name": "alpha",
+          "type": "const double*",
+          "role": "scalar"
+        },
+        {
+          "name": "A",
+          "type": "const double*",
+          "role": "input"
+        },
+        {
+          "name": "lda",
+          "type": "int",
+          "role": "value"
+        },
+        {
+          "name": "strideA",
+          "type": "long long int",
+          "role": "value"
+        },
+        {
+          "name": "x",
+          "type": "const double*",
+          "role": "input"
+        },
+        {
+          "name": "incx",
+          "type": "int",
+          "role": "value"
+        },
+        {
+          "name": "stridex",
+          "type": "long long int",
+          "role": "value"
+        },
+        {
+          "name": "beta",
+          "type": "const double*",
+          "role": "scalar"
+        },
+        {
+          "name": "y",
+          "type": "double*",
+          "role": "inout"
+        },
+        {
+          "name": "incy",
+          "type": "int",
+          "role": "value"
+        },
+        {
+          "name": "stridey",
+          "type": "long long int",
+          "role": "value"
+        },
+        {
+          "name": "batchCount",
+          "type": "int",
+          "role": "value"
+        }
+      ]
+    },
+    {
+      "name": "cublasCgemvStridedBatched",
+      "operation": "gemvstridedbatched",
+      "dtype": "complex64",
+      "args": [
+        {
+          "name": "handle",
+          "type": "cublasHandle_t",
+          "role": "context"
+        },
+        {
+          "name": "trans",
+          "type": "cublasOperation_t",
+          "role": "value"
+        },
+        {
+          "name": "m",
+          "type": "int",
+          "role": "value"
+        },
+        {
+          "name": "n",
+          "type": "int",
+          "role": "value"
+        },
+        {
+          "name": "alpha",
+          "type": "const cuComplex*",
+          "role": "scalar"
+        },
+        {
+          "name": "A",
+          "type": "const cuComplex*",
+          "role": "input"
+        },
+        {
+          "name": "lda",
+          "type": "int",
+          "role": "value"
+        },
+        {
+          "name": "strideA",
+          "type": "long long int",
+          "role": "value"
+        },
+        {
+          "name": "x",
+          "type": "const cuComplex*",
+          "role": "input"
+        },
+        {
+          "name": "incx",
+          "type": "int",
+          "role": "value"
+        },
+        {
+          "name": "stridex",
+          "type": "long long int",
+          "role": "value"
+        },
+        {
+          "name": "beta",
+          "type": "const cuComplex*",
+          "role": "scalar"
+        },
+        {
+          "name": "y",
+          "type": "cuComplex*",
+          "role": "inout"
+        },
+        {
+          "name": "incy",
+          "type": "int",
+          "role": "value"
+        },
+        {
+          "name": "stridey",
+          "type": "long long int",
+          "role": "value"
+        },
+        {
+          "name": "batchCount",
+          "type": "int",
+          "role": "value"
+        }
+      ]
+    },
+    {
+      "name": "cublasZgemvStridedBatched",
+      "operation": "gemvstridedbatched",
+      "dtype": "complex128",
+      "args": [
+        {
+          "name": "handle",
+          "type": "cublasHandle_t",
+          "role": "context"
+        },
+        {
+          "name": "trans",
+          "type": "cublasOperation_t",
+          "role": "value"
+        },
+        {
+          "name": "m",
+          "type": "int",
+          "role": "value"
+        },
+        {
+          "name": "n",
+          "type": "int",
+          "role": "value"
+        },
+        {
+          "name": "alpha",
+          "type": "const cuDoubleComplex*",
+          "role": "scalar"
+        },
+        {
+          "name": "A",
+          "type": "const cuDoubleComplex*",
+          "role": "input"
+        },
+        {
+          "name": "lda",
+          "type": "int",
+          "role": "value"
+        },
+        {
+          "name": "strideA",
+          "type": "long long int",
+          "role": "value"
+        },
+        {
+          "name": "x",
+          "type": "const cuDoubleComplex*",
+          "role": "input"
+        },
+        {
+          "name": "incx",
+          "type": "int",
+          "role": "value"
+        },
+        {
+          "name": "stridex",
+          "type": "long long int",
+          "role": "value"
+        },
+        {
+          "name": "beta",
+          "type": "const cuDoubleComplex*",
+          "role": "scalar"
+        },
+        {
+          "name": "y",
+          "type": "cuDoubleComplex*",
+          "role": "inout"
+        },
+        {
+          "name": "incy",
+          "type": "int",
+          "role": "value"
+        },
+        {
+          "name": "stridey",
+          "type": "long long int",
+          "role": "value"
+        },
+        {
+          "name": "batchCount",
+          "type": "int",
+          "role": "value"
+        }
+      ]
+    },
+    {
+      "name": "cublasSgemm_v2",
+      "operation": "gemm",
+      "dtype": "float32",
+      "args": [
+        {
+          "name": "handle",
+          "type": "cublasHandle_t",
+          "role": "context"
+        },
+        {
+          "name": "transa",
+          "type": "cublasOperation_t",
+          "role": "value"
+        },
+        {
+          "name": "transb",
+          "type": "cublasOperation_t",
+          "role": "value"
+        },
+        {
+          "name": "m",
+          "type": "int",
+          "role": "value"
+        },
+        {
+          "name": "n",
+          "type": "int",
+          "role": "value"
+        },
+        {
+          "name": "k",
+          "type": "int",
+          "role": "value"
+        },
+        {
+          "name": "alpha",
+          "type": "const float*",
+          "role": "scalar"
+        },
+        {
+          "name": "A",
+          "type": "const float*",
+          "role": "input"
+        },
+        {
+          "name": "lda",
+          "type": "int",
+          "role": "value"
+        },
+        {
+          "name": "B",
+          "type": "const float*",
+          "role": "input"
+        },
+        {
+          "name": "ldb",
+          "type": "int",
+          "role": "value"
+        },
+        {
+          "name": "beta",
+          "type": "const float*",
+          "role": "scalar"
+        },
+        {
+          "name": "C",
+          "type": "float*",
+          "role": "inout"
+        },
+        {
+          "name": "ldc",
+          "type": "int",
+          "role": "value"
+        }
+      ]
+    },
+    {
+      "name": "cublasCgemm_v2",
+      "operation": "gemm",
+      "dtype": "complex64",
+      "args": [
+        {
+          "name": "handle",
+          "type": "cublasHandle_t",
+          "role": "context"
+        },
+        {
+          "name": "transa",
+          "type": "cublasOperation_t",
+          "role": "value"
+        },
+        {
+          "name": "transb",
+          "type": "cublasOperation_t",
+          "role": "value"
+        },
+        {
+          "name": "m",
+          "type": "int",
+          "role": "value"
+        },
+        {
+          "name": "n",
+          "type": "int",
+          "role": "value"
+        },
+        {
+          "name": "k",
+          "type": "int",
+          "role": "value"
+        },
+        {
+          "name": "alpha",
+          "type": "const cuComplex*",
+          "role": "scalar"
+        },
+        {
+          "name": "A",
+          "type": "const cuComplex*",
+          "role": "input"
+        },
+        {
+          "name": "lda",
+          "type": "int",
+          "role": "value"
+        },
+        {
+          "name": "B",
+          "type": "const cuComplex*",
+          "role": "input"
+        },
+        {
+          "name": "ldb",
+          "type": "int",
+          "role": "value"
+        },
+        {
+          "name": "beta",
+          "type": "const cuComplex*",
+          "role": "scalar"
+        },
+        {
+          "name": "C",
+          "type": "cuComplex*",
+          "role": "inout"
+        },
+        {
+          "name": "ldc",
+          "type": "int",
+          "role": "value"
+        }
+      ]
+    },
+    {
+      "name": "cublasSgemmEx",
+      "operation": "gemmex",
+      "dtype": "float32",
+      "args": [
+        {
+          "name": "handle",
+          "type": "cublasHandle_t",
+          "role": "context"
+        },
+        {
+          "name": "transa",
+          "type": "cublasOperation_t",
+          "role": "value"
+        },
+        {
+          "name": "transb",
+          "type": "cublasOperation_t",
+          "role": "value"
+        },
+        {
+          "name": "m",
+          "type": "int",
+          "role": "value"
+        },
+        {
+          "name": "n",
+          "type": "int",
+          "role": "value"
+        },
+        {
+          "name": "k",
+          "type": "int",
+          "role": "value"
+        },
+        {
+          "name": "alpha",
+          "type": "const float*",
+          "role": "scalar"
+        },
+        {
+          "name": "A",
+          "type": "const void*",
+          "role": "input"
+        },
+        {
+          "name": "Atype",
+          "type": "cudaDataType",
+          "role": "value"
+        },
+        {
+          "name": "lda",
+          "type": "int",
+          "role": "value"
+        },
+        {
+          "name": "B",
+          "type": "const void*",
+          "role": "input"
+        },
+        {
+          "name": "Btype",
+          "type": "cudaDataType",
+          "role": "value"
+        },
+        {
+          "name": "ldb",
+          "type": "int",
+          "role": "value"
+        },
+        {
+          "name": "beta",
+          "type": "const float*",
+          "role": "scalar"
+        },
+        {
+          "name": "C",
+          "type": "void*",
+          "role": "inout"
+        },
+        {
+          "name": "Ctype",
+          "type": "cudaDataType",
+          "role": "value"
+        },
+        {
+          "name": "ldc",
+          "type": "int",
+          "role": "value"
+        }
+      ]
+    },
+    {
+      "name": "cublasSsyrk_v2",
+      "operation": "syrk",
+      "dtype": "float32",
+      "args": [
+        {
+          "name": "handle",
+          "type": "cublasHandle_t",
+          "role": "context"
+        },
+        {
+          "name": "uplo",
+          "type": "cublasFillMode_t",
+          "role": "value"
+        },
+        {
+          "name": "trans",
+          "type": "cublasOperation_t",
+          "role": "value"
+        },
+        {
+          "name": "n",
+          "type": "int",
+          "role": "value"
+        },
+        {
+          "name": "k",
+          "type": "int",
+          "role": "value"
+        },
+        {
+          "name": "alpha",
+          "type": "const float*",
+          "role": "scalar"
+        },
+        {
+          "name": "A",
+          "type": "const float*",
+          "role": "input"
+        },
+        {
+          "name": "lda",
+          "type": "int",
+          "role": "value"
+        },
+        {
+          "name": "beta",
+          "type": "const float*",
+          "role": "scalar"
+        },
+        {
+          "name": "C",
+          "type": "float*",
+          "role": "inout"
+        },
+        {
+          "name": "ldc",
+          "type": "int",
+          "role": "value"
+        }
+      ]
+    },
+    {
+      "name": "cublasCsyrkEx",
+      "operation": "syrkex",
+      "dtype": "complex64",
+      "args": [
+        {
+          "name": "handle",
+          "type": "cublasHandle_t",
+          "role": "context"
+        },
+        {
+          "name": "uplo",
+          "type": "cublasFillMode_t",
+          "role": "value"
+        },
+        {
+          "name": "trans",
+          "type": "cublasOperation_t",
+          "role": "value"
+        },
+        {
+          "name": "n",
+          "type": "int",
+          "role": "value"
+        },
+        {
+          "name": "k",
+          "type": "int",
+          "role": "value"
+        },
+        {
+          "name": "alpha",
+          "type": "const cuComplex*",
+          "role": "scalar"
+        },
+        {
+          "name": "A",
+          "type": "const void*",
+          "role": "input"
+        },
+        {
+          "name": "Atype",
+          "type": "cudaDataType",
+          "role": "value"
+        },
+        {
+          "name": "lda",
+          "type": "int",
+          "role": "value"
+        },
+        {
+          "name": "beta",
+          "type": "const cuComplex*",
+          "role": "scalar"
+        },
+        {
+          "name": "C",
+          "type": "void*",
+          "role": "inout"
+        },
+        {
+          "name": "Ctype",
+          "type": "cudaDataType",
+          "role": "value"
+        },
+        {
+          "name": "ldc",
+          "type": "int",
+          "role": "value"
+        }
+      ]
+    },
+    {
+      "name": "cublasCsymm_v2",
+      "operation": "symm",
+      "dtype": "complex64",
+      "args": [
+        {
+          "name": "handle",
+          "type": "cublasHandle_t",
+          "role": "context"
+        },
+        {
+          "name": "side",
+          "type": "cublasSideMode_t",
+          "role": "value"
+        },
+        {
+          "name": "uplo",
+          "type": "cublasFillMode_t",
+          "role": "value"
+        },
+        {
+          "name": "m",
+          "type": "int",
+          "role": "value"
+        },
+        {
+          "name": "n",
+          "type": "int",
+          "role": "value"
+        },
+        {
+          "name": "alpha",
+          "type": "const cuComplex*",
+          "role": "scalar"
+        },
+        {
+          "name": "A",
+          "type": "const cuComplex*",
+          "role": "input"
+        },
+        {
+          "name": "lda",
+          "type": "int",
+          "role": "value"
+        },
+        {
+          "name": "B",
+          "type": "const cuComplex*",
+          "role": "input"
+        },
+        {
+          "name": "ldb",
+          "type": "int",
+          "role": "value"
+        },
+        {
+          "name": "beta",
+          "type": "const cuComplex*",
+          "role": "scalar"
+        },
+        {
+          "name": "C",
+          "type": "cuComplex*",
+          "role": "inout"
+        },
+        {
+          "name": "ldc",
+          "type": "int",
+          "role": "value"
+        }
+      ]
+    },
+    {
+      "name": "cublasStrsm_v2",
+      "operation": "trsm",
+      "dtype": "float32",
+      "args": [
+        {
+          "name": "handle",
+          "type": "cublasHandle_t",
+          "role": "context"
+        },
+        {
+          "name": "side",
+          "type": "cublasSideMode_t",
+          "role": "value"
+        },
+        {
+          "name": "uplo",
+          "type": "cublasFillMode_t",
+          "role": "value"
+        },
+        {
+          "name": "trans",
+          "type": "cublasOperation_t",
+          "role": "value"
+        },
+        {
+          "name": "diag",
+          "type": "cublasDiagType_t",
+          "role": "value"
+        },
+        {
+          "name": "m",
+          "type": "int",
+          "role": "value"
+        },
+        {
+          "name": "n",
+          "type": "int",
+          "role": "value"
+        },
+        {
+          "name": "alpha",
+          "type": "const float*",
+          "role": "scalar"
+        },
+        {
+          "name": "A",
+          "type": "const float*",
+          "role": "input"
+        },
+        {
+          "name": "lda",
+          "type": "int",
+          "role": "value"
+        },
+        {
+          "name": "B",
+          "type": "float*",
+          "role": "inout"
+        },
+        {
+          "name": "ldb",
+          "type": "int",
+          "role": "value"
+        }
+      ]
+    },
+    {
+      "name": "cublasHgemmBatched",
+      "operation": "gemmbatched",
+      "dtype": "float16",
+      "args": [
+        {
+          "name": "handle",
+          "type": "cublasHandle_t",
+          "role": "context"
+        },
+        {
+          "name": "transa",
+          "type": "cublasOperation_t",
+          "role": "value"
+        },
+        {
+          "name": "transb",
+          "type": "cublasOperation_t",
+          "role": "value"
+        },
+        {
+          "name": "m",
+          "type": "int",
+          "role": "value"
+        },
+        {
+          "name": "n",
+          "type": "int",
+          "role": "value"
+        },
+        {
+          "name": "k",
+          "type": "int",
+          "role": "value"
+        },
+        {
+          "name": "alpha",
+          "type": "const __half*",
+          "role": "scalar"
+        },
+        {
+          "name": "Aarray",
+          "type": "const __half* const",
+          "role": "input"
+        },
+        {
+          "name": "lda",
+          "type": "int",
+          "role": "value"
+        },
+        {
+          "name": "Barray",
+          "type": "const __half* const",
+          "role": "input"
+        },
+        {
+          "name": "ldb",
+          "type": "int",
+          "role": "value"
+        },
+        {
+          "name": "beta",
+          "type": "const __half*",
+          "role": "scalar"
+        },
+        {
+          "name": "Carray",
+          "type": "__half* const",
+          "role": "input"
+        },
+        {
+          "name": "ldc",
+          "type": "int",
+          "role": "value"
+        },
+        {
+          "name": "batchCount",
+          "type": "int",
+          "role": "value"
+        }
+      ]
+    },
+    {
+      "name": "cublasDgemmBatched",
+      "operation": "gemmbatched",
+      "dtype": "float64",
+      "args": [
+        {
+          "name": "handle",
+          "type": "cublasHandle_t",
+          "role": "context"
+        },
+        {
+          "name": "transa",
+          "type": "cublasOperation_t",
+          "role": "value"
+        },
+        {
+          "name": "transb",
+          "type": "cublasOperation_t",
+          "role": "value"
+        },
+        {
+          "name": "m",
+          "type": "int",
+          "role": "value"
+        },
+        {
+          "name": "n",
+          "type": "int",
+          "role": "value"
+        },
+        {
+          "name": "k",
+          "type": "int",
+          "role": "value"
+        },
+        {
+          "name": "alpha",
+          "type": "const double*",
+          "role": "scalar"
+        },
+        {
+          "name": "Aarray",
+          "type": "const double* const",
+          "role": "input"
+        },
+        {
+          "name": "lda",
+          "type": "int",
+          "role": "value"
+        },
+        {
+          "name": "Barray",
+          "type": "const double* const",
+          "role": "input"
+        },
+        {
+          "name": "ldb",
+          "type": "int",
+          "role": "value"
+        },
+        {
+          "name": "beta",
+          "type": "const double*",
+          "role": "scalar"
+        },
+        {
+          "name": "Carray",
+          "type": "double* const",
+          "role": "input"
+        },
+        {
+          "name": "ldc",
+          "type": "int",
+          "role": "value"
+        },
+        {
+          "name": "batchCount",
+          "type": "int",
+          "role": "value"
+        }
+      ]
+    },
+    {
+      "name": "cublasZgemmBatched",
+      "operation": "gemmbatched",
+      "dtype": "complex128",
+      "args": [
+        {
+          "name": "handle",
+          "type": "cublasHandle_t",
+          "role": "context"
+        },
+        {
+          "name": "transa",
+          "type": "cublasOperation_t",
+          "role": "value"
+        },
+        {
+          "name": "transb",
+          "type": "cublasOperation_t",
+          "role": "value"
+        },
+        {
+          "name": "m",
+          "type": "int",
+          "role": "value"
+        },
+        {
+          "name": "n",
+          "type": "int",
+          "role": "value"
+        },
+        {
+          "name": "k",
+          "type": "int",
+          "role": "value"
+        },
+        {
+          "name": "alpha",
+          "type": "const cuDoubleComplex*",
+          "role": "scalar"
+        },
+        {
+          "name": "Aarray",
+          "type": "const cuDoubleComplex* const",
+          "role": "input"
+        },
+        {
+          "name": "lda",
+          "type": "int",
+          "role": "value"
+        },
+        {
+          "name": "Barray",
+          "type": "const cuDoubleComplex* const",
+          "role": "input"
+        },
+        {
+          "name": "ldb",
+          "type": "int",
+          "role": "value"
+        },
+        {
+          "name": "beta",
+          "type": "const cuDoubleComplex*",
+          "role": "scalar"
+        },
+        {
+          "name": "Carray",
+          "type": "cuDoubleComplex* const",
+          "role": "input"
+        },
+        {
+          "name": "ldc",
+          "type": "int",
+          "role": "value"
+        },
+        {
+          "name": "batchCount",
+          "type": "int",
+          "role": "value"
+        }
+      ]
+    },
+    {
+      "name": "cublasHgemmStridedBatched",
+      "operation": "gemmstridedbatched",
+      "dtype": "float16",
+      "args": [
+        {
+          "name": "handle",
+          "type": "cublasHandle_t",
+          "role": "context"
+        },
+        {
+          "name": "transa",
+          "type": "cublasOperation_t",
+          "role": "value"
+        },
+        {
+          "name": "transb",
+          "type": "cublasOperation_t",
+          "role": "value"
+        },
+        {
+          "name": "m",
+          "type": "int",
+          "role": "value"
+        },
+        {
+          "name": "n",
+          "type": "int",
+          "role": "value"
+        },
+        {
+          "name": "k",
+          "type": "int",
+          "role": "value"
+        },
+        {
+          "name": "alpha",
+          "type": "const __half*",
+          "role": "scalar"
+        },
+        {
+          "name": "A",
+          "type": "const __half*",
+          "role": "input"
+        },
+        {
+          "name": "lda",
+          "type": "int",
+          "role": "value"
+        },
+        {
+          "name": "strideA",
+          "type": "long long int",
+          "role": "value"
+        },
+        {
+          "name": "B",
+          "type": "const __half*",
+          "role": "input"
+        },
+        {
+          "name": "ldb",
+          "type": "int",
+          "role": "value"
+        },
+        {
+          "name": "strideB",
+          "type": "long long int",
+          "role": "value"
+        },
+        {
+          "name": "beta",
+          "type": "const __half*",
+          "role": "scalar"
+        },
+        {
+          "name": "C",
+          "type": "__half*",
+          "role": "inout"
+        },
+        {
+          "name": "ldc",
+          "type": "int",
+          "role": "value"
+        },
+        {
+          "name": "strideC",
+          "type": "long long int",
+          "role": "value"
+        },
+        {
+          "name": "batchCount",
+          "type": "int",
+          "role": "value"
+        }
+      ]
+    },
+    {
+      "name": "cublasSgemmStridedBatched",
+      "operation": "gemmstridedbatched",
+      "dtype": "float32",
+      "args": [
+        {
+          "name": "handle",
+          "type": "cublasHandle_t",
+          "role": "context"
+        },
+        {
+          "name": "transa",
+          "type": "cublasOperation_t",
+          "role": "value"
+        },
+        {
+          "name": "transb",
+          "type": "cublasOperation_t",
+          "role": "value"
+        },
+        {
+          "name": "m",
+          "type": "int",
+          "role": "value"
+        },
+        {
+          "name": "n",
+          "type": "int",
+          "role": "value"
+        },
+        {
+          "name": "k",
+          "type": "int",
+          "role": "value"
+        },
+        {
+          "name": "alpha",
+          "type": "const float*",
+          "role": "scalar"
+        },
+        {
+          "name": "A",
+          "type": "const float*",
+          "role": "input"
+        },
+        {
+          "name": "lda",
+          "type": "int",
+          "role": "value"
+        },
+        {
+          "name": "strideA",
+          "type": "long long int",
+          "role": "value"
+        },
+        {
+          "name": "B",
+          "type": "const float*",
+          "role": "input"
+        },
+        {
+          "name": "ldb",
+          "type": "int",
+          "role": "value"
+        },
+        {
+          "name": "strideB",
+          "type": "long long int",
+          "role": "value"
+        },
+        {
+          "name": "beta",
+          "type": "const float*",
+          "role": "scalar"
+        },
+        {
+          "name": "C",
+          "type": "float*",
+          "role": "inout"
+        },
+        {
+          "name": "ldc",
+          "type": "int",
+          "role": "value"
+        },
+        {
+          "name": "strideC",
+          "type": "long long int",
+          "role": "value"
+        },
+        {
+          "name": "batchCount",
+          "type": "int",
+          "role": "value"
+        }
+      ]
+    },
+    {
+      "name": "cublasDgemmStridedBatched",
+      "operation": "gemmstridedbatched",
+      "dtype": "float64",
+      "args": [
+        {
+          "name": "handle",
+          "type": "cublasHandle_t",
+          "role": "context"
+        },
+        {
+          "name": "transa",
+          "type": "cublasOperation_t",
+          "role": "value"
+        },
+        {
+          "name": "transb",
+          "type": "cublasOperation_t",
+          "role": "value"
+        },
+        {
+          "name": "m",
+          "type": "int",
+          "role": "value"
+        },
+        {
+          "name": "n",
+          "type": "int",
+          "role": "value"
+        },
+        {
+          "name": "k",
+          "type": "int",
+          "role": "value"
+        },
+        {
+          "name": "alpha",
+          "type": "const double*",
+          "role": "scalar"
+        },
+        {
+          "name": "A",
+          "type": "const double*",
+          "role": "input"
+        },
+        {
+          "name": "lda",
+          "type": "int",
+          "role": "value"
+        },
+        {
+          "name": "strideA",
+          "type": "long long int",
+          "role": "value"
+        },
+        {
+          "name": "B",
+          "type": "const double*",
+          "role": "input"
+        },
+        {
+          "name": "ldb",
+          "type": "int",
+          "role": "value"
+        },
+        {
+          "name": "strideB",
+          "type": "long long int",
+          "role": "value"
+        },
+        {
+          "name": "beta",
+          "type": "const double*",
+          "role": "scalar"
+        },
+        {
+          "name": "C",
+          "type": "double*",
+          "role": "inout"
+        },
+        {
+          "name": "ldc",
+          "type": "int",
+          "role": "value"
+        },
+        {
+          "name": "strideC",
+          "type": "long long int",
+          "role": "value"
+        },
+        {
+          "name": "batchCount",
+          "type": "int",
+          "role": "value"
+        }
+      ]
+    },
+    {
+      "name": "cublasCgemmStridedBatched",
+      "operation": "gemmstridedbatched",
+      "dtype": "complex64",
+      "args": [
+        {
+          "name": "handle",
+          "type": "cublasHandle_t",
+          "role": "context"
+        },
+        {
+          "name": "transa",
+          "type": "cublasOperation_t",
+          "role": "value"
+        },
+        {
+          "name": "transb",
+          "type": "cublasOperation_t",
+          "role": "value"
+        },
+        {
+          "name": "m",
+          "type": "int",
+          "role": "value"
+        },
+        {
+          "name": "n",
+          "type": "int",
+          "role": "value"
+        },
+        {
+          "name": "k",
+          "type": "int",
+          "role": "value"
+        },
+        {
+          "name": "alpha",
+          "type": "const cuComplex*",
+          "role": "scalar"
+        },
+        {
+          "name": "A",
+          "type": "const cuComplex*",
+          "role": "input"
+        },
+        {
+          "name": "lda",
+          "type": "int",
+          "role": "value"
+        },
+        {
+          "name": "strideA",
+          "type": "long long int",
+          "role": "value"
+        },
+        {
+          "name": "B",
+          "type": "const cuComplex*",
+          "role": "input"
+        },
+        {
+          "name": "ldb",
+          "type": "int",
+          "role": "value"
+        },
+        {
+          "name": "strideB",
+          "type": "long long int",
+          "role": "value"
+        },
+        {
+          "name": "beta",
+          "type": "const cuComplex*",
+          "role": "scalar"
+        },
+        {
+          "name": "C",
+          "type": "cuComplex*",
+          "role": "inout"
+        },
+        {
+          "name": "ldc",
+          "type": "int",
+          "role": "value"
+        },
+        {
+          "name": "strideC",
+          "type": "long long int",
+          "role": "value"
+        },
+        {
+          "name": "batchCount",
+          "type": "int",
+          "role": "value"
+        }
+      ]
+    },
+    {
+      "name": "cublasZgemmStridedBatched",
+      "operation": "gemmstridedbatched",
+      "dtype": "complex128",
+      "args": [
+        {
+          "name": "handle",
+          "type": "cublasHandle_t",
+          "role": "context"
+        },
+        {
+          "name": "transa",
+          "type": "cublasOperation_t",
+          "role": "value"
+        },
+        {
+          "name": "transb",
+          "type": "cublasOperation_t",
+          "role": "value"
+        },
+        {
+          "name": "m",
+          "type": "int",
+          "role": "value"
+        },
+        {
+          "name": "n",
+          "type": "int",
+          "role": "value"
+        },
+        {
+          "name": "k",
+          "type": "int",
+          "role": "value"
+        },
+        {
+          "name": "alpha",
+          "type": "const cuDoubleComplex*",
+          "role": "scalar"
+        },
+        {
+          "name": "A",
+          "type": "const cuDoubleComplex*",
+          "role": "input"
+        },
+        {
+          "name": "lda",
+          "type": "int",
+          "role": "value"
+        },
+        {
+          "name": "strideA",
+          "type": "long long int",
+          "role": "value"
+        },
+        {
+          "name": "B",
+          "type": "const cuDoubleComplex*",
+          "role": "input"
+        },
+        {
+          "name": "ldb",
+          "type": "int",
+          "role": "value"
+        },
+        {
+          "name": "strideB",
+          "type": "long long int",
+          "role": "value"
+        },
+        {
+          "name": "beta",
+          "type": "const cuDoubleComplex*",
+          "role": "scalar"
+        },
+        {
+          "name": "C",
+          "type": "cuDoubleComplex*",
+          "role": "inout"
+        },
+        {
+          "name": "ldc",
+          "type": "int",
+          "role": "value"
+        },
+        {
+          "name": "strideC",
+          "type": "long long int",
+          "role": "value"
+        },
+        {
+          "name": "batchCount",
+          "type": "int",
+          "role": "value"
+        }
+      ]
+    },
+    {
+      "name": "cublasSgeam",
+      "operation": "geam",
+      "dtype": "float32",
+      "args": [
+        {
+          "name": "handle",
+          "type": "cublasHandle_t",
+          "role": "context"
+        },
+        {
+          "name": "transa",
+          "type": "cublasOperation_t",
+          "role": "value"
+        },
+        {
+          "name": "transb",
+          "type": "cublasOperation_t",
+          "role": "value"
+        },
+        {
+          "name": "m",
+          "type": "int",
+          "role": "value"
+        },
+        {
+          "name": "n",
+          "type": "int",
+          "role": "value"
+        },
+        {
+          "name": "alpha",
+          "type": "const float*",
+          "role": "scalar"
+        },
+        {
+          "name": "A",
+          "type": "const float*",
+          "role": "input"
+        },
+        {
+          "name": "lda",
+          "type": "int",
+          "role": "value"
+        },
+        {
+          "name": "beta",
+          "type": "const float*",
+          "role": "scalar"
+        },
+        {
+          "name": "B",
+          "type": "const float*",
+          "role": "input"
+        },
+        {
+          "name": "ldb",
+          "type": "int",
+          "role": "value"
+        },
+        {
+          "name": "C",
+          "type": "float*",
+          "role": "inout"
+        },
+        {
+          "name": "ldc",
+          "type": "int",
+          "role": "value"
+        }
+      ]
+    },
+    {
+      "name": "cublasDtrsmBatched",
+      "operation": "trsmbatched",
+      "dtype": "float64",
+      "args": [
+        {
+          "name": "handle",
+          "type": "cublasHandle_t",
+          "role": "context"
+        },
+        {
+          "name": "side",
+          "type": "cublasSideMode_t",
+          "role": "value"
+        },
+        {
+          "name": "uplo",
+          "type": "cublasFillMode_t",
+          "role": "value"
+        },
+        {
+          "name": "trans",
+          "type": "cublasOperation_t",
+          "role": "value"
+        },
+        {
+          "name": "diag",
+          "type": "cublasDiagType_t",
+          "role": "value"
+        },
+        {
+          "name": "m",
+          "type": "int",
+          "role": "value"
+        },
+        {
+          "name": "n",
+          "type": "int",
+          "role": "value"
+        },
+        {
+          "name": "alpha",
+          "type": "const double*",
+          "role": "scalar"
+        },
+        {
+          "name": "A",
+          "type": "const double* const",
+          "role": "input"
+        },
+        {
+          "name": "lda",
+          "type": "int",
+          "role": "value"
+        },
+        {
+          "name": "B",
+          "type": "double* const",
+          "role": "input"
+        },
+        {
+          "name": "ldb",
+          "type": "int",
+          "role": "value"
+        },
+        {
+          "name": "batchCount",
+          "type": "int",
+          "role": "value"
+        }
+      ]
+    },
+    {
+      "name": "cublasZtrsmBatched",
+      "operation": "trsmbatched",
+      "dtype": "complex128",
+      "args": [
+        {
+          "name": "handle",
+          "type": "cublasHandle_t",
+          "role": "context"
+        },
+        {
+          "name": "side",
+          "type": "cublasSideMode_t",
+          "role": "value"
+        },
+        {
+          "name": "uplo",
+          "type": "cublasFillMode_t",
+          "role": "value"
+        },
+        {
+          "name": "trans",
+          "type": "cublasOperation_t",
+          "role": "value"
+        },
+        {
+          "name": "diag",
+          "type": "cublasDiagType_t",
+          "role": "value"
+        },
+        {
+          "name": "m",
+          "type": "int",
+          "role": "value"
+        },
+        {
+          "name": "n",
+          "type": "int",
+          "role": "value"
+        },
+        {
+          "name": "alpha",
+          "type": "const cuDoubleComplex*",
+          "role": "scalar"
+        },
+        {
+          "name": "A",
+          "type": "const cuDoubleComplex* const",
+          "role": "input"
+        },
+        {
+          "name": "lda",
+          "type": "int",
+          "role": "value"
+        },
+        {
+          "name": "B",
+          "type": "cuDoubleComplex* const",
+          "role": "input"
+        },
+        {
+          "name": "ldb",
+          "type": "int",
+          "role": "value"
+        },
+        {
+          "name": "batchCount",
+          "type": "int",
+          "role": "value"
+        }
+      ]
+    },
+    {
+      "name": "cublasSdgmm",
+      "operation": "dgmm",
+      "dtype": "float32",
+      "args": [
+        {
+          "name": "handle",
+          "type": "cublasHandle_t",
+          "role": "context"
+        },
+        {
+          "name": "mode",
+          "type": "cublasSideMode_t",
+          "role": "value"
+        },
+        {
+          "name": "m",
+          "type": "int",
+          "role": "value"
+        },
+        {
+          "name": "n",
+          "type": "int",
+          "role": "value"
+        },
+        {
+          "name": "A",
+          "type": "const float*",
+          "role": "input"
+        },
+        {
+          "name": "lda",
+          "type": "int",
+          "role": "value"
+        },
+        {
+          "name": "x",
+          "type": "const float*",
+          "role": "input"
+        },
+        {
+          "name": "incx",
+          "type": "int",
+          "role": "value"
+        },
+        {
+          "name": "C",
+          "type": "float*",
+          "role": "inout"
+        },
+        {
+          "name": "ldc",
+          "type": "int",
+          "role": "value"
+        }
+      ]
+    },
+    {
+      "name": "cublasSgemmBatched_64",
+      "operation": "gemmbatched",
+      "dtype": "float32",
+      "args": [
+        {
+          "name": "handle",
+          "type": "cublasHandle_t",
+          "role": "context"
+        },
+        {
+          "name": "transa",
+          "type": "cublasOperation_t",
+          "role": "value"
+        },
+        {
+          "name": "transb",
+          "type": "cublasOperation_t",
+          "role": "value"
+        },
+        {
+          "name": "m",
+          "type": "int64_t",
+          "role": "value"
+        },
+        {
+          "name": "n",
+          "type": "int64_t",
+          "role": "value"
+        },
+        {
+          "name": "k",
+          "type": "int64_t",
+          "role": "value"
+        },
+        {
+          "name": "alpha",
+          "type": "const float*",
+          "role": "scalar"
+        },
+        {
+          "name": "Aarray",
+          "type": "const float* const",
+          "role": "input"
+        },
+        {
+          "name": "lda",
+          "type": "int64_t",
+          "role": "value"
+        },
+        {
+          "name": "Barray",
+          "type": "const float* const",
+          "role": "input"
+        },
+        {
+          "name": "ldb",
+          "type": "int64_t",
+          "role": "value"
+        },
+        {
+          "name": "beta",
+          "type": "const float*",
+          "role": "scalar"
+        },
+        {
+          "name": "Carray",
+          "type": "float* const",
+          "role": "input"
+        },
+        {
+          "name": "ldc",
+          "type": "int64_t",
+          "role": "value"
+        },
+        {
+          "name": "batchCount",
+          "type": "int64_t",
+          "role": "value"
+        }
+      ]
+    },
+    {
+      "name": "cublasCgemmStridedBatched_64",
+      "operation": "gemmstridedbatched",
+      "dtype": "complex64",
+      "args": [
+        {
+          "name": "handle",
+          "type": "cublasHandle_t",
+          "role": "context"
+        },
+        {
+          "name": "transa",
+          "type": "cublasOperation_t",
+          "role": "value"
+        },
+        {
+          "name": "transb",
+          "type": "cublasOperation_t",
+          "role": "value"
+        },
+        {
+          "name": "m",
+          "type": "int64_t",
+          "role": "value"
+        },
+        {
+          "name": "n",
+          "type": "int64_t",
+          "role": "value"
+        },
+        {
+          "name": "k",
+          "type": "int64_t",
+          "role": "value"
+        },
+        {
+          "name": "alpha",
+          "type": "const cuComplex*",
+          "role": "scalar"
+        },
+        {
+          "name": "A",
+          "type": "const cuComplex*",
+          "role": "input"
+        },
+        {
+          "name": "lda",
+          "type": "int64_t",
+          "role": "value"
+        },
+        {
+          "name": "strideA",
+          "type": "long long int",
+          "role": "value"
+        },
+        {
+          "name": "B",
+          "type": "const cuComplex*",
+          "role": "input"
+        },
+        {
+          "name": "ldb",
+          "type": "int64_t",
+          "role": "value"
+        },
+        {
+          "name": "strideB",
+          "type": "long long int",
+          "role": "value"
+        },
+        {
+          "name": "beta",
+          "type": "const cuComplex*",
+          "role": "scalar"
+        },
+        {
+          "name": "C",
+          "type": "cuComplex*",
+          "role": "inout"
+        },
+        {
+          "name": "ldc",
+          "type": "int64_t",
+          "role": "value"
+        },
+        {
+          "name": "strideC",
+          "type": "long long int",
+          "role": "value"
+        },
+        {
+          "name": "batchCount",
+          "type": "int64_t",
+          "role": "value"
+        }
+      ]
+    },
+    {
+      "name": "cublasCgemvBatched_64",
+      "operation": "gemvbatched",
+      "dtype": "complex64",
+      "args": [
+        {
+          "name": "handle",
+          "type": "cublasHandle_t",
+          "role": "context"
+        },
+        {
+          "name": "trans",
+          "type": "cublasOperation_t",
+          "role": "value"
+        },
+        {
+          "name": "m",
+          "type": "int64_t",
+          "role": "value"
+        },
+        {
+          "name": "n",
+          "type": "int64_t",
+          "role": "value"
+        },
+        {
+          "name": "alpha",
+          "type": "const cuComplex*",
+          "role": "scalar"
+        },
+        {
+          "name": "Aarray",
+          "type": "const cuComplex* const",
+          "role": "input"
+        },
+        {
+          "name": "lda",
+          "type": "int64_t",
+          "role": "value"
+        },
+        {
+          "name": "xarray",
+          "type": "const cuComplex* const",
+          "role": "input"
+        },
+        {
+          "name": "incx",
+          "type": "int64_t",
+          "role": "value"
+        },
+        {
+          "name": "beta",
+          "type": "const cuComplex*",
+          "role": "scalar"
+        },
+        {
+          "name": "yarray",
+          "type": "cuComplex* const",
+          "role": "input"
+        },
+        {
+          "name": "incy",
+          "type": "int64_t",
+          "role": "value"
+        },
+        {
+          "name": "batchCount",
+          "type": "int64_t",
+          "role": "value"
+        }
+      ]
+    },
+    {
+      "name": "cublasDgemmStridedBatched_64",
+      "operation": "gemmstridedbatched",
+      "dtype": "float64",
+      "args": [
+        {
+          "name": "handle",
+          "type": "cublasHandle_t",
+          "role": "context"
+        },
+        {
+          "name": "transa",
+          "type": "cublasOperation_t",
+          "role": "value"
+        },
+        {
+          "name": "transb",
+          "type": "cublasOperation_t",
+          "role": "value"
+        },
+        {
+          "name": "m",
+          "type": "int64_t",
+          "role": "value"
+        },
+        {
+          "name": "n",
+          "type": "int64_t",
+          "role": "value"
+        },
+        {
+          "name": "k",
+          "type": "int64_t",
+          "role": "value"
+        },
+        {
+          "name": "alpha",
+          "type": "const double*",
+          "role": "scalar"
+        },
+        {
+          "name": "A",
+          "type": "const double*",
+          "role": "input"
+        },
+        {
+          "name": "lda",
+          "type": "int64_t",
+          "role": "value"
+        },
+        {
+          "name": "strideA",
+          "type": "long long int",
+          "role": "value"
+        },
+        {
+          "name": "B",
+          "type": "const double*",
+          "role": "input"
+        },
+        {
+          "name": "ldb",
+          "type": "int64_t",
+          "role": "value"
+        },
+        {
+          "name": "strideB",
+          "type": "long long int",
+          "role": "value"
+        },
+        {
+          "name": "beta",
+          "type": "const double*",
+          "role": "scalar"
+        },
+        {
+          "name": "C",
+          "type": "double*",
+          "role": "inout"
+        },
+        {
+          "name": "ldc",
+          "type": "int64_t",
+          "role": "value"
+        },
+        {
+          "name": "strideC",
+          "type": "long long int",
+          "role": "value"
+        },
+        {
+          "name": "batchCount",
+          "type": "int64_t",
+          "role": "value"
+        }
+      ]
+    }
+  ]
+}

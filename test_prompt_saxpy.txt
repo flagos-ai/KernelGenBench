@@ -1,0 +1,98 @@
+You are an expert in CUDA programming and cuBLAS library. Generate a Python baseline function that wraps the cuBLAS C API using CuPy.
+
+## Function Information
+
+**Function Name**: cublasSaxpy_v2
+**Base Operation**: axpy
+**Data Type**: float32
+**BLAS Level**: 1
+**Variant**: base
+
+**Description**: The `cublasSaxpy_v2` function performs the single-precision BLAS operation `y = alpha * x + y`, where `x` and `y` are vectors with specified strides `incx` and `incy`, and `alpha` is a scalar multiplier. It is a level 1 operation that requires a cuBLAS handle for execution.
+
+**C API Signature**:
+```c
+cublasStatus_t cublasSaxpy_v2(cublasHandle_t handle, int n, const float* alpha, const float* x, int incx, float* y, int incy);
+```
+
+**Parameters**:
+
+- `n`: int
+- `alpha`: const float* (scalar)
+- `x`: const float* (tensor)
+- `incx`: int
+- `y`: float* (tensor) (input/output)
+- `incy`: int
+
+## Requirements
+
+1. **Function signature**: Accept parameters matching the C API (excluding handle)
+2. **Import statements**: Use standard imports (torch, cupy, cupy_backends.cuda.libs.cublas, dlpack)
+3. **Tensor conversion**: Convert PyTorch tensors to CuPy arrays using dlpack
+4. **cuBLAS C API call**: Call cuBLAS C API directly via `cupy_backends.cuda.libs.cublas`
+5. **Handle management**: Get cuBLAS handle using `device.get_cublas_handle()`
+6. **Return value**: Convert result back to PyTorch tensor using dlpack
+7. **Docstring**: Include brief description of the operation
+
+## Template Format
+
+```python
+import torch
+import cupy as cp
+from cupy.cuda import device
+from cupy_backends.cuda.libs import cublas
+from torch.utils.dlpack import to_dlpack, from_dlpack
+
+def function_name(param1, param2, ...):
+    """CuPy cuBLAS C API baseline for operation: brief description"""
+    # Get cuBLAS handle
+    handle = device.get_cublas_handle()
+
+    # Convert to CuPy arrays
+    x_cp = cp.from_dlpack(to_dlpack(x))
+
+    # Call cuBLAS C API directly
+    cublas.cublasOperation(handle, param1, x_cp.data.ptr, ...)
+
+    # Convert back and return
+    ref_out = from_dlpack(x_cp.toDlpack())
+    return ref_out
+```
+
+## Examples
+
+**AXPY Example** (y = alpha * x + y):
+```python
+import torch
+import cupy as cp
+from cupy.cuda import device
+from cupy_backends.cuda.libs import cublas
+from torch.utils.dlpack import to_dlpack, from_dlpack
+
+def caxpy(n, alpha, x, incx, y, incy):
+    """CuPy cuBLAS C API baseline for caxpy: y = alpha * x + y (complex64)"""
+    handle = device.get_cublas_handle()
+    x_cp = cp.from_dlpack(to_dlpack(x))
+    y_cp = cp.from_dlpack(to_dlpack(y))
+
+    # Call cuBLAS C API: cublasCaxpy_v2
+    cublas.caxpy(handle, n, alpha, x_cp.data.ptr, incx, y_cp.data.ptr, incy)
+
+    ref_out = from_dlpack(y_cp.toDlpack())
+    return ref_out
+```
+
+## Important Constraints
+
+1. **Function name**: Must be `saxpy` (lowercase)
+2. **C API call**: Use `cublas.saxpy(handle, ...)` to call the cuBLAS C API
+3. **Handle**: Get handle with `handle = device.get_cublas_handle()`
+4. **Tensor pointers**: Use `.data.ptr` to get raw pointer from CuPy array
+5. **No explanations**: Generate ONLY the Python code, no markdown text
+6. **Code block**: Wrap code in ```python ... ``` block
+7. **Imports**: Always include the 5 required import lines (torch, cupy, device, cublas, dlpack)
+8. **Docstring**: Brief one-line description mentioning "cuBLAS C API"
+9. **Variable naming**: Use `ref_out` for the final return value
+10. **Parameter order**: Follow the exact C API signature (excluding handle)
+
+Generate the complete baseline function now.

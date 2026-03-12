@@ -1,0 +1,147 @@
+You are an expert in CUDA programming and cuBLAS library. Generate a Python baseline function that wraps the cuBLAS C API using CuPy.
+
+## Function Information
+
+**Function Name**: cublasCgemvStridedBatched
+**Base Operation**: gemv
+**Data Type**: complex64
+**BLAS Level**: 2
+**Variant**: StridedBatched
+
+**Description**: The `cublasCgemvStridedBatched` function performs a batched matrix-vector multiplication using complex64 matrices, where each matrix and vector in the batch is separated by a fixed stride. It computes `y = alpha * op(A) * x + beta * y` for each batch, with `op(A)` being the matrix `A` or its transpose, and supports configurable strides for input and output arrays.
+
+**C API Signature**:
+```c
+cublasStatus_t cublasCgemvStridedBatched(cublasHandle_t handle, cublasOperation_t trans, int m, int n, const cuComplex* alpha, const cuComplex* A, int lda, long long int strideA, const cuComplex* x, int incx, long long int stridex, const cuComplex* beta, cuComplex* y, int incy, long long int stridey, int batchCount);
+```
+
+**Parameters**:
+
+- `trans`: cublasOperation_t
+- `m`: int
+- `n`: int
+- `alpha`: const cuComplex* (scalar)
+- `A`: const cuComplex* (tensor)
+- `lda`: int
+- `strideA`: long long int
+- `x`: const cuComplex* (tensor)
+- `incx`: int
+- `stridex`: long long int
+- `beta`: const cuComplex* (scalar)
+- `y`: cuComplex* (tensor) (input/output)
+- `incy`: int
+- `stridey`: long long int
+- `batchCount`: int
+
+**Return Value**: `y`
+
+## Requirements
+
+1. **Pure ctypes implementation**: MUST use ONLY ctypes, NO CuPy imports allowed
+2. **Function signature**: Accept parameters matching the C API (excluding handle)
+3. **Library loading**: Load cuBLAS library using `ctypes.CDLL('/usr/local/cuda/lib64/libcublas.so.12')`
+4. **Handle management**: Create/destroy handle using cublasCreate_v2/cublasDestroy_v2
+5. **Tensor pointers**: Extract raw pointers from PyTorch tensors using `tensor.data_ptr()`
+6. **Scalar pointers**: For scalar parameters (alpha, beta), create GPU tensor and extract pointer
+7. **Pointer mode**: Set pointer mode to device (1) using cublasSetPointerMode_v2
+8. **Function signature**: Define argtypes and restype for the cuBLAS function
+9. **Return value**: Return the modified tensor(s) directly
+10. **Docstring**: Include brief description mentioning "ctypes cuBLAS C API baseline"
+
+## Template Format
+
+```python
+import torch
+import ctypes
+
+# Load cuBLAS library
+libcublas = ctypes.CDLL('/usr/local/cuda/lib64/libcublas.so.12')
+
+def function_name(param1, param2, ...):
+    """ctypes cuBLAS C API baseline for operation: brief description"""
+    # Create handle
+    cublasCreate_v2 = libcublas.cublasCreate_v2
+    cublasCreate_v2.argtypes = [ctypes.POINTER(ctypes.c_void_p)]
+    cublasCreate_v2.restype = ctypes.c_int
+    handle = ctypes.c_void_p()
+    cublasCreate_v2(ctypes.byref(handle))
+
+    # Convert tensors to GPU pointers
+    x_ptr = ctypes.c_void_p(x.data_ptr())
+
+    # For scalar parameters, create GPU tensor
+    alpha_gpu = torch.tensor([alpha], dtype=torch.float32, device='cuda')
+    alpha_ptr = ctypes.c_void_p(alpha_gpu.data_ptr())
+
+    # Set pointer mode to device
+    cublasSetPointerMode = libcublas.cublasSetPointerMode_v2
+    cublasSetPointerMode.argtypes = [ctypes.c_void_p, ctypes.c_int]
+    cublasSetPointerMode.restype = ctypes.c_int
+    cublasSetPointerMode(handle, 1)  # CUBLAS_POINTER_MODE_DEVICE
+
+    # Define function signature
+    func = libcublas.cublasOperation_v2
+    func.argtypes = [ctypes.c_void_p, ctypes.c_int, ...]
+    func.restype = ctypes.c_int
+
+    # Call cuBLAS C API
+    status = func(handle, n, ctypes.cast(alpha_ptr, ctypes.POINTER(ctypes.c_float)), ...)
+
+    # Destroy handle
+    cublasDestroy_v2 = libcublas.cublasDestroy_v2
+    cublasDestroy_v2.argtypes = [ctypes.c_void_p]
+    cublasDestroy_v2.restype = ctypes.c_int
+    cublasDestroy_v2(handle)
+
+    return result_tensor
+
+if __name__ == "__main__":
+    # Test code
+    x = torch.randn(..., dtype=torch.float32, device='cuda')
+    result = function_name(...)
+    assert result is not None
+    expected = torch_reference(...)
+    torch.testing.assert_close(result, expected, rtol=1e-5, atol=1e-5)
+    print("✓ function_name test passed")
+```
+
+## Examples
+
+## Important Constraints
+
+**For the baseline function:**
+1. **Function name**: Must be `cublasCgemvStridedBatched` (exact match with c_api field)
+2. **Library loading**: Load cuBLAS with `libcublas = ctypes.CDLL('/usr/local/cuda/lib64/libcublas.so.12')`
+3. **NO CuPy**: ABSOLUTELY NO CuPy imports or usage - pure ctypes only
+4. **Handle creation**: Create handle using cublasCreate_v2 with proper argtypes/restype
+5. **Tensor pointers**: Use `ctypes.c_void_p(tensor.data_ptr())` to get raw pointer from PyTorch tensors
+6. **Scalar pointers**: For scalar params (alpha, beta), create GPU tensor: `alpha_gpu = torch.tensor([alpha], dtype=torch.float32, device='cuda')`, then use `ctypes.c_void_p(alpha_gpu.data_ptr())`
+7. **Pointer mode**: MUST set pointer mode to device (1) before calling cuBLAS using cublasSetPointerMode_v2
+8. **Function signature**: Define argtypes for the cuBLAS function using ctypes types (c_void_p, c_int, POINTER(c_float), etc.)
+9. **Pointer casting**: Cast void pointers to typed pointers using `ctypes.cast(ptr, ctypes.POINTER(ctypes.c_float))`
+10. **Handle destruction**: Destroy handle using cublasDestroy_v2 after operation
+11. **Return value**: Return the modified `y` tensor
+12. **Parameter order**: Follow the exact C API signature (handle is first parameter)
+
+**For the test code (in `if __name__ == "__main__":`)**:
+13. **Test data**: Create appropriate test tensors on GPU with correct dtype
+14. **Clone originals**: Clone input tensors before calling baseline (for comparison)
+15. **Call baseline**: Invoke the baseline function with test data
+16. **Assert not None**: Verify result is not None
+17. **PyTorch reference**: Compute expected result using simple PyTorch operations
+18. **CRITICAL - Column-Major Layout**: cuBLAS uses Fortran column-major layout, PyTorch uses C row-major layout
+    - For GEMM operations: PyTorch A(m,k) @ B(k,n) = C(m,n) is stored row-major
+    - cuBLAS expects column-major, so you need to transpose the computation
+    - Solution: Use A.t().contiguous() and B.t().contiguous() OR adjust the reference computation
+    - For matrix-vector operations: Similar considerations apply for matrix storage
+19. **Numerical check**: Use `torch.testing.assert_close(result, expected, rtol=1e-5, atol=1e-5)`
+20. **Print success**: Print "✓ cublasCgemvStridedBatched test passed" on success
+
+**General:**
+21. **No extra code**: Do NOT add device context managers or any other code not shown in examples
+22. **No explanations**: Generate ONLY the Python code, no markdown text
+23. **Code block**: Wrap code in ```python ... ``` block
+24. **Imports**: Only import torch and ctypes at the top (NO CuPy)
+25. **Docstring**: Brief one-line description mentioning "ctypes cuBLAS C API baseline for cublasCgemvStridedBatched"
+
+Generate the complete code (baseline function + test code) now.

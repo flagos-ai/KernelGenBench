@@ -1,0 +1,52 @@
+You are a skilled GPU programmer proficient in Triton. Your task is to generate a Triton kernel function.
+Here is an example of a PyTorch function and its corresponding Triton kernel implementation:
+PyTorch function:
+def add(A, B):
+        return torch.add(A, B)
+Triton kernel implementation:
+import triton
+    import triton.language as tl
+
+
+    @triton.jit
+    def add_kernel(x_ptr,  # *Pointer* to first input vector.
+                y_ptr,  # *Pointer* to second input vector.
+                output_ptr,  # *Pointer* to output vector.
+                n_elements,  # Size of the vector.
+                BLOCK_SIZE: tl.constexpr,  # Number of elements each program should process.
+                # NOTE: `constexpr` so it can be used as a shape value.
+                ):
+        pid = tl.program_id(axis=0)  # We use a 1D launch grid so axis is 0.
+        block_start = pid * BLOCK_SIZE
+        offsets = block_start + tl.arange(0, BLOCK_SIZE)
+        mask = offsets < n_elements
+        x = tl.load(x_ptr + offsets, mask=mask)
+        y = tl.load(y_ptr + offsets, mask=mask)
+        output = x + y
+        tl.store(output_ptr + offsets, output, mask=mask)
+
+    def add(x: torch.Tensor, y: torch.Tensor):
+        output = torch.empty_like(x)
+        assert x.device == DEVICE and y.device == DEVICE and output.device == DEVICE
+        n_elements = output.numel()
+        grid = lambda meta: (triton.cdiv(n_elements, meta['BLOCK_SIZE']), )
+        add_kernel[grid](x, y, output, n_elements, BLOCK_SIZE=1024)
+        return output
+You must strictly adhere to the following specifications:
+The Triton kernel should implement the same functionality as the following PyTorch function:
+```python
+# Reference PyTorch implementation for torch.add
+import torch
+
+def add(*args, **kwargs):
+    return torch.add(*args, **kwargs)
+```
+The Triton kernel function name should be add.
+
+The input and output args of the function are as follows:
+Input Args: [InputArg(arg_name='*args', arg_type='Any', arg_value=None, arg_default=(None,), arg_desc='Input arguments to the PyTorch operator'), InputArg(arg_name='**kwargs', arg_type='Any', arg_value=None, arg_default=(None,), arg_desc='Keyword arguments to the PyTorch operator')]
+Output Args: [OutputArg(arg_type='torch.Tensor', arg_value=None, arg_desc='Output tensor from the operation')]
+The generated code should include both the Triton kernel definition (with @triton.jit) and the Python wrapper function(s) that launch the kernel.
+The wrapper function name must be exactly the same as the provided function name: add
+You must generate the valid Triton code directly without any explanations or additional text, and ensure no testing or benchmarking code is included. The code must be complete and ready to run.
+You must use ```python ... ``` to format the code block.

@@ -1,0 +1,975 @@
+[
+  {
+    "name": "_copy_low_upp",
+    "return_type": "void",
+    "params": "Real* A, MatrixDim dimA",
+    "full_signature": "__global__ static void _copy_low_upp(Real* A, MatrixDim dimA) {",
+    "start_line": 86
+  },
+  {
+    "name": "_copy_upp_low",
+    "return_type": "void",
+    "params": "Real* A, MatrixDim dimA",
+    "full_signature": "__global__ static void _copy_upp_low(Real* A, MatrixDim dimA) {",
+    "start_line": 98
+  },
+  {
+    "name": "_add_diag_vec_mat",
+    "return_type": "void",
+    "params": "Real alpha, Real *mat, MatrixDim mat_dim, const Real *vec, const Real *mat2, int mat2_row_stride, int mat2_col_stride, Real beta",
+    "full_signature": "__global__ static void _add_diag_vec_mat(Real alpha, Real *mat, MatrixDim mat_dim, const Real *vec, const Real *mat2, int mat2_row_stride, int mat2_col_stride, Real beta) {",
+    "start_line": 111
+  },
+  {
+    "name": "_copy_from_tp",
+    "return_type": "void",
+    "params": "Real* A, const OtherReal* B, MatrixDim dmat",
+    "full_signature": "__global__ static void _copy_from_tp(Real* A, const OtherReal* B, MatrixDim dmat) {",
+    "start_line": 128
+  },
+  {
+    "name": "_copy_from_tp_trans",
+    "return_type": "void",
+    "params": "Real* A, const OtherReal* B, MatrixDim dmat",
+    "full_signature": "__global__ static void _copy_from_tp_trans(Real* A, const OtherReal* B, MatrixDim dmat) {",
+    "start_line": 144
+  },
+  {
+    "name": "_copy_from_mat",
+    "return_type": "void",
+    "params": "Real* mat_out, const OtherReal* mat_in, MatrixDim d_out, MatrixDim d_in",
+    "full_signature": "__global__ static void _copy_from_mat(Real* mat_out, const OtherReal* mat_in, MatrixDim d_out, MatrixDim d_in) {",
+    "start_line": 163
+  },
+  {
+    "name": "_copy_from_mat_trans",
+    "return_type": "void",
+    "params": "Real* mat_out, const OtherReal* mat_in, MatrixDim d_out, MatrixDim d_in",
+    "full_signature": "__global__ static void _copy_from_mat_trans(Real* mat_out, const OtherReal* mat_in, MatrixDim d_out, MatrixDim d_in) {",
+    "start_line": 175
+  },
+  {
+    "name": "_copy_from_smat",
+    "return_type": "void",
+    "params": "Real* mat, MatrixDim mat_dim, const int* smat_row_ptr, const int* smat_col_idx, const OtherReal* smat_val",
+    "full_signature": "__global__ static void _copy_from_smat(Real* mat, MatrixDim mat_dim, const int* smat_row_ptr, const int* smat_col_idx, const OtherReal* smat_val) {",
+    "start_line": 219
+  },
+  {
+    "name": "_select_rows",
+    "return_type": "void",
+    "params": "const int* out_row_ptr, int* out_col_idx, Real* out_val, const int* row_indexes, const int num_selected_rows, const int* in_row_ptr, const int* in_col_idx, const Real* in_val",
+    "full_signature": "__global__ static void _select_rows(const int* out_row_ptr, int* out_col_idx, Real* out_val, const int* row_indexes, const int num_selected_rows, const int* in_row_ptr, const int* in_col_idx, const Re",
+    "start_line": 248
+  },
+  {
+    "name": "_add_smat",
+    "return_type": "void",
+    "params": "Real* mat, MatrixDim mat_dim, Real alpha, const int* smat_row_ptr, const int* smat_col_idx, const Real* smat_val",
+    "full_signature": "__global__ static void _add_smat(Real* mat, MatrixDim mat_dim, Real alpha, const int* smat_row_ptr, const int* smat_col_idx, const Real* smat_val) {",
+    "start_line": 274
+  },
+  {
+    "name": "_add_smat_trans",
+    "return_type": "void",
+    "params": "Real* mat, MatrixDim mat_dim, Real alpha, const int* smat_row_ptr, const int* smat_col_idx, const Real* smat_val",
+    "full_signature": "__global__ static void _add_smat_trans(Real* mat, MatrixDim mat_dim, Real alpha, const int* smat_row_ptr, const int* smat_col_idx, const Real* smat_val) {",
+    "start_line": 295
+  },
+  {
+    "name": "_sequence",
+    "return_type": "void",
+    "params": "T* data, int length, T base",
+    "full_signature": "__global__ static void _sequence(T* data, int length, T base) {",
+    "start_line": 313
+  },
+  {
+    "name": "_copy_from_smat_trans",
+    "return_type": "void",
+    "params": "Real* mat, MatrixDim mat_dim, const int* smat_row_ptr, const int* smat_col_idx, const OtherReal* smat_val",
+    "full_signature": "__global__ static void _copy_from_smat_trans(Real* mat, MatrixDim mat_dim, const int* smat_row_ptr, const int* smat_col_idx, const OtherReal* smat_val) {",
+    "start_line": 327
+  },
+  {
+    "name": "_trace_mat_smat_trans",
+    "return_type": "void",
+    "params": "const Real* mat, MatrixDim mat_dim, const int* smat_row_ptr, const int* smat_col_idx, const Real* smat_val, Real* trace_vec",
+    "full_signature": "__global__ static void _trace_mat_smat_trans(const Real* mat, MatrixDim mat_dim, const int* smat_row_ptr, const int* smat_col_idx, const Real* smat_val, Real* trace_vec) {",
+    "start_line": 349
+  },
+  {
+    "name": "_trace_mat_smat",
+    "return_type": "void",
+    "params": "const Real* mat, MatrixDim mat_dim, const int* smat_row_ptr, const int* smat_col_idx, const Real* smat_val, Real* trace_vec",
+    "full_signature": "__global__ static void _trace_mat_smat(const Real* mat, MatrixDim mat_dim, const int* smat_row_ptr, const int* smat_col_idx, const Real* smat_val, Real* trace_vec) {",
+    "start_line": 371
+  },
+  {
+    "name": "_scale_diag_packed",
+    "return_type": "void",
+    "params": "Real* mat, Real value, int dim",
+    "full_signature": "__global__ static void _scale_diag_packed(Real* mat, Real value, int dim) {",
+    "start_line": 388
+  },
+  {
+    "name": "_set_diag",
+    "return_type": "void",
+    "params": "Real* mat, Real value, MatrixDim d",
+    "full_signature": "__global__ static void _set_diag(Real* mat, Real value, MatrixDim d) {",
+    "start_line": 398
+  },
+  {
+    "name": "_set_diag_packed",
+    "return_type": "void",
+    "params": "Real* mat, Real value, int dim",
+    "full_signature": "__global__ static void _set_diag_packed(Real* mat, Real value, int dim) {",
+    "start_line": 408
+  },
+  {
+    "name": "_add_diag_packed",
+    "return_type": "void",
+    "params": "Real* mat, Real value, int dim",
+    "full_signature": "__global__ static void _add_diag_packed(Real* mat, Real value, int dim) {",
+    "start_line": 418
+  },
+  {
+    "name": "_set_const",
+    "return_type": "void",
+    "params": "Real* mat, Real value, MatrixDim d",
+    "full_signature": "__global__ static void _set_const(Real* mat, Real value, MatrixDim d) {",
+    "start_line": 428
+  },
+  {
+    "name": "_set_zero_above_diag",
+    "return_type": "void",
+    "params": "Real* mat, MatrixDim d",
+    "full_signature": "__global__ static void _set_zero_above_diag(Real* mat, MatrixDim d) {",
+    "start_line": 438
+  },
+  {
+    "name": "_add",
+    "return_type": "void",
+    "params": "Real* mat, Real value, MatrixDim d",
+    "full_signature": "__global__ static void _add(Real* mat, Real value, MatrixDim d) {",
+    "start_line": 448
+  },
+  {
+    "name": "_scale",
+    "return_type": "void",
+    "params": "Real* mat, Real value, MatrixDim d",
+    "full_signature": "__global__ static void _scale(Real* mat, Real value, MatrixDim d) {",
+    "start_line": 458
+  },
+  {
+    "name": "_mul_elements",
+    "return_type": "void",
+    "params": "Real* mat, const Real* A, MatrixDim dst_d, int src_stride",
+    "full_signature": "__global__ static void _mul_elements(Real* mat, const Real* A, MatrixDim dst_d, int src_stride) {",
+    "start_line": 468
+  },
+  {
+    "name": "_div_elements",
+    "return_type": "void",
+    "params": "Real* mat, const Real* A, MatrixDim dst_d, int src_stride",
+    "full_signature": "__global__ static void _div_elements(Real* mat, const Real* A, MatrixDim dst_d, int src_stride) {",
+    "start_line": 479
+  },
+  {
+    "name": "_max",
+    "return_type": "void",
+    "params": "Real* mat, const Real* A, MatrixDim dst_d, int src_stride",
+    "full_signature": "__global__ static void _max(Real* mat, const Real* A, MatrixDim dst_d, int src_stride) {",
+    "start_line": 490
+  },
+  {
+    "name": "_min",
+    "return_type": "void",
+    "params": "Real* mat, const Real* other, MatrixDim mat_d, int other_stride",
+    "full_signature": "__global__ static void _min(Real* mat, const Real* other, MatrixDim mat_d, int other_stride) {",
+    "start_line": 502
+  },
+  {
+    "name": "_vec_mul_elements",
+    "return_type": "void",
+    "params": "Real* v, const Real* a, int dim",
+    "full_signature": "__global__ static void _vec_mul_elements(Real* v, const Real* a, int dim) {",
+    "start_line": 516
+  },
+  {
+    "name": "_mul_cols_vec",
+    "return_type": "void",
+    "params": "Real* mat, const Real* scale, MatrixDim d",
+    "full_signature": "__global__ static void _mul_cols_vec(Real* mat, const Real* scale, MatrixDim d) {",
+    "start_line": 524
+  },
+  {
+    "name": "_mul_rows_vec",
+    "return_type": "void",
+    "params": "Real* mat, const Real* scale, MatrixDim d",
+    "full_signature": "__global__ static void _mul_rows_vec(Real* mat, const Real* scale, MatrixDim d) {",
+    "start_line": 534
+  },
+  {
+    "name": "_mul_rows_group_mat",
+    "return_type": "void",
+    "params": "Real *y, const Real *x, MatrixDim d, int src_stride, int group_size",
+    "full_signature": "__global__ static void _mul_rows_group_mat(Real *y, const Real *x, MatrixDim d, int src_stride, int group_size) {",
+    "start_line": 544
+  },
+  {
+    "name": "_diff_group_pnorm",
+    "return_type": "void",
+    "params": "Real *id, const Real *iv, const Real *ov, const Real* od, MatrixDim id_dim, int iv_stride, int ov_stride, int od_stride, int group_size, Real power",
+    "full_signature": "__global__ void _diff_group_pnorm(Real *id, const Real *iv, const Real *ov, const Real* od, MatrixDim id_dim, int iv_stride, int ov_stride, int od_stride, int group_size, Real power) {",
+    "start_line": 558
+  },
+  {
+    "name": "_calc_group_max_deriv",
+    "return_type": "void",
+    "params": "Real *deriv, const Real *vec, const Real *maxv, MatrixDim deriv_dim, int vec_stride, int maxv_stride, int group_size",
+    "full_signature": "__global__ static void _calc_group_max_deriv(Real *deriv, const Real *vec, const Real *maxv, MatrixDim deriv_dim, int vec_stride, int maxv_stride, int group_size) {",
+    "start_line": 607
+  },
+  {
+    "name": "_replace_value",
+    "return_type": "void",
+    "params": "Real *vec, int dim, Real orig, Real changed",
+    "full_signature": "__global__ static void _replace_value(Real *vec, int dim, Real orig, Real changed) {",
+    "start_line": 627
+  },
+  {
+    "name": "_div_rows_vec",
+    "return_type": "void",
+    "params": "Real* mat, const Real* vec_div, MatrixDim d",
+    "full_signature": "__global__ static void _div_rows_vec(Real* mat, const Real* vec_div, MatrixDim d) {",
+    "start_line": 636
+  },
+  {
+    "name": "_add_mat",
+    "return_type": "void",
+    "params": "Real alpha, const Real* src, Real* dst, MatrixDim d, int src_stride",
+    "full_signature": "__global__ static void _add_mat(Real alpha, const Real* src, Real* dst, MatrixDim d, int src_stride) {",
+    "start_line": 651
+  },
+  {
+    "name": "_add_mat_trans",
+    "return_type": "void",
+    "params": "Real alpha, const Real* src, Real* dst, MatrixDim d, int src_stride",
+    "full_signature": "__global__ static void _add_mat_trans(Real alpha, const Real* src, Real* dst, MatrixDim d, int src_stride) {",
+    "start_line": 663
+  },
+  {
+    "name": "_add_mat_blocks",
+    "return_type": "void",
+    "params": "Real alpha, const Real* src, int32_cuda num_row_blocks, int32_cuda num_col_blocks, Real* dst, MatrixDim d, int src_stride",
+    "full_signature": "__global__ static void _add_mat_blocks(Real alpha, const Real* src, int32_cuda num_row_blocks, int32_cuda num_col_blocks, Real* dst, MatrixDim d, int src_stride) {",
+    "start_line": 675
+  },
+  {
+    "name": "_add_mat_repeated",
+    "return_type": "void",
+    "params": "Real alpha, const Real* src, MatrixDim src_dim, Real* dst, MatrixDim dst_dim",
+    "full_signature": "__global__ static void _add_mat_repeated(Real alpha, const Real* src, MatrixDim src_dim, Real* dst, MatrixDim dst_dim) {",
+    "start_line": 695
+  },
+  {
+    "name": "_add_mat_blocks_trans",
+    "return_type": "void",
+    "params": "Real alpha, const Real* src, int32_cuda num_row_blocks, int32_cuda num_col_blocks, Real* dst, MatrixDim d, int src_stride",
+    "full_signature": "__global__ static void _add_mat_blocks_trans(Real alpha, const Real* src, int32_cuda num_row_blocks, int32_cuda num_col_blocks, Real* dst, MatrixDim d, int src_stride) {",
+    "start_line": 711
+  },
+  {
+    "name": "_set_mat_mat_div_mat",
+    "return_type": "void",
+    "params": "const Real* A, const Real* B, const Real* C, Real* dst, MatrixDim d, int stride_a, int stride_b, int stride_c",
+    "full_signature": "__global__ static void _set_mat_mat_div_mat(const Real* A, const Real* B, const Real* C, Real* dst, MatrixDim d, int stride_a, int stride_b, int stride_c) {",
+    "start_line": 731
+  },
+  {
+    "name": "_sy_add_tr2",
+    "return_type": "void",
+    "params": "Real alpha, Real beta, const Real *T, MatrixDim tdim, Real *S, MatrixDim sdim",
+    "full_signature": "__global__ static void _sy_add_tr2(Real alpha, Real beta, const Real *T, MatrixDim tdim, Real *S, MatrixDim sdim) {",
+    "start_line": 752
+  },
+  {
+    "name": "_add_vec_to_cols",
+    "return_type": "void",
+    "params": "Real alpha, const Real* col, Real beta, Real* dst, MatrixDim d",
+    "full_signature": "__global__ static void _add_vec_to_cols(Real alpha, const Real* col, Real beta, Real* dst, MatrixDim d) {",
+    "start_line": 777
+  },
+  {
+    "name": "_add_vec_to_rows",
+    "return_type": "void",
+    "params": "Real alpha, const Real* row, Real beta, Real* dst, MatrixDim d",
+    "full_signature": "__global__ static void _add_vec_to_rows(Real alpha, const Real* row, Real beta, Real* dst, MatrixDim d) {",
+    "start_line": 788
+  },
+  {
+    "name": "_apply_mask",
+    "return_type": "void",
+    "params": "Real* mat, const char* mask, MatrixDim dmat, MatrixDim dmask",
+    "full_signature": "__global__ static void _apply_mask(Real* mat, const char* mask, MatrixDim dmat, MatrixDim dmask) {",
+    "start_line": 799
+  },
+  {
+    "name": "_add_mat_diag_vec",
+    "return_type": "void",
+    "params": "Real alpha, Real *mat, MatrixDim mat_dim, const Real *mat2, int mat2_row_stride, int mat2_col_stride, const Real *vec, Real beta",
+    "full_signature": "__global__ static void _add_mat_diag_vec(Real alpha, Real *mat, MatrixDim mat_dim, const Real *mat2, int mat2_row_stride, int mat2_col_stride, const Real *vec, Real beta) {",
+    "start_line": 812
+  },
+  {
+    "name": "_add_mat_mat_elements",
+    "return_type": "void",
+    "params": "Real *data, const Real *srcA_data, const Real *srcB_data, MatrixDim dim, int srcA_stride, int srcB_stride, Real alpha, Real beta",
+    "full_signature": "__global__ static void _add_mat_mat_elements(Real *data, const Real *srcA_data, const Real *srcB_data, MatrixDim dim, int srcA_stride, int srcB_stride, Real alpha, Real beta) {",
+    "start_line": 826
+  },
+  {
+    "name": "_set_bias_params",
+    "return_type": "void",
+    "params": "Real* v, const Real* a, Real param_1, Real param_2, Real param_3, int* flag, int dim",
+    "full_signature": "__global__ static void _set_bias_params(Real* v, const Real* a, Real param_1, Real param_2, Real param_3, int* flag, int dim) {",
+    "start_line": 847
+  },
+  {
+    "name": "_cublas_copy_kaldi",
+    "return_type": "void",
+    "params": "int n, const Real* x, int incx, OtherReal* y, int incy",
+    "full_signature": "__global__ static void _cublas_copy_kaldi(int n, const Real* x, int incx, OtherReal* y, int incy) {",
+    "start_line": 868
+  },
+  {
+    "name": "_copy_rows_from_vec",
+    "return_type": "void",
+    "params": "Real* m_out, MatrixDim d, const Real* v_in",
+    "full_signature": "__global__ static void _copy_rows_from_vec(Real* m_out, MatrixDim d, const Real* v_in) {",
+    "start_line": 881
+  },
+  {
+    "name": "_copy_cols_from_vec",
+    "return_type": "void",
+    "params": "Real* m_out, MatrixDim d, const Real* v_in",
+    "full_signature": "__global__ static void _copy_cols_from_vec(Real* m_out, MatrixDim d, const Real* v_in) {",
+    "start_line": 894
+  },
+  {
+    "name": "_trace_mat_mat",
+    "return_type": "void",
+    "params": "const Real* A, const Real* B, MatrixDim dA, int B_stride, Real* value",
+    "full_signature": "__global__ static void _trace_mat_mat(const Real* A, const Real* B, MatrixDim dA, int B_stride, Real* value) {",
+    "start_line": 907
+  },
+  {
+    "name": "_trace_mat_mat_trans_atomic",
+    "return_type": "void",
+    "params": "Real * result, const Real * A, const Real * B, MatrixDim dA, int B_stride",
+    "full_signature": "__global__ void _trace_mat_mat_trans_atomic(Real * result, const Real * A, const Real * B, MatrixDim dA, int B_stride) {",
+    "start_line": 1009
+  },
+  {
+    "name": "_frobenius_norm_atomic",
+    "return_type": "void",
+    "params": "Real * result, const Real * A, MatrixDim dA",
+    "full_signature": "__global__ void _frobenius_norm_atomic(Real * result, const Real * A, MatrixDim dA) {",
+    "start_line": 1068
+  },
+  {
+    "name": "_trace_mat_mat_trans",
+    "return_type": "void",
+    "params": "const Real* A, const Real* B, MatrixDim dA, int B_stride, Real* value",
+    "full_signature": "__global__ static void _trace_mat_mat_trans(const Real* A, const Real* B, MatrixDim dA, int B_stride, Real* value) {",
+    "start_line": 1148
+  },
+  {
+    "name": "_add_diag_mat_mat_MNT",
+    "return_type": "void",
+    "params": "const Real alpha, const Real* M, const MatrixDim dim_M, const Real* N, const int stride_N, const Real beta, Real* v",
+    "full_signature": "__global__ static void _add_diag_mat_mat_MNT(const Real alpha, const Real* M, const MatrixDim dim_M, const Real* N, const int stride_N, const Real beta, Real* v) {",
+    "start_line": 1195
+  },
+  {
+    "name": "_add_diag_mat_mat_MTN",
+    "return_type": "void",
+    "params": "const Real alpha, const Real* M, const int stride_M, const Real* N, const MatrixDim dim_N, const Real beta, Real* v, const int stride_v",
+    "full_signature": "__global__ static void _add_diag_mat_mat_MTN(const Real alpha, const Real* M, const int stride_M, const Real* N, const MatrixDim dim_N, const Real beta, Real* v, const int stride_v) {",
+    "start_line": 1239
+  },
+  {
+    "name": "_add_diag_mat_mat_MN",
+    "return_type": "void",
+    "params": "const Real alpha, const Real* M, const int stride_M, const Real* N, const MatrixDim dim_N, const Real beta, Real* v",
+    "full_signature": "__global__ static void _add_diag_mat_mat_MN(const Real alpha, const Real* M, const int stride_M, const Real* N, const MatrixDim dim_N, const Real beta, Real* v) {",
+    "start_line": 1296
+  },
+  {
+    "name": "_add_vec_vec",
+    "return_type": "void",
+    "params": "Real alpha, Real* v, const Real* x, const Real* y, Real beta, int dim",
+    "full_signature": "__global__ static void _add_vec_vec(Real alpha, Real* v, const Real* x, const Real* y, Real beta, int dim) {",
+    "start_line": 1373
+  },
+  {
+    "name": "_copy_col_from_mat_df",
+    "return_type": "void",
+    "params": "double* v, int col, const Real* mat, MatrixDim dmat, int dim",
+    "full_signature": "__global__ static void _copy_col_from_mat_df(double* v, int col, const Real* mat, MatrixDim dmat, int dim) {",
+    "start_line": 1384
+  },
+  {
+    "name": "_copy_col_from_mat_fd",
+    "return_type": "void",
+    "params": "float* v, int col, const Real* mat, MatrixDim dmat, int dim",
+    "full_signature": "__global__ static void _copy_col_from_mat_fd(float* v, int col, const Real* mat, MatrixDim dmat, int dim) {",
+    "start_line": 1396
+  },
+  {
+    "name": "_vec_apply_exp",
+    "return_type": "void",
+    "params": "Real* v, int dim",
+    "full_signature": "__global__ static void _vec_apply_exp(Real* v, int dim) {",
+    "start_line": 1408
+  },
+  {
+    "name": "_vec_apply_log",
+    "return_type": "void",
+    "params": "Real* v, Real* flag, int dim",
+    "full_signature": "__global__ static void _vec_apply_log(Real* v, Real* flag, int dim) {",
+    "start_line": 1419
+  },
+  {
+    "name": "_cuda_comp_obj_deriv",
+    "return_type": "void",
+    "params": "MatrixElement<Real> *x, int s, const Real* z, MatrixDim d, Real* z2, MatrixDim d2, Real* t",
+    "full_signature": "__global__ static void _cuda_comp_obj_deriv(MatrixElement<Real> *x, int s, const Real* z, MatrixDim d, Real* z2, MatrixDim d2, Real* t) {",
+    "start_line": 1434
+  },
+  {
+    "name": "_cuda_vector_copy_elements",
+    "return_type": "void",
+    "params": "Real *data, int dim, const Real *src_mat, int mat_stride, bool transpose, const MatrixIndexT_cuda* elements",
+    "full_signature": "__global__ static void _cuda_vector_copy_elements(Real *data, int dim, const Real *src_mat, int mat_stride, bool transpose, const MatrixIndexT_cuda* elements) {",
+    "start_line": 1479
+  },
+  {
+    "name": "_cuda_matrix_add_elements",
+    "return_type": "void",
+    "params": "Real *data, MatrixDim dim, Real alpha, MatrixElement<Real>* x, int num_elements",
+    "full_signature": "__global__ static void _cuda_matrix_add_elements(Real *data, MatrixDim dim, Real alpha, MatrixElement<Real>* x, int num_elements) {",
+    "start_line": 1497
+  },
+  {
+    "name": "_cuda_matrix_add_indexed_values",
+    "return_type": "void",
+    "params": "MatrixDim dim, Real alpha, const Int32Pair* indices, const Real* x, int s, Real* data",
+    "full_signature": "__global__ static void _cuda_matrix_add_indexed_values(MatrixDim dim, Real alpha, const Int32Pair* indices, const Real* x, int s, Real* data) {",
+    "start_line": 1508
+  },
+  {
+    "name": "_cuda_matrix_add_to_elements",
+    "return_type": "void",
+    "params": "Real alpha, Real* mat, MatrixDim dim, const MatrixIndexT_cuda* elements",
+    "full_signature": "__global__ static void _cuda_matrix_add_to_elements(Real alpha, Real* mat, MatrixDim dim, const MatrixIndexT_cuda* elements) {",
+    "start_line": 1520
+  },
+  {
+    "name": "_matrix_lookup",
+    "return_type": "void",
+    "params": "const Real *data, MatrixDim dim, const Int32Pair *indices, int indices_size, Real *output",
+    "full_signature": "__global__ static void _matrix_lookup(const Real *data, MatrixDim dim, const Int32Pair *indices, int indices_size, Real *output) {",
+    "start_line": 1535
+  },
+  {
+    "name": "_equal_element_mask",
+    "return_type": "void",
+    "params": "const Real *mat1, const Real *mat2, Real *mask, MatrixDim mat1_dim, int mat2_stride, int mask_stride",
+    "full_signature": "__global__ static void _equal_element_mask(const Real *mat1, const Real *mat2, Real *mask, MatrixDim mat1_dim, int mat2_stride, int mask_stride) {",
+    "start_line": 1548
+  },
+  {
+    "name": "_vec_transform_reduce",
+    "return_type": "void",
+    "params": " const Real* v, Real* result, const int dim, const int inc, const TransReduceOp<TransReduceType, Real> op",
+    "full_signature": "__global__ static void _vec_transform_reduce( const Real* v, Real* result, const int dim, const int inc, const TransReduceOp<TransReduceType, Real> op) {",
+    "start_line": 1782
+  },
+  {
+    "name": "_strided_reduction_fused_kernel",
+    "return_type": "void",
+    "params": "Real * __restrict__ dots, const Real * __restrict__ data, void * __restrict__ scratch, const MatrixDim d, const TransReduceOp<TransReduceType, Real> op",
+    "full_signature": "__global__ void _strided_reduction_fused_kernel(Real * __restrict__ dots, const Real * __restrict__ data, void * __restrict__ scratch, const MatrixDim d, const TransReduceOp<TransReduceType, Real> op)",
+    "start_line": 1868
+  },
+  {
+    "name": "_transform_reduce_mat_rows",
+    "return_type": "void",
+    "params": " Real *result, const Real *mat, const MatrixDim d, const TransReduceOp<TransReduceType, Real> op",
+    "full_signature": "__global__ static void _transform_reduce_mat_rows( Real *result, const Real *mat, const MatrixDim d, const TransReduceOp<TransReduceType, Real> op) {",
+    "start_line": 1997
+  },
+  {
+    "name": "_transform_reduce_mat_cols",
+    "return_type": "void",
+    "params": " Real *result, const Real *mat, const MatrixDim d, const TransReduceOp<TransReduceType, Real> op",
+    "full_signature": "__global__ static void _transform_reduce_mat_cols( Real *result, const Real *mat, const MatrixDim d, const TransReduceOp<TransReduceType, Real> op) {",
+    "start_line": 2041
+  },
+  {
+    "name": "_group_transform_reduce",
+    "return_type": "void",
+    "params": " Real *y, const Real *x, const MatrixDim d, const int src_stride, const int group_size, const TransReduceOp<TransReduceType, Real> op",
+    "full_signature": "__global__ static void _group_transform_reduce( Real *y, const Real *x, const MatrixDim d, const int src_stride, const int group_size, const TransReduceOp<TransReduceType, Real> op) {",
+    "start_line": 2081
+  },
+  {
+    "name": "_vec_apply_floor",
+    "return_type": "void",
+    "params": "Real *v, Real floor_val, float *count, int dim",
+    "full_signature": "__global__ static void _vec_apply_floor(Real *v, Real floor_val, float *count, int dim) {",
+    "start_line": 2145
+  },
+  {
+    "name": "_vec_apply_ceiling",
+    "return_type": "void",
+    "params": "Real *v, Real ceiling_val, float *count, int dim",
+    "full_signature": "__global__ static void _vec_apply_ceiling(Real *v, Real ceiling_val, float *count, int dim) {",
+    "start_line": 2160
+  },
+  {
+    "name": "_copy_cols",
+    "return_type": "void",
+    "params": "Real* dst, const Real *src, const MatrixIndexT_cuda* reorder, MatrixDim dst_dim, int src_stride",
+    "full_signature": "__global__ static void _copy_cols(Real* dst, const Real *src, const MatrixIndexT_cuda* reorder, MatrixDim dst_dim, int src_stride) {",
+    "start_line": 2176
+  },
+  {
+    "name": "_add_cols",
+    "return_type": "void",
+    "params": "Real* dst, const Real *src, const MatrixIndexT_cuda* reorder, MatrixDim dst_dim, int src_stride",
+    "full_signature": "__global__ static void _add_cols(Real* dst, const Real *src, const MatrixIndexT_cuda* reorder, MatrixDim dst_dim, int src_stride) {",
+    "start_line": 2195
+  },
+  {
+    "name": "_copy_rows",
+    "return_type": "void",
+    "params": "Real* dst, const Real *src, const MatrixIndexT_cuda* reorder, MatrixDim dst_dim, int src_stride",
+    "full_signature": "__global__ static void _copy_rows(Real* dst, const Real *src, const MatrixIndexT_cuda* reorder, MatrixDim dst_dim, int src_stride) {",
+    "start_line": 2212
+  },
+  {
+    "name": "_copy_rows",
+    "return_type": "void",
+    "params": "Real* dst, const Real * const *src, MatrixDim dst_dim",
+    "full_signature": "__global__ static void _copy_rows(Real* dst, const Real * const *src, MatrixDim dst_dim) {",
+    "start_line": 2231
+  },
+  {
+    "name": "_copy_to_rows",
+    "return_type": "void",
+    "params": "Real* const * dst, const Real *src, MatrixDim src_dim",
+    "full_signature": "__global__ static void _copy_to_rows(Real* const * dst, const Real *src, MatrixDim src_dim) {",
+    "start_line": 2247
+  },
+  {
+    "name": "_add_rows",
+    "return_type": "void",
+    "params": "Real alpha, Real* dst, const Real *src, const MatrixIndexT_cuda* reorder, MatrixDim dst_dim, int src_stride",
+    "full_signature": "__global__ static void _add_rows(Real alpha, Real* dst, const Real *src, const MatrixIndexT_cuda* reorder, MatrixDim dst_dim, int src_stride) {",
+    "start_line": 2261
+  },
+  {
+    "name": "_mul_rows",
+    "return_type": "void",
+    "params": "Real* dst, const Real *src, const MatrixIndexT_cuda* reorder, MatrixDim dst_dim, int src_stride",
+    "full_signature": "__global__ static void _mul_rows(Real* dst, const Real *src, const MatrixIndexT_cuda* reorder, MatrixDim dst_dim, int src_stride) {",
+    "start_line": 2277
+  },
+  {
+    "name": "_add_rows",
+    "return_type": "void",
+    "params": "Real alpha, Real* dst, const Real * const *src, MatrixDim dst_dim",
+    "full_signature": "__global__ static void _add_rows(Real alpha, Real* dst, const Real * const *src, MatrixDim dst_dim) {",
+    "start_line": 2294
+  },
+  {
+    "name": "_add_to_rows",
+    "return_type": "void",
+    "params": "Real alpha, Real* dst, const Real *src, const MatrixIndexT_cuda* reorder, MatrixDim src_dim, int dst_stride",
+    "full_signature": "__global__ static void _add_to_rows(Real alpha, Real* dst, const Real *src, const MatrixIndexT_cuda* reorder, MatrixDim src_dim, int dst_stride) {",
+    "start_line": 2308
+  },
+  {
+    "name": "_add_to_rows",
+    "return_type": "void",
+    "params": "Real alpha, Real* const * dst, const Real *src, MatrixDim src_dim",
+    "full_signature": "__global__ static void _add_to_rows(Real alpha, Real* const * dst, const Real *src, MatrixDim src_dim) {",
+    "start_line": 2324
+  },
+  {
+    "name": "_invert_elements",
+    "return_type": "void",
+    "params": "Real* data, MatrixDim d",
+    "full_signature": "__global__ static void _invert_elements(Real* data, MatrixDim d) {",
+    "start_line": 2337
+  },
+  {
+    "name": "_add_mat_blockmat_trans",
+    "return_type": "void",
+    "params": "Real *data, MatrixDim dim, const Real *A_data, int A_num_rows, int A_num_cols, int A_row_stride, int A_col_stride, const CuBlockMatrixData *B_cu_data, int B_num_blocks, Real alpha, Real beta",
+    "full_signature": "__global__ static void _add_mat_blockmat_trans(Real *data, MatrixDim dim, const Real *A_data, int A_num_rows, int A_num_cols, int A_row_stride, int A_col_stride, const CuBlockMatrixData *B_cu_data, in",
+    "start_line": 2349
+  },
+  {
+    "name": "_add_mat_blockmat",
+    "return_type": "void",
+    "params": "Real *data, MatrixDim dim, const Real *A_data, int A_num_rows, int A_num_cols, int A_row_stride, int A_col_stride, const CuBlockMatrixData *B_cu_data, int B_num_blocks, Real alpha, Real beta",
+    "full_signature": "__global__ static void _add_mat_blockmat(Real *data, MatrixDim dim, const Real *A_data, int A_num_rows, int A_num_cols, int A_row_stride, int A_col_stride, const CuBlockMatrixData *B_cu_data, int B_nu",
+    "start_line": 2387
+  },
+  {
+    "name": "_block_add_mat_mat",
+    "return_type": "void",
+    "params": "CuBlockMatrixData *B_cu_data, int num_blocks, const Real *C_data, int C_num_cols, int C_row_stride, int C_col_stride, const Real *D_data, int D_row_stride, int D_col_stride, Real alpha, Real beta",
+    "full_signature": "__global__ static void _block_add_mat_mat(CuBlockMatrixData *B_cu_data, int num_blocks, const Real *C_data, int C_num_cols, int C_row_stride, int C_col_stride, const Real *D_data, int D_row_stride, in",
+    "start_line": 2431
+  },
+  {
+    "name": "_blockadd_mat_blockmat_trans",
+    "return_type": "void",
+    "params": "Real *data, MatrixDim dim, const Real *A_data, int A_num_rows, int A_num_cols, int A_row_stride, int A_col_stride, const CuBlockMatrixData *B_cu_data, int B_num_blocks, Real alpha, Real beta",
+    "full_signature": "__global__ static void _blockadd_mat_blockmat_trans(Real *data, MatrixDim dim, const Real *A_data, int A_num_rows, int A_num_cols, int A_row_stride, int A_col_stride, const CuBlockMatrixData *B_cu_dat",
+    "start_line": 2468
+  },
+  {
+    "name": "_sum_column_ranges",
+    "return_type": "void",
+    "params": "Real *data, MatrixDim dim, const Real *src_data, MatrixDim src_dim, const Int32Pair *indices",
+    "full_signature": "__global__ static void _sum_column_ranges(Real *data, MatrixDim dim, const Real *src_data, MatrixDim src_dim, const Int32Pair *indices) {",
+    "start_line": 2507
+  },
+  {
+    "name": "_add_row_ranges",
+    "return_type": "void",
+    "params": "Real *data, MatrixDim dim, const Real *src_data, MatrixDim src_dim, const Int32Pair *indexes",
+    "full_signature": "__global__ static void _add_row_ranges(Real *data, MatrixDim dim, const Real *src_data, MatrixDim src_dim, const Int32Pair *indexes) {",
+    "start_line": 2524
+  },
+  {
+    "name": "_soft_hinge",
+    "return_type": "void",
+    "params": "Real*y, const Real*x, MatrixDim d, int src_stride",
+    "full_signature": "__global__ static void _soft_hinge(Real*y, const Real*x, MatrixDim d, int src_stride) {",
+    "start_line": 2538
+  },
+  {
+    "name": "_group_pnorm",
+    "return_type": "void",
+    "params": "Real *y, const Real *x, MatrixDim d, int src_stride, int group_size, Real power",
+    "full_signature": "__global__ static void _group_pnorm(Real *y, const Real *x, MatrixDim d, int src_stride, int group_size, Real power) {",
+    "start_line": 2555
+  },
+  {
+    "name": "_sigmoid",
+    "return_type": "void",
+    "params": "Real*y, const Real*x, MatrixDim d, int src_stride",
+    "full_signature": "__global__ static void _sigmoid(Real*y, const Real*x, MatrixDim d, int src_stride) {",
+    "start_line": 2602
+  },
+  {
+    "name": "_diff_sigmoid",
+    "return_type": "void",
+    "params": "Real*eout, const Real*e, const Real*y, MatrixDim d, int e_stride, int y_stride",
+    "full_signature": "__global__ static void _diff_sigmoid(Real*eout, const Real*e, const Real*y, MatrixDim d, int e_stride, int y_stride) {",
+    "start_line": 2614
+  },
+  {
+    "name": "_tanh",
+    "return_type": "void",
+    "params": "Real*y, const Real*x, MatrixDim d, int src_stride",
+    "full_signature": "__global__ static void _tanh(Real*y, const Real*x, MatrixDim d, int src_stride) {",
+    "start_line": 2627
+  },
+  {
+    "name": "_diff_tanh",
+    "return_type": "void",
+    "params": "Real*eout, const Real*e, const Real*y, MatrixDim d, int e_stride, int y_stride",
+    "full_signature": "__global__ static void _diff_tanh(Real*eout, const Real*e, const Real*y, MatrixDim d, int e_stride, int y_stride) {",
+    "start_line": 2645
+  },
+  {
+    "name": "_ensure_nonzero",
+    "return_type": "void",
+    "params": "const Real *x, MatrixDim d, Real epsilon, int y_stride, Real *y",
+    "full_signature": "__global__ static void _ensure_nonzero(const Real *x, MatrixDim d, Real epsilon, int y_stride, Real *y) {",
+    "start_line": 2672
+  },
+  {
+    "name": "_parametric_relu",
+    "return_type": "void",
+    "params": "Real* y, const Real* x, MatrixDim d, int src_stride, const Real* a, const Real* b",
+    "full_signature": "__global__ static void _parametric_relu(Real* y, const Real* x, MatrixDim d, int src_stride, const Real* a, const Real* b) {",
+    "start_line": 2694
+  },
+  {
+    "name": "_diff_parametric_relu",
+    "return_type": "void",
+    "params": "Real* eout, const Real* e, const Real* y, MatrixDim d, int e_stride, int y_stride, const Real* a, const Real* b",
+    "full_signature": "__global__ static void _diff_parametric_relu(Real* eout, const Real* e, const Real* y, MatrixDim d, int e_stride, int y_stride, const Real* a, const Real* b) {",
+    "start_line": 2708
+  },
+  {
+    "name": "_heaviside",
+    "return_type": "void",
+    "params": "Real* y, const Real* x, MatrixDim d, int src_stride",
+    "full_signature": "__global__ static void _heaviside(Real* y, const Real* x, MatrixDim d, int src_stride) {",
+    "start_line": 2722
+  },
+  {
+    "name": "_exp",
+    "return_type": "void",
+    "params": "Real* y, const Real* x, MatrixDim d, int src_stride",
+    "full_signature": "__global__ static void _exp(Real* y, const Real* x, MatrixDim d, int src_stride) {",
+    "start_line": 2734
+  },
+  {
+    "name": "_pow",
+    "return_type": "void",
+    "params": "Real* y, const Real* x, Real power, MatrixDim d, int src_stride",
+    "full_signature": "__global__ static void _pow(Real* y, const Real* x, Real power, MatrixDim d, int src_stride) {",
+    "start_line": 2746
+  },
+  {
+    "name": "_ceiling",
+    "return_type": "void",
+    "params": "Real* y, const Real* x, Real ceiling_val, MatrixDim d, int src_stride",
+    "full_signature": "__global__ static void _ceiling(Real* y, const Real* x, Real ceiling_val, MatrixDim d, int src_stride) {",
+    "start_line": 2757
+  },
+  {
+    "name": "_floor",
+    "return_type": "void",
+    "params": "Real* y, const Real* x, Real floor_val, MatrixDim d, int src_stride",
+    "full_signature": "__global__ static void _floor(Real* y, const Real* x, Real floor_val, MatrixDim d, int src_stride) {",
+    "start_line": 2769
+  },
+  {
+    "name": "_exp_limited",
+    "return_type": "void",
+    "params": "Real* y, const Real* x, Real lower_limit, Real upper_limit, MatrixDim d, int src_stride",
+    "full_signature": "__global__ static void _exp_limited(Real* y, const Real* x, Real lower_limit, Real upper_limit, MatrixDim d, int src_stride) {",
+    "start_line": 2781
+  },
+  {
+    "name": "_exp_special",
+    "return_type": "void",
+    "params": "Real* y, const Real* x, MatrixDim d, int src_stride",
+    "full_signature": "__global__ static void _exp_special(Real* y, const Real* x, MatrixDim d, int src_stride) {",
+    "start_line": 2804
+  },
+  {
+    "name": "_log",
+    "return_type": "void",
+    "params": "Real* y, const Real* x, MatrixDim d, int src_stride",
+    "full_signature": "__global__ static void _log(Real* y, const Real* x, MatrixDim d, int src_stride) {",
+    "start_line": 2821
+  },
+  {
+    "name": "_pow_abs",
+    "return_type": "void",
+    "params": "Real* y, const Real* x, Real power, bool include_sign, MatrixDim d, int src_stride",
+    "full_signature": "__global__ static void _pow_abs(Real* y, const Real* x, Real power, bool include_sign, MatrixDim d, int src_stride) {",
+    "start_line": 2831
+  },
+  {
+    "name": "_softmax_reduce",
+    "return_type": "void",
+    "params": "Real*y, const Real*x, MatrixDim d, int src_stride",
+    "full_signature": "__global__ static void _softmax_reduce(Real*y, const Real*x, MatrixDim d, int src_stride) {",
+    "start_line": 2848
+  },
+  {
+    "name": "_normalize_per_row",
+    "return_type": "void",
+    "params": "Real *y, int y_stride, const Real *x, MatrixDim x_d, Real target_rms, bool add_log_stddev",
+    "full_signature": "__global__ static void _normalize_per_row(Real *y, int y_stride, const Real *x, MatrixDim x_d, Real target_rms, bool add_log_stddev) {",
+    "start_line": 2908
+  },
+  {
+    "name": "_diff_normalize_per_row",
+    "return_type": "void",
+    "params": "Real *id, int id_stride, const Real *iv, MatrixDim iv_dim, const Real* od, int od_stride, Real target_rms, bool add_log_stddev",
+    "full_signature": "__global__ static void _diff_normalize_per_row(Real *id, int id_stride, const Real *iv, MatrixDim iv_dim, const Real* od, int od_stride, Real target_rms, bool add_log_stddev) {",
+    "start_line": 2949
+  },
+  {
+    "name": "_log_softmax_reduce",
+    "return_type": "void",
+    "params": "Real* y, const Real* x, MatrixDim y_dim, int x_stride",
+    "full_signature": "__global__ static void _log_softmax_reduce(Real* y, const Real* x, MatrixDim y_dim, int x_stride) {",
+    "start_line": 3040
+  },
+  {
+    "name": "_splice",
+    "return_type": "void",
+    "params": "Real* y, const Real* x, const int32_cuda* off, MatrixDim d_out, MatrixDim d_in",
+    "full_signature": "__global__ static void _splice(Real* y, const Real* x, const int32_cuda* off, MatrixDim d_out, MatrixDim d_in) {",
+    "start_line": 3088
+  },
+  {
+    "name": "_take_mean",
+    "return_type": "void",
+    "params": "const Real* x, Real* y, MatrixDim d_in",
+    "full_signature": "__global__ static void _take_mean(const Real* x, Real* y, MatrixDim d_in) {",
+    "start_line": 3106
+  },
+  {
+    "name": "_take_lower",
+    "return_type": "void",
+    "params": "const Real* x, Real* y, MatrixDim d_in",
+    "full_signature": "__global__ static void _take_lower(const Real* x, Real* y, MatrixDim d_in) {",
+    "start_line": 3119
+  },
+  {
+    "name": "_take_upper",
+    "return_type": "void",
+    "params": "const Real* x, Real* y, MatrixDim d_in",
+    "full_signature": "__global__ static void _take_upper(const Real* x, Real* y, MatrixDim d_in) {",
+    "start_line": 3132
+  },
+  {
+    "name": "_vec_copy_diag_from_packed",
+    "return_type": "void",
+    "params": "Real* y, const Real* x, int dim",
+    "full_signature": "__global__ static void _vec_copy_diag_from_packed(Real* y, const Real* x, int dim) {",
+    "start_line": 3144
+  },
+  {
+    "name": "_copy_from_sp",
+    "return_type": "void",
+    "params": "const Real* x, Real* y, MatrixDim dim",
+    "full_signature": "__global__ static void _copy_from_sp(const Real* x, Real* y, MatrixDim dim) {",
+    "start_line": 3154
+  },
+  {
+    "name": "_copy",
+    "return_type": "void",
+    "params": "Real* y, const Real* x, const int32_cuda* copy_from, MatrixDim d_out, MatrixDim d_in",
+    "full_signature": "__global__ static void _copy(Real* y, const Real* x, const int32_cuda* copy_from, MatrixDim d_out, MatrixDim d_in) {",
+    "start_line": 3170
+  },
+  {
+    "name": "_one",
+    "return_type": "void",
+    "params": "Real* x, int dim",
+    "full_signature": "__global__ static void _one(Real* x, int dim) {",
+    "start_line": 3187
+  },
+  {
+    "name": "_randomize",
+    "return_type": "void",
+    "params": "Real* y, const Real* x, const int32_cuda* copy_from, MatrixDim d_out, MatrixDim d_in",
+    "full_signature": "__global__ static void _randomize(Real* y, const Real* x, const int32_cuda* copy_from, MatrixDim d_out, MatrixDim d_in) {",
+    "start_line": 3196
+  },
+  {
+    "name": "_regularize_l1",
+    "return_type": "void",
+    "params": "Real* wei, Real* grad, Real l1, Real lr, MatrixDim d, int stride_grad",
+    "full_signature": "__global__ static void _regularize_l1(Real* wei, Real* grad, Real l1, Real lr, MatrixDim d, int stride_grad) {",
+    "start_line": 3209
+  },
+  {
+    "name": "_find_row_max_id",
+    "return_type": "void",
+    "params": "const Real* mat, Real* vec_val, int32_cuda* vec_id, MatrixDim d",
+    "full_signature": "__global__ static void _find_row_max_id(const Real* mat, Real* vec_val, int32_cuda* vec_id, MatrixDim d) {",
+    "start_line": 3237
+  },
+  {
+    "name": "_diff_xent",
+    "return_type": "void",
+    "params": "const int32_cuda* vec_tgt, Real* mat_net_out, Real* vec_log_post, MatrixDim d",
+    "full_signature": "__global__ static void _diff_xent(const int32_cuda* vec_tgt, Real* mat_net_out, Real* vec_log_post, MatrixDim d) {",
+    "start_line": 3297
+  },
+  {
+    "name": "_diff_softmax",
+    "return_type": "void",
+    "params": "Real* x, const MatrixDim dim, const Real* value, const int value_stride, const Real* diff, const int diff_stride",
+    "full_signature": "__global__ static void _diff_softmax(Real* x, const MatrixDim dim, const Real* value, const int value_stride, const Real* diff, const int diff_stride) {",
+    "start_line": 3316
+  },
+  {
+    "name": "_diff_log_softmax",
+    "return_type": "void",
+    "params": "const MatrixDim in_deriv_dim, const Real* out_value, const int out_value_stride, const Real* out_deriv, const int out_deriv_stride, Real* in_deriv",
+    "full_signature": "__global__ static void _diff_log_softmax(const MatrixDim in_deriv_dim, const Real* out_value, const int out_value_stride, const Real* out_deriv, const int out_deriv_stride, Real* in_deriv) {",
+    "start_line": 3356
+  },
+  {
+    "name": "_lstm_nonlinearity",
+    "return_type": "void",
+    "params": "const Real* in, const int in_stride, const Real* params, const int params_stride, const int out_stride, const int cell_dim, const int have_dropout_mask, const int num_rows, Real* out",
+    "full_signature": "__global__ static void _lstm_nonlinearity(const Real* in, const int in_stride, const Real* params, const int params_stride, const int out_stride, const int cell_dim, const int have_dropout_mask, const",
+    "start_line": 3424
+  },
+  {
+    "name": "_diff_lstm_nonlinearity",
+    "return_type": "void",
+    "params": "const int cell_dim, const int have_dropout_mask, const int num_rows, const Real* input, const int input_stride, const Real* params, const int params_stride, const Real* output_deriv, const int output_deriv_stride, const double* deriv_sum_in, const int deriv_sum_in_stride, const Real* self_repair_config, double count, Real* input_deriv, const int input_deriv_stride, Real* params_deriv, const int params_deriv_stride, double* value_sum_out, const int value_sum_out_stride, double* deriv_sum_out, const int deriv_sum_out_stride, Real* self_repair_sum_out, const int self_repair_sum_out_stride",
+    "full_signature": "__global__ static void _diff_lstm_nonlinearity(const int cell_dim, const int have_dropout_mask, const int num_rows, const Real* input, const int input_stride, const Real* params, const int params_stri",
+    "start_line": 3552
+  },
+  {
+    "name": "_cuda_compress_uint8_sign",
+    "return_type": "void",
+    "params": "const BaseFloat *src, MatrixDim dim, unsigned char *dest, int dest_stride",
+    "full_signature": "__global__ static void _cuda_compress_uint8_sign(const BaseFloat *src, MatrixDim dim, unsigned char *dest, int dest_stride) {",
+    "start_line": 3876
+  },
+  {
+    "name": "_cuda_compress_bounds_check",
+    "return_type": "void",
+    "params": "const BaseFloat *src, MatrixDim dim, I *dest, int dest_stride, float inv_scale",
+    "full_signature": "__global__ static void _cuda_compress_bounds_check(const BaseFloat *src, MatrixDim dim, I *dest, int dest_stride, float inv_scale) {",
+    "start_line": 3909
+  },
+  {
+    "name": "_cuda_compress_no_bounds_check",
+    "return_type": "void",
+    "params": "const BaseFloat *src, MatrixDim dim, I *dest, int dest_stride, float inv_scale",
+    "full_signature": "__global__ static void _cuda_compress_no_bounds_check(const BaseFloat *src, MatrixDim dim, I *dest, int dest_stride, float inv_scale) {",
+    "start_line": 3940
+  },
+  {
+    "name": "_cuda_uncompress",
+    "return_type": "void",
+    "params": "BaseFloat *dest, MatrixDim dim, const I *src, int src_stride, float scale",
+    "full_signature": "__global__ static void _cuda_uncompress(BaseFloat *dest, MatrixDim dim, const I *src, int src_stride, float scale) {",
+    "start_line": 3957
+  },
+  {
+    "name": "_cuda_mat_copy_range_clamped",
+    "return_type": "void",
+    "params": " int32_t row_start, int32_t row_end, int32_t num_cols, const Real * __restrict__ src, int32_t lds, int32_t clamp_low, int32_t clamp_high, Real * __restrict__ dst, int32_t ldd",
+    "full_signature": "__global__ void _cuda_mat_copy_range_clamped( int32_t row_start, int32_t row_end, int32_t num_cols, const Real * __restrict__ src, int32_t lds, int32_t clamp_low, int32_t clamp_high, Real * __restrict",
+    "start_line": 3972
+  },
+  {
+    "name": "_cuda_batch_copy_mats",
+    "return_type": "void",
+    "params": "BatchedMatrixCopyDesc<Real> batch_desc",
+    "full_signature": "__global__ void _cuda_batch_copy_mats(BatchedMatrixCopyDesc<Real> batch_desc) {",
+    "start_line": 4017
+  },
+  {
+    "name": "_noop_kernel",
+    "return_type": "void",
+    "params": "",
+    "full_signature": "__global__ static void _noop_kernel() {",
+    "start_line": 4042
+  }
+]
