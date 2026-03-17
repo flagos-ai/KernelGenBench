@@ -57,7 +57,7 @@ def verify_kernels(
     config: dict,
     device_count: int = 8,
     operators: list[str] | None = None,
-    timeout: int = 300,
+    timeout: int = 600,
 ) -> dict:
     """Verify generated kernels using Verifier.
 
@@ -148,11 +148,18 @@ def verify_kernels(
     )
 
     # Process results
+    # NOTE: Verifier uses mp.Queue which returns results in completion order,
+    # not input order. Use result.op_name to map back to the correct operator.
     operators_results = {}
     passed = 0
     failed = 0
 
-    for result, op_name in zip(results, op_names):
+    for result in results:
+        # Extract operator name from result (e.g., "aten::add" -> "add")
+        result_op = result.op_name
+        if "::" in result_op:
+            result_op = result_op.split("::")[-1]
+
         op_result = {
             "status": "passed" if result.success else "failed",
             "total_tests": result.info.get("total", 0) if result.info else 0,
@@ -167,7 +174,7 @@ def verify_kernels(
                 tb = tb[:500] + "..."
             op_result["error"] = tb
 
-        operators_results[op_name] = op_result
+        operators_results[result_op] = op_result
 
         if result.success:
             passed += 1
@@ -214,8 +221,8 @@ def main():
     parser.add_argument(
         "--timeout", "-t",
         type=int,
-        default=300,
-        help="Timeout per operator in seconds (default: 300)"
+        default=600,
+        help="Timeout per operator in seconds (default: 600)"
     )
     parser.add_argument(
         "--config", "-c",

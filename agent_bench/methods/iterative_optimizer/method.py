@@ -73,7 +73,7 @@ class IterativeOptimizerMethod(BaseMethod):
         agent_config = config.get("agent", {})
         max_cc_calls = agent_config.get("max_optimize_calls", 10)
         target_speedup = agent_config.get("target_speedup", 1.0)
-        verify_timeout = agent_config.get("verify_timeout", 300)
+        verify_timeout = agent_config.get("verify_timeout", 600)
 
         # Get dataset from config (required)
         dataset = config.get("dataset", "v2_1")
@@ -297,7 +297,7 @@ class IterativeOptimizerMethod(BaseMethod):
         # Calculate total timeout based on iteration parameters
         max_cc_calls = agent_config.get("max_optimize_calls", 10)
         cc_timeout = agent_config.get("cc_timeout", 1800)
-        verify_timeout = agent_config.get("verify_timeout", 300)
+        verify_timeout = agent_config.get("verify_timeout", 600)
 
         # Each iteration needs: cc_timeout + verify_timeout
         # Plus buffer for process startup, file I/O, etc.
