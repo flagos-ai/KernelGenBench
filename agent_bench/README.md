@@ -77,6 +77,7 @@ agent_bench/
 | v2 | 49 | PyTorch 基础算子 |
 | v2_1 | 110 | PyTorch 扩展算子 |
 | cupy | 48 | cuBLAS 算子 |
+| KernelGenBench | 210 | 110 aten + 50 vllm13 + 50 cublas |
 
 ## 分步执行
 

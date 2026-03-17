@@ -33,22 +33,39 @@ def load_config(config_path: Path) -> dict:
         return yaml.safe_load(f)
 
 
-def get_test_module(dataset: str, config: dict) -> str:
-    """Get test module path for dataset."""
+def get_test_modules(dataset: str, config: dict) -> list[str]:
+    """Get test module path(s) for dataset.
+
+    Returns a list of module paths (KernelGenBench needs multiple).
+    """
     test_modules = config.get("test_modules", {})
     if dataset in test_modules:
-        return str(PROJECT_ROOT / test_modules[dataset])
+        val = test_modules[dataset]
+        if isinstance(val, list):
+            return [str(PROJECT_ROOT / m) for m in val]
+        return [str(PROJECT_ROOT / val)]
 
     # Defaults
     defaults = {
-        "v2": "src/flagbench/accuracy/test_v2_ops.py",
-        "v2_1": "src/flagbench/accuracy/test_v2_1_ops_with_benchmark.py",
-        "cupy": "src/flagbench/accuracy/cublas/test_cublas_ops.py",
+        "v2": ["src/flagbench/accuracy/test_v2_ops.py"],
+        "v2_1": ["src/flagbench/accuracy/test_v2_1_ops_with_benchmark.py"],
+        "cupy": ["src/flagbench/accuracy/cublas/test_cublas_ops.py"],
+        "KernelGenBench": [
+            "src/flagbench/accuracy/test_v2_1_ops_with_benchmark.py",
+            "src/flagbench/accuracy/vllm13/",
+            "src/flagbench/accuracy/cublas/",
+        ],
     }
     if dataset in defaults:
-        return str(PROJECT_ROOT / defaults[dataset])
+        return [str(PROJECT_ROOT / m) for m in defaults[dataset]]
 
     raise ValueError(f"No test module configured for dataset: {dataset}")
+
+
+def get_test_module(dataset: str, config: dict) -> str:
+    """Get test module path for dataset (backward compat, returns first module)."""
+    modules = get_test_modules(dataset, config)
+    return modules[0] if modules else None
 
 
 def verify_kernels(
@@ -78,10 +95,11 @@ def verify_kernels(
     if not kernels_dir.exists():
         raise ValueError(f"Kernels directory not found: {kernels_dir}")
 
-    # Get test module
-    test_module = get_test_module(dataset, config)
-    if not Path(test_module).exists():
-        raise ValueError(f"Test module not found: {test_module}")
+    # Get test modules
+    test_modules = get_test_modules(dataset, config)
+    for m in test_modules:
+        if not Path(m).exists():
+            raise ValueError(f"Test module not found: {m}")
 
     # Setup environment
     os.environ["DISPATCH_TORCH_LIB"] = "1"
@@ -101,13 +119,16 @@ def verify_kernels(
     )
 
     verifier = Verifier(verify_config)
-    verifier.set_modules(modules=[test_module], mode="accuracy")
+    verifier.set_modules(modules=test_modules, mode="accuracy")
 
     # Collect kernels to verify
     kernel_files = list(kernels_dir.glob("*.py"))
     if operators:
         filter_ops = set(operators)
-        kernel_files = [f for f in kernel_files if f.stem in filter_ops]
+        kernel_files = [f for f in kernel_files
+                        if f.stem in filter_ops
+                        or (dataset == "KernelGenBench" and "__" in f.stem
+                            and f.stem.split("__", 1)[1] in filter_ops)]
 
     logger.info(f"Found {len(kernel_files)} kernels to verify")
 
@@ -115,12 +136,17 @@ def verify_kernels(
     verify_requests = []
     op_names = []
 
-    # Determine namespace based on dataset
-    namespace = "cupy" if dataset == "cupy" else "aten"
+    # Determine namespace: for KernelGenBench, extract from filename (namespace__opname.py)
+    default_namespace = "cupy" if dataset == "cupy" else "aten"
 
     for kernel_file in sorted(kernel_files):
-        op_name = kernel_file.stem
-        full_name = f"{namespace}::{op_name}"
+        stem = kernel_file.stem
+        if dataset == "KernelGenBench" and "__" in stem:
+            ns, op_name = stem.split("__", 1)
+            full_name = f"{ns}::{op_name}"
+        else:
+            op_name = stem
+            full_name = f"{default_namespace}::{op_name}"
 
         with open(kernel_file) as f:
             kernel_code = f.read()
@@ -246,7 +272,6 @@ def main():
         action="store_true",
         help="Enable debug logging"
     )
-
     args = parser.parse_args()
 
     log_level = logging.DEBUG if args.verbose else logging.INFO

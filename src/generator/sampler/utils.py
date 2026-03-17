@@ -311,7 +311,7 @@ def query_server(
         )
         outputs = [choice.message.content for choice in response.choices]
     elif server_type == "ksyun":
-        response = client.chat.completions.create(
+        ksyun_kwargs = dict(
             model=model,
             messages=[
                 {"role": "system", "content": system_prompt},
@@ -321,8 +321,12 @@ def query_server(
             temperature=temperature,
             n=num_completions,
             max_tokens=max_tokens,
-            top_p=top_p,
         )
+        # Claude models don't support both temperature and top_p
+        _no_top_p_models = ("mco", "ep-20260313004351-feb36", "ep-20260317033721-n8ndf")
+        if not model.startswith(_no_top_p_models):
+            ksyun_kwargs["top_p"] = top_p
+        response = client.chat.completions.create(**ksyun_kwargs)
         outputs = [choice.message.content for choice in response.choices]
     elif server_type == "anthropic":
         assert type(prompt) == str

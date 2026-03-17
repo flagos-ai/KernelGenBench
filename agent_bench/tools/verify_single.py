@@ -36,21 +36,26 @@ logger = logging.getLogger(__name__)
 
 # Default test module paths - can be overridden via config
 DEFAULT_TEST_MODULES = {
-    "v2": "src/flagbench/accuracy/test_v2_ops.py",
-    "v2_1": "src/flagbench/accuracy/test_v2_1_ops_with_benchmark.py",
-    "cupy": "src/flagbench/accuracy/cublas/test_cublas_ops.py",
+    "v2": ["src/flagbench/accuracy/test_v2_ops.py"],
+    "v2_1": ["src/flagbench/accuracy/test_v2_1_ops_with_benchmark.py"],
+    "cupy": ["src/flagbench/accuracy/cublas/test_cublas_ops.py"],
+    "KernelGenBench": [
+        "src/flagbench/accuracy/test_v2_1_ops_with_benchmark.py",
+        "src/flagbench/accuracy/vllm13/",
+        "src/flagbench/accuracy/cublas/",
+    ],
 }
 
 
-def get_test_module(dataset: str, config: dict = None) -> str:
-    """Get test module path for dataset.
+def get_test_modules(dataset: str, config: dict = None) -> list[str]:
+    """Get test module path(s) for dataset.
 
     Args:
-        dataset: Dataset name (v2, v2_1, cupy, etc.)
+        dataset: Dataset name (v2, v2_1, cupy, KernelGenBench, etc.)
         config: Optional config dict with custom test_modules mapping
 
     Returns:
-        Absolute path to test module
+        List of absolute paths to test modules
 
     Raises:
         ValueError: If no test module configured for dataset
@@ -59,13 +64,22 @@ def get_test_module(dataset: str, config: dict = None) -> str:
     if config:
         test_modules = config.get("test_modules", {})
         if dataset in test_modules:
-            return str(PROJECT_ROOT / test_modules[dataset])
+            val = test_modules[dataset]
+            if isinstance(val, list):
+                return [str(PROJECT_ROOT / m) for m in val]
+            return [str(PROJECT_ROOT / val)]
 
     # Fall back to defaults
     if dataset in DEFAULT_TEST_MODULES:
-        return str(PROJECT_ROOT / DEFAULT_TEST_MODULES[dataset])
+        return [str(PROJECT_ROOT / m) for m in DEFAULT_TEST_MODULES[dataset]]
 
     raise ValueError(f"No test module configured for dataset: {dataset}")
+
+
+def get_test_module(dataset: str, config: dict = None) -> str:
+    """Get test module path for dataset (backward compat, returns first module)."""
+    modules = get_test_modules(dataset, config)
+    return modules[0] if modules else None
 
 
 def _extract_avg_speedup(speedup_list):
@@ -87,6 +101,7 @@ def _extract_avg_speedup(speedup_list):
     speedups = [item.get('speedup') for item in speedup_list
                 if isinstance(item, dict) and isinstance(item.get('speedup'), (int, float))]
     return sum(speedups) / len(speedups) if speedups else None
+
 
 
 def verify_single_kernel(
@@ -132,9 +147,9 @@ def verify_single_kernel(
     with open(code_path) as f:
         kernel_code = f.read()
 
-    # Get test module
+    # Get test modules
     try:
-        test_module = get_test_module(dataset, config)
+        test_modules_list = get_test_modules(dataset, config)
     except ValueError as e:
         return {
             "passed": False,
@@ -144,14 +159,15 @@ def verify_single_kernel(
             "failed_tests": 0,
         }
 
-    if not Path(test_module).exists():
-        return {
-            "passed": False,
-            "error": f"Test module not found: {test_module}",
-            "total_tests": 0,
-            "passed_tests": 0,
-            "failed_tests": 0,
-        }
+    for m in test_modules_list:
+        if not Path(m).exists():
+            return {
+                "passed": False,
+                "error": f"Test module not found: {m}",
+                "total_tests": 0,
+                "passed_tests": 0,
+                "failed_tests": 0,
+            }
 
     # Setup environment
     os.environ["DISPATCH_TORCH_LIB"] = "1"
@@ -187,11 +203,14 @@ def verify_single_kernel(
         )
 
         verifier = Verifier(verify_config)
-        verifier.set_modules(modules=[test_module], mode="accuracy")
+        verifier.set_modules(modules=test_modules_list, mode="accuracy")
 
-        # Determine namespace based on dataset
-        namespace = "cupy" if dataset == "cupy" else "aten"
-        full_name = f"{namespace}::{operator}"
+        # Determine namespace: extract from operator name if it has ::, otherwise infer from dataset
+        if "::" in operator:
+            full_name = operator
+        else:
+            namespace = "cupy" if dataset == "cupy" else "aten"
+            full_name = f"{namespace}::{operator}"
 
         # Prepare verification request
         verify_req = VerifyRequest(
@@ -336,7 +355,6 @@ Examples:
         action="store_true",
         help="Enable verbose logging"
     )
-
     args = parser.parse_args()
 
     log_level = logging.DEBUG if args.verbose else logging.WARNING

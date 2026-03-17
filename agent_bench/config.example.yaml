@@ -21,10 +21,15 @@ paths:
   python: python         # Python 解释器路径
 
 # Dataset 到测试模块的映射 (相对于 flagbench/ 根目录)
+# KernelGenBench 需要多个测试模块（列表格式）
 test_modules:
   v2: src/flagbench/accuracy/test_v2_ops.py
   v2_1: src/flagbench/accuracy/test_v2_1_ops_with_benchmark.py
   cupy: src/flagbench/accuracy/cublas/test_cublas_ops.py
+  KernelGenBench:
+    - src/flagbench/accuracy/test_v2_1_ops_with_benchmark.py
+    - src/flagbench/accuracy/vllm13/
+    - src/flagbench/accuracy/cublas/
 
 # 轮询间隔 (秒)
 poll_interval: 10

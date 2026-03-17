@@ -710,7 +710,7 @@ class Verifier:
                             filtered_sources.append(s)
                             filtered_function_names.append(fn_name)
                             filtered_namespaces.append("triton")
-                    elif ns == "triton" and DISPATCH_TORCH_LIB:
+                    elif (ns == "triton" or ns == "") and DISPATCH_TORCH_LIB:
                         # DISPATCH_TORCH_LIB=1: 注册 triton 到 "triton" 命名空间
                         filtered_sources.append(s)
                         filtered_function_names.append(fn_name)
