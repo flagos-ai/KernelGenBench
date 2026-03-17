@@ -191,8 +191,19 @@ def run(args):
     if args.target_speedup is not None:
         config.setdefault("agent", {})["target_speedup"] = args.target_speedup
 
-    # Get method
-    method = get_method(args.method)
+    # Get method (auto-detect from run config when resuming)
+    method_name = args.method
+    if args.resume and method_name == "naive_cc":
+        # User didn't explicitly specify method, try to detect from run config
+        run_config_path = (SCRIPT_DIR / config.get("paths", {}).get("runs", "runs")
+                          / args.resume / "config.yaml")
+        if run_config_path.exists():
+            run_config = load_config(run_config_path)
+            saved_method = run_config.get("method")
+            if saved_method:
+                method_name = saved_method
+                logger.info(f"Auto-detected method from run config: {method_name}")
+    method = get_method(method_name)
     logger.info(f"Using method: {method.name}")
 
     # Paths
@@ -257,10 +268,18 @@ def run(args):
     # Check existing kernels (for resume)
     existing_kernels = set()
     if args.resume:
+        # When --op is specified with --resume, force re-run those operators
+        force_rerun = set()
+        if args.op:
+            force_rerun = set(args.op.split(","))
+
         for f in kernels_dir.glob("*.py"):
             op_name = f.stem
-            existing_kernels.add(op_name)
-        logger.info(f"Found {len(existing_kernels)} existing kernels")
+            if op_name not in force_rerun:
+                existing_kernels.add(op_name)
+        logger.info(f"Found {len(existing_kernels)} existing kernels (skipping)")
+        if force_rerun:
+            logger.info(f"Force re-run: {', '.join(force_rerun)}")
 
     # Build task queue
     queue = deque()
