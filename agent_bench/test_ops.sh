@@ -76,7 +76,7 @@ while [[ $# -gt 0 ]]; do
             echo "Options:"
             echo "  -d, --dataset       Dataset to use (default: v2_1)"
             echo "  -m, --method        Agent method to use (default: naive_cc)"
-            echo "                      Available: naive_cc, iterative_optimizer"
+            echo "                      Available: naive_cc, normal_cc, iterative_optimizer"
             echo "  --device-count      Number of GPUs for verification (default: 8)"
             echo "  --timeout           Timeout per operator in seconds (default: 300)"
             echo "  --max-optimize-calls  Max CC calls for iterative_optimizer (default: 10)"
