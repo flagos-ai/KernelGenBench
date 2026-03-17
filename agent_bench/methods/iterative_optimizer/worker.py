@@ -19,7 +19,8 @@ NOTE_TRUNCATE_LENGTH = 50
 
 # Resolve paths
 SCRIPT_DIR = Path(__file__).resolve().parent
-TOOLS_DIR = SCRIPT_DIR / "tools"
+AGENT_BENCH_DIR = SCRIPT_DIR.parent.parent
+TOOLS_DIR = AGENT_BENCH_DIR / "tools"  # Shared tools directory
 TEMPLATES_DIR = SCRIPT_DIR / "templates"
 
 

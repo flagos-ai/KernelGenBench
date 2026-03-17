@@ -1,4 +1,4 @@
-"""Naive CC method - single call to Claude Code."""
+"""Normal CC method - CC with self-verification loop."""
 
 import json
 import logging
@@ -17,15 +17,22 @@ METHOD_DIR = Path(__file__).parent
 TEMPLATES_DIR = METHOD_DIR / "templates"
 INSTRUCTIONS_TEMPLATE = TEMPLATES_DIR / "instructions.md"
 
+# Verification tool path (shared tools directory)
+AGENT_BENCH_DIR = METHOD_DIR.parent.parent
+VERIFY_SCRIPT = AGENT_BENCH_DIR / "tools" / "verify_single.py"
 
-class NaiveCCMethod(BaseMethod):
-    """Single-call Claude Code method.
 
-    This is the simplest method: one CC call per operator.
-    CC is expected to output code in a ```python block.
+class NormalCCMethod(BaseMethod):
+    """Enhanced CC method with self-verification capability.
+
+    This method allows CC to:
+    1. Generate initial implementation
+    2. Verify using verify_single.py
+    3. Iterate and fix based on errors
+    4. Output final code in standard format
     """
 
-    name = "naive_cc"
+    name = "normal_cc"
 
     def _load_instructions_template(self) -> str:
         """Load instructions template from file."""
@@ -62,12 +69,22 @@ class NaiveCCMethod(BaseMethod):
 
         return final_prompt
 
-    def _build_prompt(self, base_prompt: str, gpu_id: int) -> str:
-        """Build final prompt with instructions template.
+    def _build_enhanced_prompt(
+        self,
+        base_prompt: str,
+        operator: str,
+        gpu_id: int,
+        workspace_dir: Path,
+        dataset: str,
+    ) -> str:
+        """Build enhanced prompt with verification instructions.
 
         Args:
             base_prompt: The original operator prompt
+            operator: Operator name
             gpu_id: GPU ID for CUDA_VISIBLE_DEVICES
+            workspace_dir: Working directory (unused but kept for API consistency)
+            dataset: Dataset name for verification
 
         Returns:
             Final prompt with method-specific instructions
@@ -75,13 +92,19 @@ class NaiveCCMethod(BaseMethod):
         # Load instructions template
         instructions = self._load_instructions_template()
 
+        # Replace placeholders in instructions
+        instructions = instructions.replace("{{GPU_ID}}", str(gpu_id))
+        instructions = instructions.replace("{{VERIFY_SCRIPT}}", str(VERIFY_SCRIPT))
+        instructions = instructions.replace("{{OPERATOR}}", operator)
+        instructions = instructions.replace("{{DATASET}}", dataset)
+
         # Replace output section with method-specific instructions
-        final_prompt = self._replace_output_section(base_prompt, instructions)
+        enhanced_prompt = self._replace_output_section(base_prompt, instructions)
 
-        # Replace any GPU_ID placeholders in the final prompt
-        final_prompt = final_prompt.replace("{{GPU_ID}}", str(gpu_id))
+        # Replace any remaining GPU_ID placeholders in the base prompt
+        enhanced_prompt = enhanced_prompt.replace("{{GPU_ID}}", str(gpu_id))
 
-        return final_prompt
+        return enhanced_prompt
 
     def launch(
         self,
@@ -91,15 +114,28 @@ class NaiveCCMethod(BaseMethod):
         gpu_id: int,
         config: dict,
     ) -> Any:
-        """Launch CC process."""
+        """Launch CC process with enhanced prompt."""
         workspace_dir.mkdir(parents=True, exist_ok=True)
 
         # Read base prompt
         with open(prompt_path) as f:
             base_prompt = f.read()
 
-        # Build final prompt with instructions
-        prompt = self._build_prompt(base_prompt, gpu_id)
+        # Get dataset from config
+        dataset = config.get("dataset", "v2_1")
+
+        # Build enhanced prompt with verification instructions
+        prompt = self._build_enhanced_prompt(
+            base_prompt=base_prompt,
+            operator=operator,
+            gpu_id=gpu_id,
+            workspace_dir=workspace_dir,
+            dataset=dataset,
+        )
+
+        # Save prompt for debugging
+        prompt_save_path = workspace_dir / "prompt.md"
+        prompt_save_path.write_text(prompt)
 
         # Prepare output paths
         stdout_path = workspace_dir / "cc_output.jsonl"
@@ -109,6 +145,7 @@ class NaiveCCMethod(BaseMethod):
         env = os.environ.copy()
         env.pop("CLAUDECODE", None)  # Allow launching CC from within CC
         env["IS_SANDBOX"] = "1"
+        env["CUDA_VISIBLE_DEVICES"] = str(gpu_id)
 
         # Build command
         agent_config = config.get("agent", {})
@@ -180,7 +217,14 @@ class NaiveCCMethod(BaseMethod):
         # Extract code from output
         code = self._extract_code(stdout_path)
 
-        # Save kernel if extracted
+        # If no code found in output, try to read from kernel.py
+        if not code:
+            kernel_path = workspace_dir / "kernel.py"
+            if kernel_path.exists():
+                code = kernel_path.read_text()
+                logger.info(f"Code extracted from kernel.py")
+
+        # Save kernel if extracted (and not already saved)
         if code:
             kernel_path = workspace_dir / "kernel.py"
             kernel_path.write_text(code)
@@ -189,11 +233,14 @@ class NaiveCCMethod(BaseMethod):
             code=code,
             passed=None,
             speedup=None,
-            metadata={"cc_calls": 1},
+            metadata={"method": "normal_cc"},
         )
 
     def _extract_code(self, output_path: Path) -> str | None:
-        """Extract Python code from CC stream-json output."""
+        """Extract Python code from CC stream-json output.
+
+        Looks for the last ```python ... ``` block in the result.
+        """
         try:
             result_text = ""
             with open(output_path, "r", errors="replace") as f:
@@ -212,10 +259,11 @@ class NaiveCCMethod(BaseMethod):
             if not result_text:
                 return None
 
-            # Extract Python code block
-            code_match = re.search(r"```python\s*(.*?)\s*```", result_text, re.DOTALL)
-            if code_match:
-                return code_match.group(1).strip()
+            # Extract the LAST Python code block (which should be the final version)
+            code_matches = re.findall(r"```python\s*(.*?)\s*```", result_text, re.DOTALL)
+            if code_matches:
+                # Return the last code block
+                return code_matches[-1].strip()
 
             return None
         except Exception as e:
