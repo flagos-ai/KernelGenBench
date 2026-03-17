@@ -8,6 +8,9 @@ Each method is a self-contained module in its own directory:
     ├── naive_cc/            # Single-call CC method
     │   ├── __init__.py
     │   └── method.py
+    ├── normal_cc/           # CC with self-verification loop
+    │   ├── __init__.py
+    │   └── method.py
     └── iterative_optimizer/ # Multi-round optimization method
         ├── __init__.py
         ├── method.py
@@ -18,11 +21,13 @@ Each method is a self-contained module in its own directory:
 
 from .base import BaseMethod, MethodResult
 from .naive_cc import NaiveCCMethod
+from .normal_cc import NormalCCMethod
 from .iterative_optimizer import IterativeOptimizerMethod
 
 # Registry of available methods
 _METHODS = {
     "naive_cc": NaiveCCMethod,
+    "normal_cc": NormalCCMethod,
     "iterative_optimizer": IterativeOptimizerMethod,
 }
 
@@ -56,5 +61,6 @@ __all__ = [
     "get_method",
     "list_methods",
     "NaiveCCMethod",
+    "NormalCCMethod",
     "IterativeOptimizerMethod",
 ]
