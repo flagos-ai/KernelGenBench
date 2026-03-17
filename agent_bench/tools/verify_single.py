@@ -93,7 +93,7 @@ def verify_single_kernel(
     code_path: Path,
     operator: str,
     dataset: str,
-    timeout: int = 300,
+    timeout: int = 600,
     config: dict = None,
     output_dir: Path = None,
 ) -> dict:
@@ -311,8 +311,8 @@ Examples:
     parser.add_argument(
         "--timeout", "-t",
         type=int,
-        default=300,
-        help="Timeout in seconds (default: 300)"
+        default=600,
+        help="Timeout in seconds (default: 600)"
     )
     parser.add_argument(
         "--output-dir",

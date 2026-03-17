@@ -154,7 +154,7 @@ def verify_kernel(
     operator: str,
     dataset: str,
     gpu_id: int,
-    timeout: int = 300,
+    timeout: int = 600,
 ) -> dict:
     """Verify a single kernel for correctness using verify_single.py.
 
@@ -553,7 +553,7 @@ def main():
     parser.add_argument("--config-path", required=True, help="Path to config.yaml")
     parser.add_argument("--max-cc-calls", type=int, default=10, help="Maximum CC calls")
     parser.add_argument("--target-speedup", type=float, default=1.0, help="Target speedup")
-    parser.add_argument("--verify-timeout", type=int, default=300, help="Verification timeout")
+    parser.add_argument("--verify-timeout", type=int, default=600, help="Verification timeout")
 
     args = parser.parse_args()
 

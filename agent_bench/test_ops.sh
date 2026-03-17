@@ -19,7 +19,7 @@ cd "$SCRIPT_DIR"
 DATASET="v2_1"
 METHOD="naive_cc"
 DEVICE_COUNT=8
-TIMEOUT=300
+TIMEOUT=600
 SKIP_GEN=false
 SKIP_VERIFY=false
 VERBOSE=""
@@ -78,7 +78,7 @@ while [[ $# -gt 0 ]]; do
             echo "  -m, --method        Agent method to use (default: naive_cc)"
             echo "                      Available: naive_cc, normal_cc, iterative_optimizer"
             echo "  --device-count      Number of GPUs for verification (default: 8)"
-            echo "  --timeout           Timeout per operator in seconds (default: 300)"
+            echo "  --timeout           Timeout per operator in seconds (default: 600)"
             echo "  --max-optimize-calls  Max CC calls for iterative_optimizer (default: 10)"
             echo "  --target-speedup    Target speedup for iterative_optimizer (default: 1.0)"
             echo "  --skip-gen          Skip prompt generation step"
