@@ -25,7 +25,19 @@ CUDA_VISIBLE_DEVICES={{GPU_ID}} python {{VERIFY_SCRIPT}} --code kernel.py --op {
 **重要提示**：
 - 每次修改后都要重新验证
 - 注意处理边界情况（空 tensor、不同 dtype 等）
-- 如果多次尝试后仍有少量测试失败，可以接受并继续
+
+## 性能优化
+
+通过所有正确性测试后，请竭尽全力优化 kernel 性能：
+
+- 优化 BLOCK_SIZE 等超参数
+- 减少不必要的内存访问和数据拷贝
+- 利用 Triton 的 auto-tuning（`@triton.autotune`）
+- 对于 float16/bfloat16 输入，在保证精度的前提下利用低精度计算加速
+- 避免不必要的 `.contiguous()` 调用
+- 合并多个 kernel 调用为一个（如果可能）
+
+优化后再次运行验证，确保正确性没有被破坏。
 
 ## 输出要求
 

@@ -138,7 +138,12 @@ def verify_kernels(
 
     if not verify_requests:
         logger.warning("No kernels to verify")
-        return {"total": 0, "passed": 0, "failed": 0, "operators": {}}
+        return {
+            "run_name": run_dir.name,
+            "dataset": dataset,
+            "summary": {"total": 0, "passed": 0, "failed": 0, "pass_rate": "0%"},
+            "operators": {},
+        }
 
     # Run verification
     logger.info(f"Verifying {len(verify_requests)} kernels with {device_count} GPUs...")
