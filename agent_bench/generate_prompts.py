@@ -17,10 +17,7 @@ from flagbench.dataset import (
     CUPY_OPERATORS,
     get_kernelgenbench_operators,
 )
-from flagbench.dataset.kernel_list import (
-    flatten_operator_dict, DynamicImplInfo,
-    VLLM_OPERATOR_NAMES, CUBLAS_OPERATOR_NAMES, TORCH_OPERATOR_NAMES,
-)
+from flagbench.dataset.kernel_list import flatten_operator_dict, DynamicImplInfo
 from flagbench.dataset.dataloader import TorchOpsLoader
 
 

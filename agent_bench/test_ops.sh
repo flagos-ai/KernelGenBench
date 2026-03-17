@@ -15,11 +15,6 @@ set -e
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 cd "$SCRIPT_DIR"
 
-# Activate conda environment (zpy_flagbench has torch + all deps)
-# Also add claude_tool's node to PATH (claude CLI needs node)
-source /share/project/zhaohuxing/anaconda3/bin/activate zpy_flagbench
-export PATH="/share/project/zhaohuxing/anaconda3/envs/claude_tool/bin:$PATH"
-
 # Default values
 DATASET="v2_1"
 METHOD="naive_cc"

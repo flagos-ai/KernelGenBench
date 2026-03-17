@@ -21,6 +21,8 @@ PROJECT_ROOT = SCRIPT_DIR.parent
 sys.path.insert(0, str(PROJECT_ROOT / "src"))
 sys.path.insert(0, str(PROJECT_ROOT))
 
+from test_modules import get_test_modules, get_test_module  # noqa: E402
+
 logger = logging.getLogger(__name__)
 
 
@@ -31,41 +33,6 @@ def load_config(config_path: Path) -> dict:
         sys.exit(1)
     with open(config_path) as f:
         return yaml.safe_load(f)
-
-
-def get_test_modules(dataset: str, config: dict) -> list[str]:
-    """Get test module path(s) for dataset.
-
-    Returns a list of module paths (KernelGenBench needs multiple).
-    """
-    test_modules = config.get("test_modules", {})
-    if dataset in test_modules:
-        val = test_modules[dataset]
-        if isinstance(val, list):
-            return [str(PROJECT_ROOT / m) for m in val]
-        return [str(PROJECT_ROOT / val)]
-
-    # Defaults
-    defaults = {
-        "v2": ["src/flagbench/accuracy/test_v2_ops.py"],
-        "v2_1": ["src/flagbench/accuracy/test_v2_1_ops_with_benchmark.py"],
-        "cupy": ["src/flagbench/accuracy/cublas/test_cublas_ops.py"],
-        "KernelGenBench": [
-            "src/flagbench/accuracy/test_v2_1_ops_with_benchmark.py",
-            "src/flagbench/accuracy/vllm13/",
-            "src/flagbench/accuracy/cublas/",
-        ],
-    }
-    if dataset in defaults:
-        return [str(PROJECT_ROOT / m) for m in defaults[dataset]]
-
-    raise ValueError(f"No test module configured for dataset: {dataset}")
-
-
-def get_test_module(dataset: str, config: dict) -> str:
-    """Get test module path for dataset (backward compat, returns first module)."""
-    modules = get_test_modules(dataset, config)
-    return modules[0] if modules else None
 
 
 def verify_kernels(
