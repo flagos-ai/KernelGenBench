@@ -184,6 +184,7 @@ def verify_single_kernel(
             sample_id=0,
             save_log=save_log,
             acc_timeout=timeout,
+            manage_device_visibility=False,
         )
 
         verifier = Verifier(verify_config)
