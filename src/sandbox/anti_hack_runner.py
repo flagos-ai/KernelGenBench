@@ -4,8 +4,6 @@ import json
 import logging
 from pathlib import Path
 from typing import Dict, Any, List, Optional
-from copy import deepcopy
-
 from sandbox.anti_hack import check_code as anti_hack_check
 from sandbox.verifier.verifier import Verifier, VerifyConfig, VerifyRequest, Source
 
