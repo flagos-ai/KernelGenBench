@@ -304,21 +304,26 @@ class PassAtKTester:
         """
         def wrapper(torch_op_name: str, torch_op_func_or_namespace: str, impl_info):
             from flagbench.dataset import get_mm_shape_info, IMPL_INFO
-            # torch_op_name 是 "mm_128x768_768x768"，namespace 是 "aten"
+            # torch_op_name 是 "mm_128x768_768x768_f32"，namespace 是 "aten"
             shape_info = get_mm_shape_info(torch_op_name)
-            shape1, shape2 = shape_info
+            shape1, shape2 = shape_info[0], shape_info[1]
+            dtype_short = shape_info[2] if len(shape_info) > 2 else "f32"
             M, K = shape1
             K2, N = shape2
+
+            dtype_map = {"f32": "torch.float32", "f16": "torch.float16", "bf16": "torch.bfloat16"}
+            dtype_full = dtype_map.get(dtype_short, "torch.float32")
 
             # 用真正的 aten::mm 获取 impl_info 和签名
             mm_impl_info = IMPL_INFO.get("mm")
             args = create_triton_generate_args("mm", "aten", mm_impl_info)
 
-            # shape 信息通过 user_advice 注入到 prompt
+            # shape + dtype 信息通过 user_advice 注入到 prompt
             shape_advice = (
-                f"SHAPE OPTIMIZATION TARGET: This mm kernel will be used for a specific shape: "
-                f"mat1=({M}, {K}) x mat2=({K}, {N}) -> output=({M}, {N}). "
-                f"You may hardcode block sizes and tiling parameters for best performance on this shape."
+                f"SHAPE OPTIMIZATION TARGET: This mm kernel will be used for a specific shape and dtype: "
+                f"mat1=({M}, {K}) x mat2=({K}, {N}) -> output=({M}, {N}), dtype={dtype_full}. "
+                f"You may hardcode block sizes and tiling parameters for best performance on this shape. "
+                f"The test will ONLY run with dtype={dtype_full}, so optimize accordingly."
             )
             args.user_advice = shape_advice
 

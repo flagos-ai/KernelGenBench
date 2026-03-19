@@ -1,18 +1,18 @@
 import flagbench
 import torch
 from sandbox.config import DEVICE as device
-from sandbox.verifier.test_parametrize import parametrize, label
+from sandbox.verifier.test_parametrize import label
 from sandbox.register import REGISTERED_OPS
-from sandbox.utils.accuracy_utils import FLOAT_DTYPES, gems_assert_close, to_reference
+from sandbox.utils.accuracy_utils import gems_assert_close, to_reference
 from runtime import get_triton_testing
 from sandbox.utils.accuracy_utils import CustomBenchmarkResult
 
 
-@label("mm_128x1024_1024x1024")
-@parametrize("dtype", FLOAT_DTYPES)
-def test_accuracy_mm_128x1024_1024x1024(dtype):
-    """mm: (128,1024) x (1024,1024) — freq=25522"""
-    M, K, N = 128, 1024, 1024
+@label("mm_128x4096_4096x4096_f16")
+def test_accuracy_mm_128x4096_4096x4096_f16():
+    """mm: (128,4096) x (4096,4096) dtype=f16 — freq=6013"""
+    M, K, N = 128, 4096, 4096
+    dtype = torch.float16
     inp1 = torch.randn(M, K, dtype=dtype, device=device)
     inp2 = torch.randn(K, N, dtype=dtype, device=device)
     ref_inp1 = to_reference(inp1, True)
