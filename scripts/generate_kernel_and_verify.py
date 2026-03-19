@@ -32,6 +32,27 @@ from generator.sampler.generate_samples import (
     GenerationConfig,
 )
 
+
+class MmShapePromptBuilder:
+    """MmShapeBench 专用 PromptBuilder
+
+    包装 TorchPromptBuilder，在构造 prompt 时临时将 op_name
+    从 aten::mm_128x768_768x768 换回 aten::mm，让 prompt 使用正确的签名。
+    """
+
+    def __init__(self, mode="basic"):
+        from generator.torch_prompt_builder import TorchPromptBuilder
+        self._inner = TorchPromptBuilder(mode=mode)
+
+    def build(self, gen_args):
+        """入口：临时换回 aten::mm，委托给内部 builder"""
+        original = gen_args.triton_kernel_name
+        gen_args.triton_kernel_name = "aten::mm"
+        try:
+            return self._inner.build(gen_args)
+        finally:
+            gen_args.triton_kernel_name = original
+
 def check_args_validity(args):
     assert args.test_type in ["accuracy", "performance", "triton"], "Invalid test type, must be one of accuracy, performance, triton."
 
@@ -178,11 +199,16 @@ class PassAtKTester:
 
         # 根据 dataset 选择 PromptBuilder
         # 目前所有 torch 相关的 dataset 都使用 TorchPromptBuilder
-        if self.dataset in ["pytorch", "gems", "v1", "v2", "v2_1", "qwen_next", "MmShapeBench"]:
+        if self.dataset in ["pytorch", "gems", "v1", "v2", "v2_1", "qwen_next"]:
             # 根据 use_wiki 参数选择 mode
             mode = "with_wiki" if self.use_wiki else "basic"
             prompt_builder = TorchPromptBuilder(mode=mode)
             logger.info(f"Created TorchPromptBuilder with mode: {mode}")
+            return prompt_builder
+        elif self.dataset == "MmShapeBench":
+            mode = "with_wiki" if self.use_wiki else "basic"
+            prompt_builder = MmShapePromptBuilder(mode=mode)
+            logger.info(f"Created MmShapePromptBuilder with mode: {mode}")
             return prompt_builder
         elif self.dataset == "cupy":
             # 使用 CupyPromptBuilder
@@ -269,6 +295,12 @@ class PassAtKTester:
 
         每个 shape 题底层都是 aten::mm，但 prompt 中注入具体 shape 信息，
         让 LLM 针对特定 shape 写最优 Triton kernel。
+
+        关键设计：
+        - triton_kernel_name 覆盖为 "aten::mm_128x768_768x768" 用于文件命名
+        - impl_info/input_args/torch_kernel_code 用真实 aten::mm 的（prompt 内容正确）
+        - shape 信息通过 user_advice 注入（build_new 会读 user_advice）
+        - verify 阶段在 verify_round 里映射回 aten::mm（见 _get_mm_verify_function_name）
         """
         def wrapper(torch_op_name: str, torch_op_func_or_namespace: str, impl_info):
             from flagbench.dataset import get_mm_shape_info, IMPL_INFO
@@ -282,20 +314,25 @@ class PassAtKTester:
             mm_impl_info = IMPL_INFO.get("mm")
             args = create_triton_generate_args("mm", "aten", mm_impl_info)
 
-            # 注入 shape 信息到 func_desc，让 prompt 包含具体 shape
-            shape_desc = (
-                f"Matrix multiplication (mm) for a SPECIFIC shape: "
-                f"mat1=({M}, {K}) x mat2=({K}, {N}) -> output=({M}, {N}).\n"
-                f"Your Triton kernel should be optimized for this exact shape. "
-                f"You may hardcode block sizes and tiling parameters for best performance on this shape.\n"
-                f"The wrapper function name must be exactly: mm"
+            # shape 信息通过 user_advice 注入到 prompt
+            shape_advice = (
+                f"SHAPE OPTIMIZATION TARGET: This mm kernel will be used for a specific shape: "
+                f"mat1=({M}, {K}) x mat2=({K}, {N}) -> output=({M}, {N}). "
+                f"You may hardcode block sizes and tiling parameters for best performance on this shape."
             )
-            args.func_desc = shape_desc
-            # 保留原始 op_name 以便文件命名
+            args.user_advice = shape_advice
+
+            # 覆盖 triton_kernel_name 用于文件命名和结果追踪
+            # MmShapePromptBuilder 会在构造 prompt 时临时换回 aten::mm
             args.triton_kernel_name = f"aten::{torch_op_name}"
             return args
 
         return wrapper
+
+    @staticmethod
+    def _get_mm_verify_function_name(op_name: str) -> str:
+        """MmShapeBench 专用：将 aten::mm_128x768_768x768 映射回 aten::mm 用于 verifier dispatch"""
+        return "aten::mm"
 
     def initialize_operators(self, namespace: str = "all") -> None:
         """初始化算子列表，返回扁平结构 {op_name: value}"""
@@ -636,8 +673,10 @@ class PassAtKTester:
                     reports = json.load(f)
                 # Store verify result to memory
                 current_report = {}
+                # MmShapeBench: verifier 写入的 op_name 是 aten::mm，需要映射匹配
+                match_op_name = self._get_mm_verify_function_name(op_name) if self.dataset == "MmShapeBench" else op_name
                 for report in reports:
-                    if report["op_name"] == op_name:
+                    if report["op_name"] == match_op_name:
                         current_report = report
                         self.store_verify_result(op_name, round_idx, current_report)
                 if current_report.get("success", False):
@@ -646,12 +685,19 @@ class PassAtKTester:
                     self.passed_operators.add(op_name)
                 continue
 
+            # MmShapeBench 专用：verify 时 function_name 映射回 aten::mm
+            # 因为 verifier 的 _check_code 需要用真实算子名查 IMPL_INFO 和做 dispatch 注册
+            verify_op_name = self._get_mm_verify_function_name(op_name) if self.dataset == "MmShapeBench" else op_name
+
             verify_req = self.create_triton_kernel_verify_args(
                 kernel_path,
                 test_file_path,
-                op_name, 
+                verify_op_name,
                 add_namespace_triton=self.dataset == "cupy" or (self.dataset == "KernelGenBench" and not op_name.startswith("aten::"))
             )
+            # MmShapeBench: function_name=aten::mm 用于 dispatch，test_func_mark=原始 shape 名用于匹配 test label
+            if self.dataset == "MmShapeBench":
+                verify_req.test_func_mark = op_name
             verify_requests.append(verify_req)
             op_names.append(op_name)
         
@@ -679,16 +725,26 @@ class PassAtKTester:
                     with open(verify_result_path, "r") as f:
                         test_reports = json.load(f)
                     current_report = {}
-                    for report in test_reports:
-                        if report["op_name"] == op_name:
-                            current_report = report
+                    # MmShapeBench: verifier 返回的 op_name 是 aten::mm，用位置匹配而非名称
+                    if self.dataset == "MmShapeBench":
+                        # 每个 verify request 独立子进程，result.json 按顺序写入
+                        # 用 result.op_name 匹配 report
+                        for report in test_reports:
+                            if report["op_name"] == result.op_name:
+                                current_report = report
+                                break
+                    else:
+                        for report in test_reports:
+                            if report["op_name"] == op_name:
+                                current_report = report
                     self.store_verify_result(op_name, round_idx, current_report)
                     logger.debug(f"Stored verify result for {op_name} round {round_idx}")
                 except Exception as e:
                     logger.warning(f"Failed to load test report for {op_name}: {e}")
-            
+
             if result.success:
-                newly_passed.add(result.op_name)
+                # MmShapeBench: result.op_name 是 aten::mm，但追踪用原始 shape op_name
+                newly_passed.add(op_name)
         
         newly_passed.update(exist_newly_passed)
         
