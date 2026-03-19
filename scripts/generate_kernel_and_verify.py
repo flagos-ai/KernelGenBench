@@ -139,6 +139,9 @@ class PassAtKTester:
                 case "KernelGenBench":
                     from flagbench.dataset import get_kernelgenbench_operators
                     self.operator_loader = get_kernelgenbench_operators()  # 50 vllm + 50 cublas + 110 torch
+                case "MmShapeBench":
+                    from flagbench.dataset import get_mm_shape_operators
+                    self.operator_loader = get_mm_shape_operators()
                 case _:
                     raise ValueError(f"Unsupported dataset: {self.dataset}")
 
@@ -150,6 +153,8 @@ class PassAtKTester:
             if self.dataset in ["cupy", "KernelGenBench"]:
                 # 对于 cupy/KernelGenBench dataset，使用 adapter 的方法
                 self.create_generate_args = self._create_cupy_generate_args_wrapper()
+            elif self.dataset == "MmShapeBench":
+                self.create_generate_args = self._create_mm_shape_generate_args_wrapper()
             else:
                 # 对于 torch 相关的 dataset，使用现有的函数
                 self.create_generate_args = create_triton_generate_args
@@ -173,7 +178,7 @@ class PassAtKTester:
 
         # 根据 dataset 选择 PromptBuilder
         # 目前所有 torch 相关的 dataset 都使用 TorchPromptBuilder
-        if self.dataset in ["pytorch", "gems", "v1", "v2", "v2_1", "qwen_next"]:
+        if self.dataset in ["pytorch", "gems", "v1", "v2", "v2_1", "qwen_next", "MmShapeBench"]:
             # 根据 use_wiki 参数选择 mode
             mode = "with_wiki" if self.use_wiki else "basic"
             prompt_builder = TorchPromptBuilder(mode=mode)
@@ -205,7 +210,7 @@ class PassAtKTester:
         from flagbench.framework.cupy_adapter import CupyAdapter
 
         # 根据 dataset 选择 Adapter
-        if self.dataset in ["pytorch", "gems", "v1", "v2", "v2_1", "qwen_next"]:
+        if self.dataset in ["pytorch", "gems", "v1", "v2", "v2_1", "qwen_next", "MmShapeBench"]:
             adapter = TorchAdapter()
             logger.info(f"Created TorchAdapter for dataset: {self.dataset}")
             return adapter
@@ -255,6 +260,40 @@ class PassAtKTester:
 
             # 调用 adapter 的 create_generate_args 方法
             return self.adapter.create_generate_args(op_name, func, impl_info)
+
+        return wrapper
+
+    def _create_mm_shape_generate_args_wrapper(self):
+        """
+        创建 MmShapeBench 的 generate_args 包装函数
+
+        每个 shape 题底层都是 aten::mm，但 prompt 中注入具体 shape 信息，
+        让 LLM 针对特定 shape 写最优 Triton kernel。
+        """
+        def wrapper(torch_op_name: str, torch_op_func_or_namespace: str, impl_info):
+            from flagbench.dataset import get_mm_shape_info, IMPL_INFO
+            # torch_op_name 是 "mm_128x768_768x768"，namespace 是 "aten"
+            shape_info = get_mm_shape_info(torch_op_name)
+            shape1, shape2 = shape_info
+            M, K = shape1
+            K2, N = shape2
+
+            # 用真正的 aten::mm 获取 impl_info 和签名
+            mm_impl_info = IMPL_INFO.get("mm")
+            args = create_triton_generate_args("mm", "aten", mm_impl_info)
+
+            # 注入 shape 信息到 func_desc，让 prompt 包含具体 shape
+            shape_desc = (
+                f"Matrix multiplication (mm) for a SPECIFIC shape: "
+                f"mat1=({M}, {K}) x mat2=({K}, {N}) -> output=({M}, {N}).\n"
+                f"Your Triton kernel should be optimized for this exact shape. "
+                f"You may hardcode block sizes and tiling parameters for best performance on this shape.\n"
+                f"The wrapper function name must be exactly: mm"
+            )
+            args.func_desc = shape_desc
+            # 保留原始 op_name 以便文件命名
+            args.triton_kernel_name = f"aten::{torch_op_name}"
+            return args
 
         return wrapper
 
@@ -833,7 +872,7 @@ def main():
     parser.add_argument("--name", type=str, default="aten", help="Namespace to test (default: aten)")
     parser.add_argument("--acc-test-func-path", type=str, default="", help="Path to the accuracy test function directory")
     parser.add_argument("--benchmark-func-path", type=str, default="", help="Path to the performance test function directory")
-    parser.add_argument("--dataset", type=str, default="v2", help="Dataset version to use (default: v2)", choices=["pytorch", "gems", "v1", "v2", "v2_1", "qwen_next", "cupy", "KernelGenBench"])
+    parser.add_argument("--dataset", type=str, default="v2", help="Dataset version to use (default: v2)", choices=["pytorch", "gems", "v1", "v2", "v2_1", "qwen_next", "cupy", "KernelGenBench", "MmShapeBench"])
     parser.add_argument("--output-dir", type=Path, default=PROJECT_ROOT / "output" / "pass_at_k", help="Output directory")
     parser.add_argument("--resume-from", type=Path, help="Resume from existing checkpoint directory")
     parser.add_argument("--test-type", type=str, default="triton", choices=["accuracy", "performance", "triton"])
@@ -927,6 +966,11 @@ def main():
         perf_timeout=args.timeout,
     )
     
+    # MmShapeBench 自动设置 custom_test_modules
+    custom_test_modules = args.custom_test_modules
+    if args.dataset == "MmShapeBench" and not custom_test_modules:
+        custom_test_modules = ["flagbench.accuracy.mm_shape_bench"]
+
     # Create tester and run
     tester = PassAtKTester(
         output_dir=output_dir,
@@ -934,7 +978,7 @@ def main():
         acc_test_func_path=args.acc_test_func_path,
         bench_test_func_path=args.benchmark_func_path,
         dataset=args.dataset,
-        custom_test_modules=args.custom_test_modules,
+        custom_test_modules=custom_test_modules,
         gen_config=gen_config,
         verify_config=verify_config,
         device_count=args.device_count,

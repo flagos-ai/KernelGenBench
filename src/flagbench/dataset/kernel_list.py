@@ -1167,6 +1167,39 @@ def get_kernelgenbench_operators():
     return ops
 
 
+# ============ MM Shape-Specific Benchmark ============
+# 每个 (shape, device) = 1 道独立题目，底层都是 aten::mm
+# 实验阶段：先放 2 个 shape，后续从 hardest_aten_ops.md 批量导入
+
+MM_SHAPE_OPERATORS = {
+    # label: ((M, K), (K, N))
+    "mm_128x768_768x768": ((128, 768), (768, 768)),
+    "mm_128x1024_1024x1024": ((128, 1024), (1024, 1024)),
+}
+
+MM_SHAPE_OPERATOR_NAMES = list(MM_SHAPE_OPERATORS.keys())
+
+
+def get_mm_shape_operators():
+    """获取 MM Shape Benchmark 算子字典
+
+    返回格式: {"aten::mm_128x768_768x768": torch.ops.aten.mm, ...}
+    所有 shape 题共用同一个底层算子 torch.ops.aten.mm。
+    """
+    mm_op = getattr(torch.ops.aten, "mm", None)
+    if mm_op is None:
+        raise RuntimeError("torch.ops.aten.mm not found")
+    ops = {}
+    for name in MM_SHAPE_OPERATOR_NAMES:
+        ops[f"aten::{name}"] = mm_op
+    return ops
+
+
+def get_mm_shape_info(label: str):
+    """获取 shape 信息: 返回 ((M, K), (K, N)) 或 None"""
+    return MM_SHAPE_OPERATORS.get(label)
+
+
 # if os.environ.get("FLAGBENCH_USE_DYNAMIC_IMPL_INFO", "0") == "1":
 #     dynamic_impl_info = DynamicImplInfo()
 #     IMPL_INFO = dynamic_impl_info
