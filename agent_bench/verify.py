@@ -42,6 +42,7 @@ def verify_kernels(
     device_count: int = 8,
     operators: list[str] | None = None,
     timeout: int = 600,
+    run_antihack: bool = True,
 ) -> dict:
     """Verify generated kernels using Verifier.
 
@@ -180,9 +181,80 @@ def verify_kernels(
             failed += 1
 
     total = len(results)
+    # Anti-hack check on passed operators
+    antihack_report = None
+    hacked_count = 0
+    if run_antihack and passed > 0:
+        from sandbox.anti_hack_runner import AntiHackRunner
+
+        logger.info("Running anti-hack checks on passed operators...")
+
+        antihack_verify_config = VerifyConfig(
+            run_name="anti_hack",
+            test_type="triton",
+            run_dir=str(run_dir / "anti_hack"),
+            store_type="local",
+            strict_check=True,
+            seed=42,
+            sample_id=0,
+            save_log=False,
+            acc_timeout=timeout,
+        )
+
+        runner = AntiHackRunner(
+            dataset=dataset,
+            verify_config=antihack_verify_config,
+            custom_test_modules=test_modules,
+            max_test_cases=1,
+        )
+
+        # Build operator info dict for passed operators
+        passed_ops_info = {}
+        for kernel_file in sorted(kernels_dir.glob("*.py")):
+            stem = kernel_file.stem
+            if dataset == "KernelGenBench" and "__" in stem:
+                ns, op = stem.split("__", 1)
+                full_name = f"{ns}::{op}"
+                result_key = op
+            else:
+                full_name = f"{default_namespace}::{stem}"
+                result_key = stem
+
+            if result_key in operators_results and operators_results[result_key]["status"] == "passed":
+                with open(kernel_file) as f:
+                    code = f.read()
+                passed_ops_info[full_name] = {
+                    "kernel_code": code,
+                    "kernel_path": kernel_file,
+                }
+
+        if passed_ops_info:
+            hack_results = runner.batch_check(passed_ops_info)
+
+            # Update operators_results for hacked ones
+            for op_full_name, hack_info in hack_results.items():
+                if hack_info.get("hacked"):
+                    short_name = op_full_name.split("::")[-1] if "::" in op_full_name else op_full_name
+                    if short_name in operators_results:
+                        operators_results[short_name]["status"] = "hacked"
+                        operators_results[short_name]["hack_layer"] = hack_info["layer"]
+                        operators_results[short_name]["hack_reason"] = hack_info["reason"]
+                        passed -= 1
+                        hacked_count += 1
+
+            # Save anti-hack report
+            passed_op_names = {k for k, v in operators_results.items() if v["status"] == "passed"}
+            hacked_op_names = {k for k, v in operators_results.items() if v["status"] == "hacked"}
+            antihack_report = runner.save_report(
+                hack_results=hack_results,
+                total_operators=total,
+                passed_operators=passed_op_names | hacked_op_names,
+                output_path=run_dir / "antihack_report.json",
+            )
+
     pass_rate = f"{passed / total * 100:.1f}%" if total > 0 else "0%"
 
-    return {
+    result_data = {
         "run_name": run_dir.name,
         "dataset": dataset,
         "timestamp": datetime.now(timezone.utc).isoformat(),
@@ -190,10 +262,20 @@ def verify_kernels(
             "total": total,
             "passed": passed,
             "failed": failed,
+            "hacked": hacked_count,
             "pass_rate": pass_rate,
         },
         "operators": operators_results,
     }
+
+    if antihack_report:
+        result_data["antihack_summary"] = {
+            "checked": antihack_report.get("original_passed", 0),
+            "hacked": antihack_report.get("hacked_count", 0),
+            "clean_passed": antihack_report.get("clean_passed", 0),
+        }
+
+    return result_data
 
 
 def main():
@@ -233,6 +315,11 @@ def main():
         type=str,
         default=None,
         help="Override dataset (auto-detected from run if not specified)"
+    )
+    parser.add_argument(
+        "--no-antihack",
+        action="store_true",
+        help="Skip anti-hack checks on passed operators"
     )
     parser.add_argument(
         "--verbose", "-v",
@@ -305,6 +392,7 @@ def main():
             device_count=args.device_count,
             operators=operators,
             timeout=args.timeout,
+            run_antihack=not args.no_antihack,
         )
 
         # Save results
@@ -317,7 +405,7 @@ def main():
         print(f"\n{'='*50}")
         print(f"Verification Results: {args.run}")
         print(f"Dataset: {dataset}")
-        print(f"Total: {s['total']}, Passed: {s['passed']}, Failed: {s['failed']}")
+        print(f"Total: {s['total']}, Passed: {s['passed']}, Failed: {s['failed']}, Hacked: {s.get('hacked', 0)}")
         print(f"Pass Rate: {s['pass_rate']}")
         print(f"Results saved to: {results_path}")
         print(f"{'='*50}")
@@ -329,6 +417,15 @@ def main():
                 if info["status"] == "failed":
                     error = info.get("error", "Unknown error")[:100]
                     print(f"  - {op}: {error}")
+
+        # Print hacked operators
+        if s.get("hacked", 0) > 0:
+            print("\nHacked operators:")
+            for op, info in results["operators"].items():
+                if info["status"] == "hacked":
+                    layer = info.get("hack_layer", "?")
+                    reason = info.get("hack_reason", "Unknown")[:100]
+                    print(f"  - {op} [{layer}]: {reason}")
 
     except Exception as e:
         logger.error(f"Verification failed: {e}")
