@@ -48,6 +48,8 @@ class VerifyConfig:
     acc_timeout: int = 300    # seconds
     perf_timeout: int = 600    # seconds
     manage_device_visibility: bool = True  # Whether to set device visibility env var
+    anti_hack: bool = False  # Enable anti-hack Layer 2/3 runtime checks
+    max_test_cases: int = 0  # Max test cases to run (0 = all)
 
 @dataclass
 class Source:
@@ -426,12 +428,13 @@ class Verifier:
         return check_result
 
     def run_tests(
-        self, 
-        name, 
-        json_path: str=None, 
-        max_failures: str | int = "all", 
-        seed=42, 
-        strict_check=False
+        self,
+        name,
+        json_path: str=None,
+        max_failures: str | int = "all",
+        seed=42,
+        strict_check=False,
+        max_test_cases: int = 0
     ) -> VerifyResult:
         set_seed(seed)
         # get api name from op_mark if it contains "::"
@@ -451,6 +454,7 @@ class Verifier:
         results = []
         speedup = None
         first_failure_traceback = None  # Store first failure traceback for reporting
+        first_func_combo = None
         for func, mark in funcs:
             func_name = func.__name__
             if func is None:
@@ -458,12 +462,18 @@ class Verifier:
                 console.print(f"[red][bold]Fail[/bold][/red] Test function {func_name} not found")
                 return VerifyResult(op_name=report_name, success=False, traceback=f"Test function {func_name} not found")
             params = get_params(func_name, mark)
-            for combo in ([{}] if not params else expand_params(params)):
+            all_combos = [{}] if not params else expand_params(params)
+            # Limit test cases if max_test_cases > 0
+            if max_test_cases > 0 and len(all_combos) > max_test_cases:
+                all_combos = all_combos[:max_test_cases]
+            for combo in all_combos:
                 total += 1
                 success = True
                 tb_str = None
                 speed = None  # Reset speed for each test case to avoid reusing previous value
                 ret = None    # Reset ret for each test case to avoid wrong branch on failure
+                if first_func_combo is None:
+                    first_func_combo = (func, deepcopy(combo))
                 try:
                     # recorded_params = jsonable_encoder(combo, custom_encoder={torch.dtype: str, Callable: lambda x: x.__name__})
                     # recorded_params = {k: default_converter(v) for k, v in combo.items()}
@@ -555,6 +565,30 @@ class Verifier:
                 }
             )
 
+        # Anti-hack Layer 2 & 3: only when config.anti_hack is enabled
+        if self._running_config.anti_hack and failed == 0 and first_func_combo is not None:
+            from sandbox.anti_hack import dual_execution_check, gpu_profiling_check
+            ah_func, ah_kwargs = first_func_combo
+            hack_detected = False
+            hack_reason = ""
+            try:
+                is_hack, reason = dual_execution_check(ah_func, ah_kwargs)
+                if is_hack:
+                    hack_detected, hack_reason = True, reason
+            except Exception as e:
+                logger.debug(f"Anti-hack Layer2 skipped: {e}")
+            if not hack_detected:
+                try:
+                    is_hack, reason = gpu_profiling_check(ah_func, ah_kwargs)
+                    if is_hack:
+                        hack_detected, hack_reason = True, reason
+                except Exception as e:
+                    logger.debug(f"Anti-hack Layer3 skipped: {e}")
+            if hack_detected:
+                failed = total
+                tb_str = f"[Anti-hack] {hack_reason}"
+                logger.warning(f"Anti-hack detected for {report_name}: {hack_reason}")
+
         log_flag = "[Fail]" if failed > 0 else "[Success]"
         flag = "[green]Success[/green]" if failed == 0 else "[red]Fail[/red]"
         if json_path:
@@ -604,8 +638,9 @@ class Verifier:
             delete_after = True
 
         verifyresult = self.run_tests(
-            name=op_mark, 
-            json_path=json_path, 
+            name=op_mark,
+            json_path=json_path,
+            max_test_cases=config.max_test_cases, 
             max_failures="all",
             seed=config.seed, 
             strict_check=config.strict_check,
@@ -675,7 +710,7 @@ class Verifier:
                             filtered_sources.append(s)
                             filtered_function_names.append(fn_name)
                             filtered_namespaces.append("triton")
-                    elif ns == "triton" and DISPATCH_TORCH_LIB:
+                    elif (ns == "triton" or ns == "") and DISPATCH_TORCH_LIB:
                         # DISPATCH_TORCH_LIB=1: 注册 triton 到 "triton" 命名空间
                         filtered_sources.append(s)
                         filtered_function_names.append(fn_name)

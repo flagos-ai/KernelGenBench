@@ -685,36 +685,93 @@ class PassAtKTester:
             
             # Verify tests
             newly_passed = self.verify_round(round_idx, round_dir, remaining)
-            
+
+            # Anti-hack: check newly passed operators immediately
+            hacked_ops = set()
+            if newly_passed:
+                hacked_ops = self.anti_hack_round(round_idx, round_dir, newly_passed)
+                newly_passed -= hacked_ops
+
             # Update passed operators and track first pass round
             for op_name in newly_passed:
                 if op_name not in self.passed_operators:
                     self.first_pass_round[op_name] = round_idx
-            
+
             self.passed_operators.update(newly_passed)
-            
+
             # Record round results
             round_result = {
                 "round": round_idx,
                 "remaining_before": remaining_count,
                 "newly_passed": len(newly_passed),
                 "newly_passed_operators": sorted(list(newly_passed)),
+                "hacked": len(hacked_ops),
+                "hacked_operators": sorted(list(hacked_ops)),
                 "total_passed": len(self.passed_operators),
                 "pass_rate": len(self.passed_operators) / total_operators,
             }
             self.results_by_round.append(round_result)
-            
+
             # Save intermediate results
             self.save_results()
-            
+
             logger.info(f"\nRound {round_idx} Summary:")
             logger.info(f"  Newly passed: {len(newly_passed)}")
+            if hacked_ops:
+                logger.info(f"  Hacked (removed): {len(hacked_ops)}")
             logger.info(f"  Total passed: {len(self.passed_operators)}/{total_operators}")
             logger.info(f"  Pass rate: {round_result['pass_rate']:.2%}")
-        
+
         # Final summary
         self.print_final_summary(total_operators, max_rounds)
     
+    def anti_hack_round(self, round_idx: int, round_dir: Path, newly_passed: set) -> set:
+        """Run anti-hack checks on newly passed operators for this round.
+
+        Args:
+            round_idx: Current round index
+            round_dir: Directory containing kernel files for this round
+            newly_passed: Set of operator names that passed verification this round
+
+        Returns:
+            Set of operator names that were detected as hacked
+        """
+        operators = {}
+        for op_name in newly_passed:
+            codes = self.generated_codes.get(op_name, {})
+            kernel_code = codes.get(round_idx, "")
+            if not kernel_code:
+                continue
+
+            kernel_path = round_dir / f"{op_name}.py"
+            test_file_path = None if self.test_type == "triton" else round_dir / f"test_accuracy_{op_name}.py"
+
+            operators[op_name] = {
+                "kernel_code": kernel_code,
+                "kernel_path": kernel_path,
+                "test_file_path": test_file_path,
+            }
+
+        if not operators:
+            return set()
+
+        from sandbox.anti_hack_runner import AntiHackRunner
+        runner = AntiHackRunner(
+            self.dataset, self.verify_config,
+            custom_test_modules=self.custom_test_modules,
+        )
+        hack_results = runner.batch_check(operators)
+
+        # Save per-round anti-hack report
+        runner.save_report(
+            hack_results=hack_results,
+            total_operators=len(self.all_operators),
+            passed_operators=newly_passed,
+            output_path=self.output_dir / f"antihack_round_{round_idx}.json",
+        )
+
+        return {op for op, r in hack_results.items() if r.get("hacked")}
+
     def save_results(self) -> None:
         """Save current results to JSON."""
         results_file = self.output_dir / "pass_at_k_results.json"
