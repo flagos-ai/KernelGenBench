@@ -21,6 +21,8 @@ PROJECT_ROOT = SCRIPT_DIR.parent
 sys.path.insert(0, str(PROJECT_ROOT / "src"))
 sys.path.insert(0, str(PROJECT_ROOT))
 
+from test_modules import get_test_modules, get_test_module  # noqa: E402
+
 logger = logging.getLogger(__name__)
 
 
@@ -31,24 +33,6 @@ def load_config(config_path: Path) -> dict:
         sys.exit(1)
     with open(config_path) as f:
         return yaml.safe_load(f)
-
-
-def get_test_module(dataset: str, config: dict) -> str:
-    """Get test module path for dataset."""
-    test_modules = config.get("test_modules", {})
-    if dataset in test_modules:
-        return str(PROJECT_ROOT / test_modules[dataset])
-
-    # Defaults
-    defaults = {
-        "v2": "src/flagbench/accuracy/test_v2_ops.py",
-        "v2_1": "src/flagbench/accuracy/test_v2_1_ops_with_benchmark.py",
-        "cupy": "src/flagbench/accuracy/cublas/test_cublas_ops.py",
-    }
-    if dataset in defaults:
-        return str(PROJECT_ROOT / defaults[dataset])
-
-    raise ValueError(f"No test module configured for dataset: {dataset}")
 
 
 def verify_kernels(
@@ -78,10 +62,11 @@ def verify_kernels(
     if not kernels_dir.exists():
         raise ValueError(f"Kernels directory not found: {kernels_dir}")
 
-    # Get test module
-    test_module = get_test_module(dataset, config)
-    if not Path(test_module).exists():
-        raise ValueError(f"Test module not found: {test_module}")
+    # Get test modules
+    test_modules = get_test_modules(dataset, config)
+    for m in test_modules:
+        if not Path(m).exists():
+            raise ValueError(f"Test module not found: {m}")
 
     # Setup environment
     os.environ["DISPATCH_TORCH_LIB"] = "1"
@@ -101,13 +86,16 @@ def verify_kernels(
     )
 
     verifier = Verifier(verify_config)
-    verifier.set_modules(modules=[test_module], mode="accuracy")
+    verifier.set_modules(modules=test_modules, mode="accuracy")
 
     # Collect kernels to verify
     kernel_files = list(kernels_dir.glob("*.py"))
     if operators:
         filter_ops = set(operators)
-        kernel_files = [f for f in kernel_files if f.stem in filter_ops]
+        kernel_files = [f for f in kernel_files
+                        if f.stem in filter_ops
+                        or (dataset == "KernelGenBench" and "__" in f.stem
+                            and f.stem.split("__", 1)[1] in filter_ops)]
 
     logger.info(f"Found {len(kernel_files)} kernels to verify")
 
@@ -115,12 +103,17 @@ def verify_kernels(
     verify_requests = []
     op_names = []
 
-    # Determine namespace based on dataset
-    namespace = "cupy" if dataset == "cupy" else "aten"
+    # Determine namespace: for KernelGenBench, extract from filename (namespace__opname.py)
+    default_namespace = "cupy" if dataset == "cupy" else "aten"
 
     for kernel_file in sorted(kernel_files):
-        op_name = kernel_file.stem
-        full_name = f"{namespace}::{op_name}"
+        stem = kernel_file.stem
+        if dataset == "KernelGenBench" and "__" in stem:
+            ns, op_name = stem.split("__", 1)
+            full_name = f"{ns}::{op_name}"
+        else:
+            op_name = stem
+            full_name = f"{default_namespace}::{op_name}"
 
         with open(kernel_file) as f:
             kernel_code = f.read()
@@ -246,7 +239,6 @@ def main():
         action="store_true",
         help="Enable debug logging"
     )
-
     args = parser.parse_args()
 
     log_level = logging.DEBUG if args.verbose else logging.INFO

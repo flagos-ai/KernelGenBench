@@ -55,20 +55,26 @@ def load_config(config_path: Path) -> dict:
         return yaml.safe_load(f)
 
 
-def load_ops_from_prompts(prompts_dir: Path, namespace: str) -> list[str]:
+def load_ops_from_prompts(prompts_dir: Path, namespace: str, dataset: str = None) -> list[str]:
     """Load operator names by scanning prompt files in directory.
 
     Args:
         prompts_dir: Directory containing prompt .md files
-        namespace: Operator namespace (e.g., "aten" or "cupy")
+        namespace: Default operator namespace (e.g., "aten" or "cupy")
+        dataset: Dataset name (used for KernelGenBench multi-namespace support)
 
     Returns:
-        List of full operator names (e.g., ["aten::add", "aten::softmax"])
+        List of full operator names (e.g., ["aten::add", "vllm13::rms_norm"])
     """
     ops = []
     for f in sorted(prompts_dir.glob("*.md")):
-        op_name = f.stem  # e.g., "softmax" from "softmax.md"
-        ops.append(f"{namespace}::{op_name}")
+        stem = f.stem  # e.g., "softmax" or "aten__add" or "vllm13__rms_norm"
+        if dataset == "KernelGenBench" and "__" in stem:
+            # KernelGenBench uses "namespace__opname" format
+            ns, op_name = stem.split("__", 1)
+            ops.append(f"{ns}::{op_name}")
+        else:
+            ops.append(f"{namespace}::{stem}")
     return ops
 
 
@@ -216,7 +222,7 @@ def run(args):
 
     # Load operators from prompt files
     namespace = "cupy" if dataset == "cupy" else "aten"
-    ops = load_ops_from_prompts(dataset_prompts_dir, namespace)
+    ops = load_ops_from_prompts(dataset_prompts_dir, namespace, dataset=dataset)
     if not ops:
         print(f"Error: No prompt files found in {dataset_prompts_dir}")
         sys.exit(1)
@@ -274,9 +280,9 @@ def run(args):
             force_rerun = set(args.op.split(","))
 
         for f in kernels_dir.glob("*.py"):
-            op_name = f.stem
-            if op_name not in force_rerun:
-                existing_kernels.add(op_name)
+            stem = f.stem
+            if stem not in force_rerun:
+                existing_kernels.add(stem)
         logger.info(f"Found {len(existing_kernels)} existing kernels (skipping)")
         if force_rerun:
             logger.info(f"Force re-run: {', '.join(force_rerun)}")
@@ -285,7 +291,9 @@ def run(args):
     queue = deque()
     for full_name in ops:
         op_name = full_name.split("::")[-1]
-        if op_name not in existing_kernels:
+        # For KernelGenBench, check namespace__opname format
+        safe_name = full_name.replace("::", "__") if dataset == "KernelGenBench" else op_name
+        if safe_name not in existing_kernels:
             queue.append((full_name, op_name, 0))
 
     logger.info(f"Queue: {len(queue)} operators to process")
@@ -322,26 +330,34 @@ def run(args):
                 break
 
             full_name, op_name, attempt = queue.popleft()
-            prompt_path = dataset_prompts_dir / f"{op_name}.md"
+            # KernelGenBench uses "namespace__opname.md" filenames
+            safe_name = full_name.replace("::", "__") if "::" in full_name else op_name
+            if dataset == "KernelGenBench":
+                prompt_path = dataset_prompts_dir / f"{safe_name}.md"
+            else:
+                prompt_path = dataset_prompts_dir / f"{op_name}.md"
 
             if not prompt_path.exists():
                 logger.warning(f"Prompt not found: {prompt_path}")
                 device_mgr.release(gpu_id)
                 continue
 
-            workspace_dir = workspaces_dir / op_name
+            workspace_dir = workspaces_dir / safe_name
 
             try:
+                # For KernelGenBench, pass full_name (with namespace) as operator
+                # so that verify_single.py can determine the correct namespace
+                launch_op_name = full_name if dataset == "KernelGenBench" else op_name
                 handle = method.launch(
-                    operator=op_name,
+                    operator=launch_op_name,
                     prompt_path=prompt_path,
                     workspace_dir=workspace_dir,
                     gpu_id=gpu_id,
                     config=config,
                 )
-                running[op_name] = (handle, gpu_id, attempt, full_name, time.time(), workspace_dir)
-                progress.add_operator(op_name, gpu_id, attempt + 1)
-                logger.info(f"Launched {method.name} for {op_name} (GPU={gpu_id})")
+                running[safe_name] = (handle, gpu_id, attempt, full_name, time.time(), workspace_dir)
+                progress.add_operator(full_name, gpu_id, attempt + 1)
+                logger.info(f"Launched {method.name} for {full_name} (GPU={gpu_id})")
             except Exception as e:
                 logger.error(f"Failed to launch agent for {op_name}: {e}")
                 device_mgr.release(gpu_id)
@@ -349,31 +365,32 @@ def run(args):
                     queue.append((full_name, op_name, attempt + 1))
 
         # Check running tasks
-        for op_name in list(running.keys()):
-            handle, gpu_id, attempt, full_name, start_time, workspace_dir = running[op_name]
+        for task_key in list(running.keys()):
+            handle, gpu_id, attempt, full_name, start_time, workspace_dir = running[task_key]
+            op_name = full_name.split("::")[-1]
             elapsed = time.time() - start_time
             proc = method.get_process(handle)
 
             # Check timeout
             if timeout and proc.poll() is None and elapsed > timeout:
-                logger.error(f"[TIMEOUT] {op_name} after {timeout}s")
+                logger.error(f"[TIMEOUT] {full_name} after {timeout}s")
                 kill_process(handle)
                 device_mgr.release(gpu_id)
-                del running[op_name]
+                del running[task_key]
 
                 # Retry timeout cases
                 if attempt + 1 < max_retries:
-                    logger.warning(f"[RETRY] {op_name} after timeout (attempt {attempt + 1})")
+                    logger.warning(f"[RETRY] {full_name} after timeout (attempt {attempt + 1})")
                     queue.append((full_name, op_name, attempt + 1))
                     progress.update_operator(
-                        op_name,
+                        full_name,
                         status="retrying",
                         duration_seconds=round(elapsed),
                         error=f"Timeout after {timeout}s, retrying...",
                     )
                 else:
                     progress.update_operator(
-                        op_name,
+                        full_name,
                         status="timeout",
                         duration_seconds=round(elapsed),
                         end_time=datetime.now(timezone.utc).isoformat(),
@@ -384,7 +401,7 @@ def run(args):
             # Check if completed
             if proc.poll() is not None:
                 device_mgr.release(gpu_id)
-                del running[op_name]
+                del running[task_key]
 
                 # Finish and extract result
                 result = method.finish(
@@ -396,12 +413,17 @@ def run(args):
 
                 if result.code:
                     # Save kernel to unified directory
-                    kernel_path = kernels_dir / f"{op_name}.py"
+                    # KernelGenBench: use namespace__opname.py to preserve namespace info
+                    if dataset == "KernelGenBench":
+                        kernel_save_name = full_name.replace("::", "__")
+                    else:
+                        kernel_save_name = op_name
+                    kernel_path = kernels_dir / f"{kernel_save_name}.py"
                     kernel_path.write_text(result.code)
 
-                    logger.info(f"[SUCCESS] {op_name} ({elapsed:.0f}s)")
+                    logger.info(f"[SUCCESS] {full_name} ({elapsed:.0f}s)")
                     progress.update_operator(
-                        op_name,
+                        full_name,
                         status="completed",
                         duration_seconds=round(elapsed),
                         end_time=datetime.now(timezone.utc).isoformat(),
@@ -410,13 +432,13 @@ def run(args):
                 else:
                     # Failed to extract code
                     if attempt + 1 < max_retries:
-                        logger.warning(f"[RETRY] {op_name} (attempt {attempt + 1})")
+                        logger.warning(f"[RETRY] {full_name} (attempt {attempt + 1})")
                         queue.append((full_name, op_name, attempt + 1))
-                        progress.update_operator(op_name, status="retrying")
+                        progress.update_operator(full_name, status="retrying")
                     else:
-                        logger.error(f"[FAILED] {op_name} - no code extracted")
+                        logger.error(f"[FAILED] {full_name} - no code extracted")
                         progress.update_operator(
-                            op_name,
+                            full_name,
                             status="failed",
                             duration_seconds=round(elapsed),
                             end_time=datetime.now(timezone.utc).isoformat(),
@@ -428,11 +450,11 @@ def run(args):
 
     # Handle shutdown
     if shutdown_requested:
-        for op_name, (handle, gpu_id, attempt, full_name, start_time, workspace_dir) in running.items():
+        for task_key, (handle, gpu_id, attempt, full_name, start_time, workspace_dir) in running.items():
             kill_process(handle)
             device_mgr.release(gpu_id)
             progress.update_operator(
-                op_name,
+                full_name,
                 status="cancelled",
                 end_time=datetime.now(timezone.utc).isoformat(),
                 duration_seconds=round(time.time() - start_time),

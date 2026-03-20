@@ -2,6 +2,7 @@
 """Generate prompt files for each operator in a dataset."""
 
 import argparse
+import inspect
 import sys
 from pathlib import Path
 
@@ -14,6 +15,7 @@ from flagbench.dataset import (
     V2_OPERATORS,
     V2_1_OPERATORS,
     CUPY_OPERATORS,
+    get_kernelgenbench_operators,
 )
 from flagbench.dataset.kernel_list import flatten_operator_dict, DynamicImplInfo
 from flagbench.dataset.dataloader import TorchOpsLoader
@@ -24,6 +26,79 @@ DATASET_OPERATORS = {
     "v2": V2_OPERATORS,
     "v2_1": V2_1_OPERATORS,
     "cupy": CUPY_OPERATORS,
+    "KernelGenBench": None,  # Special handling: 210 ops = 110 aten + 50 vllm13 + 50 cublas
+}
+
+
+def _get_kernelgenbench_flat_ops() -> dict:
+    """Get KernelGenBench operators as flat dict {full_name: func}."""
+    return get_kernelgenbench_operators()
+
+
+def get_namespace_from_op(full_name: str) -> str:
+    """Extract namespace from full operator name like 'aten::add' -> 'aten'."""
+    if "::" in full_name:
+        return full_name.split("::")[0]
+    return "aten"
+
+
+def get_baseline_operator_info(op_name: str, namespace: str, baseline_func=None) -> dict:
+    """Get operator info from baseline function (for vllm13/cublas ops without torch.ops schema).
+
+    Args:
+        op_name: Operator name
+        namespace: Namespace (vllm13, cublas)
+        baseline_func: The baseline function object
+
+    Returns:
+        dict with keys: signatures, impl_info, input_args, baseline_code
+    """
+    info = {
+        "signatures": "",
+        "impl_info": f"- `{op_name}`",
+        "input_args": "",
+        "baseline_code": "",
+    }
+
+    if baseline_func is not None:
+        try:
+            sig = inspect.signature(baseline_func)
+            info["signatures"] = f"- `{op_name}`: `{op_name}{sig}`"
+            # Format input args
+            params = []
+            for pname, param in sig.parameters.items():
+                if param.annotation != inspect.Parameter.empty:
+                    params.append(f"  - `{pname}`: {param.annotation}")
+                else:
+                    params.append(f"  - `{pname}`")
+            info["input_args"] = "\n".join(params) if params else f"(See {namespace} documentation)"
+
+            # Get docstring if available
+            doc = inspect.getdoc(baseline_func)
+            if doc:
+                info["input_args"] += f"\n\n**Description**: {doc}"
+
+            # Get baseline source code
+            try:
+                info["baseline_code"] = inspect.getsource(baseline_func)
+            except (OSError, TypeError):
+                info["baseline_code"] = f"# Source code not available for {op_name}"
+        except Exception:
+            info["signatures"] = f"- `{op_name}`: (See {namespace} documentation)"
+            info["input_args"] = f"(See {namespace} documentation for parameter details)"
+    else:
+        info["signatures"] = f"- `{op_name}`: (See {namespace} documentation)"
+        info["input_args"] = f"(See {namespace} documentation for parameter details)"
+
+    return info
+
+
+# Template name mapping by namespace
+TEMPLATE_BY_NAMESPACE = {
+    "aten": "triton_kernel_aten.md",
+    "vllm13": "triton_kernel_vllm.md",
+    "cublas": "triton_kernel_cublas.md",
+    "cupy": "triton_kernel_cublas.md",  # cupy uses same template as cublas
 }
 
 
@@ -109,8 +184,9 @@ def render_prompt(template: str, operator: str, full_name: str, op_info: dict,
     prompt = prompt.replace("{{GPU_ID}}", str(gpu_id))
     prompt = prompt.replace("{{PYTHON_PATH}}", python_path)
     prompt = prompt.replace("{{OP_SIGNATURES}}", op_info["signatures"])
-    prompt = prompt.replace("{{IMPL_INFO}}", op_info["impl_info"])
+    prompt = prompt.replace("{{IMPL_INFO}}", op_info.get("impl_info", ""))
     prompt = prompt.replace("{{INPUT_ARGS}}", op_info["input_args"])
+    prompt = prompt.replace("{{BASELINE_CODE}}", op_info.get("baseline_code", ""))
     prompt = prompt.replace("{{REFERENCE_CODE}}", "")  # Optional, can be added later
     return prompt
 
@@ -118,7 +194,7 @@ def render_prompt(template: str, operator: str, full_name: str, op_info: dict,
 def generate_prompts_for_dataset(
     dataset: str,
     output_dir: Path,
-    template_path: Path,
+    template_dir: Path,
     operators: list[str] | None = None,
     force: bool = False,
     python_path: str = "python",
@@ -126,9 +202,9 @@ def generate_prompts_for_dataset(
     """Generate prompt files for all operators in a dataset.
 
     Args:
-        dataset: Dataset name (v2, v2_1, cupy)
+        dataset: Dataset name (v2, v2_1, cupy, KernelGenBench)
         output_dir: Output directory for prompt files
-        template_path: Path to prompt template
+        template_dir: Directory containing prompt templates
         operators: Optional list of specific operators to generate
         force: Overwrite existing files
         python_path: Python interpreter path for prompts
@@ -136,24 +212,27 @@ def generate_prompts_for_dataset(
     if dataset not in DATASET_OPERATORS:
         raise ValueError(f"Unknown dataset: {dataset}. Available: {list(DATASET_OPERATORS.keys())}")
 
-    # Load template
-    template = load_template(template_path)
-
-    # Get operators dict
-    ops_dict = DATASET_OPERATORS[dataset]
-
-    # Determine namespace and flatten operators
-    if dataset == "cupy":
-        namespace = "cupy"
-        # cupy operators are already in flat format (cupy::xxx -> func)
-        flat_ops = ops_dict
+    # Pre-load all templates (keyed by namespace)
+    templates = {}
+    for ns, tmpl_name in TEMPLATE_BY_NAMESPACE.items():
+        tmpl_path = template_dir / tmpl_name
+        if tmpl_path.exists():
+            templates[ns] = load_template(tmpl_path)
+    # Fallback: legacy single template
+    legacy_path = template_dir / "triton_kernel.md"
+    if legacy_path.exists():
+        legacy_template = load_template(legacy_path)
     else:
-        namespace = "aten"
-        flat_ops = flatten_operator_dict(ops_dict, namespace)
+        legacy_template = None
 
-    # For cupy, we need to handle the signature lookup differently
-    # since cupy operators don't have torch.ops schemas
-    is_cupy = (dataset == "cupy")
+    # Get operators dict and flatten
+    if dataset == "KernelGenBench":
+        # KernelGenBench: 210 ops with mixed namespaces (aten/vllm13/cublas)
+        flat_ops = _get_kernelgenbench_flat_ops()
+    elif dataset == "cupy":
+        flat_ops = DATASET_OPERATORS[dataset]
+    else:
+        flat_ops = flatten_operator_dict(DATASET_OPERATORS[dataset], "aten")
 
     # Create output directory
     dataset_output_dir = output_dir / dataset
@@ -176,25 +255,32 @@ def generate_prompts_for_dataset(
     skipped = 0
 
     for full_name in sorted(flat_ops.keys()):
-        # Extract operator name
         op_name = full_name.split("::")[-1]
+        namespace = get_namespace_from_op(full_name)
 
-        # Output file path
-        prompt_path = dataset_output_dir / f"{op_name}.md"
+        # Output file path: use full_name with :: replaced to avoid collisions
+        # e.g. "aten::add" -> "aten__add.md", "vllm13::rms_norm" -> "vllm13__rms_norm.md"
+        if dataset == "KernelGenBench":
+            safe_name = full_name.replace("::", "__")
+            prompt_path = dataset_output_dir / f"{safe_name}.md"
+        else:
+            prompt_path = dataset_output_dir / f"{op_name}.md"
 
         # Skip if exists and not force
         if prompt_path.exists() and not force:
             skipped += 1
             continue
 
-        # Get operator info
-        if is_cupy:
-            # cupy operators don't have torch.ops schemas, use placeholder
-            op_info = {
-                "signatures": f"- `{op_name}`: (See cuBLAS documentation)",
-                "impl_info": f"- `{op_name}`",
-                "input_args": "(See cuBLAS documentation for parameter details)",
-            }
+        # Select template by namespace
+        template = templates.get(namespace) or legacy_template
+        if template is None:
+            print(f"Warning: No template found for namespace '{namespace}', skipping {full_name}")
+            continue
+
+        # Get operator info based on namespace
+        if namespace in ("vllm13", "cublas", "cupy"):
+            baseline_func = flat_ops.get(full_name)
+            op_info = get_baseline_operator_info(op_name, namespace, baseline_func)
         else:
             op_info = get_operator_info(op_name, namespace)
 
@@ -238,10 +324,10 @@ def main():
         help="Output directory for prompts (default: prompts/)"
     )
     parser.add_argument(
-        "--template",
+        "--template-dir",
         type=Path,
-        default=SCRIPT_DIR / "templates" / "triton_kernel.md",
-        help="Path to prompt template"
+        default=SCRIPT_DIR / "templates",
+        help="Directory containing prompt templates (default: templates/)"
     )
     parser.add_argument(
         "--force", "-f",
@@ -278,7 +364,7 @@ def main():
             generate_prompts_for_dataset(
                 dataset=dataset,
                 output_dir=args.output_dir,
-                template_path=args.template,
+                template_dir=args.template_dir,
                 operators=operators,
                 force=args.force,
                 python_path=args.python_path,
