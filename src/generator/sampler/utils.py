@@ -735,10 +735,16 @@ def extract_code_blocks(text, code_language_types: list[str]) -> str:
 # Scale up experiments in parallel
 ################################################################################
 
-def maybe_multithread(func, instances, num_workers, time_interval=0.0, **shared_kwargs):
+def maybe_multithread(func, instances, num_workers, time_interval=0.0, on_result=None, **shared_kwargs):
     """
     Multithreaded execution of func, with optional time interval between queries
     Ideal for querying LLM APIs, does not provide process isolation
+
+    Args:
+        on_result: Optional callback called with each result as it completes.
+                   Signature: on_result(result) -> None
+                   This enables incremental saving so completed results are not
+                   lost if some tasks hang or fail.
     """
     output_data = []
     if isinstance(instances, dict):
@@ -777,13 +783,24 @@ def maybe_multithread(func, instances, num_workers, time_interval=0.0, **shared_
                         result = future.result()
                         if result is not None:
                             output_data.append(result)
+                            if on_result is not None:
+                                try:
+                                    on_result(result)
+                                except Exception as cb_err:
+                                    logger.error(f"on_result callback error: {cb_err}")
                     except Exception as e:
                         logger.error("Got an error!", e)
                         continue
     else:
         for instance in tqdm(instances):
             output = func(**instance, **shared_kwargs) if isinstance(instance, dict) else func(instance, **shared_kwargs)
-            if output is not None: output_data.append(output)
+            if output is not None:
+                output_data.append(output)
+                if on_result is not None:
+                    try:
+                        on_result(output)
+                    except Exception as cb_err:
+                        logger.error(f"on_result callback error: {cb_err}")
 
     return output_data
 

@@ -427,15 +427,35 @@ class PassAtKTester:
             generator = GENERATOR[self.test_type](self.gen_config, prompt_builder=self.prompt_builder)
         else:
             generator = GENERATOR[self.test_type](self.gen_config)
-        generated_codes = generator(gen_args)
-        
+
+        # Incremental save callback: save each result to disk as soon as it completes,
+        # so that completed results are not lost if some tasks hang or fail.
+        incremental_saved = set()
+        def _on_result(raw_result):
+            try:
+                from generator.sampler.utils import extract_first_code  # noqa: E402
+                raw_code = raw_result[-1]
+                gen_arg = raw_result[1]
+                op_name = gen_arg.op_name
+                extracted = extract_first_code(raw_code, ["python", "cpp"]) if raw_code else None
+                if extracted and extracted.strip():
+                    test_file = round_dir / f"{op_name.split('.')[-1]}.py"
+                    with open(test_file, "w") as f:
+                        f.write(extracted.strip())
+                    incremental_saved.add(op_name)
+                    logger.debug(f"Incremental save: {op_name}")
+            except Exception as e:
+                logger.debug(f"Incremental save failed for one result: {e}")
+
+        generated_codes = generator(gen_args, on_result=_on_result)
+
         # Process and save the generated codes
         generation_results = []
         saved_count = 0
-        
+
         for idx, (generated_code, name, sample_id) in enumerate(generated_codes):
             full_name = name
-            
+
             result_entry = {
                 "operator": full_name,
                 "test_file_name": f"{name}.py",
@@ -443,25 +463,28 @@ class PassAtKTester:
                 "error": None,
                 "code_length": 0,
             }
-            
+
             if generated_code and isinstance(generated_code, str) and len(generated_code.strip()) > 0:
                 try:
                     test_file = round_dir / f"{name.split('.')[-1]}.py"
                     with open(test_file, "w") as f:
                         f.write(generated_code)
-                    
+
                     result_entry["success"] = True
                     result_entry["code_length"] = len(generated_code)
                     saved_count += 1
                     self.store_generated_code(full_name, round_idx, generated_code)
-                    
+
                 except Exception as e:
                     result_entry["error"] = str(e)
                     logger.error(f"Failed to save {name}: {e}")
             else:
                 result_entry["error"] = "Empty or invalid generated code"
-            
+
             generation_results.append(result_entry)
+
+        if incremental_saved:
+            logger.info(f"Incremental save: {len(incremental_saved)} kernels saved during generation")
         
         round_summary_path = round_dir / "generation_summary.json"
         if round_summary_path.exists():

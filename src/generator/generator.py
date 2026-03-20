@@ -35,7 +35,7 @@ class BaseGenerator:
         )
         self.from_mcp = False
 
-    def __call__(self, kwargs) -> list:
+    def __call__(self, kwargs, on_result=None) -> list:
         if not isinstance(kwargs, list):
             kwargs = [kwargs]
         kwargs = [self._init_data(kwarg) for kwarg in kwargs]
@@ -45,12 +45,13 @@ class BaseGenerator:
         }
         # kwargs.update({"prompt_fn": self.generate_prompt})
         generation_results = maybe_multithread(
-            generate_sample_launcher, 
+            generate_sample_launcher,
             instances=kwargs,
             num_workers=self.generation_config.num_workers,
-            time_interval=self.generation_config.api_query_interval, 
-            config=self.generation_config, 
-            inference_server=self.inference_server, 
+            time_interval=self.generation_config.api_query_interval,
+            on_result=on_result,
+            config=self.generation_config,
+            inference_server=self.inference_server,
             run_dir=os.path.join(self.generation_config.run_dir, self.generation_config.run_name)
         )
         generation_results = self.post_process(generation_results)
