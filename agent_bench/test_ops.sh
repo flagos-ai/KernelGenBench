@@ -76,7 +76,8 @@ while [[ $# -gt 0 ]]; do
             echo "Options:"
             echo "  -d, --dataset       Dataset to use (default: v2_1)"
             echo "  -m, --method        Agent method to use (default: naive_cc)"
-            echo "                      Available: naive_cc, normal_cc, iterative_optimizer"
+            echo "                      Available: naive_cc, normal_cc, iterative_optimizer,"
+            echo "                                 naive_opencode, normal_opencode, iterative_opencode"
             echo "  --device-count      Number of GPUs for verification (default: 8)"
             echo "  --timeout           Timeout per operator in seconds (default: 600)"
             echo "  --max-optimize-calls  Max CC calls for iterative_optimizer (default: 10)"
@@ -95,6 +96,8 @@ while [[ $# -gt 0 ]]; do
             echo "  $0 --skip-gen -d v2_1            # Skip regenerating prompts"
             echo "  $0 -m iterative_optimizer add    # Use iterative optimizer method"
             echo "  $0 -m iterative_optimizer add --max-optimize-calls 5  # Limit CC calls"
+            echo "  $0 -m normal_opencode add              # Use OpenCode method"
+            echo "  $0 -m normal_opencode -d v2_1           # OpenCode on full dataset"
             exit 0
             ;;
         -*)

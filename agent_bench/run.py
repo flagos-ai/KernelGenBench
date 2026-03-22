@@ -157,8 +157,22 @@ class Progress:
             self._save()
 
     def finalize(self):
-        """Mark run as complete."""
+        """Mark run as complete and aggregate token usage."""
         self.data["end_time"] = datetime.now(timezone.utc).isoformat()
+        # Aggregate token usage across all operators
+        token_total = {
+            "input_tokens": 0,
+            "output_tokens": 0,
+            "cache_creation": 0,
+            "cache_read": 0,
+            "total": 0,
+        }
+        for op_data in self.data["operators"].values():
+            tu = op_data.get("token_usage")
+            if tu:
+                for k in token_total:
+                    token_total[k] += tu.get(k, 0)
+        self.data["token_usage"] = token_total
         self._save()
 
     def _recount(self):
@@ -428,6 +442,7 @@ def run(args):
                         duration_seconds=round(elapsed),
                         end_time=datetime.now(timezone.utc).isoformat(),
                         code_generated=True,
+                        token_usage=result.metadata.get("token_usage"),
                     )
                 else:
                     # Failed to extract code
@@ -468,10 +483,18 @@ def run(args):
 
     # Print summary
     s = progress.data["summary"]
+    t = progress.data.get("token_usage", {})
     print(f"\n{'='*50}")
     print(f"Run completed: {run_name}")
     print(f"Method: {method.name}")
     print(f"Total: {s['total']}, Completed: {s['completed']}, Failed: {s['failed']}")
+    if t.get("total", 0) > 0:
+        print(f"\nToken Usage:")
+        print(f"  Input tokens:     {t['input_tokens']:>12,}")
+        print(f"  Output tokens:    {t['output_tokens']:>12,}")
+        print(f"  Cache creation:   {t['cache_creation']:>12,}")
+        print(f"  Cache read:       {t['cache_read']:>12,}")
+        print(f"  Total:            {t['total']:>12,}")
     print(f"Results: {run_dir}")
     print(f"{'='*50}")
 
