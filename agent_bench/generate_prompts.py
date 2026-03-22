@@ -25,6 +25,16 @@ from flagbench.dataset.kernel_list import (
 from flagbench.dataset.dataloader import TorchOpsLoader
 from runtime import get_visible_devices_env, get_device_constraints
 
+# Import device detection for template selection
+sys.path.insert(0, str(SCRIPT_DIR))
+from device_manager import detect_device_type
+
+# Device type to template subdirectory mapping
+_DEVICE_TEMPLATE_DIR = {
+    "npu": "ascend",
+    "musa": "musa",
+}
+
 
 # Dataset name to operators mapping
 DATASET_OPERATORS = {
@@ -206,11 +216,8 @@ def render_prompt(template: str, operator: str, full_name: str, op_info: dict,
     prompt = prompt.replace("{{INPUT_ARGS}}", op_info["input_args"])
     prompt = prompt.replace("{{BASELINE_CODE}}", op_info.get("baseline_code", ""))
     prompt = prompt.replace("{{REFERENCE_CODE}}", "")  # Optional, can be added later
-    # Device-agnostic: inject device env var name and constraints
+    # Device-agnostic: inject device env var name
     prompt = prompt.replace("{{DEVICE_ENV}}", get_visible_devices_env())
-    device_constraints = get_device_constraints()
-    if device_constraints:
-        prompt = prompt.rstrip() + "\n\n" + device_constraints
     return prompt
 
 
@@ -236,8 +243,20 @@ def generate_prompts_for_dataset(
         raise ValueError(f"Unknown dataset: {dataset}. Available: {list(DATASET_OPERATORS.keys())}")
 
     # Pre-load all templates (keyed by namespace)
+    # Device-specific templates take priority over generic ones
+    device_type = detect_device_type()
+    device_subdir = _DEVICE_TEMPLATE_DIR.get(device_type)
+    device_template_dir = template_dir / device_subdir if device_subdir else None
+
     templates = {}
     for ns, tmpl_name in TEMPLATE_BY_NAMESPACE.items():
+        # Try device-specific template first
+        if device_template_dir:
+            device_tmpl_path = device_template_dir / tmpl_name
+            if device_tmpl_path.exists():
+                templates[ns] = load_template(device_tmpl_path)
+                continue
+        # Fallback to generic template
         tmpl_path = template_dir / tmpl_name
         if tmpl_path.exists():
             templates[ns] = load_template(tmpl_path)
