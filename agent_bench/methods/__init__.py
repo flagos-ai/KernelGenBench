@@ -23,12 +23,18 @@ from .base import BaseMethod, MethodResult
 from .naive_cc import NaiveCCMethod
 from .normal_cc import NormalCCMethod
 from .iterative_optimizer import IterativeOptimizerMethod
+from .naive_opencode import NaiveOpenCodeMethod
+from .normal_opencode import NormalOpenCodeMethod
+from .iterative_opencode import IterativeOpenCodeMethod
 
 # Registry of available methods
 _METHODS = {
     "naive_cc": NaiveCCMethod,
     "normal_cc": NormalCCMethod,
     "iterative_optimizer": IterativeOptimizerMethod,
+    "naive_opencode": NaiveOpenCodeMethod,
+    "normal_opencode": NormalOpenCodeMethod,
+    "iterative_opencode": IterativeOpenCodeMethod,
 }
 
 
@@ -63,4 +69,7 @@ __all__ = [
     "NaiveCCMethod",
     "NormalCCMethod",
     "IterativeOptimizerMethod",
+    "NaiveOpenCodeMethod",
+    "NormalOpenCodeMethod",
+    "IterativeOpenCodeMethod",
 ]

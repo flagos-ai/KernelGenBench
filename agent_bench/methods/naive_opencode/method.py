@@ -1,0 +1,275 @@
+"""Naive OpenCode method - single call to OpenCode."""
+
+import json
+import logging
+import os
+import re
+import subprocess
+from pathlib import Path
+from typing import Any
+
+from ..base import BaseMethod, MethodResult
+
+logger = logging.getLogger(__name__)
+
+# Paths relative to this method's directory
+METHOD_DIR = Path(__file__).parent
+TEMPLATES_DIR = METHOD_DIR / "templates"
+INSTRUCTIONS_TEMPLATE = TEMPLATES_DIR / "instructions.md"
+
+
+def _extract_token_usage(output_path: Path) -> dict:
+    """Extract token usage from OpenCode JSON output.
+
+    Parses step_finish events and accumulates token counts.
+    Returns dict with: input_tokens, output_tokens, cache_creation, cache_read, total.
+    """
+    usage = {
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "cache_creation": 0,
+        "cache_read": 0,
+        "total": 0,
+    }
+    try:
+        with open(output_path, "r", errors="replace") as f:
+            for line in f:
+                line = line.strip()
+                if not line:
+                    continue
+                try:
+                    event = json.loads(line)
+                    if event.get("type") != "step_finish":
+                        continue
+                    tokens = event.get("part", {}).get("tokens", {})
+                    usage["input_tokens"] += tokens.get("input", 0)
+                    usage["output_tokens"] += tokens.get("output", 0)
+                    usage["total"] += tokens.get("total", 0)
+                    cache = tokens.get("cache", {})
+                    usage["cache_read"] += cache.get("read", 0)
+                    usage["cache_creation"] += cache.get("write", 0)
+                except json.JSONDecodeError:
+                    continue
+    except Exception as e:
+        logger.warning(f"Failed to extract token usage: {e}")
+    return usage
+
+
+class NaiveOpenCodeMethod(BaseMethod):
+    """Single-call OpenCode method.
+
+    Same as NaiveCCMethod but uses OpenCode CLI instead of Claude Code.
+    OpenCode is expected to output code in a ```python block.
+    """
+
+    name = "naive_opencode"
+
+    def _load_instructions_template(self) -> str:
+        """Load instructions template from file."""
+        if INSTRUCTIONS_TEMPLATE.exists():
+            return INSTRUCTIONS_TEMPLATE.read_text()
+        else:
+            logger.warning(f"Instructions template not found: {INSTRUCTIONS_TEMPLATE}")
+            return ""
+
+    def _replace_output_section(self, base_prompt: str, new_instructions: str) -> str:
+        """Replace the output requirements section with new instructions."""
+        pattern = r"(##\s*输出要求.*?)$"
+        match = re.search(pattern, base_prompt, re.DOTALL | re.IGNORECASE)
+
+        if match:
+            final_prompt = base_prompt[:match.start()].rstrip() + "\n\n" + new_instructions
+        else:
+            final_prompt = base_prompt.rstrip() + "\n\n" + new_instructions
+
+        return final_prompt
+
+    def _build_prompt(self, base_prompt: str, gpu_id: int) -> str:
+        """Build final prompt with instructions template."""
+        instructions = self._load_instructions_template()
+        final_prompt = self._replace_output_section(base_prompt, instructions)
+        final_prompt = final_prompt.replace("{{GPU_ID}}", str(gpu_id))
+        return final_prompt
+
+    def launch(
+        self,
+        operator: str,
+        prompt_path: Path,
+        workspace_dir: Path,
+        gpu_id: int,
+        config: dict,
+    ) -> Any:
+        """Launch OpenCode process."""
+        workspace_dir.mkdir(parents=True, exist_ok=True)
+
+        # Read base prompt
+        with open(prompt_path) as f:
+            base_prompt = f.read()
+
+        # Build final prompt with instructions
+        prompt = self._build_prompt(base_prompt, gpu_id)
+
+        # Prepare output paths
+        stdout_path = workspace_dir / "oc_output.json"
+        log_path = workspace_dir / "oc.log"
+
+        # Environment
+        env = os.environ.copy()
+        env["IS_SANDBOX"] = "1"
+
+        # Build command
+        agent_config = config.get("agent", {})
+        opencode_bin = agent_config.get("opencode_bin", "opencode")
+        opencode_model = agent_config.get("opencode_model")
+
+        cmd = [
+            opencode_bin,
+            "run", prompt,
+            "--format", "json",
+            "--dir", str(workspace_dir),
+        ]
+
+        if opencode_model:
+            cmd.extend(["--model", opencode_model])
+
+        # Launch process
+        stdout_file = open(stdout_path, "w")
+        stderr_file = open(log_path, "w")
+
+        try:
+            proc = subprocess.Popen(
+                cmd,
+                cwd=str(workspace_dir),
+                env=env,
+                stdin=subprocess.DEVNULL,
+                stdout=stdout_file,
+                stderr=stderr_file,
+                start_new_session=True,
+            )
+        except Exception:
+            stdout_file.close()
+            stderr_file.close()
+            raise
+
+        return {
+            "proc": proc,
+            "stdout_path": stdout_path,
+            "stdout_file": stdout_file,
+            "stderr_file": stderr_file,
+        }
+
+    def finish(
+        self,
+        operator: str,
+        handle: Any,
+        workspace_dir: Path,
+        config: dict,
+    ) -> MethodResult:
+        """Extract code from OpenCode output."""
+        stdout_path = handle["stdout_path"]
+        stdout_file = handle["stdout_file"]
+        stderr_file = handle["stderr_file"]
+
+        # Close file handles
+        try:
+            if not stdout_file.closed:
+                stdout_file.close()
+        except Exception:
+            pass
+        try:
+            if not stderr_file.closed:
+                stderr_file.close()
+        except Exception:
+            pass
+
+        # Extract code from output
+        code = self._extract_code(stdout_path)
+
+        # Extract token usage
+        token_usage = _extract_token_usage(stdout_path)
+
+        # Save kernel if extracted
+        if code:
+            kernel_path = workspace_dir / "kernel.py"
+            kernel_path.write_text(code)
+
+        return MethodResult(
+            code=code,
+            passed=None,
+            speedup=None,
+            metadata={"oc_calls": 1, "token_usage": token_usage},
+        )
+
+    def _extract_code(self, output_path: Path) -> str | None:
+        """Extract Python code from OpenCode JSON output.
+
+        OpenCode --format json outputs JSON events (one per line).
+        We try multiple strategies:
+        1. Look for {type: "result"} event (same as CC format)
+        2. Look for {type: "text"} or {type: "message"} events
+        3. Fall back to reading entire output as text
+        """
+        try:
+            content = output_path.read_text(errors="replace")
+            if not content.strip():
+                return None
+
+            # Strategy 1: Try parsing as JSONL (line-by-line JSON events)
+            result_text = ""
+            for line in content.splitlines():
+                line = line.strip()
+                if not line:
+                    continue
+                try:
+                    event = json.loads(line)
+                    # Look for result/text/message events
+                    etype = event.get("type")
+                    part = event.get("part", {})
+                    if etype == "result":
+                        result_text = event.get("result", "") or part.get("result", "")
+                        break
+                    elif etype == "text":
+                        result_text += part.get("text", "") or event.get("text", "")
+                    elif etype == "message" and "content" in event:
+                        result_text = event.get("content", "")
+                except json.JSONDecodeError:
+                    continue
+
+            # Strategy 2: Try parsing entire content as single JSON
+            if not result_text:
+                try:
+                    data = json.loads(content)
+                    if isinstance(data, dict):
+                        result_text = (
+                            data.get("result", "")
+                            or data.get("text", "")
+                            or data.get("content", "")
+                            or data.get("message", "")
+                        )
+                    elif isinstance(data, list):
+                        # Array of events
+                        for event in data:
+                            if isinstance(event, dict):
+                                if event.get("type") == "result":
+                                    result_text = event.get("result", "")
+                                    break
+                except json.JSONDecodeError:
+                    pass
+
+            # Strategy 3: Use raw content as text
+            if not result_text:
+                result_text = content
+
+            # Extract the last Python code block
+            code_matches = re.findall(r"```python\s*(.*?)\s*```", result_text, re.DOTALL)
+            if code_matches:
+                return code_matches[-1].strip()
+
+            return None
+        except Exception as e:
+            logger.warning(f"Failed to extract code: {e}")
+            return None
+
+    def get_process(self, handle: Any) -> subprocess.Popen:
+        """Get the subprocess.Popen object from handle."""
+        return handle["proc"]
