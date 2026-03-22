@@ -85,7 +85,9 @@ class IterativeOpenCodeMethod(BaseMethod):
 
         env = os.environ.copy()
         env["IS_SANDBOX"] = "1"
-        env["CUDA_VISIBLE_DEVICES"] = str(gpu_id)
+
+        from ...device_manager import get_device_env_var
+        env[get_device_env_var()] = str(gpu_id)
 
         worker_script = METHOD_DIR / "worker.py"
 

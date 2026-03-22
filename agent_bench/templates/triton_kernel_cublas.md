@@ -10,7 +10,7 @@
 
 ## 运行环境
 
-- 所有涉及 GPU 的命令必须加上 `CUDA_VISIBLE_DEVICES={{GPU_ID}}` 前缀
+- 所有涉及 GPU 的命令必须加上 `{{DEVICE_ENV}}={{GPU_ID}}` 前缀
 - Python 路径: `{{PYTHON_PATH}}`
 
 ## Baseline 函数

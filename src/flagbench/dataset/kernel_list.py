@@ -1134,8 +1134,12 @@ def _load_vllm_operators():
 
 def _load_cublas_operators():
     """延迟加载 CUBLAS baseline 函数"""
-    from .baseline import cublas
-    return {f'cublas::{name}': getattr(cublas, name) for name in CUBLAS_OPERATOR_NAMES}
+    try:
+        from .baseline import cublas
+        return {f'cublas::{name}': getattr(cublas, name) for name in CUBLAS_OPERATOR_NAMES}
+    except ImportError:
+        logger.warning("cublas baseline not available (no cublas library), skipping cublas operators")
+        return {}
 
 
 def _load_torch_operators():
@@ -1156,6 +1160,19 @@ def get_vllm_operators():
 def get_cublas_operators():
     """获取 CUBLAS_OPERATORS 字典"""
     return _load_cublas_operators()
+
+
+def get_aten_operators():
+    """获取 aten 算子字典 (110 torch operators)"""
+    return _load_torch_operators()
+
+
+def get_kernelgenbench_nocublas_operators():
+    """获取 KernelGenBench 无 cublas 子集 (50 vllm + 110 torch = 160)"""
+    ops = {}
+    ops.update(_load_vllm_operators())
+    ops.update(_load_torch_operators())
+    return ops
 
 
 def get_kernelgenbench_operators():

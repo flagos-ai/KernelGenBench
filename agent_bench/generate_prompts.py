@@ -17,8 +17,13 @@ from flagbench.dataset import (
     CUPY_OPERATORS,
     get_kernelgenbench_operators,
 )
-from flagbench.dataset.kernel_list import flatten_operator_dict, DynamicImplInfo
+from flagbench.dataset.kernel_list import (
+    flatten_operator_dict, DynamicImplInfo,
+    get_aten_operators, get_vllm_operators, get_cublas_operators,
+    get_kernelgenbench_nocublas_operators,
+)
 from flagbench.dataset.dataloader import TorchOpsLoader
+from runtime import get_visible_devices_env, get_device_constraints
 
 
 # Dataset name to operators mapping
@@ -27,12 +32,25 @@ DATASET_OPERATORS = {
     "v2_1": V2_1_OPERATORS,
     "cupy": CUPY_OPERATORS,
     "KernelGenBench": None,  # Special handling: 210 ops = 110 aten + 50 vllm13 + 50 cublas
+    "KernelGenBench-aten": None,  # 110 aten ops
+    "KernelGenBench-vllm": None,  # 50 vllm13 ops
+    "KernelGenBench-cublas": None,  # 50 cublas ops
+    "KernelGenBench-nocublas": None,  # 160 ops = 110 aten + 50 vllm13 (for non-NVIDIA chips)
 }
 
 
-def _get_kernelgenbench_flat_ops() -> dict:
+def _get_kernelgenbench_flat_ops(dataset: str = "KernelGenBench") -> dict:
     """Get KernelGenBench operators as flat dict {full_name: func}."""
-    return get_kernelgenbench_operators()
+    if dataset == "KernelGenBench-aten":
+        return get_aten_operators()
+    elif dataset == "KernelGenBench-vllm":
+        return get_vllm_operators()
+    elif dataset == "KernelGenBench-cublas":
+        return get_cublas_operators()
+    elif dataset == "KernelGenBench-nocublas":
+        return get_kernelgenbench_nocublas_operators()
+    else:
+        return get_kernelgenbench_operators()
 
 
 def get_namespace_from_op(full_name: str) -> str:
@@ -188,6 +206,11 @@ def render_prompt(template: str, operator: str, full_name: str, op_info: dict,
     prompt = prompt.replace("{{INPUT_ARGS}}", op_info["input_args"])
     prompt = prompt.replace("{{BASELINE_CODE}}", op_info.get("baseline_code", ""))
     prompt = prompt.replace("{{REFERENCE_CODE}}", "")  # Optional, can be added later
+    # Device-agnostic: inject device env var name and constraints
+    prompt = prompt.replace("{{DEVICE_ENV}}", get_visible_devices_env())
+    device_constraints = get_device_constraints()
+    if device_constraints:
+        prompt = prompt.rstrip() + "\n\n" + device_constraints
     return prompt
 
 
@@ -226,16 +249,19 @@ def generate_prompts_for_dataset(
         legacy_template = None
 
     # Get operators dict and flatten
-    if dataset == "KernelGenBench":
-        # KernelGenBench: 210 ops with mixed namespaces (aten/vllm13/cublas)
-        flat_ops = _get_kernelgenbench_flat_ops()
+    is_kgb = dataset.startswith("KernelGenBench")
+    if is_kgb:
+        flat_ops = _get_kernelgenbench_flat_ops(dataset)
     elif dataset == "cupy":
         flat_ops = DATASET_OPERATORS[dataset]
     else:
         flat_ops = flatten_operator_dict(DATASET_OPERATORS[dataset], "aten")
 
+    # Sub-datasets share KernelGenBench prompts directory
+    prompts_dataset = "KernelGenBench" if is_kgb else dataset
+
     # Create output directory
-    dataset_output_dir = output_dir / dataset
+    dataset_output_dir = output_dir / prompts_dataset
     dataset_output_dir.mkdir(parents=True, exist_ok=True)
 
     # Filter operators if specified (exact match on operator name)
@@ -260,7 +286,7 @@ def generate_prompts_for_dataset(
 
         # Output file path: use full_name with :: replaced to avoid collisions
         # e.g. "aten::add" -> "aten__add.md", "vllm13::rms_norm" -> "vllm13__rms_norm.md"
-        if dataset == "KernelGenBench":
+        if is_kgb:
             safe_name = full_name.replace("::", "__")
             prompt_path = dataset_output_dir / f"{safe_name}.md"
         else:

@@ -24,6 +24,16 @@ TOOLS_DIR = AGENT_BENCH_DIR / "tools"  # Shared tools directory
 TEMPLATES_DIR = SCRIPT_DIR / "templates"
 
 
+def _get_device_env_var() -> str:
+    """Get device visibility env var name (standalone, no relative imports)."""
+    vendor = os.environ.get("GEMS_VENDOR", "")
+    if vendor == "ascend" or os.environ.get("ASCEND_RT_VISIBLE_DEVICES"):
+        return "ASCEND_RT_VISIBLE_DEVICES"
+    if vendor == "mthreads" or os.environ.get("MUSA_VISIBLE_DEVICES"):
+        return "MUSA_VISIBLE_DEVICES"
+    return "CUDA_VISIBLE_DEVICES"
+
+
 def list_versions(workspace_dir: Path) -> list[str]:
     """List all version directories (v1, v2, ...) in workspace.
 
@@ -77,6 +87,7 @@ def load_optimize_prompt(gpu_id: int, operator: str, dataset: str) -> str:
     prompt = prompt.replace("{{OP_NAME}}", operator)
     prompt = prompt.replace("{{DATASET}}", dataset)
     prompt = prompt.replace("{{TOOLS_DIR}}", str(TOOLS_DIR))
+    prompt = prompt.replace("{{DEVICE_ENV}}", _get_device_env_var())
 
     return prompt
 
@@ -189,7 +200,7 @@ def verify_kernel(
 
     # Set environment for verification
     env = os.environ.copy()
-    env["CUDA_VISIBLE_DEVICES"] = str(gpu_id)
+    env[_get_device_env_var()] = str(gpu_id)
     env["DISPATCH_TORCH_LIB"] = "1"
     env["FLAGBENCH_SKIP_BOTH_TEST"] = "1"
 

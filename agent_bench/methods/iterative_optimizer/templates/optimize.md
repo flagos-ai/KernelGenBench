@@ -16,7 +16,7 @@ Current directory contains:
 **IMPORTANT**: Always use `--output-dir` to save verification results. This creates `verify.json` which will be reused by the system.
 
 ```bash
-CUDA_VISIBLE_DEVICES={{GPU_ID}} python {{TOOLS_DIR}}/verify_single.py \
+{{DEVICE_ENV}}={{GPU_ID}} python {{TOOLS_DIR}}/verify_single.py \
     --code v1/kernel.py --op {{OP_NAME}} --dataset {{DATASET}} --output-dir v1/
 ```
 

@@ -3,7 +3,7 @@
 你可以使用以下命令验证你的实现：
 
 ```bash
-CUDA_VISIBLE_DEVICES={{GPU_ID}} python {{VERIFY_SCRIPT}} --code kernel.py --op {{OPERATOR}} --dataset {{DATASET}} --output-json
+{{DEVICE_ENV}}={{GPU_ID}} python {{VERIFY_SCRIPT}} --code kernel.py --op {{OPERATOR}} --dataset {{DATASET}} --output-json
 ```
 
 验证结果会以 JSON 格式输出，包含：

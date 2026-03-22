@@ -8,7 +8,15 @@ from sandbox.register import Register, register, REGISTERED_OPS
 from sandbox.verifier.test_parametrize import Param, parametrize, label
 
 # Import baseline modules to trigger registration
-from .dataset.baseline import cupy as cupy_baseline
+try:
+    from .dataset.baseline import cupy as cupy_baseline
+except ImportError:
+    cupy_baseline = None
+
+try:
+    from .dataset.baseline import cublas as cublas_baseline
+except ImportError:
+    cublas_baseline = None
 
 
 import os

@@ -69,7 +69,7 @@ def load_ops_from_prompts(prompts_dir: Path, namespace: str, dataset: str = None
     ops = []
     for f in sorted(prompts_dir.glob("*.md")):
         stem = f.stem  # e.g., "softmax" or "aten__add" or "vllm13__rms_norm"
-        if dataset == "KernelGenBench" and "__" in stem:
+        if dataset and dataset.startswith("KernelGenBench") and "__" in stem:
             # KernelGenBench uses "namespace__opname" format
             ns, op_name = stem.split("__", 1)
             ops.append(f"{ns}::{op_name}")
@@ -230,9 +230,11 @@ def run(args):
     prompts_dir = SCRIPT_DIR / config.get("paths", {}).get("prompts", "prompts")
     runs_dir = SCRIPT_DIR / config.get("paths", {}).get("runs", "runs")
 
-    # Dataset
+    # Dataset - sub-datasets share KernelGenBench prompts directory
     dataset = args.dataset
-    dataset_prompts_dir = prompts_dir / dataset
+    is_kgb = dataset.startswith("KernelGenBench")
+    prompts_dataset = "KernelGenBench" if is_kgb else dataset
+    dataset_prompts_dir = prompts_dir / prompts_dataset
 
     # Load operators from prompt files
     namespace = "cupy" if dataset == "cupy" else "aten"
@@ -240,6 +242,16 @@ def run(args):
     if not ops:
         print(f"Error: No prompt files found in {dataset_prompts_dir}")
         sys.exit(1)
+
+    # Filter by sub-dataset namespace
+    if dataset == "KernelGenBench-aten":
+        ops = [op for op in ops if op.startswith("aten::")]
+    elif dataset == "KernelGenBench-vllm":
+        ops = [op for op in ops if op.startswith("vllm13::")]
+    elif dataset == "KernelGenBench-cublas":
+        ops = [op for op in ops if op.startswith("cublas::")]
+    elif dataset == "KernelGenBench-nocublas":
+        ops = [op for op in ops if not op.startswith("cublas::")]
 
     # Filter operators if specified (exact match on operator name)
     if args.op:
@@ -306,7 +318,7 @@ def run(args):
     for full_name in ops:
         op_name = full_name.split("::")[-1]
         # For KernelGenBench, check namespace__opname format
-        safe_name = full_name.replace("::", "__") if dataset == "KernelGenBench" else op_name
+        safe_name = full_name.replace("::", "__") if is_kgb else op_name
         if safe_name not in existing_kernels:
             queue.append((full_name, op_name, 0))
 
@@ -346,7 +358,7 @@ def run(args):
             full_name, op_name, attempt = queue.popleft()
             # KernelGenBench uses "namespace__opname.md" filenames
             safe_name = full_name.replace("::", "__") if "::" in full_name else op_name
-            if dataset == "KernelGenBench":
+            if is_kgb:
                 prompt_path = dataset_prompts_dir / f"{safe_name}.md"
             else:
                 prompt_path = dataset_prompts_dir / f"{op_name}.md"
@@ -361,7 +373,7 @@ def run(args):
             try:
                 # For KernelGenBench, pass full_name (with namespace) as operator
                 # so that verify_single.py can determine the correct namespace
-                launch_op_name = full_name if dataset == "KernelGenBench" else op_name
+                launch_op_name = full_name if is_kgb else op_name
                 handle = method.launch(
                     operator=launch_op_name,
                     prompt_path=prompt_path,
@@ -428,7 +440,7 @@ def run(args):
                 if result.code:
                     # Save kernel to unified directory
                     # KernelGenBench: use namespace__opname.py to preserve namespace info
-                    if dataset == "KernelGenBench":
+                    if is_kgb:
                         kernel_save_name = full_name.replace("::", "__")
                     else:
                         kernel_save_name = op_name
