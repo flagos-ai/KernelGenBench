@@ -140,6 +140,9 @@ def rms_norm_baseline(out, input, weight, epsilon):
         prompt += "- Include the Triton kernel(s) decorated with @triton.jit\n"
         prompt += "- Do NOT include explanations or test code\n"
 
+        # Add device-specific constraints
+        prompt += self._get_device_constraints()
+
         return prompt
 
     def build_fix(self, gen_args: BaseGenerateArgs) -> str:

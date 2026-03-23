@@ -39,7 +39,7 @@ DEVICE_CONSTRAINTS = {
 It should be noted that the operator runs on Ascend NPU devices.
 1. In the generated operator implementation, if `import torch` is used, it must be immediately followed by `import torch_npu`.
 2. The device type is `npu`, and all device-related APIs should use `npu`, for example `device = torch.device("npu:0")`, `torch.npu.synchronize()`, etc. Always ensure consistent use of the `npu` device.
-3. Compilation errors like "error: ub overflow" usually indicate excessive Unified Buffer (UB) usage caused by large intermediate tensors. A common workaround is to split the computation into smaller tiles or chunks and handle them iteratively within the kernel.
+3. All GPU-related commands must use `ASCEND_RT_VISIBLE_DEVICES` instead of `CUDA_VISIBLE_DEVICES`.
 """,
     'musa': """
 ## Device-Specific Requirements

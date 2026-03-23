@@ -116,6 +116,9 @@ def saxpy(alpha, x, y):
         prompt += "2. The Python wrapper function that calls the kernel\n"
         prompt += "3. Proper imports (triton, triton.language, torch)\n"
 
+        # Add device-specific constraints
+        prompt += self._get_device_constraints()
+
         return prompt
 
     def _get_blas_level_guidance(self, blas_type: str) -> str:
