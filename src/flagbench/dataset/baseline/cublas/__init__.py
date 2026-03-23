@@ -1,51 +1,54 @@
 # cuBLAS Baseline Functions
-from .cublasCcopy_v2 import cublasCcopy_v2
-from .cublasCdotu_v2 import cublasCdotu_v2
-from .cublasCgemmStridedBatched import cublasCgemmStridedBatched
-from .cublasCgemmStridedBatched_64 import cublasCgemmStridedBatched_64
-from .cublasCgemm_v2 import cublasCgemm_v2
-from .cublasCgemvBatched_64 import cublasCgemvBatched_64
-from .cublasCgemvStridedBatched import cublasCgemvStridedBatched
-from .cublasCgemv_v2 import cublasCgemv_v2
-from .cublasCgeru_v2 import cublasCgeru_v2
-from .cublasCsymm_v2 import cublasCsymm_v2
-from .cublasCsymv_v2 import cublasCsymv_v2
-from .cublasCsyrkEx import cublasCsyrkEx
-from .cublasDasum_v2 import cublasDasum_v2
-from .cublasDaxpy_v2 import cublasDaxpy_v2
-from .cublasDcopy_v2 import cublasDcopy_v2
-from .cublasDgemmBatched import cublasDgemmBatched
-from .cublasDgemmStridedBatched import cublasDgemmStridedBatched
-from .cublasDgemmStridedBatched_64 import cublasDgemmStridedBatched_64
-from .cublasDgemvBatched import cublasDgemvBatched
-from .cublasDgemvStridedBatched import cublasDgemvStridedBatched
-from .cublasDgemv_v2 import cublasDgemv_v2
-from .cublasDsbmv_v2 import cublasDsbmv_v2
-from .cublasDsyr2_v2 import cublasDsyr2_v2
-from .cublasDtrsmBatched import cublasDtrsmBatched
-from .cublasHgemmBatched import cublasHgemmBatched
-from .cublasHgemmStridedBatched import cublasHgemmStridedBatched
-from .cublasSaxpy_v2 import cublasSaxpy_v2
-from .cublasSdgmm import cublasSdgmm
-from .cublasSdot_v2 import cublasSdot_v2
-from .cublasSgeam import cublasSgeam
-from .cublasSgemmBatched_64 import cublasSgemmBatched_64
-from .cublasSgemmEx import cublasSgemmEx
-from .cublasSgemmStridedBatched import cublasSgemmStridedBatched
-from .cublasSgemm_v2 import cublasSgemm_v2
-from .cublasSgemvBatched import cublasSgemvBatched
-from .cublasSgemvStridedBatched import cublasSgemvStridedBatched
-from .cublasSger_v2 import cublasSger_v2
-from .cublasSscal_v2 import cublasSscal_v2
-from .cublasSsyrk_v2 import cublasSsyrk_v2
-from .cublasStbmv_v2 import cublasStbmv_v2
-from .cublasStrsm_v2 import cublasStrsm_v2
-from .cublasStrsv_v2 import cublasStrsv_v2
-from .cublasZdotc_v2 import cublasZdotc_v2
-from .cublasZgemmBatched import cublasZgemmBatched
-from .cublasZgemmStridedBatched import cublasZgemmStridedBatched
-from .cublasZgemvBatched import cublasZgemvBatched
-from .cublasZgemvStridedBatched import cublasZgemvStridedBatched
-from .cublasZgerc_v2 import cublasZgerc_v2
-from .cublasZswap_v2 import cublasZswap_v2
-from .cublasZtrsmBatched import cublasZtrsmBatched
+try:
+    from .cublasCcopy_v2 import cublasCcopy_v2
+    from .cublasCdotu_v2 import cublasCdotu_v2
+    from .cublasCgemmStridedBatched import cublasCgemmStridedBatched
+    from .cublasCgemmStridedBatched_64 import cublasCgemmStridedBatched_64
+    from .cublasCgemm_v2 import cublasCgemm_v2
+    from .cublasCgemvBatched_64 import cublasCgemvBatched_64
+    from .cublasCgemvStridedBatched import cublasCgemvStridedBatched
+    from .cublasCgemv_v2 import cublasCgemv_v2
+    from .cublasCgeru_v2 import cublasCgeru_v2
+    from .cublasCsymm_v2 import cublasCsymm_v2
+    from .cublasCsymv_v2 import cublasCsymv_v2
+    from .cublasCsyrkEx import cublasCsyrkEx
+    from .cublasDasum_v2 import cublasDasum_v2
+    from .cublasDaxpy_v2 import cublasDaxpy_v2
+    from .cublasDcopy_v2 import cublasDcopy_v2
+    from .cublasDgemmBatched import cublasDgemmBatched
+    from .cublasDgemmStridedBatched import cublasDgemmStridedBatched
+    from .cublasDgemmStridedBatched_64 import cublasDgemmStridedBatched_64
+    from .cublasDgemvBatched import cublasDgemvBatched
+    from .cublasDgemvStridedBatched import cublasDgemvStridedBatched
+    from .cublasDgemv_v2 import cublasDgemv_v2
+    from .cublasDsbmv_v2 import cublasDsbmv_v2
+    from .cublasDsyr2_v2 import cublasDsyr2_v2
+    from .cublasDtrsmBatched import cublasDtrsmBatched
+    from .cublasHgemmBatched import cublasHgemmBatched
+    from .cublasHgemmStridedBatched import cublasHgemmStridedBatched
+    from .cublasSaxpy_v2 import cublasSaxpy_v2
+    from .cublasSdgmm import cublasSdgmm
+    from .cublasSdot_v2 import cublasSdot_v2
+    from .cublasSgeam import cublasSgeam
+    from .cublasSgemmBatched_64 import cublasSgemmBatched_64
+    from .cublasSgemmEx import cublasSgemmEx
+    from .cublasSgemmStridedBatched import cublasSgemmStridedBatched
+    from .cublasSgemm_v2 import cublasSgemm_v2
+    from .cublasSgemvBatched import cublasSgemvBatched
+    from .cublasSgemvStridedBatched import cublasSgemvStridedBatched
+    from .cublasSger_v2 import cublasSger_v2
+    from .cublasSscal_v2 import cublasSscal_v2
+    from .cublasSsyrk_v2 import cublasSsyrk_v2
+    from .cublasStbmv_v2 import cublasStbmv_v2
+    from .cublasStrsm_v2 import cublasStrsm_v2
+    from .cublasStrsv_v2 import cublasStrsv_v2
+    from .cublasZdotc_v2 import cublasZdotc_v2
+    from .cublasZgemmBatched import cublasZgemmBatched
+    from .cublasZgemmStridedBatched import cublasZgemmStridedBatched
+    from .cublasZgemvBatched import cublasZgemvBatched
+    from .cublasZgemvStridedBatched import cublasZgemvStridedBatched
+    from .cublasZgerc_v2 import cublasZgerc_v2
+    from .cublasZswap_v2 import cublasZswap_v2
+    from .cublasZtrsmBatched import cublasZtrsmBatched
+except (OSError, ImportError):
+    pass
