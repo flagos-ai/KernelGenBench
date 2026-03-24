@@ -109,7 +109,7 @@ class NormalOpenCodeMethod(BaseMethod):
         instructions = instructions.replace("{{OPERATOR}}", operator)
         instructions = instructions.replace("{{DATASET}}", dataset)
 
-        from ...device_manager import get_device_env_var
+        from device_manager import get_device_env_var
         instructions = instructions.replace("{{DEVICE_ENV}}", get_device_env_var())
 
         # Replace output section with method-specific instructions
@@ -157,7 +157,7 @@ class NormalOpenCodeMethod(BaseMethod):
         env = os.environ.copy()
         env["IS_SANDBOX"] = "1"
 
-        from ...device_manager import get_device_env_var
+        from device_manager import get_device_env_var
         env[get_device_env_var()] = str(gpu_id)
 
         # Build command
