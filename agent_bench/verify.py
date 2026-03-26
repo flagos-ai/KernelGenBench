@@ -182,7 +182,7 @@ def verify_kernels(
     total = len(results)
     pass_rate = f"{passed / total * 100:.1f}%" if total > 0 else "0%"
 
-    return {
+    verify_result = {
         "run_name": run_dir.name,
         "dataset": dataset,
         "timestamp": datetime.now(timezone.utc).isoformat(),
@@ -194,6 +194,48 @@ def verify_kernels(
         },
         "operators": operators_results,
     }
+
+    # Anti-hack: batch check all passed operators
+    passed_ops = set()
+    for result in results:
+        if result.success:
+            passed_ops.add(result.op_name)
+
+    if passed_ops:
+        logger.info(f"Running anti-hack checks on {len(passed_ops)} passed operators...")
+        try:
+            from sandbox.anti_hack_runner import AntiHackRunner
+
+            runner = AntiHackRunner(
+                dataset=dataset,
+                verify_config=verify_config,
+                custom_test_modules=test_modules,
+                device_count=device_count,
+            )
+
+            ah_operators = {}
+            for op_name in passed_ops:
+                file_stem = op_name.replace("::", "__")
+                kernel_file = kernels_dir / f"{file_stem}.py"
+                if not kernel_file.exists():
+                    continue
+                with open(kernel_file) as f:
+                    ah_operators[op_name] = {
+                        "kernel_code": f.read(),
+                        "kernel_path": kernel_file,
+                    }
+
+            hack_results = runner.batch_check(ah_operators)
+            runner.save_report(
+                hack_results=hack_results,
+                total_operators=total,
+                passed_operators=passed_ops,
+                output_path=run_dir / "antihack_report.json",
+            )
+        except Exception as e:
+            logger.warning(f"Anti-hack check failed: {e}")
+
+    return verify_result
 
 
 def main():
