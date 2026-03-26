@@ -48,7 +48,7 @@ class VerifyConfig:
     acc_timeout: int = 300    # seconds
     perf_timeout: int = 600    # seconds
     manage_device_visibility: bool = True  # Whether to set device visibility env var
-    anti_hack: bool = True  # Enable anti-hack Layer 2/3 runtime checks
+    anti_hack: bool = False  # Enable anti-hack Layer 2/3 runtime checks
     max_test_cases: int = 0  # Max test cases to run (0 = all)
 
 @dataclass

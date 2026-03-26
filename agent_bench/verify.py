@@ -153,10 +153,8 @@ def verify_kernels(
     failed = 0
 
     for result in results:
-        # Extract operator name from result (e.g., "aten::add" -> "add")
+        # Use full op_name (e.g., "aten::add") as key to avoid namespace collisions
         result_op = result.op_name
-        if "::" in result_op:
-            result_op = result_op.split("::")[-1]
 
         op_result = {
             "status": "passed" if result.success else "failed",
