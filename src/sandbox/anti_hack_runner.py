@@ -15,7 +15,8 @@ class AntiHackRunner:
 
     def __init__(self, dataset: str, verify_config: VerifyConfig,
                  custom_test_modules: Optional[List[str]] = None,
-                 max_test_cases: int = 1):
+                 max_test_cases: int = 1,
+                 device_count: int = 1):
         """Initialize anti-hack runner.
 
         Args:
@@ -23,11 +24,13 @@ class AntiHackRunner:
             verify_config: Base verify config for Layer 2/3 checks
             custom_test_modules: Test modules to load (avoids test case bloat)
             max_test_cases: Max test cases to run for L2/L3 checks (default: 1)
+            device_count: Number of GPUs for Layer 2/3 checks
         """
         self.dataset = dataset
         self.verify_config = verify_config
         self.custom_test_modules = custom_test_modules
         self.max_test_cases = max_test_cases
+        self.device_count = device_count
 
     def get_backend(self, op_name: str) -> str:
         """Determine anti-hack backend from operator name.
@@ -125,7 +128,7 @@ class AntiHackRunner:
 
             _, results = verifier.only_verify(
                 name_source_map=[verify_req],
-                device_count=1,
+                device_count=self.device_count,
             )
 
             if not results:
