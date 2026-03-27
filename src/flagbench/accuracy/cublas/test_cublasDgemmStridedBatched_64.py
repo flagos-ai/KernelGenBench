@@ -20,7 +20,7 @@ import torch
 @parametrize("transa, transb", [("N", "N"), ("N", "T"), ("T", "N"), ("T", "T")])
 @parametrize("batchCount", [1, 2, 4])
 @parametrize("dtype", [torch.float64])
-def test_cublasDgemmStridedBatched_64(M, N, K, alpha, beta, transa, transb, batchCount, dtype):
+def test_accuracy_cublasDgemmStridedBatched_64(M, N, K, alpha, beta, transa, transb, batchCount, dtype):
     A_shape = (batchCount, K, M) if transa == 'T' else (batchCount, M, K)
     B_shape = (batchCount, N, K) if transb == 'T' else (batchCount, K, N)
     A = torch.randn(A_shape, dtype=dtype, device=device)

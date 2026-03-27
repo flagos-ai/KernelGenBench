@@ -49,7 +49,7 @@ import torch
     ("C", "T"),
 ])
 @parametrize("dtype", [torch.complex64])
-def test_cublasCgemm_v2(M, N, K, alpha, beta, transa, transb, dtype):
+def test_accuracy_cublasCgemm_v2(M, N, K, alpha, beta, transa, transb, dtype):
     # Determine storage shapes based on transposition flags (column-major expectations)
     A_rows = M if transa == 'N' else K
     A_cols = K if transa == 'N' else M
