@@ -1,0 +1,28 @@
+# Agent Benchmark Configuration - Ksyun GPT5.4
+
+agent:
+  type: claude
+  bin: /share/project/zhaohuxing/anaconda3/envs/claude_tool/bin/claude
+  timeout: 1800
+  max_retries: 3
+  budget: 50.0
+  opencode_bin: /share/project/zhaohuxing/anaconda3/envs/claude_tool/bin/opencode
+  opencode_model: kspmas/ep-20260317031647-wtdxo
+
+device:
+  gpu_ids: [4,5,6,7]
+  lock_dir: /tmp/agent_bench_gpu_locks_gpt54
+
+paths:
+  prompts: prompts
+  runs: runs
+  templates: templates
+  python: python
+
+test_modules:
+  KernelGenBench:
+    - src/flagbench/accuracy/test_v2_1_ops_with_benchmark.py
+    - src/flagbench/accuracy/vllm13/
+    - src/flagbench/accuracy/cublas/
+
+poll_interval: 10

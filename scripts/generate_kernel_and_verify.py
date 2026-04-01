@@ -745,6 +745,10 @@ class PassAtKTester:
             logger.info(f"  Total passed: {len(self.passed_operators)}/{total_operators}")
             logger.info(f"  Pass rate: {round_result['pass_rate']:.2%}")
 
+        # Anti-hack: final check on all passed operators
+        if self.passed_operators:
+            self.anti_hack_final_check()
+
         # Final summary
         self.print_final_summary(total_operators, max_rounds)
     
@@ -765,6 +769,7 @@ class PassAtKTester:
             kernel_code = codes.get(round_idx, "")
             if not kernel_code:
                 continue
+
 
             kernel_path = round_dir / f"{op_name}.py"
             test_file_path = None if self.test_type == "triton" else round_dir / f"test_accuracy_{op_name}.py"
@@ -794,6 +799,50 @@ class PassAtKTester:
         )
 
         return {op for op, r in hack_results.items() if r.get("hacked")}
+
+    def anti_hack_final_check(self) -> None:
+        """Run anti-hack checks on all passed operators after Pass@K completes.
+
+        Does NOT modify self.passed_operators. Saves a separate
+        pass_at_k_results_antihack.json with anti-hack results.
+        """
+        operators = {}
+        for op_name in list(self.passed_operators):
+            round_idx = self.first_pass_round.get(op_name)
+            if round_idx is None:
+                continue
+
+            codes = self.generated_codes.get(op_name, {})
+            kernel_code = codes.get(round_idx, "")
+            if not kernel_code:
+                continue
+
+            round_dir = self.output_dir / f"round_{round_idx}"
+            kernel_path = round_dir / f"{op_name}.py"
+            test_file_path = None if self.test_type == "triton" else round_dir / f"test_accuracy_{op_name}.py"
+
+            operators[op_name] = {
+                "kernel_code": kernel_code,
+                "kernel_path": kernel_path,
+                "test_file_path": test_file_path,
+            }
+
+        if not operators:
+            return
+
+        from sandbox.anti_hack_runner import AntiHackRunner
+        runner = AntiHackRunner(
+            self.dataset, self.verify_config,
+            custom_test_modules=self.custom_test_modules,
+        )
+        hack_results = runner.batch_check(operators)
+        runner.save_report(
+            hack_results=hack_results,
+            total_operators=len(self.all_operators),
+            passed_operators=self.passed_operators,
+            output_path=self.output_dir / "pass_at_k_results_antihack.json",
+        )
+
 
     def save_results(self) -> None:
         """Save current results to JSON."""
