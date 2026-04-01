@@ -145,8 +145,11 @@ class TorchPromptBuilder(PromptBuilder):
         if info.user_advice:
             prompt += f"And the following user advice should be considered: {info.user_advice}\n"
 
-        prompt += f"You must generate the valid Triton code directly without any explanations or additional text, and ensure no testing or benchmarking code is included. The code must be complete and ready to run.\n"
-        prompt += f"You must use ```python ... ``` to format the code block.\n"
+        prompt += (
+            "You must return a complete optimized implementation as a Python code block.\n"
+            "Return a full `ModelNew` class that wraps your Triton kernel(s).\n"
+            "Use ```python ... ``` to format the code block and include no extra text.\n"
+        )
 
         # Add device constraints
         prompt += self._get_device_constraints()

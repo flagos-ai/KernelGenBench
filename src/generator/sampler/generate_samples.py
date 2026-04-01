@@ -164,11 +164,13 @@ def generate_sample_single(
 
     # Query server with constructed prompt
     custom_cuda = inference_server(custom_cuda_prompt)
-    # extracted_custom_cuda = extract_first_code(custom_cuda, ["python", "cpp"])
-    # if extracted_custom_cuda is not None:
-    #     custom_cuda = extracted_custom_cuda
-    # else:
-    #     logger.warning(f"Code extraction failed for {work.op_name}, using raw output.")
+    if isinstance(custom_cuda, list):
+        custom_cuda = custom_cuda[0] if custom_cuda else ""
+    extracted_custom_cuda = extract_first_code(custom_cuda, ["python", "cpp"])
+    if extracted_custom_cuda is not None:
+        custom_cuda = extracted_custom_cuda
+    else:
+        logger.warning(f"Code extraction failed for {work.op_name}, using raw output.")
     # # check LLM is able to generate custom CUDA code
     # assert custom_cuda is not None, "Custom CUDA code generation failed"
 

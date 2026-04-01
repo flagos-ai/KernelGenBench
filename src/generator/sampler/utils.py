@@ -223,12 +223,12 @@ def query_server(
         #     )
         #     model = model_name
         
-        # case "vllm":
-        #     client = OpenAI(
-        #         api_key="EMPTY", 
-        #         base_url=base_url if base_url else "http://localhost:8000/v1"
-        #     )
-        #     model = model_name
+        case "vllm":
+            client = OpenAI(
+                api_key="EMPTY",
+                base_url=base_url if base_url else "http://localhost:8000/v1"
+            )
+            model = model_name
 
         case "panda":
             client = OpenAI(
@@ -664,6 +664,27 @@ def extract_first_code(output_string: str, code_language_types: list[str]) -> st
 
         return code
 
+    # Fallback: try drkernel-style kernel block
+    kernel_block = extract_kernel_implementation_block(trimmed)
+    if kernel_block:
+        return kernel_block
+
+    return None
+
+
+def extract_kernel_implementation_block(text: str) -> str | None:
+    """
+    Extract code from a drkernel-style block:
+    # Kernel Implementation
+    ...
+    # End
+    """
+    if not text:
+        return None
+    pattern = r"#\s*Kernel\s+Implementation\s*\n(.*?)(?=\n#\s*End\b|$)"
+    match = re.search(pattern, text, re.DOTALL | re.IGNORECASE)
+    if match:
+        return match.group(1).strip()
     return None
 
 
