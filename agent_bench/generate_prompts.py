@@ -33,6 +33,7 @@ from device_manager import detect_device_type
 _DEVICE_TEMPLATE_DIR = {
     "npu": "ascend",
     "musa": "musa",
+    "iluvatar": "iluvatar",
 }
 
 

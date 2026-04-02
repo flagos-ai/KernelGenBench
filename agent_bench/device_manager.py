@@ -9,12 +9,24 @@ logger = logging.getLogger(__name__)
 
 
 def detect_device_type() -> str:
-    """Detect current device type: 'cuda', 'npu', or 'musa'."""
+    """Detect current device type: 'cuda', 'npu', 'musa', or 'iluvatar'."""
     vendor = os.environ.get("GEMS_VENDOR", "")
     if vendor == "ascend" or os.environ.get("ASCEND_RT_VISIBLE_DEVICES"):
         return "npu"
     if vendor == "mthreads" or os.environ.get("MUSA_VISIBLE_DEVICES"):
         return "musa"
+    if vendor == "iluvatar":
+        return "iluvatar"
+    # Auto-detect Iluvatar GPU via device name
+    if not vendor:
+        try:
+            result = subprocess.run(
+                ["nvidia-smi", "--query-gpu=name", "--format=csv,noheader"],
+                capture_output=True, text=True, timeout=10)
+            if result.returncode == 0 and "Iluvatar" in result.stdout:
+                return "iluvatar"
+        except (subprocess.TimeoutExpired, FileNotFoundError):
+            pass
     return "cuda"
 
 
@@ -22,6 +34,7 @@ _VISIBLE_DEVICES_ENV = {
     "cuda": "CUDA_VISIBLE_DEVICES",
     "npu": "ASCEND_RT_VISIBLE_DEVICES",
     "musa": "MUSA_VISIBLE_DEVICES",
+    "iluvatar": "CUDA_VISIBLE_DEVICES",
 }
 
 
