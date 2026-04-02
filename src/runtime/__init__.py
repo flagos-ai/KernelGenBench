@@ -47,7 +47,29 @@ It should be noted that the operator runs on MUSA devices.
 1. In the generated operator implementation, if `import torch` is used, it must be immediately followed by `import torch_musa`.
 2. The device type is `musa`, and all device-related APIs should use `musa`, for example `device = torch.device("musa:0")`, `torch.musa.synchronize()`, etc. Always ensure consistent use of the `musa` device.
 """,
+    'iluvatar': """
+## Device-Specific Requirements
+It should be noted that the operator runs on Iluvatar BI-V150 GPUs with CoreX software stack.
+1. The device type is `cuda` (standard PyTorch CUDA API). No special import is needed beyond `import torch`.
+2. Iluvatar GPUs provide a CUDA-compatible interface via CoreX, but the underlying hardware architecture differs from NVIDIA. Avoid relying on NVIDIA-specific hardware features (e.g., Tensor Core specific instructions).
+3. Some advanced Triton features may not be supported or may behave differently. Prefer basic Triton operations.
+4. Use `allow_tf32=False` for `tl.dot` to ensure precision.
+5. Prefer smaller BLOCK_SIZE values (e.g., 512 or 1024) to avoid register spilling on this architecture.
+""",
 }
+
+
+def _is_iluvatar() -> bool:
+    """Detect if running on Iluvatar GPU."""
+    if os.environ.get('GEMS_VENDOR') == 'iluvatar':
+        return True
+    try:
+        import torch
+        if torch.cuda.is_available():
+            return 'Iluvatar' in torch.cuda.get_device_name(0)
+    except Exception:
+        pass
+    return False
 
 
 def get_visible_devices_env() -> str:
@@ -59,6 +81,9 @@ def get_device_constraints() -> str:
     """获取当前设备的 Prompt 约束（如果启用）"""
     if not ENABLE_DEVICE_CONSTRAINTS:
         return ""
+    # Iluvatar reports as 'cuda' but needs its own constraints
+    if device.name == 'cuda' and _is_iluvatar():
+        return DEVICE_CONSTRAINTS.get('iluvatar', "")
     return DEVICE_CONSTRAINTS.get(device.name, "")
 
 
