@@ -86,7 +86,8 @@ class PassAtKTester:
         self.single_test = single_test
         self.op_name = op_name
         self.reflection = reflection
-        self.disable_antihack_round = False
+        self.disable_antihack_round = True
+        self.disable_antihack = False
         
         # Track results
         self.all_operators: Dict[str, Dict[str, APIInfo]] = {}
@@ -750,7 +751,7 @@ class PassAtKTester:
             logger.info(f"  Pass rate: {round_result['pass_rate']:.2%}")
 
         # Anti-hack: final check on all passed operators
-        if self.passed_operators:
+        if self.passed_operators and not self.disable_antihack:
             self.anti_hack_final_check()
 
         # Final summary
@@ -931,6 +932,7 @@ def main():
     parser.add_argument("--use-wiki", action="store_true", help="Use Wiki references for generation")
     parser.add_argument("--custom-test-modules", type=str, nargs="+", default=None, help="Custom test module paths or directories (e.g., src/flagbench/accuracy/test_custom.py or src/flagbench/accuracy/)")
     parser.add_argument("--disable-antihack-round", action="store_true", help="Disable per-round anti-hack checks (final check still runs)")
+    parser.add_argument("--disable-antihack", action="store_true", help="Disable all anti-hack checks (both per-round and final)")
 
     args = parser.parse_args()
 
@@ -1024,6 +1026,7 @@ def main():
         use_wiki=args.use_wiki,
     )
     tester.disable_antihack_round = args.disable_antihack_round
+    tester.disable_antihack = args.disable_antihack
     
     tester.initialize_operators(args.name)
     tester.run_pass_at_k(max_rounds=args.max_rounds)
