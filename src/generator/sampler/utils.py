@@ -18,7 +18,7 @@ from tqdm import tqdm
 # from together import Together
 from openai import OpenAI
 # import google.generativeai as genai
-# import anthropic
+import anthropic
 
 # from datasets import load_dataset
 import numpy as np
@@ -47,7 +47,8 @@ DEEPSEEK_KEY = os.environ.get("DEEPSEEK_API_KEY")
 OPENAI_KEY = os.environ.get("OPENAI_API_KEY")
 GEMINI_KEY = os.environ.get("GEMINI_API_KEY")
 SGLANG_KEY = os.environ.get("SGLANG_API_KEY")  # for Local Deployment
-ANTHROPIC_KEY = os.environ.get("ANTHROPIC_API_KEY")
+ANTHROPIC_KEY = os.environ.get("ANTHROPIC_API_KEY") or os.environ.get("ANTHROPIC_AUTH_TOKEN")
+ANTHROPIC_BASE_URL = os.environ.get("ANTHROPIC_BASE_URL")
 SAMBANOVA_API_KEY = os.environ.get("SAMBANOVA_API_KEY")
 FIREWORKS_API_KEY = os.environ.get("FIREWORKS_API_KEY")
 DASHSCOPE_API_KEY = os.environ.get("DASHSCOPE_API_KEY")
@@ -198,11 +199,12 @@ def query_server(
         #     )
         #     model = model_name
 
-        # case "anthropic":
-        #     client = anthropic.Anthropic(
-        #         api_key=ANTHROPIC_KEY,
-        #     )
-        #     model = model_name
+        case "anthropic":
+            client = anthropic.Anthropic(
+                api_key=ANTHROPIC_KEY,
+                base_url=ANTHROPIC_BASE_URL if ANTHROPIC_BASE_URL else anthropic.NOT_GIVEN,
+            )
+            model = model_name
         # case "google":
         #     genai.configure(api_key=GEMINI_KEY)
         #     model = model_name

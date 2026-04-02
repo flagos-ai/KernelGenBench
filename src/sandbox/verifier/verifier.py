@@ -49,7 +49,16 @@ class VerifyConfig:
     perf_timeout: int = 600    # seconds
     manage_device_visibility: bool = True  # Whether to set device visibility env var
     anti_hack: bool = False  # Enable anti-hack Layer 2/3 runtime checks
+    device_type: str = None  # Device type: nvidia, iluvatar, ascend, mthreads (auto-detected if None)
     max_test_cases: int = 0  # Max test cases to run (0 = all)
+
+    def __post_init__(self):
+        if self.device_type is None:
+            try:
+                from runtime import get_device_type
+                self.device_type = get_device_type()
+            except ImportError:
+                self.device_type = "nvidia"
 
 @dataclass
 class Source:
@@ -578,12 +587,15 @@ class Verifier:
             except Exception as e:
                 logger.debug(f"Anti-hack Layer2 skipped: {e}")
             if not hack_detected:
-                try:
-                    is_hack, reason = gpu_profiling_check(ah_func, ah_kwargs)
-                    if is_hack:
-                        hack_detected, hack_reason = True, reason
-                except Exception as e:
-                    logger.debug(f"Anti-hack Layer3 skipped: {e}")
+                if self._running_config.device_type == "nvidia":
+                    try:
+                        is_hack, reason = gpu_profiling_check(ah_func, ah_kwargs)
+                        if is_hack:
+                            hack_detected, hack_reason = True, reason
+                    except Exception as e:
+                        logger.debug(f"Anti-hack Layer3 skipped: {e}")
+                else:
+                    logger.debug(f"Anti-hack Layer3 skipped: non-NVIDIA device ({self._running_config.device_type})")
             if hack_detected:
                 failed = total
                 tb_str = f"[Anti-hack] {hack_reason}"

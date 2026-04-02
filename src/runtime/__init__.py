@@ -87,6 +87,23 @@ def get_device_constraints() -> str:
     return DEVICE_CONSTRAINTS.get(device.name, "")
 
 
+def get_device_type() -> str:
+    """获取当前设备类型，用于 anti-hack 等场景。
+
+    Returns:
+        "nvidia", "iluvatar", "ascend", or "mthreads"
+    """
+    if device.name == 'npu':
+        return 'ascend'
+    if device.name == 'musa':
+        return 'mthreads'
+    if device.name == 'cuda':
+        if _is_iluvatar():
+            return 'iluvatar'
+        return 'nvidia'
+    return 'nvidia'
+
+
 def get_triton_testing():
     """
     获取当前设备的 triton testing 模块
@@ -109,6 +126,7 @@ __all__ = [
     'torch_device_fn',
     'get_visible_devices_env',
     'get_device_constraints',
+    'get_device_type',
     'get_triton_testing',
     'VISIBLE_DEVICES_ENV',
     'DEVICE_CONSTRAINTS',

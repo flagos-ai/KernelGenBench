@@ -35,19 +35,23 @@ class AntiHackRunner:
         self.device_count = device_count
 
     def get_backend(self, op_name: str) -> str:
-        """Determine anti-hack backend from operator name.
+        """Determine anti-hack backend from operator name and device type.
 
         Args:
             op_name: Operator name (e.g., "aten::add", "vllm13::fused_add")
 
         Returns:
-            Backend name for anti-hack check ("torch", "vllm13", "cublas")
+            Backend name for anti-hack check ("torch", "torch_iluvatar", "vllm13", "cublas")
         """
+        device_type = self.verify_config.device_type
+
         if op_name.startswith("vllm13::") or op_name.startswith("vllm15::"):
             return "vllm13"
         elif op_name.startswith("cublas::"):
             return "cublas"
         elif op_name.startswith("aten::"):
+            if device_type != "nvidia":
+                return f"torch_{device_type}"
             return "torch"
         return self.dataset
 

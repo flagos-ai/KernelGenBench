@@ -43,6 +43,17 @@ BACKEND_BLACKLISTS = {
         # torch backend: harder to define, only block direct aten dispatch
         "torch.ops.aten",
     ],
+    # Heterogeneous chip backends (non-NVIDIA)
+    "torch_iluvatar": [
+        # Iluvatar (天数智芯): block direct aten dispatch, same principle as NV
+        "torch.ops.aten",
+    ],
+    "torch_ascend": [
+        # Ascend (华为昇腾): TODO - add blacklist as needed
+    ],
+    "torch_mthreads": [
+        # Moore Threads (摩尔线程): TODO - add blacklist as needed
+    ],
 }
 
 
