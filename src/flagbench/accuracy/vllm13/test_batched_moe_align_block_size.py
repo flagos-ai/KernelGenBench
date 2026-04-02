@@ -18,7 +18,7 @@ import triton
     (64, 16, 256),
     (128, 16, 256),
 ])
-def test_batched_moe_align_block_size(config):
+def test_accuracy_batched_moe_align_block_size(config):
     num_experts = config[0]
     block_size = config[1]
     max_tokens = config[2]

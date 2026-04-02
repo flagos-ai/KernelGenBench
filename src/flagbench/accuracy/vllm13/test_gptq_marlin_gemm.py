@@ -18,7 +18,7 @@ from vllm.scalar_type import scalar_types
     (512, 1024, 512),
     (1024, 2048, 1024),
 ])
-def test_gptq_marlin_gemm(config):
+def test_accuracy_gptq_marlin_gemm(config):
     M = config[0]
     K = config[1]
     N = config[2]

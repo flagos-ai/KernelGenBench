@@ -53,6 +53,7 @@ FIREWORKS_API_KEY = os.environ.get("FIREWORKS_API_KEY")
 DASHSCOPE_API_KEY = os.environ.get("DASHSCOPE_API_KEY")
 PANDA_API_KEY = os.environ.get("PANDA_API_KEY")
 KSYUN_API_KEY = os.environ.get("KSYUN_API_KEY")
+FLAGOS_API_KEY = os.environ.get("FLAGOS_API_KEY")
 
 ############################################
 # Triton Prompt
@@ -255,6 +256,15 @@ def query_server(
             }
             model = ksyun_model_mapping.get(model_name, model_name)
 
+        case "flagos":
+            client = OpenAI(
+                api_key=FLAGOS_API_KEY,
+                base_url="https://api.flagos.net/v1",
+                timeout=10000000,
+                max_retries=10,
+            )
+            model = model_name
+
         case _:
             raise NotImplementedError
 
@@ -311,6 +321,20 @@ def query_server(
         )
         outputs = [choice.message.content for choice in response.choices]
     elif server_type == "ksyun":
+        response = client.chat.completions.create(
+            model=model,
+            messages=[
+                {"role": "system", "content": system_prompt},
+                {"role": "user", "content": prompt},
+            ],
+            stream=False,
+            temperature=temperature,
+            n=num_completions,
+            max_tokens=max_tokens,
+            top_p=top_p,
+        )
+        outputs = [choice.message.content for choice in response.choices]
+    elif server_type == "flagos":
         response = client.chat.completions.create(
             model=model,
             messages=[
@@ -566,6 +590,11 @@ SERVER_PRESETS = {
     },
     "ksyun": {
         "model_name": "glm-4.7",
+        "temperature": 0.0,
+        "max_tokens": 32768,
+    },
+    "flagos": {
+        "model_name": "MiniMax-M2.5",
         "temperature": 0.0,
         "max_tokens": 32768,
     }

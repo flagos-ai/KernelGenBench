@@ -86,6 +86,7 @@ class PassAtKTester:
         self.single_test = single_test
         self.op_name = op_name
         self.reflection = reflection
+        self.disable_antihack_round = False
         
         # Track results
         self.all_operators: Dict[str, Dict[str, APIInfo]] = {}
@@ -362,7 +363,10 @@ class PassAtKTester:
         for op_name, api_info in remaining_operators.items():
             # op_name 格式: "aten::add"
             namespace, kernel_name = op_name.split("::", 1)
-            file_name = f"test_accuracy_{op_name}.py"
+            if self.test_type == "triton":
+                file_name = f"{op_name}.py"
+            else:
+                file_name = f"test_accuracy_{op_name}.py"
 
             if Path(round_dir / file_name).exists():
                 logger.info(f"Skipping already existing test for {op_name}")
@@ -711,7 +715,7 @@ class PassAtKTester:
 
             # Anti-hack: check newly passed operators immediately
             hacked_ops = set()
-            if newly_passed:
+            if newly_passed and not self.disable_antihack_round:
                 hacked_ops = self.anti_hack_round(round_idx, round_dir, newly_passed)
                 newly_passed -= hacked_ops
 
@@ -926,6 +930,7 @@ def main():
     parser.add_argument("--reflection", action="store_true", help="Enable reflection: use previous round's verify results as feedback for next generation")
     parser.add_argument("--use-wiki", action="store_true", help="Use Wiki references for generation")
     parser.add_argument("--custom-test-modules", type=str, nargs="+", default=None, help="Custom test module paths or directories (e.g., src/flagbench/accuracy/test_custom.py or src/flagbench/accuracy/)")
+    parser.add_argument("--disable-antihack-round", action="store_true", help="Disable per-round anti-hack checks (final check still runs)")
 
     args = parser.parse_args()
 
@@ -1018,6 +1023,7 @@ def main():
         reflection=args.reflection,
         use_wiki=args.use_wiki,
     )
+    tester.disable_antihack_round = args.disable_antihack_round
     
     tester.initialize_operators(args.name)
     tester.run_pass_at_k(max_rounds=args.max_rounds)

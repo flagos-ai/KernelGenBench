@@ -17,7 +17,7 @@ import triton
     (1024, 1024),
     (2048, 1024),
 ])
-def test_marlin_int4_fp8_preprocess(config):
+def test_accuracy_marlin_int4_fp8_preprocess(config):
     K = config[0]
     N = config[1]
     pack_factor = 8
