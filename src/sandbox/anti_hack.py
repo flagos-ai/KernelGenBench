@@ -52,7 +52,8 @@ BACKEND_BLACKLISTS = {
         # Ascend (华为昇腾): TODO - add blacklist as needed
     ],
     "torch_mthreads": [
-        # Moore Threads (摩尔线程): TODO - add blacklist as needed
+        # Moore Threads (摩尔线程): block direct aten dispatch
+        "torch.ops.aten",
     ],
 }
 
