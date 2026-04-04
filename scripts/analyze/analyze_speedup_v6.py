@@ -205,6 +205,11 @@ def load_antihack_hacked_ops(result_dir: Path) -> List[str]:
         # Try agent format
         antihack_file = result_dir / "antihack_report.json"
     if not antihack_file.exists():
+        # Try antihack_round_*.json (pass@1 format)
+        candidates = sorted(result_dir.glob("antihack_round_*.json"))
+        if candidates:
+            antihack_file = candidates[-1]  # use latest round
+    if not antihack_file.exists():
         return []
 
     try:
