@@ -193,6 +193,26 @@ def load_from_verification_dir(result_dir: Path) -> Dict[str, Dict]:
     return operator_results
 
 
+def load_antihack_clean_ops(result_dir: Path) -> Optional[set]:
+    """Load clean_passed_operators from pass_at_k_results_antihack.json as whitelist.
+
+    Returns a set of clean operator names, or None if not available.
+    """
+    antihack_file = result_dir / "pass_at_k_results_antihack.json"
+    if not antihack_file.exists():
+        return None
+    try:
+        with open(antihack_file, 'r') as f:
+            data = json.load(f)
+        clean = data.get("clean_passed_operators")
+        if clean is not None:
+            return set(clean)
+        return None
+    except Exception as e:
+        print(f"Warning: Failed to load antihack clean ops: {e}", file=sys.stderr)
+        return None
+
+
 def load_antihack_hacked_ops(result_dir: Path) -> List[str]:
     """Load hacked operator names from antihack results.
 
@@ -532,12 +552,19 @@ def main():
 
     # Apply antihack filtering (default: on)
     if apply_antihack:
-        hacked_ops = load_antihack_hacked_ops(result_dir)
-        if hacked_ops:
-            for op in hacked_ops:
-                if op in operator_results:
-                    del operator_results[op]
-            print(f"Anti-hack: {len(operator_results)} clean operators remaining")
+        clean_ops = load_antihack_clean_ops(result_dir)
+        if clean_ops is not None:
+            # Whitelist mode: only keep operators in clean_passed_operators
+            operator_results = {k: v for k, v in operator_results.items() if k in clean_ops}
+            print(f"Anti-hack (whitelist): {len(operator_results)} clean operators remaining")
+        else:
+            # Fallback: blacklist mode using hacked_operators
+            hacked_ops = load_antihack_hacked_ops(result_dir)
+            if hacked_ops:
+                for op in hacked_ops:
+                    if op in operator_results:
+                        del operator_results[op]
+                print(f"Anti-hack (blacklist): {len(operator_results)} clean operators remaining")
     else:
         print("Anti-hack filtering disabled (--no-antihack)")
 
