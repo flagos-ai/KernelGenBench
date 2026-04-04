@@ -1035,8 +1035,10 @@ def main():
         reflection=args.reflection,
         use_wiki=args.use_wiki,
     )
-    tester.disable_antihack_round = args.disable_antihack_round
-    tester.disable_antihack = args.disable_antihack
+    if args.disable_antihack_round:
+        tester.disable_antihack_round = True
+    if args.disable_antihack:
+        tester.disable_antihack = True
     
     tester.initialize_operators(args.name)
     tester.run_pass_at_k(max_rounds=args.max_rounds)
