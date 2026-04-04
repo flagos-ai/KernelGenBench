@@ -131,6 +131,10 @@ class PassAtKTester:
                 case "v2_1":
                     from flagbench.dataset import V2_1_OPERATORS
                     self.operator_loader = flatten_operator_dict(V2_1_OPERATORS, "aten")
+                    if self.custom_test_modules is None:
+                        self.custom_test_modules = [
+                            "flagbench.accuracy.test_v2_1_ops_with_benchmark",
+                        ]
                 case "qwen_next":
                     from flagbench.dataset import QWEN_NEXT_OPERATORS
                     self.operator_loader = flatten_operator_dict(QWEN_NEXT_OPERATORS, "aten")
