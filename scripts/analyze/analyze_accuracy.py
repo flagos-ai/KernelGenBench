@@ -11,6 +11,74 @@ from pathlib import Path
 TOTAL = {"aten": 110, "vllm13": 50, "cublas": 50, "total": 210}
 
 
+def _count_tokens_oc(filepath: Path) -> int:
+    """从 oc_output.json (JSONL) 统计 token 总量。取最后一条 step_finish 的 tokens.total。"""
+    total = 0
+    with open(filepath) as f:
+        for line in f:
+            line = line.strip()
+            if not line:
+                continue
+            try:
+                obj = json.loads(line)
+            except json.JSONDecodeError:
+                continue
+            if obj.get("type") == "step_finish":
+                tokens = obj.get("part", {}).get("tokens", {})
+                t = tokens.get("total", 0)
+                if t:
+                    total = t  # 取最后一条（累计值）
+    return total
+
+
+def _count_tokens_cc(filepath: Path) -> int:
+    """从 cc_output.jsonl (JSONL) 统计 token 总量。累加所有 assistant 消息的 usage。"""
+    total = 0
+    with open(filepath) as f:
+        for line in f:
+            line = line.strip()
+            if not line:
+                continue
+            try:
+                obj = json.loads(line)
+            except json.JSONDecodeError:
+                continue
+            if obj.get("type") == "assistant":
+                usage = obj.get("message", {}).get("usage", {})
+                total += usage.get("input_tokens", 0)
+                total += usage.get("output_tokens", 0)
+                total += usage.get("cache_creation_input_tokens", 0)
+                total += usage.get("cache_read_input_tokens", 0)
+    return total
+
+
+def scan_workspace_tokens(run_dir: Path) -> dict:
+    """扫描 workspaces 目录，统计每个算子的 token 用量。
+
+    Returns:
+        {"per_op": {op_name: tokens}, "total": int, "agent_type": "oc"|"cc"|"unknown"}
+    """
+    ws_dir = run_dir / "workspaces"
+    if not ws_dir.exists():
+        return {"per_op": {}, "total": 0, "agent_type": "unknown"}
+
+    per_op = {}
+    agent_type = "unknown"
+    for op_dir in sorted(ws_dir.iterdir()):
+        if not op_dir.is_dir():
+            continue
+        oc_file = op_dir / "oc_output.json"
+        cc_file = op_dir / "cc_output.jsonl"
+        if oc_file.exists():
+            agent_type = "oc"
+            per_op[op_dir.name] = _count_tokens_oc(oc_file)
+        elif cc_file.exists():
+            agent_type = "cc"
+            per_op[op_dir.name] = _count_tokens_cc(cc_file)
+
+    return {"per_op": per_op, "total": sum(per_op.values()), "agent_type": agent_type}
+
+
 def classify(op_name: str) -> str:
     if op_name.startswith("aten::"):
         return "aten"
@@ -179,20 +247,21 @@ def main():
     if counts["unknown"]:
         print(f"  unknown: {counts['unknown']}")
 
-    # Token 效率分析
+    # Token 效率分析 — 直接扫描 workspaces 目录
     run_dir = path.parent
-    token_path = run_dir / "token_analysis.json"
-    if token_path.exists():
-        with open(token_path) as f:
-            token_data = json.load(f)
-        total_tokens = token_data.get("total", {}).get("total", 0)
-        if total_tokens and total_clean > 0:
+    token_info = scan_workspace_tokens(run_dir)
+    total_tokens = token_info["total"]
+    if total_tokens:
+        agent_label = {"oc": "OpenCode", "cc": "Claude Code"}.get(token_info["agent_type"], "unknown")
+        print(f"\nToken 效率 ({agent_label}):")
+        print(f"  总 token: {total_tokens:,}")
+        if total_clean > 0:
             avg = total_tokens / total_clean
-            print(f"\nToken 效率:")
-            print(f"  总 token: {total_tokens:,}")
             print(f"  平均每个正确算子: {avg:,.0f} tokens")
+        avg_all = total_tokens / len(token_info["per_op"]) if token_info["per_op"] else 0
+        print(f"  平均每个算子(含失败): {avg_all:,.0f} tokens")
     else:
-        print(f"\n(未找到 token_analysis.json)")
+        print(f"\n(未找到 workspaces 中的 token 数据)")
 
 
 if __name__ == "__main__":
