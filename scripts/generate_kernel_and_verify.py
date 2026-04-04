@@ -141,6 +141,12 @@ class PassAtKTester:
                 case "KernelGenBench":
                     from flagbench.dataset import get_kernelgenbench_operators
                     self.operator_loader = get_kernelgenbench_operators()  # 50 vllm + 50 cublas + 110 torch
+                    if self.custom_test_modules is None:
+                        self.custom_test_modules = [
+                            "flagbench.accuracy.test_v2_1_ops_with_benchmark",
+                            "src/flagbench/accuracy/vllm13/",
+                            "src/flagbench/accuracy/cublas/",
+                        ]
                 case _:
                     raise ValueError(f"Unsupported dataset: {self.dataset}")
 
