@@ -423,7 +423,28 @@ class Verifier:
             total = 0
             success = 0
             while finished < total_tasks:
-                result = result_queue.get()  # 等子进程消息
+                try:
+                    result = result_queue.get(timeout=30)
+                except Exception:
+                    # Check if all GPU processes are dead
+                    all_dead = all(not p.is_alive() for p in processes)
+                    if all_dead:
+                        logger.error(f"All GPU processes exited but {total_tasks - finished} results missing. Breaking out.")
+                        # Create failure results for missing tasks
+                        received_ops = {r.op_name for r in check_result}
+                        for req in name_source_maps:
+                            op = req.source[0].function_name
+                            if op not in received_ops:
+                                check_result.append(VerifyResult(
+                                    op_name=op,
+                                    success=False,
+                                    traceback="GPU process died before completing verification.",
+                                    code=req.source[0].source if req.source else None,
+                                ))
+                                finished += 1
+                                pbar.update(1)
+                        break
+                    continue
                 s = result.success == True
                 success += s
                 check_result.append(result)
@@ -432,7 +453,7 @@ class Verifier:
                 pbar.update(1)
                 pbar.set_postfix(success=f"{success}/{total}")
         for p in processes:
-            p.join()
+            p.join(timeout=10)
 
         return check_result
 
