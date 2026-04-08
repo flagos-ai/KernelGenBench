@@ -9,7 +9,7 @@ logger = logging.getLogger(__name__)
 
 
 def detect_device_type() -> str:
-    """Detect current device type: 'cuda', 'npu', 'musa', or 'iluvatar'."""
+    """Detect current device type: 'cuda', 'npu', 'musa', 'iluvatar', or 'hygon'."""
     vendor = os.environ.get("GEMS_VENDOR", "")
     if vendor == "ascend" or os.environ.get("ASCEND_RT_VISIBLE_DEVICES"):
         return "npu"
@@ -17,6 +17,8 @@ def detect_device_type() -> str:
         return "musa"
     if vendor == "iluvatar":
         return "iluvatar"
+    if vendor == "hygon":
+        return "hygon"
     # Auto-detect Iluvatar GPU via device name
     if not vendor:
         try:
@@ -27,6 +29,16 @@ def detect_device_type() -> str:
                 return "iluvatar"
         except (subprocess.TimeoutExpired, FileNotFoundError):
             pass
+        # Auto-detect Hygon DCU via rocm-smi
+        try:
+            result = subprocess.run(
+                ["rocm-smi", "--showproductname"],
+                capture_output=True, text=True, timeout=10)
+            if result.returncode == 0 and ("Hygon" in result.stdout or "DCU" in result.stdout
+                                           or "BW" in result.stdout or "C-3000" in result.stdout):
+                return "hygon"
+        except (subprocess.TimeoutExpired, FileNotFoundError):
+            pass
     return "cuda"
 
 
@@ -35,6 +47,7 @@ _VISIBLE_DEVICES_ENV = {
     "npu": "ASCEND_RT_VISIBLE_DEVICES",
     "musa": "MUSA_VISIBLE_DEVICES",
     "iluvatar": "CUDA_VISIBLE_DEVICES",
+    "hygon": "HIP_VISIBLE_DEVICES",
 }
 
 
@@ -67,6 +80,8 @@ class DeviceManager:
             return self._detect_npu()
         elif self.device_type == "musa":
             return self._detect_via_cmd(["musa-smi", "-L"])
+        elif self.device_type == "hygon":
+            return self._detect_hygon_dcu()
         return [0]
 
     def _detect_via_cmd(self, cmd: list[str]) -> list[int]:
@@ -96,6 +111,30 @@ class DeviceManager:
         except (subprocess.TimeoutExpired, FileNotFoundError):
             pass
         logger.warning("Failed to detect NPU devices, defaulting to [0]")
+        return [0]
+
+    def _detect_hygon_dcu(self) -> list[int]:
+        """Detect Hygon DCU devices via rocm-smi."""
+        try:
+            result = subprocess.run(
+                ["rocm-smi", "-l"], capture_output=True, text=True, timeout=10)
+            if result.returncode == 0:
+                import re
+                # rocm-smi uses HCU[N] format on Hygon DCU
+                ids = [int(m) for m in re.findall(r"HCU\[(\d+)\]", result.stdout)]
+                if ids:
+                    return sorted(set(ids))
+        except (subprocess.TimeoutExpired, FileNotFoundError):
+            pass
+        # fallback: detect via torch
+        try:
+            import torch
+            count = torch.cuda.device_count()
+            if count > 0:
+                return list(range(count))
+        except Exception:
+            pass
+        logger.warning("Failed to detect Hygon DCU devices, defaulting to [0]")
         return [0]
 
     def _lock_path(self, gpu_id: int) -> str:

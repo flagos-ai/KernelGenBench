@@ -34,6 +34,7 @@ _DEVICE_TEMPLATE_DIR = {
     "npu": "ascend",
     "musa": "musa",
     "iluvatar": "iluvatar",
+    "hygon": "hygon",
 }
 
 

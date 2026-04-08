@@ -20,6 +20,13 @@ if _vendor == 'mthreads' or os.environ.get('MUSA_VISIBLE_DEVICES'):
     except ImportError:
         pass
 
+if _vendor == 'hygon' or os.environ.get('HIP_VISIBLE_DEVICES'):
+    try:
+        # import torch_hygon  # noqa: F401  # 如果海光有专门的 torch 扩展包
+        pass
+    except ImportError:
+        pass
+
 from flag_gems.runtime import device, torch_device_fn
 
 # 设备可见性环境变量映射
@@ -27,6 +34,7 @@ VISIBLE_DEVICES_ENV = {
     'cuda': 'CUDA_VISIBLE_DEVICES',
     'npu': 'ASCEND_RT_VISIBLE_DEVICES',
     'musa': 'MUSA_VISIBLE_DEVICES',
+    'hygon': 'HIP_VISIBLE_DEVICES',
 }
 
 # 设备约束开关（通过环境变量控制）
@@ -56,6 +64,15 @@ It should be noted that the operator runs on Iluvatar BI-V150 GPUs with CoreX so
 4. Use `allow_tf32=False` for `tl.dot` to ensure precision.
 5. Prefer smaller BLOCK_SIZE values (e.g., 512 or 1024) to avoid register spilling on this architecture.
 """,
+    'hygon': """
+## Device-Specific Requirements
+It should be noted that the operator runs on Hygon DCU (Deep Computing Unit).
+1. The device type is `cuda` (standard PyTorch CUDA API via ROCm/HIP). No special import is needed beyond `import torch`.
+2. Hygon DCU is based on ROCm/HIP ecosystem, providing CUDA-compatible interface. Avoid relying on NVIDIA-specific hardware features (e.g., Tensor Core instructions, CUDA-specific intrinsics).
+3. Some advanced Triton features may not be supported or may behave differently on HIP backend. Prefer basic Triton operations.
+4. Use `allow_tf32=False` for `tl.dot` to ensure precision (TF32 is an NVIDIA-specific feature).
+5. Prefer moderate BLOCK_SIZE values (e.g., 256 or 512) to avoid register pressure on this architecture.
+""",
 }
 
 
@@ -67,6 +84,21 @@ def _is_iluvatar() -> bool:
         import torch
         if torch.cuda.is_available():
             return 'Iluvatar' in torch.cuda.get_device_name(0)
+    except Exception:
+        pass
+    return False
+
+
+def _is_hygon() -> bool:
+    """Detect if running on Hygon DCU."""
+    if os.environ.get('GEMS_VENDOR') == 'hygon':
+        return True
+    try:
+        import torch
+        if torch.cuda.is_available():
+            name = torch.cuda.get_device_name(0)
+            # Hygon DCU reports as 'BW' (series name)
+            return 'Hygon' in name or 'DCU' in name or name.strip() == 'BW'
     except Exception:
         pass
     return False
@@ -84,6 +116,8 @@ def get_device_constraints() -> str:
     # Iluvatar reports as 'cuda' but needs its own constraints
     if device.name == 'cuda' and _is_iluvatar():
         return DEVICE_CONSTRAINTS.get('iluvatar', "")
+    if device.name == 'cuda' and _is_hygon():
+        return DEVICE_CONSTRAINTS.get('hygon', "")
     return DEVICE_CONSTRAINTS.get(device.name, "")
 
 
@@ -100,6 +134,8 @@ def get_device_type() -> str:
     if device.name == 'cuda':
         if _is_iluvatar():
             return 'iluvatar'
+        if _is_hygon():
+            return 'hygon'
         return 'nvidia'
     return 'nvidia'
 

@@ -55,6 +55,10 @@ BACKEND_BLACKLISTS = {
         # Moore Threads (摩尔线程): block direct aten dispatch
         "torch.ops.aten",
     ],
+    "torch_hygon": [
+        # Hygon DCU (海光): block direct aten dispatch, same principle
+        "torch.ops.aten",
+    ],
 }
 
 
