@@ -96,7 +96,11 @@ class PassAtKTester:
         self.generated_codes: Dict[str, Dict[int, str]] = {}  # {op_name: {round: code}}
         self.generation_summaries: List[Dict] = []  # Track generation summaries for each round
         self.verify_results: Dict[str, Dict[int, Dict]] = {}  # {op_name: {round: [test_results]}}
-        
+
+        # Token usage tracking
+        from generator.sampler.utils import TokenUsageCollector
+        self.token_collector = TokenUsageCollector()
+
         # Wiki cache for operator references
         self.use_wiki = use_wiki
         self.wiki_cache: Dict[str, Any] = {}  # {operator_name: wiki_info}
@@ -462,7 +466,13 @@ class PassAtKTester:
             except Exception as e:
                 logger.debug(f"Incremental save failed for one result: {e}")
 
+        # Reset token tracker before generation
+        self.token_collector.begin_round()
+
         generated_codes = generator(gen_args, on_result=_on_result)
+
+        # Collect token usage for this round
+        self.token_collector.end_round(round_idx)
 
         # Process and save the generated codes
         generation_results = []
@@ -884,6 +894,7 @@ class PassAtKTester:
             "generation_summaries": self.generation_summaries,
             "passed_operators": sorted(list(self.passed_operators)),
             "operator_details": operator_details,
+            **self.token_collector.to_dict(),
         }
         
         with open(results_file, "w") as f:
@@ -910,7 +921,9 @@ class PassAtKTester:
         logger.info(f"\nVerification Statistics (Pass@K):")
         for i, round_result in enumerate(self.results_by_round, 1):
             logger.info(f"  Pass@{i}: {round_result['pass_rate']:.2%} ({round_result['total_passed']}/{total_operators})")
-        
+
+        self.token_collector.print_summary(logger.info)
+
         logger.info(f"{'='*60}\n")
 
 

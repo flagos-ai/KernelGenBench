@@ -12,6 +12,7 @@ import re
 import importlib
 import os
 import json
+import threading
 from tqdm import tqdm
 
 # API clients
@@ -40,6 +41,98 @@ from concurrent.futures import ProcessPoolExecutor, as_completed
 import logging
 
 logger = logging.getLogger(__name__)
+
+
+class TokenUsageTracker:
+    """Thread-safe token usage accumulator for LLM API calls."""
+    _KEYS = ("input_tokens", "output_tokens", "cache_creation", "cache_read", "total")
+
+    def __init__(self):
+        self._lock = threading.Lock()
+        self.reset()
+
+    def record(self, usage):
+        """Record usage from API response. Handles OpenAI and Anthropic formats."""
+        if not usage:
+            return
+        with self._lock:
+            self._usage["input_tokens"] += getattr(usage, "prompt_tokens", 0) or getattr(usage, "input_tokens", 0) or 0
+            self._usage["output_tokens"] += getattr(usage, "completion_tokens", 0) or getattr(usage, "output_tokens", 0) or 0
+            self._usage["total"] += getattr(usage, "total_tokens", 0) or 0
+            self._usage["cache_creation"] += getattr(usage, "cache_creation_input_tokens", 0) or 0
+            self._usage["cache_read"] += getattr(usage, "cache_read_input_tokens", 0) or 0
+
+    def get_and_reset(self) -> dict:
+        with self._lock:
+            result = self._usage.copy()
+            if result["total"] == 0:
+                result["total"] = result["input_tokens"] + result["output_tokens"]
+            self.reset()
+            return result
+
+    def get(self) -> dict:
+        with self._lock:
+            result = self._usage.copy()
+            if result["total"] == 0:
+                result["total"] = result["input_tokens"] + result["output_tokens"]
+            return result
+
+    def reset(self):
+        self._usage = {k: 0 for k in self._KEYS}
+
+
+token_tracker = TokenUsageTracker()
+
+
+class TokenUsageCollector:
+    """High-level token usage collector with per-round tracking.
+
+    Usage:
+        collector = TokenUsageCollector()
+        collector.begin_round()
+        # ... LLM calls (token_tracker records automatically) ...
+        collector.end_round(round_idx)
+        # After all rounds:
+        collector.print_summary()
+        results["token_usage"] = collector.total
+        results["token_usage_by_round"] = collector.by_round
+    """
+
+    def __init__(self):
+        self.by_round: list[dict] = []
+        self.total: dict = {k: 0 for k in TokenUsageTracker._KEYS}
+
+    def begin_round(self):
+        """Call before each generation round."""
+        token_tracker.reset()
+
+    def end_round(self, round_idx: int):
+        """Call after each generation round to collect stats."""
+        usage = token_tracker.get_and_reset()
+        self.by_round.append({"round": round_idx, **usage})
+        for k in self.total:
+            self.total[k] += usage.get(k, 0)
+
+    def to_dict(self) -> dict:
+        """Return dict suitable for JSON serialization."""
+        return {
+            "token_usage": self.total,
+            "token_usage_by_round": self.by_round,
+        }
+
+    def print_summary(self, logger_fn=None):
+        """Print token usage summary. Uses logging if no logger_fn provided."""
+        if self.total.get("total", 0) == 0:
+            return
+        log = logger_fn or logger.info
+        t = self.total
+        log(f"\nToken Usage:")
+        log(f"  Input tokens:     {t['input_tokens']:>12,}")
+        log(f"  Output tokens:    {t['output_tokens']:>12,}")
+        log(f"  Cache creation:   {t['cache_creation']:>12,}")
+        log(f"  Cache read:       {t['cache_read']:>12,}")
+        log(f"  Total:            {t['total']:>12,}")
+
 
 # Define API key access
 TOGETHER_KEY = os.environ.get("TOGETHER_API_KEY")
@@ -527,6 +620,10 @@ def query_server(
                 top_p=top_p,
             )
             outputs = [choice.message.content for choice in response.choices]
+
+    # Record token usage
+    if hasattr(response, 'usage') and response.usage:
+        token_tracker.record(response.usage)
 
     # output processing
     if len(outputs) == 1:
