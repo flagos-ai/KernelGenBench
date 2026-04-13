@@ -188,10 +188,10 @@ else
     echo "[Step 3/3] Skipping verification (--skip-verify)"
 fi
 
-# Step 4: Analyze accuracy & token usage
+# Step 4: Analyze token usage
 echo ""
-echo "[Step 4] Analyzing accuracy and token usage..."
-python ../scripts/analyze/analyze_accuracy.py "runs/$RUN_NAME"
+echo "[Step 4] Analyzing token usage..."
+python ../scripts/analyze/analyze_tokens.py "runs/$RUN_NAME"
 
 echo ""
 echo "=================================================="
