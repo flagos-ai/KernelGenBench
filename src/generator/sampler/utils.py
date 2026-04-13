@@ -308,9 +308,9 @@ def query_server(
         #     client = OpenAI(api_key=SAMBANOVA_API_KEY, base_url="https://api.sambanova.ai/v1")
         #     model = model_name
             
-        # case "openai":
-        #     client = OpenAI(api_key=OPENAI_KEY)
-        #     model = model_name
+        case "openai":
+            client = OpenAI(api_key=OPENAI_KEY)
+            model = model_name
 
         # case "qwen":
         #     client = OpenAI(
@@ -357,6 +357,13 @@ def query_server(
                 base_url="https://api.flagos.net/v1",
                 timeout=10000000,
                 max_retries=10,
+            )
+            model = model_name
+
+        case "zyapi":
+            client = anthropic.Anthropic(
+                auth_token=os.environ.get("ANTHROPIC_AUTH_TOKEN"),
+                base_url="https://zyapi.xmsxb.com/",
             )
             model = model_name
 
@@ -461,6 +468,34 @@ def query_server(
             )
         else:
             # Use standard endpoint for normal models
+            response = client.messages.create(
+                model=model,
+                system=system_prompt,
+                messages=[
+                    {"role": "user", "content": prompt},
+                ],
+                temperature=temperature,
+                top_p=top_p,
+                top_k=top_k,
+                max_tokens=max_tokens,
+            )
+        outputs = [choice.text for choice in response.content if not hasattr(choice, 'thinking') or not choice.thinking]
+
+    elif server_type == "zyapi":
+        assert type(prompt) == str
+
+        if is_reasoning_model:
+            response = client.beta.messages.create(
+                model=model,
+                system=system_prompt,
+                messages=[
+                    {"role": "user", "content": prompt},
+                ],
+                max_tokens=max_tokens,
+                thinking={"type": "enabled", "budget_tokens": budget_tokens},
+                betas=["output-128k-2025-02-19"],
+            )
+        else:
             response = client.messages.create(
                 model=model,
                 system=system_prompt,
@@ -694,6 +729,11 @@ SERVER_PRESETS = {
     },
     "flagos": {
         "model_name": "MiniMax-M2.5",
+        "temperature": 0.0,
+        "max_tokens": 32768,
+    },
+    "zyapi": {
+        "model_name": "mco-4",
         "temperature": 0.0,
         "max_tokens": 32768,
     }
