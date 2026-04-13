@@ -94,7 +94,7 @@ def verify_kernels(
         filter_ops = set(operators)
         kernel_files = [f for f in kernel_files
                         if f.stem in filter_ops
-                        or (dataset == "KernelGenBench" and "__" in f.stem
+                        or (dataset.startswith("KernelGenBench") and "__" in f.stem
                             and f.stem.split("__", 1)[1] in filter_ops)]
 
     logger.info(f"Found {len(kernel_files)} kernels to verify")
@@ -108,7 +108,7 @@ def verify_kernels(
 
     for kernel_file in sorted(kernel_files):
         stem = kernel_file.stem
-        if dataset == "KernelGenBench" and "__" in stem:
+        if dataset.startswith("KernelGenBench") and "__" in stem:
             ns, op_name = stem.split("__", 1)
             full_name = f"{ns}::{op_name}"
         else:
