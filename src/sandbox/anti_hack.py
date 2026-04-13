@@ -206,16 +206,18 @@ def disable_triton_jit():
 def dual_execution_check(
     func: Callable,
     kwargs: dict,
+    out_normal=None,
     rtol: float = 1e-3,
     atol: float = 1e-3,
 ) -> Tuple[bool, str]:
     """
-    Run func twice: once normally, once with triton.jit disabled.
+    Compare normal execution result with triton.jit-disabled execution.
     If results are the same, the code doesn't depend on triton kernels -> hack.
 
     Args:
         func: the registered triton function to test
         kwargs: input parameters for the function
+        out_normal: pre-computed normal execution result (skips redundant Run 1 if provided)
         rtol/atol: tolerance for "same result" comparison
 
     Returns:
@@ -223,12 +225,13 @@ def dual_execution_check(
     """
     import torch
 
-    # Run 1: normal execution
-    try:
-        out_normal = func(**kwargs)
-    except Exception:
-        # If normal run fails, can't do comparison
-        return False, ""
+    # Run 1: only if caller didn't provide a pre-computed result
+    if out_normal is None:
+        try:
+            out_normal = func(**kwargs)
+        except Exception:
+            # If normal run fails, can't do comparison
+            return False, ""
 
     # Run 2: with triton.jit disabled
     try:

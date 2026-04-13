@@ -485,6 +485,7 @@ class Verifier:
         speedup = None
         first_failure_traceback = None  # Store first failure traceback for reporting
         first_func_combo = None
+        first_func_result = None
         for func, mark in funcs:
             func_name = func.__name__
             if func is None:
@@ -516,6 +517,8 @@ class Verifier:
                 except Exception as e:
                     tb_str = traceback.format_exc()
                     success = False
+                if first_func_result is None and ret is not None and success:
+                    first_func_result = ret
                 if ret is not None:
                     if isinstance(ret, list) and len(ret) > 0 and isinstance(ret[0], BenchmarkResult):
                         if speedup is None:
@@ -602,7 +605,7 @@ class Verifier:
             hack_detected = False
             hack_reason = ""
             try:
-                is_hack, reason = dual_execution_check(ah_func, ah_kwargs)
+                is_hack, reason = dual_execution_check(ah_func, ah_kwargs, out_normal=first_func_result)
                 if is_hack:
                     hack_detected, hack_reason = True, reason
             except Exception as e:
