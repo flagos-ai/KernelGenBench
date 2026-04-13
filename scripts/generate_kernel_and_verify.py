@@ -384,7 +384,7 @@ class PassAtKTester:
                 file_name = f"test_accuracy_{op_name}.py"
 
             if Path(round_dir / file_name).exists():
-                logger.info(f"Skipping already existing test for {op_name}")
+                logger.info(f"Skipping already existing operator {op_name}")
                 with open(round_dir / file_name, "r") as f:
                     code = f.read()
                 self.store_generated_code(op_name, round_idx, code)
