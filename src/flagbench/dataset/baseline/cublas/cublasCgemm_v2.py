@@ -1,73 +1,36 @@
 import torch
 import ctypes
-import os
+
+try:
+    from ._backend import get_or_create_handle, get_blas_func, map_op, cuComplex
+except ImportError:
+    from flagbench.dataset.baseline.cublas._backend import get_or_create_handle, get_blas_func, map_op, cuComplex
 
 # Global variables for caching (initialized once, reused)
-_libcublas = None
-_cublas_handle = None
-_cublas_set_pointer_mode = None
 _cublas_func = None
 _scalar_cache = {}  # Cache GPU tensors for scalar parameters
 
-# cuComplex definition for ctypes (matches two 32-bit floats)
-class cuComplex(ctypes.Structure):
-    _fields_ = [("x", ctypes.c_float), ("y", ctypes.c_float)]
-
-def _get_cublas_lib():
-    global _libcublas
-    if _libcublas is None:
-        cuda_home = os.environ.get('CUDA_HOME', '/usr/local/cuda')
-        _libcublas = ctypes.CDLL(os.path.join(cuda_home, 'lib64', 'libcublas.so.12'))
-    return _libcublas
-
-def _get_or_create_handle():
-    '''Get or create global cuBLAS handle (reused across calls)'''
-    global _cublas_handle, _cublas_set_pointer_mode
-    if _cublas_handle is None:
-        libcublas = _get_cublas_lib()
-
-        # Create handle
-        cublasCreate_v2 = libcublas.cublasCreate_v2
-        cublasCreate_v2.argtypes = [ctypes.POINTER(ctypes.c_void_p)]
-        cublasCreate_v2.restype = ctypes.c_int
-        _cublas_handle = ctypes.c_void_p()
-        status = cublasCreate_v2(ctypes.byref(_cublas_handle))
-        if status != 0:
-            raise RuntimeError(f"cublasCreate_v2 failed with status {status}")
-
-        # Setup SetPointerMode function (once)
-        _cublas_set_pointer_mode = libcublas.cublasSetPointerMode_v2
-        _cublas_set_pointer_mode.argtypes = [ctypes.c_void_p, ctypes.c_int]
-        _cublas_set_pointer_mode.restype = ctypes.c_int
-
-        # Set to device mode (once)
-        _cublas_set_pointer_mode(_cublas_handle, 1)
-
-    return _cublas_handle
 
 def _get_cublas_func():
-    '''Get cuBLAS function with signature set (once)'''
+    '''Get BLAS function with signature set (once)'''
     global _cublas_func
     if _cublas_func is None:
-        libcublas = _get_cublas_lib()
-        _cublas_func = libcublas.cublasCgemm_v2
-        _cublas_func.argtypes = [
-            ctypes.c_void_p,             # handle
-            ctypes.c_int,                # transa
-            ctypes.c_int,                # transb
-            ctypes.c_int,                # m
-            ctypes.c_int,                # n
-            ctypes.c_int,                # k
-            ctypes.POINTER(cuComplex),   # alpha (device pointer)
-            ctypes.POINTER(cuComplex),   # A (device pointer)
-            ctypes.c_int,                # lda
-            ctypes.POINTER(cuComplex),   # B (device pointer)
-            ctypes.c_int,                # ldb
-            ctypes.POINTER(cuComplex),   # beta (device pointer)
-            ctypes.POINTER(cuComplex),   # C (device pointer)
-            ctypes.c_int                 # ldc
-        ]
-        _cublas_func.restype = ctypes.c_int
+        _cublas_func = get_blas_func('cublasCgemm_v2', [
+            ctypes.c_void_p,
+            ctypes.c_int,  # handle
+            ctypes.c_int,  # transa
+            ctypes.c_int,  # transb
+            ctypes.c_int,  # m
+            ctypes.c_int,  # n
+            ctypes.POINTER(cuComplex),  # k
+            ctypes.POINTER(cuComplex),  # alpha (device pointer)
+            ctypes.c_int,  # A (device pointer)
+            ctypes.POINTER(cuComplex),  # lda
+            ctypes.c_int,  # B (device pointer)
+            ctypes.POINTER(cuComplex),  # ldb
+            ctypes.POINTER(cuComplex),  # beta (device pointer)
+            ctypes.c_int,  # C (device pointer)
+        ])
     return _cublas_func
 
 def _get_scalar_gpu(key, value, dtype):
