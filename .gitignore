@@ -163,4 +163,4 @@ tmp/
 output*/
 test_server_results/
 
-.claude/
+.claude/cublas_hygon_test_results.md
