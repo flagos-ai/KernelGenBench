@@ -14,6 +14,19 @@ DEFAULT_TEST_MODULES = {
         "src/flagbench/accuracy/vllm13/",
         "src/flagbench/accuracy/cublas/",
     ],
+    "KernelGenBench-aten": [
+        "src/flagbench/accuracy/test_v2_1_ops_with_benchmark.py",
+    ],
+    "KernelGenBench-vllm": [
+        "src/flagbench/accuracy/vllm13/",
+    ],
+    "KernelGenBench-cublas": [
+        "src/flagbench/accuracy/cublas/",
+    ],
+    "KernelGenBench-nocublas": [
+        "src/flagbench/accuracy/test_v2_1_ops_with_benchmark.py",
+        "src/flagbench/accuracy/vllm13/",
+    ],
 }
 
 

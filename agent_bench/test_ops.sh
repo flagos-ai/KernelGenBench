@@ -15,8 +15,23 @@ set -e
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 cd "$SCRIPT_DIR"
 
+# Auto-detect default dataset based on device type
+# NVIDIA: KernelGenBench (210 ops = 110 aten + 50 vllm + 50 cublas)
+# Other chips: KernelGenBench-aten (110 aten ops)
+_DEVICE_TYPE=$(python -c "
+import sys; sys.path.insert(0, '$(dirname "${BASH_SOURCE[0]}")')
+from device_manager import detect_device_type
+print(detect_device_type())
+" 2>/dev/null || echo "cuda")
+
+if [[ "$_DEVICE_TYPE" == "cuda" ]]; then
+    DEFAULT_DATASET="KernelGenBench"
+else
+    DEFAULT_DATASET="KernelGenBench-aten"
+fi
+
 # Default values
-DATASET="v2_1"
+DATASET="$DEFAULT_DATASET"
 METHOD="naive_cc"
 DEVICE_COUNT=8
 TIMEOUT=600
@@ -74,7 +89,7 @@ while [[ $# -gt 0 ]]; do
             echo "                      If not specified, test entire dataset"
             echo ""
             echo "Options:"
-            echo "  -d, --dataset       Dataset to use (default: v2_1)"
+            echo "  -d, --dataset       Dataset to use (default: KernelGenBench on NVIDIA, KernelGenBench-aten on other chips)"
             echo "  -m, --method        Agent method to use (default: naive_cc)"
             echo "                      Available: naive_cc, normal_cc, iterative_optimizer,"
             echo "                                 naive_opencode, normal_opencode, iterative_opencode"
@@ -127,6 +142,7 @@ fi
 
 echo "=================================================="
 echo "Agent Benchmark"
+echo "Device type: $_DEVICE_TYPE"
 echo "Dataset: $DATASET"
 echo "Method: $METHOD"
 echo "Target: $DISPLAY_TARGET"
