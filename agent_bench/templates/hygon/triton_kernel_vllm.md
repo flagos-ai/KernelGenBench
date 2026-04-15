@@ -11,7 +11,6 @@
 ## 运行环境
 
 - **硬件**: 海光 DCU（Deep Computing Unit）
-- **软件栈**: DTK（DCU Toolkit），ROCm 兼容，PyTorch（HIP 后端），Triton
 - 所有涉及 GPU 的命令必须加上 `HIP_VISIBLE_DEVICES={{GPU_ID}}` 前缀
 - Python 路径: `{{PYTHON_PATH}}`
 
@@ -21,14 +20,13 @@
   - `device = torch.device("cuda:0")`
   - `torch.cuda.synchronize()`
   - `tensor.to('cuda')`
-- 环境变量使用 `HIP_VISIBLE_DEVICES`（或 `CUDA_VISIBLE_DEVICES`，取决于 DTK 版本）
+- 环境变量使用 `HIP_VISIBLE_DEVICES`
 - **不需要额外的 import**，直接 `import torch` 即可
 - Triton kernel 的编写方式与 NVIDIA GPU 基本一致，但需注意：
   - 海光 DCU 基于 ROCm/HIP 生态，提供 CUDA 兼容接口，但底层硬件架构不同
   - 某些高级 CUDA/Triton 特性可能不支持或行为不同，优先使用基础 Triton 操作
   - 避免依赖 NVIDIA 特有的硬件特性（如 Tensor Core 特定指令、CUDA 特有 intrinsics）
   - `tl.dot` 建议使用 `allow_tf32=False`（TF32 是 NVIDIA 特有功能）
-  - 建议使用适中的 BLOCK_SIZE（如 256 或 512），避免寄存器压力过大
 
 ## Baseline 函数
 

@@ -35,6 +35,7 @@ _DEVICE_TEMPLATE_DIR = {
     "musa": "musa",
     "iluvatar": "iluvatar",
     "hygon": "hygon",
+    "muxi": "muxi",
 }
 
 

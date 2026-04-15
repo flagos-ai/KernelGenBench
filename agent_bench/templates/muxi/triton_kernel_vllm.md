@@ -1,6 +1,6 @@
-# Triton Kernel 实现任务 (vLLM)（天数智芯 Iluvatar）
+# Triton Kernel 实现任务 (vLLM)（沐曦 MetaX）
 
-你需要为 vLLM baseline 函数实现一个在天数智芯（Iluvatar）GPU 上运行的 Triton kernel。
+你需要为 vLLM baseline 函数实现一个在沐曦 MetaX GPU 上运行的 Triton kernel。
 
 ## 任务信息
 
@@ -10,23 +10,24 @@
 
 ## 运行环境
 
-- **硬件**: 天数智芯 Iluvatar GPU
-- 所有涉及 GPU 的命令必须加上 `CUDA_VISIBLE_DEVICES={{GPU_ID}}` 前缀
+- **硬件**: 沐曦 MetaX GPU
+- 所有涉及 GPU 的命令必须加上 `MACA_VISIBLE_DEVICES={{GPU_ID}}` 前缀
 - Python 路径: `{{PYTHON_PATH}}`
 
-## 天数智芯 Iluvatar GPU 注意事项（必须遵守）
+## 沐曦 MetaX GPU 注意事项（必须遵守）
 
 - 设备类型是 `cuda`，使用标准 PyTorch CUDA API，例如：
   - `device = torch.device("cuda:0")`
   - `torch.cuda.synchronize()`
   - `tensor.to('cuda')`
-- 环境变量使用 `CUDA_VISIBLE_DEVICES`（与 NVIDIA 一致）
-- **不需要额外的 import**（不需要 torch_npu 或 torch_musa），直接 `import torch` 即可
+- 环境变量使用 `MACA_VISIBLE_DEVICES`
+- **不需要额外的 import**，直接 `import torch` 即可
 - Triton kernel 的编写方式与 NVIDIA GPU 基本一致，但需注意：
-  - 天数智芯 GPU 基于 CUDA 兼容接口，但底层硬件架构不同
+  - 沐曦 GPU 基于 MACA SDK，提供 CUDA 兼容接口，但底层硬件架构不同
   - 某些高级 CUDA/Triton 特性可能不支持或行为不同，优先使用基础 Triton 操作
   - 避免依赖 NVIDIA 特有的硬件特性（如 Tensor Core 特定指令）
   - `tl.dot` 建议使用 `allow_tf32=False` 以确保精度
+  - 部分算子对 bfloat16 支持有限，遇到精度问题时优先用 float32 累加
 
 ## Baseline 函数
 

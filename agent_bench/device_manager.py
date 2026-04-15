@@ -9,7 +9,7 @@ logger = logging.getLogger(__name__)
 
 
 def detect_device_type() -> str:
-    """Detect current device type: 'cuda', 'npu', 'musa', 'iluvatar', or 'hygon'."""
+    """Detect current device type: 'cuda', 'npu', 'musa', 'iluvatar', 'hygon', or 'muxi'."""
     vendor = os.environ.get("GEMS_VENDOR", "")
     if vendor == "ascend" or os.environ.get("ASCEND_RT_VISIBLE_DEVICES"):
         return "npu"
@@ -19,6 +19,8 @@ def detect_device_type() -> str:
         return "iluvatar"
     if vendor == "hygon":
         return "hygon"
+    if vendor == "muxi" or os.environ.get("MACA_VISIBLE_DEVICES"):
+        return "muxi"
     # Auto-detect Iluvatar GPU via device name
     if not vendor:
         try:
@@ -39,6 +41,15 @@ def detect_device_type() -> str:
                 return "hygon"
         except (subprocess.TimeoutExpired, FileNotFoundError):
             pass
+        # Auto-detect MetaX GPU via mx-smi
+        try:
+            result = subprocess.run(
+                ["mx-smi", "-L"],
+                capture_output=True, text=True, timeout=10)
+            if result.returncode == 0 and "MetaX" in result.stdout:
+                return "muxi"
+        except (subprocess.TimeoutExpired, FileNotFoundError):
+            pass
     return "cuda"
 
 
@@ -48,6 +59,7 @@ _VISIBLE_DEVICES_ENV = {
     "musa": "MUSA_VISIBLE_DEVICES",
     "iluvatar": "CUDA_VISIBLE_DEVICES",
     "hygon": "HIP_VISIBLE_DEVICES",
+    "muxi": "MACA_VISIBLE_DEVICES",
 }
 
 

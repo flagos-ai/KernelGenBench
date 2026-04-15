@@ -10,8 +10,7 @@
 
 ## 运行环境
 
-- **硬件**: 天数智芯 Iluvatar BI-V150 GPU
-- **软件栈**: CoreX 4.4.0（CUDA 兼容层），PyTorch 2.7，Triton 3.1
+- **硬件**: 天数智芯 Iluvatar GPU
 - 所有涉及 GPU 的命令必须加上 `CUDA_VISIBLE_DEVICES={{GPU_ID}}` 前缀
 - Python 路径: `{{PYTHON_PATH}}`
 
@@ -24,11 +23,10 @@
 - 环境变量使用 `CUDA_VISIBLE_DEVICES`（与 NVIDIA 一致）
 - **不需要额外的 import**（不需要 torch_npu 或 torch_musa），直接 `import torch` 即可
 - Triton kernel 的编写方式与 NVIDIA GPU 基本一致，但需注意：
-  - Iluvatar BI-V150 基于 CoreX 软件栈，提供 CUDA 兼容接口，但底层硬件架构不同
+  - 天数智芯 GPU 基于 CUDA 兼容接口，但底层硬件架构不同
   - 某些高级 CUDA/Triton 特性可能不支持或行为不同，优先使用基础 Triton 操作
   - 避免依赖 NVIDIA 特有的硬件特性（如 Tensor Core 特定指令）
   - `tl.dot` 建议使用 `allow_tf32=False` 以确保精度
-  - 建议使用较小的 BLOCK_SIZE（如 512 或 1024），避免过大的 tile 导致寄存器溢出
 
 ## 算子规范
 
