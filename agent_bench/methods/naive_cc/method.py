@@ -90,6 +90,7 @@ class NaiveCCMethod(BaseMethod):
         workspace_dir: Path,
         gpu_id: int,
         config: dict,
+        attempt: int = 0,
     ) -> Any:
         """Launch CC process."""
         workspace_dir.mkdir(parents=True, exist_ok=True)
@@ -101,9 +102,9 @@ class NaiveCCMethod(BaseMethod):
         # Build final prompt with instructions
         prompt = self._build_prompt(base_prompt, gpu_id)
 
-        # Prepare output paths
-        stdout_path = workspace_dir / "cc_output.jsonl"
-        log_path = workspace_dir / "cc.log"
+        # Prepare output paths with attempt suffix to avoid overwriting on retry
+        stdout_path = workspace_dir / f"cc_output_attempt{attempt}.jsonl"
+        log_path = workspace_dir / f"cc_attempt{attempt}.log"
 
         # Environment
         env = os.environ.copy()

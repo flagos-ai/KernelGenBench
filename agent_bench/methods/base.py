@@ -37,6 +37,7 @@ class BaseMethod(ABC):
         workspace_dir: Path,
         gpu_id: int,
         config: dict,
+        attempt: int = 0,
     ) -> Any:
         """Launch the agent process.
 
@@ -46,6 +47,7 @@ class BaseMethod(ABC):
             workspace_dir: Working directory for this operator
             gpu_id: GPU ID to use
             config: Configuration dict
+            attempt: Retry attempt number (0-based), used for output file suffixes
 
         Returns:
             Process handle or context needed for finish()

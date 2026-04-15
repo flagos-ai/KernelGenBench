@@ -98,6 +98,7 @@ class NaiveOpenCodeMethod(BaseMethod):
         workspace_dir: Path,
         gpu_id: int,
         config: dict,
+        attempt: int = 0,
     ) -> Any:
         """Launch OpenCode process."""
         workspace_dir.mkdir(parents=True, exist_ok=True)
@@ -109,9 +110,9 @@ class NaiveOpenCodeMethod(BaseMethod):
         # Build final prompt with instructions
         prompt = self._build_prompt(base_prompt, gpu_id)
 
-        # Prepare output paths
-        stdout_path = workspace_dir / "oc_output.json"
-        log_path = workspace_dir / "oc.log"
+        # Prepare output paths with attempt suffix to avoid overwriting on retry
+        stdout_path = workspace_dir / f"oc_output_attempt{attempt}.json"
+        log_path = workspace_dir / f"oc_attempt{attempt}.log"
 
         # Environment
         env = os.environ.copy()

@@ -53,6 +53,9 @@ def _count_tokens_cc(filepath: Path) -> int:
 def scan_workspace_tokens(run_dir: Path) -> dict:
     """扫描 workspaces 目录，统计每个算子的 token 用量。
 
+    支持带 attempt 后缀的文件名（如 cc_output_attempt0.jsonl）和旧格式（cc_output.jsonl）。
+    多次 retry 的 token 会累加。
+
     Returns:
         {"per_op": {op_name: tokens}, "total": int, "agent_type": "oc"|"cc"|"unknown"}
     """
@@ -65,14 +68,25 @@ def scan_workspace_tokens(run_dir: Path) -> dict:
     for op_dir in sorted(ws_dir.iterdir()):
         if not op_dir.is_dir():
             continue
-        oc_file = op_dir / "oc_output.json"
-        cc_file = op_dir / "cc_output.jsonl"
-        if oc_file.exists():
-            agent_type = "oc"
-            per_op[op_dir.name] = _count_tokens_oc(oc_file)
-        elif cc_file.exists():
+
+        op_tokens = 0
+
+        # Look for CC output files (new format with attempt suffix + legacy)
+        cc_files = sorted(op_dir.glob("cc_output_attempt*.jsonl")) + list(op_dir.glob("cc_output.jsonl"))
+        if cc_files:
             agent_type = "cc"
-            per_op[op_dir.name] = _count_tokens_cc(cc_file)
+            for f in cc_files:
+                op_tokens += _count_tokens_cc(f)
+
+        # Look for OC output files (new format with attempt suffix + legacy)
+        oc_files = sorted(op_dir.glob("oc_output_attempt*.json")) + list(op_dir.glob("oc_output.json"))
+        if oc_files:
+            agent_type = "oc"
+            for f in oc_files:
+                op_tokens += _count_tokens_oc(f)
+
+        if op_tokens > 0:
+            per_op[op_dir.name] = op_tokens
 
     return {"per_op": per_op, "total": sum(per_op.values()), "agent_type": agent_type}
 

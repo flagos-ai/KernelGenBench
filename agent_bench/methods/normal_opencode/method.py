@@ -125,6 +125,7 @@ class NormalOpenCodeMethod(BaseMethod):
         workspace_dir: Path,
         gpu_id: int,
         config: dict,
+        attempt: int = 0,
     ) -> Any:
         """Launch OpenCode process with enhanced prompt."""
         workspace_dir.mkdir(parents=True, exist_ok=True)
@@ -145,13 +146,13 @@ class NormalOpenCodeMethod(BaseMethod):
             dataset=dataset,
         )
 
-        # Save prompt for debugging
-        prompt_save_path = workspace_dir / "prompt.md"
+        # Save prompt for debugging with attempt suffix
+        prompt_save_path = workspace_dir / f"prompt_attempt{attempt}.md"
         prompt_save_path.write_text(prompt)
 
-        # Prepare output paths
-        stdout_path = workspace_dir / "oc_output.json"
-        log_path = workspace_dir / "oc.log"
+        # Prepare output paths with attempt suffix to avoid overwriting on retry
+        stdout_path = workspace_dir / f"oc_output_attempt{attempt}.json"
+        log_path = workspace_dir / f"oc_attempt{attempt}.log"
 
         # Environment
         env = os.environ.copy()

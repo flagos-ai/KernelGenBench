@@ -380,6 +380,7 @@ def run(args):
                     workspace_dir=workspace_dir,
                     gpu_id=gpu_id,
                     config=config,
+                    attempt=attempt,
                 )
                 running[safe_name] = (handle, gpu_id, attempt, full_name, time.time(), workspace_dir)
                 progress.add_operator(full_name, gpu_id, attempt + 1)

@@ -116,6 +116,7 @@ class NormalCCMethod(BaseMethod):
         workspace_dir: Path,
         gpu_id: int,
         config: dict,
+        attempt: int = 0,
     ) -> Any:
         """Launch CC process with enhanced prompt."""
         workspace_dir.mkdir(parents=True, exist_ok=True)
@@ -136,13 +137,13 @@ class NormalCCMethod(BaseMethod):
             dataset=dataset,
         )
 
-        # Save prompt for debugging
-        prompt_save_path = workspace_dir / "prompt.md"
+        # Save prompt for debugging with attempt suffix
+        prompt_save_path = workspace_dir / f"prompt_attempt{attempt}.md"
         prompt_save_path.write_text(prompt)
 
-        # Prepare output paths
-        stdout_path = workspace_dir / "cc_output.jsonl"
-        log_path = workspace_dir / "cc.log"
+        # Prepare output paths with attempt suffix to avoid overwriting on retry
+        stdout_path = workspace_dir / f"cc_output_attempt{attempt}.jsonl"
+        log_path = workspace_dir / f"cc_attempt{attempt}.log"
 
         # Environment
         env = os.environ.copy()
