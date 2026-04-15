@@ -49,26 +49,10 @@ def cublasZgemvStridedBatched(trans, m, n, alpha, A, lda, strideA, x, incx, stri
     handle = get_or_create_handle()
     func = _get_cublas_func()
 
-    # Convert string trans to int if needed (N->0, T->1)
+    # Convert string trans to int if needed (N->0, T->1), then map to backend enum
     if isinstance(trans, str):
-        trans = 0 if trans == 'N' else 1
-        trans = map_op(trans)
-    
-    # Map trans to cublasOperation_t
-    def _to_cublas_op(t):
-        if isinstance(t, int):
-            return t
-        t = str(t).upper()
-        if t == 'N':
-            return 0
-        elif t == 'T':
-            return 1
-        elif t == 'C':
-            return 2
-        else:
-            raise ValueError("Invalid trans value. Use 'N', 'T', or 'C'.")
-    
-    trans_op = _to_cublas_op(trans)
+        trans = {'N': 0, 'T': 1, 'C': 2}.get(trans.upper(), 0)
+    trans_op = map_op(trans)
     
     # Convert tensors to GPU pointers
     A_ptr = ctypes.c_void_p(A.data_ptr())

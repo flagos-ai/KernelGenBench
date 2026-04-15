@@ -119,11 +119,19 @@ _spm_fn = None
 
 
 def set_pointer_mode(handle, mode: int):
-    """Set BLAS pointer mode. 0 = HOST, 1 = DEVICE."""
+    """Set BLAS pointer mode. 0 = HOST, 1 = DEVICE.
+
+    On NVIDIA, this is a no-op (cuBLAS handles host/device pointers automatically).
+    On other vendors (Hygon/Ascend/etc.), explicit mode switching is required.
+    """
+    backend = get_backend()
+    # Skip pointer mode switching on NVIDIA — cuBLAS handles it automatically
+    if backend.vendor.value == "nvidia":
+        return
+
     global _spm_fn
     if _spm_fn is None:
         lib = get_blas_lib()
-        backend = get_backend()
         _spm_fn = getattr(lib, backend.blas_set_pointer_mode_fn)
         _spm_fn.argtypes = [ctypes.c_void_p, ctypes.c_int]
         _spm_fn.restype = ctypes.c_int
