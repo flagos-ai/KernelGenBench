@@ -155,6 +155,35 @@ class PassAtKTester:
                             "src/flagbench/accuracy/vllm13/",
                             "src/flagbench/accuracy/cublas/",
                         ]
+                case "KernelGenBench-aten":
+                    from flagbench.dataset import get_aten_operators
+                    self.operator_loader = get_aten_operators()  # 110 aten ops
+                    if self.custom_test_modules is None:
+                        self.custom_test_modules = [
+                            "flagbench.accuracy.test_v2_1_ops_with_benchmark",
+                        ]
+                case "KernelGenBench-vllm":
+                    from flagbench.dataset import get_vllm_operators
+                    self.operator_loader = get_vllm_operators()  # 50 vllm ops
+                    if self.custom_test_modules is None:
+                        self.custom_test_modules = [
+                            "src/flagbench/accuracy/vllm13/",
+                        ]
+                case "KernelGenBench-cublas":
+                    from flagbench.dataset import get_cublas_operators
+                    self.operator_loader = get_cublas_operators()  # 50 cublas ops
+                    if self.custom_test_modules is None:
+                        self.custom_test_modules = [
+                            "src/flagbench/accuracy/cublas/",
+                        ]
+                case "KernelGenBench-nocublas":
+                    from flagbench.dataset import get_kernelgenbench_nocublas_operators
+                    self.operator_loader = get_kernelgenbench_nocublas_operators()  # 110 aten + 50 vllm = 160 ops
+                    if self.custom_test_modules is None:
+                        self.custom_test_modules = [
+                            "flagbench.accuracy.test_v2_1_ops_with_benchmark",
+                            "src/flagbench/accuracy/vllm13/",
+                        ]
                 case _:
                     raise ValueError(f"Unsupported dataset: {self.dataset}")
 
@@ -163,7 +192,7 @@ class PassAtKTester:
             self.adapter = self._create_adapter()
 
             # 根据 dataset 设置 create_generate_args 方法
-            if self.dataset in ["cupy", "KernelGenBench"]:
+            if self.dataset in ["cupy"] or self.dataset.startswith("KernelGenBench"):
                 # 对于 cupy/KernelGenBench dataset，使用 adapter 的方法
                 self.create_generate_args = self._create_cupy_generate_args_wrapper()
             else:
@@ -201,11 +230,11 @@ class PassAtKTester:
             prompt_builder = CupyPromptBuilder(mode=mode)
             logger.info(f"Created CupyPromptBuilder with mode: {mode}")
             return prompt_builder
-        elif self.dataset == "KernelGenBench":
+        elif self.dataset.startswith("KernelGenBench"):
             # KernelGenBench 使用 KernelGenBenchPromptBuilder 根据 args 类型分发
             mode = "with_wiki" if self.use_wiki else "basic"
             prompt_builder = KernelGenBenchPromptBuilder(mode=mode)
-            logger.info(f"Created KernelGenBenchPromptBuilder for KernelGenBench with mode: {mode}")
+            logger.info(f"Created KernelGenBenchPromptBuilder for {self.dataset} with mode: {mode}")
             return prompt_builder
         else:
             raise ValueError(f"Unsupported dataset for PromptBuilder: {self.dataset}")
@@ -229,7 +258,7 @@ class PassAtKTester:
             adapter = CupyAdapter()
             logger.info(f"Created CupyAdapter for dataset: {self.dataset}")
             return adapter
-        elif self.dataset == "KernelGenBench":
+        elif self.dataset.startswith("KernelGenBench"):
             adapter = KernelGenBenchAdapter()
             logger.info(f"Created KernelGenBenchAdapter for dataset: {self.dataset}")
             return adapter
@@ -928,12 +957,22 @@ class PassAtKTester:
 
 
 def main():
+    # Auto-detect default dataset based on device type
+    # NVIDIA: KernelGenBench (210 ops = 110 aten + 50 vllm + 50 cublas)
+    # Other chips: KernelGenBench-aten (110 aten ops)
+    try:
+        from runtime import get_device_type
+        _device_type = get_device_type()
+    except Exception:
+        _device_type = "nvidia"
+    _DEFAULT_DATASET = "KernelGenBench" if _device_type == "nvidia" else "KernelGenBench-aten"
+
     parser = argparse.ArgumentParser(description="Test Pass@K for operator generation")
-    
+
     parser.add_argument("--name", type=str, default="aten", help="Namespace to test (default: aten)")
     parser.add_argument("--acc-test-func-path", type=str, default="", help="Path to the accuracy test function directory")
     parser.add_argument("--benchmark-func-path", type=str, default="", help="Path to the performance test function directory")
-    parser.add_argument("--dataset", type=str, default="v2", help="Dataset version to use (default: v2)", choices=["pytorch", "gems", "v1", "v2", "v2_1", "qwen_next", "cupy", "KernelGenBench"])
+    parser.add_argument("--dataset", type=str, default=_DEFAULT_DATASET, help=f"Dataset version to use (default: {_DEFAULT_DATASET})", choices=["pytorch", "gems", "v1", "v2", "v2_1", "qwen_next", "cupy", "KernelGenBench", "KernelGenBench-aten", "KernelGenBench-vllm", "KernelGenBench-cublas", "KernelGenBench-nocublas"])
     parser.add_argument("--output-dir", type=Path, default=PROJECT_ROOT / "output" / "pass_at_k", help="Output directory")
     parser.add_argument("--resume-from", type=Path, help="Resume from existing checkpoint directory")
     parser.add_argument("--test-type", type=str, default="triton", choices=["accuracy", "performance", "triton"])
