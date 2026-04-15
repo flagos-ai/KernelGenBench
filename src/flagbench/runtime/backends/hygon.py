@@ -13,7 +13,7 @@ _HIPBLAS_KEEP_V2 = {
 
 # Enum mappings: cuBLAS → hipBLAS
 _OP_MAP = {0: 111, 1: 112, 2: 113}
-_FILL_MAP = {0: 121, 1: 122}
+_FILL_MAP = {0: 122, 1: 121}
 _SIDE_MAP = {0: 141, 1: 142}
 _DIAG_MAP = {0: 131, 1: 132}
 

@@ -97,7 +97,7 @@ if __name__ == "__main__":
     m = 3
     n = 3
     side = 'L'   # left side
-    uplo = 'U'   # use upper triangular
+    uplo = 'L'   # A_rm is upper triangular, column-major sees lower triangular
     trans = 'N'  # no transpose
     diag = 'N'   # non-unit diagonal
     alpha = 1.2 - 0.7j
