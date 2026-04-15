@@ -32,7 +32,7 @@ fi
 
 # Default values
 DATASET="$DEFAULT_DATASET"
-METHOD="naive_cc"
+METHOD="normal_cc"
 DEVICE_COUNT=8
 TIMEOUT=600
 SKIP_GEN=false
