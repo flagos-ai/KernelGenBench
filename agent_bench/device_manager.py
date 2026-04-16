@@ -46,7 +46,7 @@ def detect_device_type() -> str:
             result = subprocess.run(
                 ["mx-smi", "-L"],
                 capture_output=True, text=True, timeout=10)
-            if result.returncode == 0 and "MetaX" in result.stdout:
+            if result.returncode == 0 and ("MetaX" in result.stdout or "MXC" in result.stdout):
                 return "muxi"
         except (subprocess.TimeoutExpired, FileNotFoundError):
             pass
