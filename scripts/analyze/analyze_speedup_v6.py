@@ -124,8 +124,82 @@ def compute_speedup_stats(speedup_list: List[Dict]) -> Optional[Dict]:
     }
 
 
+def _load_passed_operators(result_dir: Path) -> Optional[set]:
+    """Load passed operator names from pass_at_k results.
+
+    Priority: pass_at_k_results_antihack.json > pass_at_k_results.json
+    Returns set of passed operator names, or None if not available.
+    """
+    # Priority 1: antihack clean list
+    antihack_file = result_dir / "pass_at_k_results_antihack.json"
+    if antihack_file.exists():
+        try:
+            with open(antihack_file, 'r') as f:
+                data = json.load(f)
+            clean = data.get("clean_passed_operators")
+            if clean is not None:
+                print(f"Loaded {len(clean)} passed operators from antihack results")
+                return set(clean)
+        except Exception as e:
+            print(f"Warning: Failed to load {antihack_file}: {e}", file=sys.stderr)
+
+    # Priority 2: pass_at_k_results.json
+    results_file = result_dir / "pass_at_k_results.json"
+    if results_file.exists():
+        try:
+            with open(results_file, 'r') as f:
+                data = json.load(f)
+            passed = data.get("passed_operators")
+            if passed is not None:
+                print(f"Loaded {len(passed)} passed operators from pass_at_k_results")
+                return set(passed)
+        except Exception as e:
+            print(f"Warning: Failed to load {results_file}: {e}", file=sys.stderr)
+
+    return None
+
+
+def _load_speedup_from_test_reports(
+    log_dir: Path, op_name: str, round_num: int
+) -> Optional[Dict]:
+    """Load speedup data from individual test_report_*.json file.
+
+    Returns operator result dict with speedup_stats, or None.
+    """
+    report_file = log_dir / f"test_report_{op_name}.json"
+    if not report_file.exists():
+        return None
+
+    try:
+        with open(report_file, 'r') as f:
+            test_cases = json.load(f)
+    except Exception:
+        return None
+
+    if not test_cases or not isinstance(test_cases, list):
+        return None
+
+    # Collect speedup entries from individual test cases
+    speedup_list = []
+    for tc in test_cases:
+        sp = tc.get("speedup")
+        if sp and isinstance(sp, dict) and "speedup" in sp:
+            speedup_list.append(sp)
+
+    speedup_stats = compute_speedup_stats(speedup_list)
+    return {
+        "round": round_num,
+        "speedup_stats": speedup_stats,
+    }
+
+
 def load_from_verification_dir(result_dir: Path) -> Dict[str, Dict]:
     """Load results from verification directory.
+
+    Uses a multi-source strategy:
+    1. Get passed operators from pass_at_k results (antihack > results)
+    2. Load speedup from result.json where available
+    3. For passed operators missing from result.json, load from test_report_*.json
 
     Keeps the BEST speedup (by geometric mean) across all rounds.
     """
@@ -147,47 +221,75 @@ def load_from_verification_dir(result_dir: Path) -> Dict[str, Dict]:
 
     print(f"Found {len(log_dirs)} rounds of verification results")
 
+    # Get authoritative passed operator set
+    passed_ops = _load_passed_operators(result_dir)
+
     for log_dir in log_dirs:
         round_num = int(log_dir.name.split("_")[1])
         result_file = log_dir / "result.json"
 
-        if not result_file.exists():
-            continue
+        # Phase 1: Load from result.json (operators marked success)
+        result_json_passed = set()
+        if result_file.exists():
+            try:
+                with open(result_file, 'r') as f:
+                    results = json.load(f)
+            except Exception as e:
+                print(f"Warning: Failed to load {result_file}: {e}", file=sys.stderr)
+                results = []
 
-        try:
-            with open(result_file, 'r') as f:
-                results = json.load(f)
-        except Exception as e:
-            print(f"Warning: Failed to load {result_file}: {e}", file=sys.stderr)
-            continue
+            for item in results:
+                op_name = item.get("op_name")
+                if not op_name:
+                    continue
 
-        for item in results:
-            op_name = item.get("op_name")
-            if not op_name:
-                continue
+                if not item.get("success"):
+                    continue
 
-            if not item.get("success"):
-                continue
+                result_json_passed.add(op_name)
+                speedup_list = item.get("speedup", [])
+                speedup_stats = compute_speedup_stats(speedup_list)
+                current_geo = speedup_stats["geo_mean"] if speedup_stats else None
 
-            speedup_list = item.get("speedup", [])
-            speedup_stats = compute_speedup_stats(speedup_list)
+                if op_name in operator_results:
+                    existing_stats = operator_results[op_name].get("speedup_stats")
+                    existing_geo = existing_stats["geo_mean"] if existing_stats else None
+                    if current_geo is not None:
+                        if existing_geo is None or current_geo > existing_geo:
+                            operator_results[op_name] = {
+                                "round": round_num,
+                                "speedup_stats": speedup_stats,
+                            }
+                else:
+                    operator_results[op_name] = {
+                        "round": round_num,
+                        "speedup_stats": speedup_stats,
+                    }
 
-            current_geo = speedup_stats["geo_mean"] if speedup_stats else None
+        # Phase 2: For passed operators not in result.json, try test_report files
+        if passed_ops is not None:
+            missing_ops = passed_ops - result_json_passed - set(operator_results.keys())
+            for op_name in missing_ops:
+                report_result = _load_speedup_from_test_reports(log_dir, op_name, round_num)
+                if report_result is not None:
+                    current_geo = report_result["speedup_stats"]["geo_mean"] if report_result["speedup_stats"] else None
+                    if op_name in operator_results:
+                        existing_stats = operator_results[op_name].get("speedup_stats")
+                        existing_geo = existing_stats["geo_mean"] if existing_stats else None
+                        if current_geo is not None:
+                            if existing_geo is None or current_geo > existing_geo:
+                                operator_results[op_name] = report_result
+                    else:
+                        operator_results[op_name] = report_result
 
-            if op_name in operator_results:
-                existing_stats = operator_results[op_name].get("speedup_stats")
-                existing_geo = existing_stats["geo_mean"] if existing_stats else None
-
-                if current_geo is not None:
-                    if existing_geo is None or current_geo > existing_geo:
-                        operator_results[op_name] = {
-                            "round": round_num,
-                            "speedup_stats": speedup_stats,
-                        }
-            else:
+    # Phase 3: If we have a passed_ops set, ensure all passed ops are represented
+    # (even without speedup data)
+    if passed_ops is not None:
+        for op_name in passed_ops:
+            if op_name not in operator_results:
                 operator_results[op_name] = {
-                    "round": round_num,
-                    "speedup_stats": speedup_stats,
+                    "round": 0,
+                    "speedup_stats": None,
                 }
 
     return operator_results
