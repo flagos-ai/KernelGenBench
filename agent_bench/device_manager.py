@@ -94,6 +94,8 @@ class DeviceManager:
             return self._detect_via_cmd(["musa-smi", "-L"])
         elif self.device_type == "hygon":
             return self._detect_hygon_dcu()
+        elif self.device_type == "muxi":
+            return self._detect_muxi()
         return [0]
 
     def _detect_via_cmd(self, cmd: list[str]) -> list[int]:
@@ -147,6 +149,21 @@ class DeviceManager:
         except Exception:
             pass
         logger.warning("Failed to detect Hygon DCU devices, defaulting to [0]")
+        return [0]
+
+    def _detect_muxi(self) -> list[int]:
+        """Detect MetaX (MUXI) GPU devices via mx-smi."""
+        try:
+            result = subprocess.run(
+                ["mx-smi", "-L"], capture_output=True, text=True, timeout=10)
+            if result.returncode == 0:
+                import re
+                ids = [int(m) for m in re.findall(r"GPU#(\d+)", result.stdout)]
+                if ids:
+                    return sorted(ids)
+        except (subprocess.TimeoutExpired, FileNotFoundError):
+            pass
+        logger.warning("Failed to detect MetaX GPU devices, defaulting to [0]")
         return [0]
 
     def _lock_path(self, gpu_id: int) -> str:
