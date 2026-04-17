@@ -222,12 +222,13 @@ class Verifier:
             with open(os.path.join(log_dir, "result.json"), "r") as f:
                 existing_result = json.load(f)
                 existing_result = [VerifyResult(**r) for r in existing_result]
-            # merge existing result with new result, avoid duplicate by op_name
-            existing_op_names = set(r.op_name for r in existing_result)
-            for r in result:
-                if r.op_name not in existing_op_names:
-                    existing_result.append(r)
-            result = existing_result
+            # merge: new results overwrite existing ones with same op_name
+            new_op_names = set(r.op_name for r in result)
+            merged = list(result)  # start with new results
+            for r in existing_result:
+                if r.op_name not in new_op_names:
+                    merged.append(r)
+            result = merged
         summary = {
             "total": len(result),
             "passed": sum(1 for r in result if r.success is True),
