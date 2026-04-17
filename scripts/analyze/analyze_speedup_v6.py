@@ -386,9 +386,79 @@ def compute_summary_stats(values: List[float]) -> Dict:
     }
 
 
+# ── Timing data ──────────────────────────────────────────────────────────────
+
+def load_timing_data(result_dir: Path) -> Dict[str, Dict]:
+    """Load per-operator timing from workspace file timestamps.
+
+    For new format (attempt files): sums duration across all attempts.
+    For old format (overwritten files): uses last attempt only.
+    Falls back to progress.json duration_seconds.
+    """
+    timing = {}
+
+    # Scan workspace files for per-attempt timing
+    workspaces_dir = result_dir / "workspaces"
+    if workspaces_dir.exists():
+        for ws_dir in workspaces_dir.iterdir():
+            if not ws_dir.is_dir():
+                continue
+            op_name = ws_dir.name.replace("__", "::", 1)
+
+            # New format: prompt_attempt*.md + cc_output_attempt*.jsonl
+            attempt_prompts = sorted(ws_dir.glob("prompt_attempt*.md"))
+            attempt_outputs = sorted(ws_dir.glob("cc_output_attempt*.jsonl"))
+
+            if attempt_prompts and attempt_outputs:
+                total_duration = 0
+                for pf, of in zip(attempt_prompts, attempt_outputs):
+                    total_duration += max(0, of.stat().st_mtime - pf.stat().st_mtime)
+                timing[op_name] = {
+                    "total_duration": round(total_duration),
+                    "num_attempts": len(attempt_prompts),
+                }
+            else:
+                # Old format: single prompt.md + cc_output.jsonl
+                pf = ws_dir / "prompt.md"
+                of = ws_dir / "cc_output.jsonl"
+                if pf.exists() and of.exists():
+                    timing[op_name] = {
+                        "total_duration": round(max(0, of.stat().st_mtime - pf.stat().st_mtime)),
+                        "num_attempts": 1,
+                    }
+
+    # Fill from progress.json for any missing
+    progress_file = result_dir / "progress.json"
+    if progress_file.exists():
+        try:
+            with open(progress_file, 'r') as f:
+                progress_ops = json.load(f).get("operators", {})
+            for op_name, info in progress_ops.items():
+                if op_name not in timing and info.get("duration_seconds"):
+                    timing[op_name] = {
+                        "total_duration": info["duration_seconds"],
+                        "num_attempts": info.get("attempt", 1),
+                    }
+        except Exception:
+            pass
+
+    return timing
+
+
+def format_duration(seconds: Optional[int]) -> str:
+    """Format seconds as H:MM:SS or M:SS."""
+    if seconds is None:
+        return "N/A"
+    h, rem = divmod(int(seconds), 3600)
+    m, s = divmod(rem, 60)
+    if h > 0:
+        return f"{h}:{m:02d}:{s:02d}"
+    return f"{m}:{s:02d}"
+
+
 # ── Console output ───────────────────────────────────────────────────────────
 
-def print_summary(operator_results: Dict[str, Dict], result_dir: Path, dataset: str):
+def print_summary(operator_results: Dict[str, Dict], result_dir: Path, dataset: str, timing: Dict[str, Dict] = None):
     """Print summary statistics to console."""
     totals = DATASET_TOTALS[dataset]
     groups = group_by_type(operator_results)
@@ -488,10 +558,41 @@ def print_summary(operator_results: Dict[str, Dict], result_dir: Path, dataset: 
         print(f"  {label:<20} {count:>3} ({pct:>5.1f}%) {bar}")
     print()
 
+    # Geomean threshold counts
+    thresholds = [(">0.8", 0.8), (">1.0", 1.0), (">1.5", 1.5)]
+    print("Geomean Threshold Counts:")
+    for label, thresh in thresholds:
+        cnt = sum(1 for g in all_geo_means if g > thresh)
+        pct = cnt / len(all_geo_means) * 100 if all_geo_means else 0
+        print(f"  {label:<8} {cnt:>3} / {len(all_geo_means)} ({pct:.1f}%)")
+    print()
+
+    # Timing summary
+    if timing:
+        total_time = sum(t["total_duration"] for t in timing.values())
+        avg_time = total_time / len(timing) if timing else 0
+        print("=" * 80)
+        print("Timing Summary")
+        print("=" * 80)
+        print(f"  Total time (all operators, all attempts): {format_duration(total_time)}")
+        print(f"  Average per operator: {format_duration(int(avg_time))}")
+        print(f"  Operators with timing data: {len(timing)}")
+        print()
+
+        # Per-operator timing table
+        print("-" * 80)
+        print(f"{'Operator':<45} {'Duration':>10} {'Attempts':>8}")
+        print("-" * 80)
+        sorted_timing = sorted(timing.items(), key=lambda x: x[1]["total_duration"], reverse=True)
+        for op_name, t in sorted_timing:
+            print(f"{op_name:<45} {format_duration(t['total_duration']):>10} {t['num_attempts']:>8}")
+        print("-" * 80)
+        print()
+
 
 # ── Markdown output ──────────────────────────────────────────────────────────
 
-def generate_markdown(operator_results: Dict[str, Dict], result_dir: Path, dataset: str) -> str:
+def generate_markdown(operator_results: Dict[str, Dict], result_dir: Path, dataset: str, timing: Dict[str, Dict] = None) -> str:
     """Generate markdown report."""
     totals = DATASET_TOTALS[dataset]
     groups = group_by_type(operator_results)
@@ -613,14 +714,44 @@ def generate_markdown(operator_results: Dict[str, Dict], result_dir: Path, datas
             lines.append(f"| {op_name} | {get_op_type(op_name)} | {round_val} |")
         lines.append("")
 
+    # Geomean threshold counts
+    all_geo_means = collect_geo_means(with_speedup)
+    if all_geo_means:
+        lines.append("## Geomean Threshold Counts")
+        lines.append("")
+        lines.append("| Threshold | Count | Total | Percentage |")
+        lines.append("|-----------|-------|-------|------------|")
+        for label, thresh in [(">0.8", 0.8), (">1.0", 1.0), (">1.5", 1.5)]:
+            cnt = sum(1 for g in all_geo_means if g > thresh)
+            pct = cnt / len(all_geo_means) * 100
+            lines.append(f"| {label} | {cnt} | {len(all_geo_means)} | {pct:.1f}% |")
+        lines.append("")
+
+    # Timing summary
+    if timing:
+        total_time = sum(t["total_duration"] for t in timing.values())
+        avg_time = total_time / len(timing) if timing else 0
+        lines.append("## Timing Summary")
+        lines.append("")
+        lines.append(f"- Total time (all operators, all attempts): {format_duration(total_time)}")
+        lines.append(f"- Average per operator: {format_duration(int(avg_time))}")
+        lines.append(f"- Operators with timing data: {len(timing)}")
+        lines.append("")
+        lines.append("| Operator | Duration | Attempts |")
+        lines.append("|----------|----------|----------|")
+        sorted_timing = sorted(timing.items(), key=lambda x: x[1]["total_duration"], reverse=True)
+        for op_name, t in sorted_timing:
+            lines.append(f"| {op_name} | {format_duration(t['total_duration'])} | {t['num_attempts']} |")
+        lines.append("")
+
     return "\n".join(lines)
 
 
 # ── Main ─────────────────────────────────────────────────────────────────────
 
-def save_results(operator_results: Dict[str, Dict], result_dir: Path, dataset: str):
+def save_results(operator_results: Dict[str, Dict], result_dir: Path, dataset: str, timing: Dict[str, Dict] = None):
     """Save results to markdown file."""
-    md_content = generate_markdown(operator_results, result_dir, dataset)
+    md_content = generate_markdown(operator_results, result_dir, dataset, timing)
     output_file = result_dir / "speedup_analysis_v6.md"
     with open(output_file, 'w') as f:
         f.write(md_content)
@@ -685,8 +816,10 @@ def main():
         print(f"Warning: Unknown dataset '{dataset}', using KernelGenBench defaults", file=sys.stderr)
         dataset = "KernelGenBench"
 
-    print_summary(operator_results, result_dir, dataset)
-    save_results(operator_results, result_dir, dataset)
+    timing = load_timing_data(result_dir)
+
+    print_summary(operator_results, result_dir, dataset, timing)
+    save_results(operator_results, result_dir, dataset, timing)
 
 
 if __name__ == "__main__":
