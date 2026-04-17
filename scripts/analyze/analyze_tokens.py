@@ -30,23 +30,50 @@ def _count_tokens_oc(filepath: Path) -> int:
 
 
 def _count_tokens_cc(filepath: Path) -> int:
-    """从 cc_output.jsonl (JSONL) 统计 token 总量。累加所有 assistant 消息的 usage。"""
-    total = 0
+    """从 cc_output.jsonl (JSONL) 统计 token 总量。
+
+    优先使用最后一条 result 行的 usage（精确值）。
+    如果没有 result 行（超时被 kill），则按 message.id 去重后求和所有 assistant 消息的 usage（近似值）。
+    """
+    lines = []
     with open(filepath) as f:
         for line in f:
             line = line.strip()
             if not line:
                 continue
             try:
-                obj = json.loads(line)
+                lines.append(json.loads(line))
             except json.JSONDecodeError:
                 continue
-            if obj.get("type") == "assistant":
-                usage = obj.get("message", {}).get("usage", {})
-                total += usage.get("input_tokens", 0)
-                total += usage.get("output_tokens", 0)
-                total += usage.get("cache_creation_input_tokens", 0)
-                total += usage.get("cache_read_input_tokens", 0)
+
+    # 优先使用 result 行
+    for obj in reversed(lines):
+        if obj.get("type") == "result":
+            usage = obj.get("usage", {})
+            return (
+                usage.get("input_tokens", 0)
+                + usage.get("output_tokens", 0)
+                + usage.get("cache_creation_input_tokens", 0)
+                + usage.get("cache_read_input_tokens", 0)
+            )
+
+    # Fallback: 按 message.id 去重求和（用于超时情况）
+    seen_ids = set()
+    total = 0
+    for obj in lines:
+        if obj.get("type") == "assistant":
+            msg = obj.get("message", {})
+            if isinstance(msg, dict):
+                msg_id = msg.get("id")
+                usage = msg.get("usage", {})
+                if msg_id and usage and msg_id not in seen_ids:
+                    seen_ids.add(msg_id)
+                    total += (
+                        usage.get("input_tokens", 0)
+                        + usage.get("output_tokens", 0)
+                        + usage.get("cache_creation_input_tokens", 0)
+                        + usage.get("cache_read_input_tokens", 0)
+                    )
     return total
 
 
