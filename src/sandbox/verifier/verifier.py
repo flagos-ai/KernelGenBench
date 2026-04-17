@@ -536,7 +536,7 @@ class Verifier:
                             avg_speed = {
                                 "ref_time": np.mean([s["latency_base"] for s in speed['result']]).item(),
                                 "res_time": np.mean([s["latency"] for s in speed['result']]).item(),
-                                "speedup": np.mean([s["speedup"] for s in speed['result']]).item(),
+                                "speedup": np.exp(np.mean(np.log([s["speedup"] for s in speed['result']]))).item(),
                                 "params": speed['dtype'],
                             }
                             # speed['result'].append(avg_speed)
@@ -578,7 +578,7 @@ class Verifier:
                     avg_speed = {
                         "ref_time": np.mean([s['ref_time'] for s in speedup]).item(),
                         "res_time": np.mean([s['res_time'] for s in speedup]).item(),
-                        "speedup": np.mean([s['speedup'] for s in speedup]).item(),
+                        "speedup": np.exp(np.mean(np.log([s['speedup'] for s in speedup]))).item(),
                         "params": "avg",
                     }
                     speedup.append(avg_speed)

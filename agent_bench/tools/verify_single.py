@@ -39,13 +39,13 @@ logger = logging.getLogger(__name__)
 
 
 def _extract_avg_speedup(speedup_list):
-    """Extract average speedup from speedup results list.
+    """Extract geometric mean speedup from speedup results list.
 
     Args:
         speedup_list: List of speedup measurement dicts from Verifier
 
     Returns:
-        Average speedup value, or None if not available
+        Geometric mean speedup value, or None if not available
     """
     if not speedup_list:
         return None
@@ -53,10 +53,14 @@ def _extract_avg_speedup(speedup_list):
     for item in reversed(speedup_list):
         if isinstance(item, dict) and item.get('params') == 'avg':
             return item.get('speedup')
-    # Fallback: calculate average from all entries
+    # Fallback: calculate geometric mean from all entries
+    import math
     speedups = [item.get('speedup') for item in speedup_list
-                if isinstance(item, dict) and isinstance(item.get('speedup'), (int, float))]
-    return sum(speedups) / len(speedups) if speedups else None
+                if isinstance(item, dict) and isinstance(item.get('speedup'), (int, float))
+                and item.get('speedup') > 0]
+    if not speedups:
+        return None
+    return math.exp(sum(math.log(s) for s in speedups) / len(speedups))
 
 
 
