@@ -1,6 +1,6 @@
 [<img width="2182" height="602" alt="github+banner-20260130" src=".github/assets/banner-20260130.png" />](https://flagos.io/)
 
-[[中文版](./README_cn.md)|English]
+[[中文版](./README.zh-CN.md)|English]
 
 <div align="right">
   <a href="https://www.linkedin.com/company/flagos-community" target="_blank">
