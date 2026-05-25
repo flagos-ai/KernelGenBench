@@ -103,7 +103,7 @@ All results use Claude Opus-4.6. Acc = accuracy (%), Spd = geometric mean speedu
 |--------|:-----------:|:-----------:|:--------:|:--------:|:--------:|:--------:|:----------:|:----------:|
 | Pass@1 | 41 | 0.70 | 39 | 0.90 | 20 | 0.76 | 68 | 0.49 |
 | Pass@5 | 57 | 0.68 | 62 | 0.79 | 28 | 0.71 | 74 | 0.49 |
-| Claude Code | 87 | 0.78 | 92 | 0.86 | 68 | 1.02 | 94 | 0.51 |
+| Claude&nbsp;Code | 87 | 0.78 | 92 | 0.86 | 68 | 1.02 | 94 | 0.51 |
 | OpenCode | 81 | 0.73 | 92 | 0.82 | 46 | 0.97 | 92 | 0.50 |
 | AKO4all | 83 | 0.97 | 91 | 1.00 | 64 | 1.62 | 84 | 0.61 |
 
@@ -115,7 +115,7 @@ All results use Claude Opus-4.6. Platforms A–E are anonymized vendor hardware.
 |--------|:--------------:|:------------------:|:------------------:|:------------------:|:------------------:|:------------------:|
 | Pass@1 | 39 / 0.90 | 46 / 0.19 | 44 / 0.69 | 37 / 0.98 | 38 / 0.89 | 38 / 0.88 |
 | Pass@5 | 62 / 0.79 | 63 / 0.15 | 60 / 0.74 | 54 / 0.92 | 65 / 0.68 | 57 / 0.83 |
-| Claude Code | 92 / 0.86 | 89 / 0.18 | 93 / 0.80 | 88 / 0.87 | 96 / 0.89 | 83 / 0.83 |
+| Claude&nbsp;Code | 92 / 0.86 | 89 / 0.18 | 93 / 0.80 | 88 / 0.87 | 96 / 0.89 | 83 / 0.83 |
 | AKO4all | 89 / 1.00 | 84 / 0.30 | 88 / 1.09 | 88 / 1.08 | 86 / 1.12 | 80 / 1.07 |
 
 ![Cross-platform accuracy, speedup, and ecosystem overhead](assets/figure_crossplatform.png)
@@ -301,7 +301,7 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) for detailed guides.
 
 | Project | Description |
 |---------|-------------|
-| [awesome-LLM-driven-kernel-generation](https://github.com/flagos-ai/awesome-LLM-driven-kernel-generation) | Survey of AI-driven kernel generation research |
+| [awesome-LLM-driven-kernel-generation](https://github.com/flagos-ai/awesome-LLM-driven-kernel-generation) | Survey of AI-driven kernel generation |
 | [KernelGen](https://github.com/flagos-ai/KernelGen) | A high-performance platform for automated Triton kernel generation using LLM and Agent |
 
 ## Citation
