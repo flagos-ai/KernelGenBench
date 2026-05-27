@@ -50,11 +50,14 @@ KernelGenBench is a benchmark framework for evaluating LLM and agent-based Trito
 pip install -r requirements.txt
 pip install -e .
 
+# NVIDIA-only: install vllm for full dataset (vLLM + cuBLAS operators)
+pip install vllm==0.13.0
+
 # For Agent Track, also install Claude Code CLI:
 npm install -g @anthropic-ai/claude-code
 ```
 
-> **Note**: `vllm==0.13.0` in requirements.txt will automatically install compatible versions of torch and triton.
+> **Note**: On NVIDIA platforms, `vllm==0.13.0` will automatically install compatible versions of torch and triton. On non-NVIDIA platforms, do **NOT** install vllm — use your platform's pre-installed torch and triton instead.
 
 Configure API credentials:
 
@@ -86,12 +89,12 @@ All chips use the same commands — the framework handles device differences aut
 
 | Dataset | Operators | Description |
 |---------|-----------|-------------|
-| `KernelGenBench` | 210 | Full set (ATen + vLLM + cuBLAS) |
+| `KernelGenBench` | 210 | Full set (ATen + vLLM + cuBLAS, NVIDIA-only) |
 | `KernelGenBench-aten` | 110 | ATen operators only |
-| `KernelGenBench-vllm` | 50 | vLLM operators only |
+| `KernelGenBench-vllm` | 50 | vLLM operators only (NVIDIA-only) |
 | `KernelGenBench-cublas` | 50 | cuBLAS operators only (NVIDIA-only) |
 
-On non-NVIDIA chips, the default dataset is automatically set to `KernelGenBench-aten` (cuBLAS operators require NVIDIA GPUs).
+On non-NVIDIA chips, the default dataset is automatically set to `KernelGenBench-aten` (vLLM and cuBLAS operators require NVIDIA GPUs).
 
 ## Results
 

@@ -11,8 +11,9 @@ uvicorn>=0.41.0
 scipy
 ijson>=3.5.0
 
-# vLLM baseline (pins compatible torch/triton automatically)
-vllm==0.13.0
+# vLLM baseline (NVIDIA-only, pulls torch/triton automatically)
+# Install manually on NVIDIA: pip install vllm==0.13.0
+# Do NOT install on non-NVIDIA platforms (causes dependency conflicts)
 
 # For Agent Track, install Claude Code CLI:
 # npm install -g @anthropic-ai/claude-code
