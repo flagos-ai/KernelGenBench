@@ -46,18 +46,40 @@ KernelGenBench is a benchmark framework for evaluating LLM and agent-based Trito
 
 ## Setup
 
+Install dependencies for your platform:
+
 ```bash
-pip install -r requirements.txt
+# NVIDIA
+pip install -r requirements/requirements_nvidia.txt
 pip install -e .
 
-# NVIDIA-only: install vllm for full dataset (vLLM + cuBLAS operators)
-pip install vllm==0.13.0
+# Ascend NPU
+pip install -r requirements/requirements_ascend.txt
+pip install -e .
 
+# MUSA (Moore Threads)
+pip install -r requirements/requirements_musa.txt
+pip install -e .
+
+# Hygon DCU
+pip install -r requirements/requirements_hygon.txt
+pip install -e .
+
+# Iluvatar
+pip install -r requirements/requirements_iluvatar.txt
+pip install -e .
+
+# MetaX (MUXI)
+pip install -r requirements/requirements_metax.txt
+pip install -e .
+```
+
+```bash
 # For Agent Track, also install Claude Code CLI:
 npm install -g @anthropic-ai/claude-code
 ```
 
-> **Note**: On NVIDIA platforms, `vllm==0.13.0` will automatically install compatible versions of torch and triton. On non-NVIDIA platforms, do **NOT** install vllm — use your platform's pre-installed torch and triton instead.
+> **Note**: On NVIDIA platforms, `vllm==0.13.0` will automatically install compatible versions of torch and triton. On non-NVIDIA platforms, torch and triton are pre-installed in the vendor container image — do **NOT** install vllm.
 
 Configure API credentials:
 

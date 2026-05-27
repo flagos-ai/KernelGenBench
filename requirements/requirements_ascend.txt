@@ -1,0 +1,15 @@
+# KernelGenBench dependencies for Ascend NPU
+# torch and torch_npu are pre-installed in the Ascend container image
+
+# Core
+anthropic>=0.71.0
+openai>=2.24.0
+PyYAML>=6.0.3
+rich>=14.3.3
+tqdm>=4.67.3
+
+# Verification framework
+fastapi>=0.134.0
+uvicorn>=0.41.0
+scipy
+ijson>=3.5.0

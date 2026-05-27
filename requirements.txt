@@ -1,4 +1,14 @@
-# Core dependencies
+# Platform-specific requirements are in the requirements/ directory.
+# Install the one matching your hardware:
+#
+#   NVIDIA:   pip install -r requirements/requirements_nvidia.txt
+#   Ascend:   pip install -r requirements/requirements_ascend.txt
+#   MUSA:     pip install -r requirements/requirements_musa.txt
+#   Hygon:    pip install -r requirements/requirements_hygon.txt
+#   Iluvatar: pip install -r requirements/requirements_iluvatar.txt
+#   MetaX:    pip install -r requirements/requirements_metax.txt
+
+# Core dependencies (platform-agnostic, safe to install anywhere)
 anthropic>=0.71.0
 openai>=2.24.0
 PyYAML>=6.0.3
@@ -10,10 +20,6 @@ fastapi>=0.134.0
 uvicorn>=0.41.0
 scipy
 ijson>=3.5.0
-
-# vLLM baseline (NVIDIA-only, pulls torch/triton automatically)
-# Install manually on NVIDIA: pip install vllm==0.13.0
-# Do NOT install on non-NVIDIA platforms (causes dependency conflicts)
 
 # For Agent Track, install Claude Code CLI:
 # npm install -g @anthropic-ai/claude-code
