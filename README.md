@@ -92,21 +92,6 @@ export OPENAI_API_KEY=your_key
 export OPENAI_BASE_URL=http://your-endpoint/v1  # optional, for custom endpoints
 ```
 
-## Supported Devices
-
-Device type is auto-detected. Override with `GEMS_VENDOR` environment variable if needed.
-
-| Device | Type | Visibility Env Var | `GEMS_VENDOR` |
-|--------|------|-------------------|---------------|
-| NVIDIA GPU | `cuda` | `CUDA_VISIBLE_DEVICES` | `nvidia` |
-| Ascend NPU | `npu` | `ASCEND_RT_VISIBLE_DEVICES` | `ascend` |
-| MUSA (Moore Threads) | `musa` | `MUSA_VISIBLE_DEVICES` | `mthreads` |
-| Hygon DCU | `cuda` (HIP) | `HIP_VISIBLE_DEVICES` | `hygon` |
-| Iluvatar GPU | `cuda` | `CUDA_VISIBLE_DEVICES` | `iluvatar` |
-| MetaX (MUXI) GPU | `cuda` | `MACA_VISIBLE_DEVICES` | `muxi` |
-
-All chips use the same commands — the framework handles device differences automatically.
-
 ## Datasets
 
 | Dataset | Operators | Description |
@@ -117,6 +102,12 @@ All chips use the same commands — the framework handles device differences aut
 | `KernelGenBench-cublas` | 50 | cuBLAS operators only (NVIDIA-only) |
 
 On non-NVIDIA chips, the default dataset is automatically set to `KernelGenBench-aten` (vLLM and cuBLAS operators require NVIDIA GPUs).
+
+## Supported Devices
+
+KernelGenBench supports 6 hardware platforms: NVIDIA, Ascend, MUSA, Hygon, Iluvatar, MetaX.
+
+Device type is auto-detected. All platforms use the same commands — the framework handles device differences automatically.
 
 ## Results
 
