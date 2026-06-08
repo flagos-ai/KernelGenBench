@@ -14,15 +14,41 @@
 
 ## 安装
 
-```bash
-pip install -r requirements.txt
-pip install -e .
+### NVIDIA
 
-# Agent Track 还需要安装 Claude Code CLI：
-npm install -g @anthropic-ai/claude-code
+```bash
+git clone https://github.com/flagos-ai/KernelGenBench.git
+cd KernelGenBench
+pip install -r requirements/requirements_nvidia.txt
+pip install -e .
 ```
 
-> **注意**：requirements.txt 中的 `vllm==0.13.0` 会自动安装兼容版本的 torch 和 triton。
+> `vllm==0.13.0` 会自动安装兼容版本的 torch 和 triton。
+
+### 国产芯片（昇腾 / 摩尔线程 / 海光 / 天数智芯 / 沐曦）
+
+国产芯片上，torch 和芯片专用运行时（如 torch_npu、torch_musa）已预装在厂商容器镜像中。请使用厂商提供的 Docker 镜像启动容器，然后在容器内安装 KernelGenBench：
+
+```bash
+# 启动厂商容器（以昇腾 NPU 为例）
+docker run -it --rm --network host \
+    --device=/dev/davinci0 --device=/dev/davinci_manager \
+    ascend/pytorch:latest bash
+
+# 在容器内 clone 并安装
+git clone https://github.com/flagos-ai/KernelGenBench.git
+cd KernelGenBench
+pip install -r requirements/requirements_ascend.txt
+pip install -e .
+
+# 其他芯片替换对应的 requirements 文件：
+#   海光 DCU:  requirements/requirements_hygon.txt
+#   摩尔线程:  requirements/requirements_musa.txt
+#   天数智芯:  requirements/requirements_iluvatar.txt
+#   沐曦:      requirements/requirements_metax.txt
+```
+
+> **注意**：非 NVIDIA 平台请勿安装 vllm，它是 NVIDIA 专用依赖。
 
 配置 API 密钥：
 
@@ -34,6 +60,11 @@ export ANTHROPIC_API_KEY=your_key
 export OPENAI_API_KEY=your_key
 export OPENAI_BASE_URL=http://your-endpoint/v1  # 可选，自定义端点
 ```
+
+> **Agent Track** 还需要安装 Claude Code CLI：
+> ```bash
+> npm install -g @anthropic-ai/claude-code
+> ```
 
 ## 支持的设备
 
