@@ -1,56 +1,21 @@
 import torch
 import ctypes
-import os
+
+try:
+    from ._backend import get_or_create_handle, get_blas_func, map_op, cuComplex
+except ImportError:
+    from kernelgenbench.dataset.baseline.cublas._backend import get_or_create_handle, get_blas_func, map_op, cuComplex
 
 # Global variables for caching (initialized once, reused)
-_libcublas = None
-_cublas_handle = None
-_cublas_set_pointer_mode = None
 _cublas_func_cgemv_batched_64 = None
 _scalar_cache = {}  # Cache GPU tensors for scalar parameters
 
-# cuComplex struct (for typed pointer casting)
-class cuComplex(ctypes.Structure):
-    _fields_ = [("x", ctypes.c_float), ("y", ctypes.c_float)]
-
-def _get_cublas_lib():
-    global _libcublas
-    if _libcublas is None:
-        cuda_home = os.environ.get('CUDA_HOME', '/usr/local/cuda')
-        _libcublas = ctypes.CDLL(os.path.join(cuda_home, 'lib64', 'libcublas.so.12'))
-    return _libcublas
-
-def _get_or_create_handle():
-    '''Get or create global cuBLAS handle (reused across calls)'''
-    global _cublas_handle, _cublas_set_pointer_mode
-    if _cublas_handle is None:
-        libcublas = _get_cublas_lib()
-
-        # Create handle
-        cublasCreate_v2 = libcublas.cublasCreate_v2
-        cublasCreate_v2.argtypes = [ctypes.POINTER(ctypes.c_void_p)]
-        cublasCreate_v2.restype = ctypes.c_int
-        _cublas_handle = ctypes.c_void_p()
-        status = cublasCreate_v2(ctypes.byref(_cublas_handle))
-        if status != 0:
-            raise RuntimeError(f"cublasCreate_v2 failed with status {status}")
-
-        # Setup SetPointerMode function (once)
-        _cublas_set_pointer_mode = libcublas.cublasSetPointerMode_v2
-        _cublas_set_pointer_mode.argtypes = [ctypes.c_void_p, ctypes.c_int]
-        _cublas_set_pointer_mode.restype = ctypes.c_int
-
-        # Set to device mode (once)
-        _cublas_set_pointer_mode(_cublas_handle, 1)
-
-    return _cublas_handle
 
 def _get_cublas_func_cgemv_batched_64():
     '''Get cuBLAS function with signature set (once)'''
     global _cublas_func_cgemv_batched_64
     if _cublas_func_cgemv_batched_64 is None:
-        libcublas = _get_cublas_lib()
-        func = libcublas.cublasCgemvBatched_64
+        func = get_blas_func("cublasCgemvBatched_64")
         func.argtypes = [
             ctypes.c_void_p,                    # handle
             ctypes.c_int,                       # trans
@@ -82,13 +47,14 @@ def _get_scalar_gpu(key, value, dtype):
 
 def cublasCgemvBatched_64(trans, m, n, alpha, Aarray, lda, xarray, incx, beta, yarray, incy, batchCount):
     '''ctypes cuBLAS C API baseline for cublasCgemvBatched_64'''
-    handle = _get_or_create_handle()
+    handle = get_or_create_handle()
     func = _get_cublas_func_cgemv_batched_64()
 
     # Convert trans if string
     if isinstance(trans, str):
         # 'N' -> 0, 'T' -> 1, 'C' -> 2
         trans = 0 if trans == 'N' else (1 if trans == 'T' else 2)
+        trans = map_op(trans)
 
     # Aarray/xarray/yarray are int64 tensors on GPU holding device pointers
     Aarray_ptr = ctypes.c_void_p(Aarray.data_ptr())

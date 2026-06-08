@@ -1,61 +1,33 @@
 import torch
 import ctypes
 
+try:
+    from ._backend import get_or_create_handle, get_blas_func
+except ImportError:
+    from kernelgenbench.dataset.baseline.cublas._backend import get_or_create_handle, get_blas_func
+
 # Global variables for caching (initialized once, reused)
-_libcublas = None
-_cublas_handle = None
-_cublas_set_pointer_mode = None
 _cublas_func = None
 _scalar_cache = {}  # Cache GPU tensors for scalar parameters
 
-def _get_cublas_lib():
-    global _libcublas
-    if _libcublas is None:
-        _libcublas = ctypes.CDLL('/usr/local/cuda/lib64/libcublas.so.12')
-    return _libcublas
-
-def _get_or_create_handle():
-    '''Get or create global cuBLAS handle (reused across calls)'''
-    global _cublas_handle, _cublas_set_pointer_mode
-    if _cublas_handle is None:
-        libcublas = _get_cublas_lib()
-
-        cublasCreate_v2 = libcublas.cublasCreate_v2
-        cublasCreate_v2.argtypes = [ctypes.POINTER(ctypes.c_void_p)]
-        cublasCreate_v2.restype = ctypes.c_int
-        _cublas_handle = ctypes.c_void_p()
-        status = cublasCreate_v2(ctypes.byref(_cublas_handle))
-        if status != 0:
-            raise RuntimeError(f"cublasCreate_v2 failed with status {status}")
-
-        _cublas_set_pointer_mode = libcublas.cublasSetPointerMode_v2
-        _cublas_set_pointer_mode.argtypes = [ctypes.c_void_p, ctypes.c_int]
-        _cublas_set_pointer_mode.restype = ctypes.c_int
-
-        _cublas_set_pointer_mode(_cublas_handle, 1)
-
-    return _cublas_handle
 
 def _get_cublas_func():
-    '''Get cuBLAS function with signature set (once)'''
+    '''Get BLAS function with signature set (once)'''
     global _cublas_func
     if _cublas_func is None:
-        libcublas = _get_cublas_lib()
-        _cublas_func = libcublas.cublasDcopy_v2
-        _cublas_func.argtypes = [
-            ctypes.c_void_p,                 # handle
-            ctypes.c_int,                    # n
-            ctypes.POINTER(ctypes.c_double), # x
-            ctypes.c_int,                    # incx
-            ctypes.POINTER(ctypes.c_double), # y
-            ctypes.c_int                     # incy
-        ]
-        _cublas_func.restype = ctypes.c_int
+        _cublas_func = get_blas_func('cublasDcopy_v2', [
+            ctypes.c_void_p,
+            ctypes.c_int,  # handle
+            ctypes.POINTER(ctypes.c_double),  # n
+            ctypes.c_int,  # x
+            ctypes.POINTER(ctypes.c_double),  # incx
+            ctypes.c_int,  # y
+        ])
     return _cublas_func
 
 def cublasDcopy_v2(n, x, incx, y, incy):
     '''ctypes cuBLAS C API baseline for cublasDcopy_v2: y = x'''
-    handle = _get_or_create_handle()
+    handle = get_or_create_handle()
     func = _get_cublas_func()
 
     x_ptr = ctypes.c_void_p(x.data_ptr())

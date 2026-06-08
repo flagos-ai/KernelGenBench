@@ -1,68 +1,35 @@
 import torch
 import ctypes
-import os
+
+try:
+    from ._backend import get_or_create_handle, get_blas_func, map_fill_mode, map_op, cuComplex, map_data_type
+except ImportError:
+    from kernelgenbench.dataset.baseline.cublas._backend import get_or_create_handle, get_blas_func, map_fill_mode, map_op, cuComplex, map_data_type
 
 # Global variables for caching (initialized once, reused)
-_libcublas = None
-_cublas_handle = None
-_cublas_set_pointer_mode = None
 _cublas_func = None
 _scalar_cache = {}  # Cache GPU tensors for scalar parameters
 
-def _get_cublas_lib():
-    global _libcublas
-    if _libcublas is None:
-        cuda_home = os.environ.get('CUDA_HOME', '/usr/local/cuda')
-        _libcublas = ctypes.CDLL(os.path.join(cuda_home, 'lib64', 'libcublas.so.12'))
-    return _libcublas
-
-def _get_or_create_handle():
-    '''Get or create global cuBLAS handle (reused across calls)'''
-    global _cublas_handle, _cublas_set_pointer_mode
-    if _cublas_handle is None:
-        libcublas = _get_cublas_lib()
-
-        # Create handle
-        cublasCreate_v2 = libcublas.cublasCreate_v2
-        cublasCreate_v2.argtypes = [ctypes.POINTER(ctypes.c_void_p)]
-        cublasCreate_v2.restype = ctypes.c_int
-        _cublas_handle = ctypes.c_void_p()
-        status = cublasCreate_v2(ctypes.byref(_cublas_handle))
-        if status != 0:
-            raise RuntimeError(f"cublasCreate_v2 failed with status {status}")
-
-        # Setup SetPointerMode function (once)
-        _cublas_set_pointer_mode = libcublas.cublasSetPointerMode_v2
-        _cublas_set_pointer_mode.argtypes = [ctypes.c_void_p, ctypes.c_int]
-        _cublas_set_pointer_mode.restype = ctypes.c_int
-
-        # Set to device mode (once)
-        _cublas_set_pointer_mode(_cublas_handle, 1)
-
-    return _cublas_handle
 
 def _get_cublas_func():
-    '''Get cuBLAS function with signature set (once)'''
+    '''Get BLAS function with signature set (once)'''
     global _cublas_func
     if _cublas_func is None:
-        libcublas = _get_cublas_lib()
-        _cublas_func = libcublas.cublasCsyrkEx
-        _cublas_func.argtypes = [
-            ctypes.c_void_p,               # handle
-            ctypes.c_int,                  # uplo
-            ctypes.c_int,                  # trans
-            ctypes.c_int,                  # n
-            ctypes.c_int,                  # k
-            ctypes.POINTER(ctypes.c_float),# alpha (cuComplex*)
-            ctypes.c_void_p,               # A (const void*)
-            ctypes.c_int,                  # Atype (cudaDataType)
-            ctypes.c_int,                  # lda
-            ctypes.POINTER(ctypes.c_float),# beta (cuComplex*)
-            ctypes.c_void_p,               # C (void*)
-            ctypes.c_int,                  # Ctype (cudaDataType)
-            ctypes.c_int                   # ldc
-        ]
-        _cublas_func.restype = ctypes.c_int
+        _cublas_func = get_blas_func('cublasCsyrkEx', [
+            ctypes.c_void_p,
+            ctypes.c_int,  # handle
+            ctypes.c_int,  # uplo
+            ctypes.c_int,  # trans
+            ctypes.c_int,  # n
+            ctypes.POINTER(ctypes.c_float),  # k
+            ctypes.c_void_p,  # alpha (cuComplex*)
+            ctypes.c_int,  # A (const void*)
+            ctypes.c_int,  # Atype (cudaDataType)
+            ctypes.POINTER(ctypes.c_float),  # lda
+            ctypes.c_void_p,  # beta (cuComplex*)
+            ctypes.c_int,  # C (void*)
+            ctypes.c_int,  # Ctype (cudaDataType)
+        ])
     return _cublas_func
 
 def _get_scalar_gpu(key, value, dtype):
@@ -78,9 +45,13 @@ def _get_scalar_gpu(key, value, dtype):
 
 def cublasCsyrkEx(uplo, trans, n, k, alpha, A, Atype, lda, beta, C, Ctype, ldc):
     '''ctypes cuBLAS C API baseline for cublasCsyrkEx'''
-    handle = _get_or_create_handle()
+    handle = get_or_create_handle()
     func = _get_cublas_func()
 
+    uplo = map_fill_mode(uplo)
+    trans = map_op(trans)
+    Atype = map_data_type(Atype)
+    Ctype = map_data_type(Ctype)
     # Convert tensors to GPU pointers
     A_ptr = ctypes.c_void_p(A.data_ptr())
     C_ptr = ctypes.c_void_p(C.data_ptr())
@@ -122,29 +93,25 @@ if __name__ == "__main__":
     A_orig = A.clone()
     C_orig = C.clone()
 
-    # Call baseline
-    result = cublasCsyrkEx(uplo, trans, n, k, alpha, A, CUDA_C_32F, n, beta, C, CUDA_C_32F, n)
-    assert result is not None
+    # Convert to column-major for cuBLAS: row-major (n,k) -> store as (k,n) row-major = (n,k) column-major
+    A_cm = A.t().contiguous()
+    C_cm = C.t().contiguous()
 
-    # PyTorch reference considering column-major expectation of cuBLAS:
-    # cuBLAS sees A_cm = A_rm^T and C_cm = C_rm^T due to memory layout mismatch
-    A_cm = A_orig.t().contiguous()
-    C_cm = C_orig.t().contiguous()
+    # Call baseline with column-major data
+    result_cm = cublasCsyrkEx(uplo, trans, n, k, alpha, A_cm, CUDA_C_32F, n, beta, C_cm, CUDA_C_32F, n)
+    assert result_cm is not None
 
-    # Compute R_cm = alpha * A_cm * A_cm^T + beta * C_cm
-    R_cm = alpha * (A_cm @ A_cm.transpose(-2, -1)) + beta * C_cm
+    # Convert result back to row-major
+    result = result_cm.t().contiguous()
 
-    # Map back to row-major view: R_rm = R_cm^T
-    R_rm = R_cm.transpose(-2, -1).contiguous()
+    # PyTorch reference: syrk trans=N computes C = alpha * A * A^T + beta * C
+    expected_full = alpha * (A_orig @ A_orig.t()) + beta * C_orig
 
-    # Since syrk updates only one triangle (specified by uplo in column-major),
-    # and beta=0 with initial C=0, in row-major view:
-    # - uplo == LOWER (cm) corresponds to updating UPPER (rm)
-    # - uplo == UPPER (cm) corresponds to updating LOWER (rm)
+    # syrk only updates one triangle; uplo=LOWER in column-major = UPPER in row-major
     if uplo == CUBLAS_FILL_MODE_LOWER:
-        expected = torch.triu(R_rm)
+        expected = torch.triu(expected_full)
     else:
-        expected = torch.tril(R_rm)
+        expected = torch.tril(expected_full)
 
     torch.testing.assert_close(result, expected, rtol=1e-5, atol=1e-5)
     print("✓ cublasCsyrkEx test passed")

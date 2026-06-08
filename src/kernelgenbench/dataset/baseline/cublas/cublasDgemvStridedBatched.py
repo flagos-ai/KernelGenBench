@@ -1,86 +1,40 @@
 import torch
 import ctypes
-import os
-import atexit
+
+try:
+    from ._backend import get_or_create_handle, get_blas_func, map_op
+except ImportError:
+    from kernelgenbench.dataset.baseline.cublas._backend import get_or_create_handle, get_blas_func, map_op
 
 # Global variables for caching (initialized once, reused)
-_libcublas = None
-_cublas_handle = None
-_cublas_set_pointer_mode = None
 _cublas_func = None
 _scalar_cache = {}  # Cache GPU tensors for scalar parameters
 
-def _get_cublas_lib():
-    global _libcublas
-    if _libcublas is None:
-        cuda_home = os.environ.get('CUDA_HOME', '/usr/local/cuda')
-        _libcublas = ctypes.CDLL(os.path.join(cuda_home, 'lib64', 'libcublas.so.12'))
-    return _libcublas
 
-def _get_or_create_handle():
-    '''Get or create global cuBLAS handle (reused across calls)'''
-    global _cublas_handle, _cublas_set_pointer_mode
-    if _cublas_handle is None:
-        libcublas = _get_cublas_lib()
-
-        # Create handle
-        cublasCreate_v2 = libcublas.cublasCreate_v2
-        cublasCreate_v2.argtypes = [ctypes.POINTER(ctypes.c_void_p)]
-        cublasCreate_v2.restype = ctypes.c_int
-        _cublas_handle = ctypes.c_void_p()
-        status = cublasCreate_v2(ctypes.byref(_cublas_handle))
-        if status != 0:
-            raise RuntimeError(f"cublasCreate_v2 failed with status {status}")
-
-        # Setup SetPointerMode function (once)
-        _cublas_set_pointer_mode = libcublas.cublasSetPointerMode_v2
-        _cublas_set_pointer_mode.argtypes = [ctypes.c_void_p, ctypes.c_int]
-        _cublas_set_pointer_mode.restype = ctypes.c_int
-
-        # Set to device mode (once)
-        status = _cublas_set_pointer_mode(_cublas_handle, 1)
-        if status != 0:
-            raise RuntimeError(f"cublasSetPointerMode_v2 failed with status {status}")
-
-    return _cublas_handle
-
-
-def cleanup_cublas():
-    '''Release cuBLAS handle on exit'''
-    global _cublas_handle
-    if _cublas_handle is not None:
-        libcublas = _get_cublas_lib()
-        libcublas.cublasDestroy_v2(_cublas_handle)
-        _cublas_handle = None
-
-atexit.register(cleanup_cublas)
 
 
 def _get_cublas_func():
-    '''Get cuBLAS function with signature set (once)'''
+    '''Get BLAS function with signature set (once)'''
     global _cublas_func
     if _cublas_func is None:
-        libcublas = _get_cublas_lib()
-        _cublas_func = libcublas.cublasDgemvStridedBatched
-        _cublas_func.argtypes = [
-            ctypes.c_void_p,                 # handle
-            ctypes.c_int,                    # trans
-            ctypes.c_int,                    # m
-            ctypes.c_int,                    # n
-            ctypes.POINTER(ctypes.c_double), # alpha (device pointer)
-            ctypes.POINTER(ctypes.c_double), # A (device pointer)
-            ctypes.c_int,                    # lda
-            ctypes.c_longlong,               # strideA (in elements)
-            ctypes.POINTER(ctypes.c_double), # x (device pointer)
-            ctypes.c_int,                    # incx
-            ctypes.c_longlong,               # stridex (in elements)
-            ctypes.POINTER(ctypes.c_double), # beta (device pointer)
-            ctypes.POINTER(ctypes.c_double), # y (device pointer)
-            ctypes.c_int,                    # incy
-            ctypes.c_longlong,               # stridey (in elements)
-            ctypes.c_int                     # batchCount
-        ]
-        _cublas_func.restype = ctypes.c_int
+        _cublas_func = get_blas_func('cublasDgemvStridedBatched', [
+            ctypes.c_void_p,
+            ctypes.c_int,  # handle
+            ctypes.c_int,  # trans
+            ctypes.c_int,  # m
+            ctypes.POINTER(ctypes.c_double),  # n
+            ctypes.POINTER(ctypes.c_double),  # alpha (device pointer)
+            ctypes.c_int,  # A (device pointer)
+            ctypes.c_longlong,  # lda
+            ctypes.POINTER(ctypes.c_double),  # strideA (in elements)
+            ctypes.c_int,  # x (device pointer)
+            ctypes.c_longlong,  # incx
+            ctypes.POINTER(ctypes.c_double),  # stridex (in elements)
+            ctypes.POINTER(ctypes.c_double),  # beta (device pointer)
+            ctypes.c_int,  # y (device pointer)
+            ctypes.c_longlong,  # incy
+            ctypes.c_int,  # stridey (in elements)
+        ])
     return _cublas_func
 
 def _get_scalar_gpu(key, value, dtype):
@@ -92,12 +46,13 @@ def _get_scalar_gpu(key, value, dtype):
 
 def cublasDgemvStridedBatched(trans, m, n, alpha, A, lda, strideA, x, incx, stridex, beta, y, incy, stridey, batchCount):
     '''ctypes cuBLAS C API baseline for cublasDgemvStridedBatched'''
-    handle = _get_or_create_handle()
+    handle = get_or_create_handle()
     func = _get_cublas_func()
 
     # Convert string trans to int if needed (N->0, T->1)
     if isinstance(trans, str):
         trans = 0 if trans == 'N' else 1
+    trans = map_op(trans)
 
     # Convert tensors to GPU pointers (void*) and cast to typed pointers
     A_ptr = ctypes.c_void_p(A.data_ptr())

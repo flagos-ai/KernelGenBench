@@ -1,71 +1,35 @@
 import torch
 import ctypes
-import os
+
+try:
+    from ._backend import get_or_create_handle, get_blas_func, map_fill_mode, map_side, map_diag, map_op, cuDoubleComplex
+except ImportError:
+    from kernelgenbench.dataset.baseline.cublas._backend import get_or_create_handle, get_blas_func, map_fill_mode, map_side, map_diag, map_op, cuDoubleComplex
 
 # Global variables for caching (initialized once, reused)
-_libcublas = None
-_cublas_handle = None
-_cublas_set_pointer_mode = None
 _cublas_func = None
 _scalar_cache = {}  # Cache GPU tensors for scalar parameters
 
-class cuDoubleComplex(ctypes.Structure):
-    _fields_ = [("x", ctypes.c_double), ("y", ctypes.c_double)]
-
-def _get_cublas_lib():
-    global _libcublas
-    if _libcublas is None:
-        cuda_home = os.environ.get('CUDA_HOME', '/usr/local/cuda')
-        _libcublas = ctypes.CDLL(os.path.join(cuda_home, 'lib64', 'libcublas.so.12'))
-    return _libcublas
-
-def _get_or_create_handle():
-    '''Get or create global cuBLAS handle (reused across calls)'''
-    global _cublas_handle, _cublas_set_pointer_mode
-    if _cublas_handle is None:
-        libcublas = _get_cublas_lib()
-
-        # Create handle
-        cublasCreate_v2 = libcublas.cublasCreate_v2
-        cublasCreate_v2.argtypes = [ctypes.POINTER(ctypes.c_void_p)]
-        cublasCreate_v2.restype = ctypes.c_int
-        _cublas_handle = ctypes.c_void_p()
-        status = cublasCreate_v2(ctypes.byref(_cublas_handle))
-        if status != 0:
-            raise RuntimeError(f"cublasCreate_v2 failed with status {status}")
-
-        # Setup SetPointerMode function (once)
-        _cublas_set_pointer_mode = libcublas.cublasSetPointerMode_v2
-        _cublas_set_pointer_mode.argtypes = [ctypes.c_void_p, ctypes.c_int]
-        _cublas_set_pointer_mode.restype = ctypes.c_int
-
-        # Set to device mode (once)
-        _cublas_set_pointer_mode(_cublas_handle, 1)
-
-    return _cublas_handle
 
 def _get_cublas_func():
-    '''Get cuBLAS function with signature set (once)'''
+    '''Get BLAS function with signature set (once)'''
     global _cublas_func
     if _cublas_func is None:
-        libcublas = _get_cublas_lib()
-        _cublas_func = libcublas.cublasZtrsmBatched
-        _cublas_func.argtypes = [
-            ctypes.c_void_p,                         # handle
-            ctypes.c_int,                            # side
-            ctypes.c_int,                            # uplo
-            ctypes.c_int,                            # trans
-            ctypes.c_int,                            # diag
-            ctypes.c_int,                            # m
-            ctypes.c_int,                            # n
-            ctypes.POINTER(cuDoubleComplex),         # alpha (device)
-            ctypes.POINTER(ctypes.c_void_p),         # Aarray (device pointer array)
-            ctypes.c_int,                            # lda
-            ctypes.POINTER(ctypes.c_void_p),         # Barray (device pointer array)
-            ctypes.c_int,                            # ldb
-            ctypes.c_int                             # batchCount
-        ]
-        _cublas_func.restype = ctypes.c_int
+        _cublas_func = get_blas_func('cublasZtrsmBatched', [
+            ctypes.c_void_p,
+            ctypes.c_int,  # handle
+            ctypes.c_int,  # side
+            ctypes.c_int,  # uplo
+            ctypes.c_int,  # trans
+            ctypes.c_int,  # diag
+            ctypes.c_int,  # m
+            ctypes.POINTER(cuDoubleComplex),  # n
+            ctypes.POINTER(ctypes.c_void_p),  # alpha (device)
+            ctypes.c_int,  # Aarray (device pointer array)
+            ctypes.POINTER(ctypes.c_void_p),  # lda
+            ctypes.c_int,  # Barray (device pointer array)
+            ctypes.c_int,  # ldb
+        ])
     return _cublas_func
 
 def _get_scalar_gpu(key, value, dtype):
@@ -77,10 +41,10 @@ def _get_scalar_gpu(key, value, dtype):
 
 def cublasZtrsmBatched(side, uplo, trans, diag, m, n, alpha, Aarray, lda, Barray, ldb, batchCount):
     '''ctypes cuBLAS C API baseline for cublasZtrsmBatched'''
-    handle = _get_or_create_handle()
+    handle = get_or_create_handle()
     func = _get_cublas_func()
 
-    # Map string enums to cuBLAS ints if necessary
+    # Map string enums to ints if necessary
     if isinstance(side, str):
         side = 0 if side == 'L' else 1
     if isinstance(uplo, str):
@@ -89,6 +53,11 @@ def cublasZtrsmBatched(side, uplo, trans, diag, m, n, alpha, Aarray, lda, Barray
         trans = 0 if trans == 'N' else (1 if trans == 'T' else 2)
     if isinstance(diag, str):
         diag = 0 if diag == 'N' else 1
+    # Map enums to backend (identity on NVIDIA, remapped on Hygon)
+    diag = map_diag(diag)
+    side = map_side(side)
+    uplo = map_fill_mode(uplo)
+    trans = map_op(trans)
 
     # Device pointer arrays (int64 tensors on GPU containing device pointers)
     Aarray_ptr = ctypes.c_void_p(Aarray.data_ptr())
@@ -128,7 +97,7 @@ if __name__ == "__main__":
     m = 3
     n = 3
     side = 'L'   # left side
-    uplo = 'U'   # use upper triangular
+    uplo = 'L'   # A_rm is upper triangular, column-major sees lower triangular
     trans = 'N'  # no transpose
     diag = 'N'   # non-unit diagonal
     alpha = 1.2 - 0.7j

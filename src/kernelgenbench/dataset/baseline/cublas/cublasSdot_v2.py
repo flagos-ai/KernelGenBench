@@ -1,59 +1,29 @@
 import torch
 import ctypes
-import os
+
+try:
+    from ._backend import get_or_create_handle, get_blas_func, set_pointer_mode, map_op
+except ImportError:
+    from kernelgenbench.dataset.baseline.cublas._backend import get_or_create_handle, get_blas_func, set_pointer_mode, map_op
 
 # Global variables for caching (initialized once, reused)
-_libcublas = None
-_cublas_handle = None
-_cublas_set_pointer_mode = None
 _cublas_func = None
 _scalar_cache = {}  # Cache GPU tensors for scalar parameters
 
-def _get_cublas_lib():
-    global _libcublas
-    if _libcublas is None:
-        cuda_home = os.environ.get('CUDA_HOME', '/usr/local/cuda')
-        _libcublas = ctypes.CDLL(os.path.join(cuda_home, 'lib64', 'libcublas.so.12'))
-    return _libcublas
-
-def _get_or_create_handle():
-    '''Get or create global cuBLAS handle (reused across calls)'''
-    global _cublas_handle, _cublas_set_pointer_mode
-    if _cublas_handle is None:
-        libcublas = _get_cublas_lib()
-
-        # Create handle
-        cublasCreate_v2 = libcublas.cublasCreate_v2
-        cublasCreate_v2.argtypes = [ctypes.POINTER(ctypes.c_void_p)]
-        cublasCreate_v2.restype = ctypes.c_int
-        _cublas_handle = ctypes.c_void_p()
-        status = cublasCreate_v2(ctypes.byref(_cublas_handle))
-        if status != 0:
-            raise RuntimeError(f"cublasCreate_v2 failed with status {status}")
-
-        # Setup SetPointerMode function (once)
-        _cublas_set_pointer_mode = libcublas.cublasSetPointerMode_v2
-        _cublas_set_pointer_mode.argtypes = [ctypes.c_void_p, ctypes.c_int]
-        _cublas_set_pointer_mode.restype = ctypes.c_int
-
-        # Set to device mode (once)
-        _cublas_set_pointer_mode(_cublas_handle, 1)
-
-    return _cublas_handle
 
 def _get_cublas_func():
-    '''Get cuBLAS function with signature set (once)'''
+    '''Get BLAS function with signature set (once)'''
     global _cublas_func
     if _cublas_func is None:
-        libcublas = _get_cublas_lib()
-        _cublas_func = libcublas.cublasSdot_v2
-        _cublas_func.argtypes = [
-            ctypes.c_void_p, ctypes.c_int,
-            ctypes.c_void_p, ctypes.c_int,
-            ctypes.c_void_p, ctypes.c_int,
-            ctypes.c_void_p
-        ]
-        _cublas_func.restype = ctypes.c_int
+        _cublas_func = get_blas_func('cublasSdot_v2', [
+            ctypes.c_void_p,
+            ctypes.c_int,
+            ctypes.c_void_p,
+            ctypes.c_int,
+            ctypes.c_void_p,
+            ctypes.c_int,
+            ctypes.c_void_p,
+        ])
     return _cublas_func
 
 def _get_scalar_gpu(key, value, dtype):
@@ -72,25 +42,24 @@ def cublasSdot_v2(n, x, incx, y, incy, result):
     For non-unit strides the strided elements are first gathered into
     contiguous buffers so that lda/ldb >= k.
     '''
-    handle = _get_or_create_handle()
-    libcublas = _get_cublas_lib()
+    handle = get_or_create_handle()
 
     # --- gather contiguous vectors --------------------------------
     xs = x[::incx][:n].contiguous()
     ys = y[::incy][:n].contiguous()
 
     # --- switch to HOST pointer mode for gemm alpha/beta ----------
-    _cublas_set_pointer_mode(handle, 0)  # HOST
+    set_pointer_mode(handle, 0)  # HOST
 
     # --- cublasSgemm_v2: C(1×1) = alpha * A^T(1×n) * B(n×1) -----
-    gemm = libcublas.cublasSgemm_v2
+    gemm = get_blas_func("cublasSgemm_v2")
     gemm.restype = ctypes.c_int
 
     alpha = ctypes.c_float(1.0)
     beta  = ctypes.c_float(0.0)
 
-    CUBLAS_OP_T = 1
-    CUBLAS_OP_N = 0
+    CUBLAS_OP_T = map_op(1)
+    CUBLAS_OP_N = map_op(0)
 
     status = gemm(
         handle,
@@ -104,7 +73,7 @@ def cublasSdot_v2(n, x, incx, y, incy, result):
     )
 
     # --- restore DEVICE pointer mode ------------------------------
-    _cublas_set_pointer_mode(handle, 1)  # DEVICE
+    set_pointer_mode(handle, 1)  # DEVICE
 
     if status != 0:
         raise RuntimeError(f"cublasSdot_v2 (gemm fallback) failed with status {status}")
