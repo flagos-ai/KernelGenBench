@@ -72,4 +72,4 @@ def get_backend(vendor: Optional[Vendor] = None) -> VendorBackend:
 
 
 # Auto-import all backend modules to trigger registration
-from . import nvidia, hygon, ascend, iluvatar, metax  # noqa: E402, F401
+from . import nvidia, hygon, ascend, iluvatar, metax, musa  # noqa: E402, F401
