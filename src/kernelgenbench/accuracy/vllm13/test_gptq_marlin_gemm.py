@@ -6,10 +6,7 @@ from sandbox.utils.accuracy_utils import CustomBenchmarkResult
 import torch
 import triton
 try:
-try:
     from vllm.scalar_type import scalar_types
-except ModuleNotFoundError:
-    scalar_types = None
 except ModuleNotFoundError:
     scalar_types = None
 

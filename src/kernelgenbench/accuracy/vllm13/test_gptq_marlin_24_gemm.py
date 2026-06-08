@@ -6,17 +6,11 @@ from sandbox.utils.accuracy_utils import CustomBenchmarkResult
 import torch
 import triton
 try:
-try:
     from vllm.scalar_type import scalar_types
 except ModuleNotFoundError:
     scalar_types = None
-except ModuleNotFoundError:
-    scalar_types = None
-try:
 try:
     from vllm.model_executor.layers.quantization.utils.marlin_utils_test_24 import marlin_24_quantize
-except ModuleNotFoundError:
-    marlin_24_quantize = None
 except ModuleNotFoundError:
     marlin_24_quantize = None
 
