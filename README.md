@@ -46,40 +46,41 @@ KernelGenBench is a benchmark framework for evaluating LLM and agent-based Trito
 
 ## Setup
 
-Install dependencies for your platform:
+### NVIDIA
 
 ```bash
-# NVIDIA
+git clone https://github.com/flagos-ai/KernelGenBench.git
+cd KernelGenBench
 pip install -r requirements/requirements_nvidia.txt
 pip install -e .
+```
 
-# Ascend NPU
+> `vllm==0.13.0` will automatically install compatible versions of torch and triton.
+
+### Domestic Chips (Ascend / MUSA / Hygon / Iluvatar / MetaX)
+
+On domestic chips, torch and the chip-specific runtime (e.g., torch_npu, torch_musa) are pre-installed in the vendor container image. Use the vendor-provided Docker image to start a container, then install KernelGenBench inside it:
+
+```bash
+# Start the vendor container (example for Ascend NPU)
+docker run -it --rm --network host \
+    --device=/dev/davinci0 --device=/dev/davinci_manager \
+    ascend/pytorch:latest bash
+
+# Inside the container, clone and install
+git clone https://github.com/flagos-ai/KernelGenBench.git
+cd KernelGenBench
 pip install -r requirements/requirements_ascend.txt
 pip install -e .
 
-# MUSA (Moore Threads)
-pip install -r requirements/requirements_musa.txt
-pip install -e .
-
-# Hygon DCU
-pip install -r requirements/requirements_hygon.txt
-pip install -e .
-
-# Iluvatar
-pip install -r requirements/requirements_iluvatar.txt
-pip install -e .
-
-# MetaX (MUXI)
-pip install -r requirements/requirements_metax.txt
-pip install -e .
+# For other chips, replace the requirements file:
+#   Hygon DCU:  requirements/requirements_hygon.txt
+#   MUSA:       requirements/requirements_musa.txt
+#   Iluvatar:   requirements/requirements_iluvatar.txt
+#   MetaX:      requirements/requirements_metax.txt
 ```
 
-```bash
-# For Agent Track, also install Claude Code CLI:
-npm install -g @anthropic-ai/claude-code
-```
-
-> **Note**: On NVIDIA platforms, `vllm==0.13.0` will automatically install compatible versions of torch and triton. On non-NVIDIA platforms, torch and triton are pre-installed in the vendor container image — do **NOT** install vllm.
+> **Note**: Do NOT install vllm on non-NVIDIA platforms — it is NVIDIA-only.
 
 Configure API credentials:
 
@@ -91,6 +92,11 @@ export ANTHROPIC_API_KEY=your_key
 export OPENAI_API_KEY=your_key
 export OPENAI_BASE_URL=http://your-endpoint/v1  # optional, for custom endpoints
 ```
+
+> **For Agent Track**, also install Claude Code CLI:
+> ```bash
+> npm install -g @anthropic-ai/claude-code
+> ```
 
 ## Datasets
 
