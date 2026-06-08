@@ -25,8 +25,23 @@ except: print('')
 " 2>/dev/null)
 PYTHON="${PYTHON:-${_CFG_PYTHON:-$(which python3)}}"
 
+# Auto-detect device type and select default dataset
+# NVIDIA: KernelGenBench (210 ops = 110 aten + 50 vllm + 50 cublas)
+# Other chips: KernelGenBench-aten (110 aten ops)
+_DEVICE_TYPE=$($PYTHON -c "
+import sys; sys.path.insert(0, '$SCRIPT_DIR')
+from device_manager import detect_device_type
+print(detect_device_type())
+" 2>/dev/null || echo "cuda")
+
+if [[ "$_DEVICE_TYPE" == "cuda" ]]; then
+    DEFAULT_DATASET="KernelGenBench"
+else
+    DEFAULT_DATASET="KernelGenBench-aten"
+fi
+
 # Default values
-DATASET="KernelGenBench"
+DATASET="$DEFAULT_DATASET"
 METHOD="normal_cc"
 DEVICE_COUNT=8
 TIMEOUT=600
@@ -128,6 +143,7 @@ fi
 
 echo "=================================================="
 echo "Agent Benchmark"
+echo "Device type: $_DEVICE_TYPE"
 echo "Dataset: $DATASET"
 echo "Method: $METHOD"
 echo "Target: $DISPLAY_TARGET"
