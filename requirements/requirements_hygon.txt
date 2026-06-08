@@ -3,13 +3,13 @@
 
 # Core
 anthropic>=0.71.0
-openai>=2.24.0
-PyYAML>=6.0.3
+openai>=1.102.0
+PyYAML>=6.0.2
 rich>=14.3.3
 tqdm>=4.67.3
 
 # Verification framework
-fastapi>=0.134.0
+fastapi>=0.116.1
 uvicorn>=0.41.0
 scipy
-ijson>=3.5.0
+ijson>=3.4.0
