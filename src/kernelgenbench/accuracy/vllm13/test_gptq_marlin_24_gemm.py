@@ -5,8 +5,20 @@ from sandbox.utils.accuracy_utils import kernelgenbench_assert_close as assert_c
 from sandbox.utils.accuracy_utils import CustomBenchmarkResult
 import torch
 import triton
-from vllm.scalar_type import scalar_types
-from vllm.model_executor.layers.quantization.utils.marlin_utils_test_24 import marlin_24_quantize
+try:
+try:
+    from vllm.scalar_type import scalar_types
+except ModuleNotFoundError:
+    scalar_types = None
+except ModuleNotFoundError:
+    scalar_types = None
+try:
+try:
+    from vllm.model_executor.layers.quantization.utils.marlin_utils_test_24 import marlin_24_quantize
+except ModuleNotFoundError:
+    marlin_24_quantize = None
+except ModuleNotFoundError:
+    marlin_24_quantize = None
 
 @label("gptq_marlin_24_gemm")
 @parametrize("config", [

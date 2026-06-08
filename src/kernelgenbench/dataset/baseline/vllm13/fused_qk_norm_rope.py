@@ -2,7 +2,10 @@
 vLLM fused_qk_norm_rope baseline wrapper.
 """
 import torch
-from vllm import _custom_ops
+try:
+    from vllm import _custom_ops
+except ModuleNotFoundError:
+    _custom_ops = None
 
 
 def fused_qk_norm_rope(

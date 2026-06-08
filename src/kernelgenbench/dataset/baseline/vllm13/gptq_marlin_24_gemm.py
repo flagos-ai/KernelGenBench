@@ -2,8 +2,14 @@
 vLLM gptq_marlin_24_gemm baseline wrapper.
 """
 import torch
-import vllm
-from vllm import _custom_ops
+try:
+    import vllm
+except ModuleNotFoundError:
+    vllm = None
+try:
+    from vllm import _custom_ops
+except ModuleNotFoundError:
+    _custom_ops = None
 
 
 def gptq_marlin_24_gemm(

@@ -2,7 +2,10 @@
 vLLM gather_and_maybe_dequant_cache baseline wrapper.
 """
 import torch
-from vllm import _custom_ops
+try:
+    from vllm import _custom_ops
+except ModuleNotFoundError:
+    _custom_ops = None
 
 
 def gather_and_maybe_dequant_cache(

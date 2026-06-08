@@ -5,7 +5,10 @@ from sandbox.utils.accuracy_utils import kernelgenbench_assert_close as assert_c
 from sandbox.utils.accuracy_utils import CustomBenchmarkResult
 import torch
 import triton
-from vllm import _custom_ops
+try:
+    from vllm import _custom_ops
+except ModuleNotFoundError:
+    _custom_ops = None
 
 @label("allspark_w8a16_gemm")
 @parametrize("config", [

@@ -1,5 +1,8 @@
 import torch
-from vllm import _custom_ops as ops
+try:
+    from vllm import _custom_ops as ops
+except ModuleNotFoundError:
+    ops = None
 
 
 def apply_repetition_penalties_cuda(
