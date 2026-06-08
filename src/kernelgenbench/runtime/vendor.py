@@ -11,6 +11,7 @@ class Vendor(Enum):
     ASCEND = "ascend"
     ILUVATAR = "iluvatar"
     MTHREADS = "mthreads"
+    METAX = "metax"
 
 
 @functools.lru_cache(maxsize=1)
@@ -31,6 +32,20 @@ def detect_vendor() -> Vendor:
         return Vendor.MTHREADS
 
     # 3. System command probes
+    # MetaX: mx-smi or MACA_PATH
+    try:
+        r = subprocess.run(
+            ["mx-smi"],
+            capture_output=True, text=True, timeout=5,
+        )
+        if r.returncode == 0 and "MetaX" in r.stdout:
+            return Vendor.METAX
+    except (subprocess.TimeoutExpired, FileNotFoundError, OSError):
+        pass
+
+    if os.environ.get("MACA_PATH"):
+        return Vendor.METAX
+
     # Hygon DCU: rocm-smi
     try:
         r = subprocess.run(
@@ -53,6 +68,10 @@ def detect_vendor() -> Vendor:
                 return Vendor.HYGON
             if "Iluvatar" in name:
                 return Vendor.ILUVATAR
+            if "MetaX" in name:
+                return Vendor.METAX
+        if "metax" in str(torch.__version__):
+            return Vendor.METAX
         if hasattr(torch, "npu") and torch.npu.is_available():
             return Vendor.ASCEND
         if hasattr(torch, "musa") and torch.musa.is_available():
