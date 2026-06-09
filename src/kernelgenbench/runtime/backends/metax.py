@@ -4,12 +4,7 @@ import os
 from . import VendorBackend, register_backend
 from ..vendor import Vendor
 
-# mcbLAS naming: cublas→mcblas, drop _v2 suffix
-_MCBLAS_KEEP_V2 = {
-    "cublasCcopy_v2", "cublasCdotu_v2", "cublasCgemm_v2", "cublasCgemv_v2",
-    "cublasCgeru_v2", "cublasCsymm_v2", "cublasCsymv_v2",
-    "cublasZdotc_v2", "cublasZgerc_v2", "cublasZswap_v2",
-}
+# mcbLAS naming: cublas→mcblas, drop _v2 and _64 suffixes
 
 # Enum values are IDENTICAL to cuBLAS — no mapping needed
 # MCBLAS_OP_N=0, MCBLAS_OP_T=1, MCBLAS_OP_C=2
@@ -50,7 +45,7 @@ It should be noted that the operator runs on MetaX C500/C550 GPUs with MACA soft
         mcblas_name = cublas_name.replace("cublas", "mcblas", 1)
         if mcblas_name.endswith("_64"):
             mcblas_name = mcblas_name[:-3]
-        if cublas_name not in _MCBLAS_KEEP_V2 and mcblas_name.endswith("_v2"):
+        if mcblas_name.endswith("_v2"):
             mcblas_name = mcblas_name[:-3]
         return mcblas_name
 
