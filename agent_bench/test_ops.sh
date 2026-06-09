@@ -38,6 +38,7 @@ if [[ "$_DEVICE_TYPE" == "cuda" ]]; then
     DEFAULT_DATASET="KernelGenBench"
 else
     DEFAULT_DATASET="KernelGenBench-aten"
+    export TORCH_DEVICE_BACKEND_AUTOLOAD=0
 fi
 
 # Default values
