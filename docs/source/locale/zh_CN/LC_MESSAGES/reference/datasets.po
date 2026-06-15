@@ -1,0 +1,300 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2026, FlagOS Community
+# This file is distributed under the same license as the KernelGenBench
+# Documentation package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: KernelGenBench Documentation \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-06-15 10:42+0800\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: zh_CN\n"
+"Language-Team: zh_CN <LL@li.org>\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.17.0\n"
+
+#: ../../source/reference/datasets.md:1
+msgid "Datasets"
+msgstr "数据集"
+
+#: ../../source/reference/datasets.md:3
+#, python-brace-format
+msgid ""
+"{term}`KernelGenBench` provides four dataset variants for different "
+"evaluation scenarios."
+msgstr ""
+"{term}`KernelGenBench` 为不同的评估场景提供了四种数据集变体。"
+
+#: ../../source/reference/datasets.md:5
+msgid "Dataset Overview"
+msgstr "数据集概览"
+
+#: ../../source/reference/datasets.md
+msgid "Dataset"
+msgstr "数据集"
+
+#: ../../source/reference/datasets.md
+msgid "Operators"
+msgstr "算子"
+
+#: ../../source/reference/datasets.md
+msgid "Sources"
+msgstr "来源"
+
+#: ../../source/reference/datasets.md
+msgid "Platforms"
+msgstr "平台"
+
+#: ../../source/reference/datasets.md
+#, python-brace-format
+msgid "`{term}`KernelGenBench``"
+msgstr "`{term}`KernelGenBench``"
+
+#: ../../source/reference/datasets.md
+msgid "210"
+msgstr "210"
+
+#: ../../source/reference/datasets.md
+#, python-brace-format
+msgid "{term}`ATen` + {term}`vLLM` + {term}`cuBLAS`"
+msgstr "{term}`ATen` + {term}`vLLM` + {term}`cuBLAS`"
+
+#: ../../source/reference/datasets.md
+msgid "NVIDIA only"
+msgstr "仅 NVIDIA"
+
+#: ../../source/reference/datasets.md
+#, python-brace-format
+msgid "`{term}`KernelGenBench-aten``"
+msgstr "`{term}`KernelGenBench-aten``"
+
+#: ../../source/reference/datasets.md
+msgid "110"
+msgstr "110"
+
+#: ../../source/reference/datasets.md
+#, python-brace-format
+msgid "{term}`ATen` only"
+msgstr "仅 {term}`ATen`"
+
+#: ../../source/reference/datasets.md
+msgid "All platforms"
+msgstr "所有平台"
+
+#: ../../source/reference/datasets.md
+#, python-brace-format
+msgid "`{term}`KernelGenBench-vllm``"
+msgstr "`{term}`KernelGenBench-vllm``"
+
+#: ../../source/reference/datasets.md
+msgid "50"
+msgstr "50"
+
+#: ../../source/reference/datasets.md
+#, python-brace-format
+msgid "{term}`vLLM` only"
+msgstr "仅 {term}`vLLM`"
+
+#: ../../source/reference/datasets.md
+#, python-brace-format
+msgid "`{term}`KernelGenBench-cublas``"
+msgstr "`{term}`KernelGenBench-cublas``"
+
+#: ../../source/reference/datasets.md
+#, python-brace-format
+msgid "{term}`cuBLAS` only"
+msgstr "仅 {term}`cuBLAS`"
+
+#: ../../source/reference/datasets.md:14
+msgid "KernelGenBench (Full)"
+msgstr "KernelGenBench（完整版）"
+
+#: ../../source/reference/datasets.md:16
+msgid "The complete benchmark for NVIDIA platforms."
+msgstr "适用于 NVIDIA 平台的完整基准。"
+
+#: ../../source/reference/datasets.md:18 ../../source/reference/datasets.md:36
+#: ../../source/reference/datasets.md:51 ../../source/reference/datasets.md:68
+msgid "Composition"
+msgstr "组成"
+
+#: ../../source/reference/datasets.md
+msgid "Source"
+msgstr "来源"
+
+#: ../../source/reference/datasets.md
+msgid "Count"
+msgstr "数量"
+
+#: ../../source/reference/datasets.md
+msgid "Description"
+msgstr "描述"
+
+#: ../../source/reference/datasets.md
+#, python-brace-format
+msgid "{term}`ATen`"
+msgstr "{term}`ATen`"
+
+#: ../../source/reference/datasets.md
+msgid "PyTorch operators"
+msgstr "PyTorch 算子"
+
+#: ../../source/reference/datasets.md
+#, python-brace-format
+msgid "{term}`vLLM`"
+msgstr "{term}`vLLM`"
+
+#: ../../source/reference/datasets.md
+msgid "Inference kernels"
+msgstr "推理内核"
+
+#: ../../source/reference/datasets.md
+#, python-brace-format
+msgid "{term}`cuBLAS`"
+msgstr "{term}`cuBLAS`"
+
+#: ../../source/reference/datasets.md
+msgid "BLAS routines"
+msgstr "BLAS 例程"
+
+#: ../../source/reference/datasets.md:26 ../../source/reference/datasets.md:41
+#: ../../source/reference/datasets.md:58 ../../source/reference/datasets.md:75
+msgid "Use Case"
+msgstr "使用场景"
+
+#: ../../source/reference/datasets.md:28
+msgid "Comprehensive evaluation"
+msgstr "综合评估"
+
+#: ../../source/reference/datasets.md:29
+msgid "NVIDIA hardware only"
+msgstr "仅限 NVIDIA 硬件"
+
+#: ../../source/reference/datasets.md:30
+msgid "Full capability assessment"
+msgstr "完整能力评估"
+
+#: ../../source/reference/datasets.md:32
+msgid "KernelGenBench-aten"
+msgstr "KernelGenBench-aten"
+
+#: ../../source/reference/datasets.md:34
+msgid "Cross-platform operator set."
+msgstr "跨平台算子集。"
+
+#: ../../source/reference/datasets.md:38
+#, python-brace-format
+msgid "110 PyTorch {term}`ATen` operators"
+msgstr "110 个 PyTorch {term}`ATen` 算子"
+
+#: ../../source/reference/datasets.md:39
+msgid "No external dependencies"
+msgstr "无外部依赖"
+
+#: ../../source/reference/datasets.md:43
+msgid "Multi-chip evaluation"
+msgstr "多芯片评估"
+
+#: ../../source/reference/datasets.md:44
+msgid "Cross-platform testing"
+msgstr "跨平台测试"
+
+#: ../../source/reference/datasets.md:45
+msgid "Portable benchmark"
+msgstr "可移植基准"
+
+#: ../../source/reference/datasets.md:47
+msgid "KernelGenBench-vllm"
+msgstr "KernelGenBench-vllm"
+
+#: ../../source/reference/datasets.md:49
+#, python-brace-format
+msgid "{term}`LLM` inference kernel benchmark."
+msgstr "{term}`LLM` 推理内核基准。"
+
+#: ../../source/reference/datasets.md:53
+#, python-brace-format
+msgid "50 {term}`vLLM` operators"
+msgstr "50 个 {term}`vLLM` 算子"
+
+#: ../../source/reference/datasets.md:54
+#, python-brace-format
+msgid "Attention mechanisms ({term}`PagedAttention`)"
+msgstr "注意力机制（{term}`PagedAttention`）"
+
+#: ../../source/reference/datasets.md:55
+msgid "KV cache management"
+msgstr "KV 缓存管理"
+
+#: ../../source/reference/datasets.md:56
+msgid "Quantization kernels"
+msgstr "量化内核"
+
+#: ../../source/reference/datasets.md:60
+msgid "Inference optimization"
+msgstr "推理优化"
+
+#: ../../source/reference/datasets.md:61
+#, python-brace-format
+msgid "{term}`vLLM` replacement testing"
+msgstr "{term}`vLLM` 替换测试"
+
+#: ../../source/reference/datasets.md:62
+msgid "Complex kernel evaluation"
+msgstr "复杂内核评估"
+
+#: ../../source/reference/datasets.md:64
+msgid "KernelGenBench-cublas"
+msgstr "KernelGenBench-cublas"
+
+#: ../../source/reference/datasets.md:66
+msgid "Linear algebra benchmark."
+msgstr "线性代数基准。"
+
+#: ../../source/reference/datasets.md:70
+#, python-brace-format
+msgid "50 {term}`cuBLAS` operators"
+msgstr "50 个 {term}`cuBLAS` 算子"
+
+#: ../../source/reference/datasets.md:71
+#, python-brace-format
+msgid "{term}`GEMM` variants"
+msgstr "{term}`GEMM` 变体"
+
+#: ../../source/reference/datasets.md:72
+msgid "Multiple precisions (S/D/C/Z/H)"
+msgstr "多种精度（S/D/C/Z/H）"
+
+#: ../../source/reference/datasets.md:73
+msgid "Batched and strided versions"
+msgstr "批处理和步进版本"
+
+#: ../../source/reference/datasets.md:77
+msgid "Performance ceiling testing"
+msgstr "性能上限测试"
+
+#: ../../source/reference/datasets.md:78
+msgid "BLAS replacement"
+msgstr "BLAS 替换"
+
+#: ../../source/reference/datasets.md:79
+msgid "High-precision kernels"
+msgstr "高精度内核"
+
+#: ../../source/reference/datasets.md:81
+msgid "Dataset Selection"
+msgstr "数据集选择"
+
+#: ../../source/reference/datasets.md:90
+#, python-brace-format
+msgid ""
+"On non-NVIDIA platforms, `{term}`KernelGenBench-aten`` is automatically "
+"selected."
+msgstr ""
+"在非 NVIDIA 平台上，会自动选择 `{term}`KernelGenBench-aten``。"

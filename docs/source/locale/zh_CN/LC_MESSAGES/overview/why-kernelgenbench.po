@@ -1,0 +1,208 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2026, FlagOS Community
+# This file is distributed under the same license as the KernelGenBench
+# Documentation package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: KernelGenBench Documentation \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-06-15 10:42+0800\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: zh_CN\n"
+"Language-Team: zh_CN <LL@li.org>\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.17.0\n"
+
+#: ../../source/overview/why-kernelgenbench.md:1
+msgid "Why KernelGenBench?"
+msgstr "为什么选择 KernelGenBench？"
+
+#: ../../source/overview/why-kernelgenbench.md:3
+msgid ""
+"Understanding the significance of KernelGenBench requires first "
+"understanding the challenges of GPU kernel development and the "
+"limitations of existing solutions."
+msgstr ""
+"理解 KernelGenBench 的重要性，首先需要了解 GPU 内核开发的挑战以及现有解决方案的局限性。"
+
+#: ../../source/overview/why-kernelgenbench.md:5
+msgid "Challenges of Kernel Development"
+msgstr "内核开发的挑战"
+
+#: ../../source/overview/why-kernelgenbench.md:7
+msgid ""
+"GPU kernel development is a highly specialized and labor-intensive task. "
+"Writing efficient kernels requires:"
+msgstr ""
+"GPU 内核开发是一项高度专业化且劳动密集型的任务。编写高效的内核需要："
+
+#: ../../source/overview/why-kernelgenbench.md:9
+msgid "Deep understanding of low-level programming"
+msgstr "深入理解底层编程"
+
+#: ../../source/overview/why-kernelgenbench.md:10
+msgid "Hardware architecture expertise"
+msgstr "硬件架构专业知识"
+
+#: ../../source/overview/why-kernelgenbench.md:11
+msgid "Performance optimization skills"
+msgstr "性能优化技能"
+
+#: ../../source/overview/why-kernelgenbench.md:12
+msgid "Cross-platform compatibility knowledge"
+msgstr "跨平台兼容性知识"
+
+#: ../../source/overview/why-kernelgenbench.md:14
+msgid ""
+"The rise of LLM and agent-based frameworks offers a promising path for "
+"automatic kernel generation, but evaluating their effectiveness requires "
+"rigorous benchmarks."
+msgstr ""
+"大语言模型和智能体框架的兴起为自动内核生成提供了一条有前景的路径，但评估其有效性需要严格的基准测试。"
+
+#: ../../source/overview/why-kernelgenbench.md:16
+msgid "Limitations of Existing Solutions"
+msgstr "现有解决方案的局限性"
+
+#: ../../source/overview/why-kernelgenbench.md:18
+msgid "Existing benchmarks face the following limitations:"
+msgstr "现有基准面临以下局限性："
+
+#: ../../source/overview/why-kernelgenbench.md
+msgid "Limitation"
+msgstr "局限性"
+
+#: ../../source/overview/why-kernelgenbench.md
+msgid "Description"
+msgstr "描述"
+
+#: ../../source/overview/why-kernelgenbench.md
+msgid "Single-source constraint"
+msgstr "单一来源限制"
+
+#: ../../source/overview/why-kernelgenbench.md
+msgid "Only tests standardized PyTorch operators"
+msgstr "仅测试标准化的 PyTorch 算子"
+
+#: ../../source/overview/why-kernelgenbench.md
+msgid "Single-hardware lock-in"
+msgstr "单一硬件锁定"
+
+#: ../../source/overview/why-kernelgenbench.md
+msgid "Limited to the NVIDIA ecosystem"
+msgstr "局限于 NVIDIA 生态系统"
+
+#: ../../source/overview/why-kernelgenbench.md
+msgid "Limited verification"
+msgstr "有限的验证"
+
+#: ../../source/overview/why-kernelgenbench.md
+msgid "Only focuses on functional correctness"
+msgstr "仅关注功能正确性"
+
+#: ../../source/overview/why-kernelgenbench.md
+msgid "No cost tracking"
+msgstr "无成本追踪"
+
+#: ../../source/overview/why-kernelgenbench.md
+msgid "Ignores token consumption and time costs"
+msgstr "忽略 Token 消耗和时间成本"
+
+#: ../../source/overview/why-kernelgenbench.md:27
+msgid "Single-source Constraint"
+msgstr "单一来源限制"
+
+#: ../../source/overview/why-kernelgenbench.md:29
+msgid ""
+"KernelBench and TritonBench pioneered execution-based evaluation, but "
+"their exclusive focus on standardized PyTorch operators allows kernel-"
+"specific agents to achieve nearly 100% accuracy, creating an illusion "
+"that the problem has been solved."
+msgstr ""
+"KernelBench 和 TritonBench 开创了基于执行的评估方法，但它们对标准化 PyTorch 算子的"
+"独家关注使得专用内核智能体能够达到近 100% 的精度，造成了问题已解决的假象。"
+
+#: ../../source/overview/why-kernelgenbench.md:31
+msgid "Single-hardware Lock-in"
+msgstr "单一硬件锁定"
+
+#: ../../source/overview/why-kernelgenbench.md:33
+msgid ""
+"The vast majority of kernel benchmarks are strictly limited to the NVIDIA"
+" ecosystem. No existing benchmark system has measured the performance "
+"portability gap across heterogeneous hardware platforms."
+msgstr ""
+"绝大多数内核基准严格局限于 NVIDIA 生态系统。没有现有的基准系统测量过异构硬件平台间的"
+"性能可移植性差距。"
+
+#: ../../source/overview/why-kernelgenbench.md:35
+msgid "How KernelGenBench Helps"
+msgstr "KernelGenBench 如何提供帮助"
+
+#: ../../source/overview/why-kernelgenbench.md:37
+msgid "KernelGenBench addresses these gaps through:"
+msgstr "KernelGenBench 通过以下方式填补这些空白："
+
+#: ../../source/overview/why-kernelgenbench.md:39
+msgid "**Multi-source Evaluation** - Tests operators from ATen, vLLM, and cuBLAS"
+msgstr "**多源评估** - 测试来自 ATen、vLLM 和 cuBLAS 的算子"
+
+#: ../../source/overview/why-kernelgenbench.md:40
+msgid "**Multi-chip Support** - Evaluates on 6 hardware platforms"
+msgstr "**多芯片支持** - 在 6 个硬件平台上进行评估"
+
+#: ../../source/overview/why-kernelgenbench.md:41
+msgid "**Rigorous Verification** - Three-layer anti-cheating mechanism"
+msgstr "**严格验证** - 三层防作弊机制"
+
+#: ../../source/overview/why-kernelgenbench.md:42
+msgid "**Cost Tracking** - Measures token consumption and actual runtime"
+msgstr "**成本追踪** - 测量 Token 消耗和实际运行时间"
+
+#: ../../source/overview/why-kernelgenbench.md:44
+msgid "Use Cases"
+msgstr "使用场景"
+
+#: ../../source/overview/why-kernelgenbench.md:46
+msgid "For Individual Developers"
+msgstr "面向个人开发者"
+
+#: ../../source/overview/why-kernelgenbench.md:48
+msgid ""
+"Use KernelGenBench as a \"quality inspector\" for kernel development. The"
+" three-layer anti-cheating mechanism ensures your generated kernels truly"
+" work in production environments."
+msgstr ""
+"将 KernelGenBench 用作内核开发的"质检员"。三层防作弊机制确保您生成的内核能够"
+"在生产环境中真正运行。"
+
+#: ../../source/overview/why-kernelgenbench.md:50
+msgid "For Chip Vendors"
+msgstr "面向芯片厂商"
+
+#: ../../source/overview/why-kernelgenbench.md:52
+msgid ""
+"KernelGenBench serves as a \"detector\" for heterogeneous adaptation. "
+"Identify performance bottlenecks and compiler compatibility issues across"
+" different chips."
+msgstr ""
+"KernelGenBench 可作为异构适配的"检测器"。识别不同芯片间的性能瓶颈和编译器兼容性问题。"
+
+#: ../../source/overview/why-kernelgenbench.md:54
+msgid "For Enterprise Teams"
+msgstr "面向企业团队"
+
+#: ../../source/overview/why-kernelgenbench.md:56
+msgid ""
+"Use KernelGenBench as a \"decision calculator\" for automation costs. "
+"Based on large-scale experiments (over 15 billion tokens), understand the"
+" token and time costs of automatic kernel generation."
+msgstr ""
+"将 KernelGenBench 用作自动化成本的"决策计算器"。基于大规模实验（超过 150 亿 Token），"
+"了解自动内核生成的 Token 和时间成本。"

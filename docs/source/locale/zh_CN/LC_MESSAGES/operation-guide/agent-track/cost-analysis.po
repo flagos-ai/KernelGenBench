@@ -1,0 +1,278 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2026, FlagOS Community
+# This file is distributed under the same license as the KernelGenBench
+# Documentation package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: KernelGenBench Documentation \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-06-15 10:42+0800\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: zh_CN\n"
+"Language-Team: zh_CN <LL@li.org>\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.17.0\n"
+
+#: ../../source/operation-guide/agent-track/cost-analysis.md:1
+msgid "Cost Analysis"
+msgstr "成本分析"
+
+#: ../../source/operation-guide/agent-track/cost-analysis.md:3
+msgid "Understanding token costs for agent-based kernel generation."
+msgstr "了解基于智能体的内核生成的 Token 成本。"
+
+#: ../../source/operation-guide/agent-track/cost-analysis.md:5
+msgid "Token Consumption"
+msgstr "Token 消耗"
+
+#: ../../source/operation-guide/agent-track/cost-analysis.md:7
+msgid "Agent methods consume more tokens than direct LLM sampling."
+msgstr "智能体方法比直接 LLM 采样消耗更多的 Token。"
+
+#: ../../source/operation-guide/agent-track/cost-analysis.md
+msgid "Method"
+msgstr "方法"
+
+#: ../../source/operation-guide/agent-track/cost-analysis.md
+msgid "Tokens per Success"
+msgstr "每次成功的 Token 数"
+
+#: ../../source/operation-guide/agent-track/cost-analysis.md
+msgid "Pass@5"
+msgstr "Pass@5"
+
+#: ../../source/operation-guide/agent-track/cost-analysis.md
+msgid "~50K"
+msgstr "~50K"
+
+#: ../../source/operation-guide/agent-track/cost-analysis.md
+msgid "Claude Code (normal)"
+msgstr "Claude Code（普通）"
+
+#: ../../source/operation-guide/agent-track/cost-analysis.md
+msgid "~500K"
+msgstr "~500K"
+
+#: ../../source/operation-guide/agent-track/cost-analysis.md
+msgid "AKO4ALL"
+msgstr "AKO4ALL"
+
+#: ../../source/operation-guide/agent-track/cost-analysis.md
+msgid "~5.19M"
+msgstr "~5.19M"
+
+#: ../../source/operation-guide/agent-track/cost-analysis.md:15
+msgid "Cost Factors"
+msgstr "成本因素"
+
+#: ../../source/operation-guide/agent-track/cost-analysis.md:17
+msgid "Iterative Debugging"
+msgstr "迭代调试"
+
+#: ../../source/operation-guide/agent-track/cost-analysis.md:19
+msgid "Agents may perform multiple iterations:"
+msgstr "智能体可能会执行多次迭代："
+
+#: ../../source/operation-guide/agent-track/cost-analysis.md:20
+msgid "Each iteration generates new code"
+msgstr "每次迭代生成新代码"
+
+#: ../../source/operation-guide/agent-track/cost-analysis.md:21
+msgid "Execution feedback increases context"
+msgstr "执行反馈增加上下文"
+
+#: ../../source/operation-guide/agent-track/cost-analysis.md:22
+msgid "Error messages increase prompt size"
+msgstr "错误消息增加提示大小"
+
+#: ../../source/operation-guide/agent-track/cost-analysis.md:24
+msgid "Model Selection"
+msgstr "模型选择"
+
+#: ../../source/operation-guide/agent-track/cost-analysis.md
+msgid "Model"
+msgstr "模型"
+
+#: ../../source/operation-guide/agent-track/cost-analysis.md
+msgid "Relative Cost"
+msgstr "相对成本"
+
+#: ../../source/operation-guide/agent-track/cost-analysis.md
+msgid "GPT-4o"
+msgstr "GPT-4o"
+
+#: ../../source/operation-guide/agent-track/cost-analysis.md
+msgid "Medium"
+msgstr "中等"
+
+#: ../../source/operation-guide/agent-track/cost-analysis.md
+msgid "Opus-4.6"
+msgstr "Opus-4.6"
+
+#: ../../source/operation-guide/agent-track/cost-analysis.md
+msgid "High"
+msgstr "高"
+
+#: ../../source/operation-guide/agent-track/cost-analysis.md
+msgid "Qwen3.5"
+msgstr "Qwen3.5"
+
+#: ../../source/operation-guide/agent-track/cost-analysis.md
+msgid "Low"
+msgstr "低"
+
+#: ../../source/operation-guide/agent-track/cost-analysis.md
+msgid "GLM-5.0"
+msgstr "GLM-5.0"
+
+#: ../../source/operation-guide/agent-track/cost-analysis.md:33
+msgid "Operator Complexity"
+msgstr "算子复杂度"
+
+#: ../../source/operation-guide/agent-track/cost-analysis.md
+msgid "Operator Type"
+msgstr "算子类型"
+
+#: ../../source/operation-guide/agent-track/cost-analysis.md
+msgid "Average Iterations"
+msgstr "平均迭代次数"
+
+#: ../../source/operation-guide/agent-track/cost-analysis.md
+msgid "ATen (Simple)"
+msgstr "ATen（简单）"
+
+#: ../../source/operation-guide/agent-track/cost-analysis.md
+msgid "2-5"
+msgstr "2-5"
+
+#: ../../source/operation-guide/agent-track/cost-analysis.md
+msgid "ATen (Complex)"
+msgstr "ATen（复杂）"
+
+#: ../../source/operation-guide/agent-track/cost-analysis.md
+msgid "5-10"
+msgstr "5-10"
+
+#: ../../source/operation-guide/agent-track/cost-analysis.md
+msgid "vLLM"
+msgstr "vLLM"
+
+#: ../../source/operation-guide/agent-track/cost-analysis.md
+msgid "10-20"
+msgstr "10-20"
+
+#: ../../source/operation-guide/agent-track/cost-analysis.md
+msgid "cuBLAS"
+msgstr "cuBLAS"
+
+#: ../../source/operation-guide/agent-track/cost-analysis.md
+msgid "10-30"
+msgstr "10-30"
+
+#: ../../source/operation-guide/agent-track/cost-analysis.md:42
+msgid "Cost Estimation"
+msgstr "成本估算"
+
+#: ../../source/operation-guide/agent-track/cost-analysis.md:44
+msgid "Quick Estimation"
+msgstr "快速估算"
+
+#: ../../source/operation-guide/agent-track/cost-analysis.md:54
+msgid "Extrapolation"
+msgstr "外推"
+
+#: ../../source/operation-guide/agent-track/cost-analysis.md:60
+msgid "Cost Optimization"
+msgstr "成本优化"
+
+#: ../../source/operation-guide/agent-track/cost-analysis.md:62
+msgid "Reduce Operators"
+msgstr "减少算子"
+
+#: ../../source/operation-guide/agent-track/cost-analysis.md:69
+msgid "Use Cheaper Methods"
+msgstr "使用更经济的方法"
+
+#: ../../source/operation-guide/agent-track/cost-analysis.md:76
+msgid "Set Timeout"
+msgstr "设置超时"
+
+#: ../../source/operation-guide/agent-track/cost-analysis.md:83
+msgid "Budget Planning"
+msgstr "预算规划"
+
+#: ../../source/operation-guide/agent-track/cost-analysis.md:85
+msgid "Based on KernelGenBench experiments:"
+msgstr "基于 KernelGenBench 实验："
+
+#: ../../source/operation-guide/agent-track/cost-analysis.md
+msgid "Scale"
+msgstr "规模"
+
+#: ../../source/operation-guide/agent-track/cost-analysis.md
+msgid "Estimated Tokens"
+msgstr "预估 Token 数"
+
+#: ../../source/operation-guide/agent-track/cost-analysis.md
+msgid "Estimated Cost (Opus)"
+msgstr "预估成本（Opus）"
+
+#: ../../source/operation-guide/agent-track/cost-analysis.md
+msgid "Debug (8 operators)"
+msgstr "调试（8 个算子）"
+
+#: ../../source/operation-guide/agent-track/cost-analysis.md
+msgid "~5M"
+msgstr "~5M"
+
+#: ../../source/operation-guide/agent-track/cost-analysis.md
+msgid "~$50"
+msgstr "~$50"
+
+#: ../../source/operation-guide/agent-track/cost-analysis.md
+msgid "ATen (110 operators)"
+msgstr "ATen（110 个算子）"
+
+#: ../../source/operation-guide/agent-track/cost-analysis.md
+msgid "~500M"
+msgstr "~500M"
+
+#: ../../source/operation-guide/agent-track/cost-analysis.md
+msgid "~$5,000"
+msgstr "~$5,000"
+
+#: ../../source/operation-guide/agent-track/cost-analysis.md
+msgid "Full (210 operators)"
+msgstr "完整（210 个算子）"
+
+#: ../../source/operation-guide/agent-track/cost-analysis.md
+msgid "~1B"
+msgstr "~1B"
+
+#: ../../source/operation-guide/agent-track/cost-analysis.md
+msgid "~$10,000"
+msgstr "~$10,000"
+
+#: ../../source/operation-guide/agent-track/cost-analysis.md
+msgid "Full AKO4ALL"
+msgstr "完整 AKO4ALL"
+
+#: ../../source/operation-guide/agent-track/cost-analysis.md
+msgid "~5B"
+msgstr "~5B"
+
+#: ../../source/operation-guide/agent-track/cost-analysis.md
+msgid "~$50,000"
+msgstr "~$50,000"
+
+#: ../../source/operation-guide/agent-track/cost-analysis.md:95
+msgid ""
+"Large-scale agent evaluation can consume billions of tokens. Be sure to "
+"test with debug mode first and plan your budget accordingly."
+msgstr "大规模智能体评估可能消耗数十亿 Token。请务必先使用调试模式测试，并相应规划预算。"

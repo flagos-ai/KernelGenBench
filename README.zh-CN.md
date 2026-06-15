@@ -2,7 +2,7 @@
 
 跨多种硬件平台评测 LLM 和 Agent 生成 Triton kernel 能力的基准框架。
 
-![KernelGenBench 架构概览](assets/overview.png)
+![KernelGenBench 架构概览](docs/_static/images/figures/overview.png)
 
 ## 特性
 
@@ -117,7 +117,7 @@ export OPENAI_BASE_URL=http://your-endpoint/v1  # 可选，自定义端点
 | Claude Code | 92 / 0.86 | 89 / 0.18 | 93 / 0.80 | 88 / 0.87 | 96 / 0.89 | 83 / 0.83 |
 | AKO4all | 89 / 1.00 | 84 / 0.30 | 88 / 1.09 | 88 / 1.08 | 86 / 1.12 | 80 / 1.07 |
 
-![跨平台精度、加速比与生态开销](assets/figure_crossplatform.png)
+![跨平台精度、加速比与生态开销](docs/_static/images/figures/figure_crossplatform.png)
 
 *在异构芯片上开展算子生成任务会带来显著的经济成本和时间成本增加——非 NVIDIA 平台最高需要 2 倍的 token 消耗和运行时间。*
 

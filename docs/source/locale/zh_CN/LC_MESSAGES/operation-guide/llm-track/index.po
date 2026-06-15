@@ -1,0 +1,56 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2026, FlagOS Community
+# This file is distributed under the same license as the KernelGenBench
+# Documentation package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: KernelGenBench Documentation \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-06-15 10:42+0800\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: zh_CN\n"
+"Language-Team: zh_CN <LL@li.org>\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.17.0\n"
+
+#: ../../source/operation-guide/llm-track/index.md:1
+msgid "LLM Track"
+msgstr "LLM 赛道"
+
+#: ../../source/operation-guide/llm-track/index.md:3
+msgid "LLM Track evaluates LLMs on direct kernel generation with Pass@K metric."
+msgstr "LLM 赛道使用 Pass@K 指标评估大语言模型的直接内核生成能力。"
+
+#: ../../source/operation-guide/llm-track/index.md:13
+msgid "What It Tests"
+msgstr "测试内容"
+
+#: ../../source/operation-guide/llm-track/index.md:15
+msgid "Base model capability to generate GPU kernels without execution feedback."
+msgstr "基础模型在没有执行反馈的情况下生成 GPU 内核的能力。"
+
+#: ../../source/operation-guide/llm-track/index.md:17
+msgid "When to Use"
+msgstr "适用场景"
+
+#: ../../source/operation-guide/llm-track/index.md:19
+msgid "Evaluating base model code generation"
+msgstr "评估基础模型代码生成能力"
+
+#: ../../source/operation-guide/llm-track/index.md:20
+msgid "Comparing different LLM providers"
+msgstr "比较不同的大语言模型提供商"
+
+#: ../../source/operation-guide/llm-track/index.md:21
+msgid "Quick benchmark with lower cost"
+msgstr "以较低成本快速进行基准测试"
+
+#: ../../source/operation-guide/llm-track/index.md:23
+msgid "Quick Start"
+msgstr "快速开始"

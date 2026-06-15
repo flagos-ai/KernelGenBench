@@ -1,0 +1,34 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2026, FlagOS Community
+# This file is distributed under the same license as the KernelGenBench
+# Documentation package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: KernelGenBench Documentation \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-06-15 10:42+0800\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: zh_CN\n"
+"Language-Team: zh_CN <LL@li.org>\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.17.0\n"
+
+#: ../../source/operation-guide/index.md:1
+msgid "Operation Guide"
+msgstr "操作指南"
+
+#: ../../source/operation-guide/index.md:3
+msgid "Step-by-step instructions for running KernelGenBench evaluations."
+msgstr "运行 KernelGenBench 评估的分步说明。"
+
+#: ../../source/operation-guide/index.md:5
+msgid ""
+"This section covers both evaluation tracks: LLM Track for direct kernel "
+"generation, and Agent Track for iterative optimization."
+msgstr "本节涵盖两个评估赛道：用于直接内核生成的 LLM 赛道，以及用于迭代优化的智能体赛道。"

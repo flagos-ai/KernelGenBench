@@ -1,0 +1,138 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2026, FlagOS Community
+# This file is distributed under the same license as the KernelGenBench
+# Documentation package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: KernelGenBench Documentation \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-06-15 10:42+0800\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: zh_CN\n"
+"Language-Team: zh_CN <LL@li.org>\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.17.0\n"
+
+#: ../../source/overview/what-is.md:1
+msgid "What is KernelGenBench?"
+msgstr "什么是 KernelGenBench？"
+
+#: ../../source/overview/what-is.md:3
+#, python-brace-format
+msgid ""
+"{term}`KernelGenBench` is a benchmark framework for evaluating "
+"{term}`LLM` and agent-based {term}`Triton` kernel generation across "
+"multiple hardware platforms. It is a component of "
+"[FlagOS](https://flagos.io/) — a unified, open-source AI system software "
+"stack."
+msgstr ""
+"{term}`KernelGenBench` 是一个用于评估 {term}`LLM` 和智能体驱动的 {term}`Triton` 内核生成的基准框架，"
+"支持多种硬件平台。它是 [FlagOS](https://flagos.io/) 的组成部分——一个统一的开源 AI 系统软件栈。"
+
+#: ../../source/overview/what-is.md:5
+msgid "![KernelGenBench Overview](../../_static/images/figures/overview.png)"
+msgstr "![KernelGenBench 概览](../../_static/images/figures/overview.png)"
+
+#: ../../source/overview/what-is.md:5
+msgid "KernelGenBench Overview"
+msgstr "KernelGenBench 概览"
+
+#: ../../source/overview/what-is.md:7
+msgid "Purpose"
+msgstr "目的"
+
+#: ../../source/overview/what-is.md:9
+#, python-brace-format
+msgid ""
+"{term}`KernelGenBench` provides a standardized way to measure how "
+"effectively AI models can generate GPU kernel code. The generated "
+"{term}`Triton` kernels serve as drop-in replacements for production use, "
+"enabling direct evaluation of real-world applicability."
+msgstr ""
+"{term}`KernelGenBench` 提供了一种标准化的方法来衡量 AI 模型生成 GPU 内核代码的有效性。"
+"生成的 {term}`Triton` 内核可直接用于生产环境，从而实现对实际应用性的直接评估。"
+
+#: ../../source/overview/what-is.md:11
+msgid "Problem Addressed"
+msgstr "解决的问题"
+
+#: ../../source/overview/what-is.md:13
+#, python-brace-format
+msgid ""
+"The benchmark addresses a critical gap in the AI ecosystem: while "
+"{term}`LLM` show promise in automating kernel development, there was no "
+"comprehensive way to evaluate their effectiveness across diverse "
+"{term}`Operator` sources and heterogeneous hardware platforms."
+msgstr ""
+"该基准填补了 AI 生态系统中的一个关键空白：虽然 {term}`LLM` 在自动化内核开发方面展现出潜力，"
+"但之前缺乏一种全面的方法来评估其在多样化 {term}`算子` 来源和异构硬件平台上的有效性。"
+
+#: ../../source/overview/what-is.md:15
+msgid "Components"
+msgstr "组成部分"
+
+#: ../../source/overview/what-is.md:17
+#, python-brace-format
+msgid "{term}`KernelGenBench` consists of two complementary sub-benchmarks:"
+msgstr "{term}`KernelGenBench` 由两个互补的子基准组成："
+
+#: ../../source/overview/what-is.md
+msgid "Sub-benchmark"
+msgstr "子基准"
+
+#: ../../source/overview/what-is.md
+msgid "Description"
+msgstr "描述"
+
+#: ../../source/overview/what-is.md
+#, python-brace-format
+msgid "{term}`KernelGenBench-MS`"
+msgstr "{term}`KernelGenBench-MS`"
+
+#: ../../source/overview/what-is.md
+msgid "Multi-Source evaluation with 210 operators"
+msgstr "多源评估，包含 210 个算子"
+
+#: ../../source/overview/what-is.md
+#, python-brace-format
+msgid "{term}`KernelGenBench-MC`"
+msgstr "{term}`KernelGenBench-MC`"
+
+#: ../../source/overview/what-is.md
+msgid "Multi-Chip evaluation across 6 hardware platforms"
+msgstr "多芯片评估，覆盖 6 个硬件平台"
+
+#: ../../source/overview/what-is.md:24
+msgid "Related Projects"
+msgstr "相关项目"
+
+#: ../../source/overview/what-is.md
+msgid "Project"
+msgstr "项目"
+
+#: ../../source/overview/what-is.md
+msgid ""
+"[awesome-LLM-driven-kernel-generation](https://github.com/flagos-ai"
+"/awesome-LLM-driven-kernel-generation)"
+msgstr ""
+"[awesome-LLM-driven-kernel-generation](https://github.com/flagos-ai"
+"/awesome-LLM-driven-kernel-generation)"
+
+#: ../../source/overview/what-is.md
+msgid "Survey of AI-driven kernel generation"
+msgstr "AI 驱动内核生成综述"
+
+#: ../../source/overview/what-is.md
+msgid "[KernelGen](https://github.com/flagos-ai/KernelGen)"
+msgstr "[KernelGen](https://github.com/flagos-ai/KernelGen)"
+
+#: ../../source/overview/what-is.md
+#, python-brace-format
+msgid "High-performance platform for automated {term}`Triton` kernel generation"
+msgstr "用于自动化 {term}`Triton` 内核生成的高性能平台"

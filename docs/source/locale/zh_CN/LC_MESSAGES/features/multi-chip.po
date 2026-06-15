@@ -1,0 +1,266 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2026, FlagOS Community
+# This file is distributed under the same license as the KernelGenBench
+# Documentation package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: KernelGenBench Documentation \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-06-15 10:42+0800\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: zh_CN\n"
+"Language-Team: zh_CN <LL@li.org>\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.17.0\n"
+
+#: ../../source/features/multi-chip.md:1
+msgid "Multi-Chip Support"
+msgstr "多芯片支持"
+
+#: ../../source/features/multi-chip.md:3
+#, python-brace-format
+msgid ""
+"{term}`KernelGenBench` supports six hardware platforms with automatic "
+"device detection and unified execution pipeline."
+msgstr ""
+"{term}`KernelGenBench` 支持六种硬件平台，具有自动设备检测和统一的执行流水线。"
+
+#: ../../source/features/multi-chip.md:5
+msgid "Supported Platforms"
+msgstr "支持的平台"
+
+#: ../../source/features/multi-chip.md
+msgid "Platform"
+msgstr "平台"
+
+#: ../../source/features/multi-chip.md
+msgid "Description"
+msgstr "描述"
+
+#: ../../source/features/multi-chip.md
+msgid "Notes"
+msgstr "备注"
+
+#: ../../source/features/multi-chip.md
+msgid "NVIDIA"
+msgstr "NVIDIA"
+
+#: ../../source/features/multi-chip.md
+msgid "A100 GPUs"
+msgstr "A100 GPU"
+
+#: ../../source/features/multi-chip.md
+msgid "Primary baseline"
+msgstr "主要基准"
+
+#: ../../source/features/multi-chip.md
+msgid "Ascend NPU"
+msgstr "昇腾 NPU"
+
+#: ../../source/features/multi-chip.md
+msgid "Huawei AI accelerators"
+msgstr "华为 AI 加速器"
+
+#: ../../source/features/multi-chip.md
+msgid "—"
+msgstr "—"
+
+#: ../../source/features/multi-chip.md
+msgid "MUSA"
+msgstr "MUSA"
+
+#: ../../source/features/multi-chip.md
+msgid "Moore Threads GPUs"
+msgstr "摩尔线程 GPU"
+
+#: ../../source/features/multi-chip.md
+msgid "Hygon DCU"
+msgstr "海光 DCU"
+
+#: ../../source/features/multi-chip.md
+msgid "Hygon data center accelerators"
+msgstr "海光数据中心加速器"
+
+#: ../../source/features/multi-chip.md
+msgid "Iluvatar"
+msgstr "天数智芯"
+
+#: ../../source/features/multi-chip.md
+msgid "Iluvatar AI chips"
+msgstr "天数智芯 AI 芯片"
+
+#: ../../source/features/multi-chip.md
+msgid "MetaX"
+msgstr "沐曦"
+
+#: ../../source/features/multi-chip.md
+msgid "MUXI accelerators"
+msgstr "沐曦加速器"
+
+#: ../../source/features/multi-chip.md:16
+msgid "Auto-Detection"
+msgstr "自动检测"
+
+#: ../../source/features/multi-chip.md:18
+msgid "Device type is automatically detected at runtime:"
+msgstr "设备类型在运行时自动检测："
+
+#: ../../source/features/multi-chip.md:25
+msgid "Unified Commands"
+msgstr "统一命令"
+
+#: ../../source/features/multi-chip.md:27
+msgid ""
+"All platforms use the same commands — the framework handles device "
+"differences automatically:"
+msgstr "所有平台使用相同的命令——框架自动处理设备差异："
+
+#: ../../source/features/multi-chip.md:36
+msgid "Platform-Specific Behavior"
+msgstr "平台特定行为"
+
+#: ../../source/features/multi-chip.md:38
+msgid "Dataset Selection"
+msgstr "数据集选择"
+
+#: ../../source/features/multi-chip.md
+msgid "Default Dataset"
+msgstr "默认数据集"
+
+#: ../../source/features/multi-chip.md
+#, python-brace-format
+msgid "{term}`KernelGenBench` (210 operators)"
+msgstr "{term}`KernelGenBench`（210 个算子）"
+
+#: ../../source/features/multi-chip.md
+msgid "Others"
+msgstr "其他"
+
+#: ../../source/features/multi-chip.md
+#, python-brace-format
+msgid "{term}`KernelGenBench-aten` (110 operators)"
+msgstr "{term}`KernelGenBench-aten`（110 个算子）"
+
+#: ../../source/features/multi-chip.md:45
+#, python-brace-format
+msgid ""
+"On non-NVIDIA platforms, {term}`vLLM` and {term}`cuBLAS` operators are "
+"unavailable."
+msgstr "在非 NVIDIA 平台上，{term}`vLLM` 和 {term}`cuBLAS` 算子不可用。"
+
+#: ../../source/features/multi-chip.md:47
+msgid "Anti-Hack Layers"
+msgstr "防作弊层"
+
+#: ../../source/features/multi-chip.md
+msgid "Layer"
+msgstr "层级"
+
+#: ../../source/features/multi-chip.md
+msgid "Non-NVIDIA"
+msgstr "非 NVIDIA"
+
+#: ../../source/features/multi-chip.md
+msgid "L1: AST Static Scan"
+msgstr "L1：AST 静态扫描"
+
+#: ../../source/features/multi-chip.md
+msgid "✓"
+msgstr "✓"
+
+#: ../../source/features/multi-chip.md
+msgid "L2: Ghost Replay"
+msgstr "L2：幽灵回放"
+
+#: ../../source/features/multi-chip.md
+msgid "L3: Hardware Profiling"
+msgstr "L3：硬件分析"
+
+#: ../../source/features/multi-chip.md
+msgid "✗"
+msgstr "✗"
+
+#: ../../source/features/multi-chip.md:55
+msgid "L3 profiling is NVIDIA-only due to tool availability."
+msgstr "L3 分析仅支持 NVIDIA，受限于工具可用性。"
+
+#: ../../source/features/multi-chip.md:57
+msgid "Tolerance Settings"
+msgstr "容差设置"
+
+#: ../../source/features/multi-chip.md:59
+msgid ""
+"Numerical tolerances are automatically adjusted per platform to account "
+"for different floating-point implementations."
+msgstr "数值容差根据平台自动调整，以适应不同的浮点实现。"
+
+#: ../../source/features/multi-chip.md:61
+msgid "Cross-Platform Challenges"
+msgstr "跨平台挑战"
+
+#: ../../source/features/multi-chip.md:63
+msgid "Compiler Maturity"
+msgstr "编译器成熟度"
+
+#: ../../source/features/multi-chip.md:65
+msgid "Non-NVIDIA platforms have:"
+msgstr "非 NVIDIA 平台存在："
+
+#: ../../source/features/multi-chip.md:66
+#, python-brace-format
+msgid "Less mature {term}`Triton` compilers"
+msgstr "{term}`Triton` 编译器不够成熟"
+
+#: ../../source/features/multi-chip.md:67
+msgid "Incomplete backend support"
+msgstr "后端支持不完整"
+
+#: ../../source/features/multi-chip.md:68
+msgid "Different memory models"
+msgstr "不同的内存模型"
+
+#: ../../source/features/multi-chip.md:70
+msgid "Performance Impact"
+msgstr "性能影响"
+
+#: ../../source/features/multi-chip.md:72
+msgid "Non-NVIDIA platforms require ~2× more tokens and time"
+msgstr "非 NVIDIA 平台需要约 2 倍的 Token 和时间"
+
+#: ../../source/features/multi-chip.md:73
+msgid "Cross-platform degradation can be severe"
+msgstr "跨平台性能下降可能很严重"
+
+#: ../../source/features/multi-chip.md:74
+msgid "Platform-specific optimizations needed"
+msgstr "需要针对平台优化"
+
+#: ../../source/features/multi-chip.md:76
+msgid "Hardware-Specific Templates"
+msgstr "硬件特定模板"
+
+#: ../../source/features/multi-chip.md:78
+msgid "The framework injects platform-specific code templates:"
+msgstr "框架注入平台特定的代码模板："
+
+#: ../../source/features/multi-chip.md:80
+msgid "Import statements"
+msgstr "导入语句"
+
+#: ../../source/features/multi-chip.md:81
+msgid "Runtime configurations"
+msgstr "运行时配置"
+
+#: ../../source/features/multi-chip.md:82
+msgid "Memory constraints"
+msgstr "内存约束"
+
+#: ../../source/features/multi-chip.md:83
+msgid "Device-specific constants"
+msgstr "设备特定常量"

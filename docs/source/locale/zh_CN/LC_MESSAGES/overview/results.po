@@ -1,0 +1,290 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2026, FlagOS Community
+# This file is distributed under the same license as the KernelGenBench
+# Documentation package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: KernelGenBench Documentation \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-06-15 10:42+0800\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: zh_CN\n"
+"Language-Team: zh_CN <LL@li.org>\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.17.0\n"
+
+#: ../../source/overview/results.md:1
+msgid "Benchmark Results"
+msgstr "基准结果"
+
+#: ../../source/overview/results.md:3
+msgid "Key findings from KernelGenBench evaluation experiments."
+msgstr "KernelGenBench 评估实验的关键发现。"
+
+#: ../../source/overview/results.md:5 ../../source/overview/results.md:9
+msgid "Multi-Source Results"
+msgstr "多源结果"
+
+#: ../../source/overview/results.md:7
+msgid ""
+"Evaluation of 210 operators from three sources (ATen, vLLM, cuBLAS) on "
+"NVIDIA A100."
+msgstr "在 NVIDIA A100 上对来自三个来源（ATen、vLLM、cuBLAS）的 210 个算子进行评估。"
+
+#: ../../source/overview/results.md:9
+msgid ""
+"![Multi-Source "
+"Results](../../_static/images/figures/table_multi_source.png)"
+msgstr ""
+"![多源结果](../../_static/images/figures/table_multi_source.png)"
+
+#: ../../source/overview/results.md:11 ../../source/overview/results.md:35
+msgid "Key Findings"
+msgstr "关键发现"
+
+#: ../../source/overview/results.md
+msgid "Finding"
+msgstr "发现"
+
+#: ../../source/overview/results.md
+msgid "Details"
+msgstr "详情"
+
+#: ../../source/overview/results.md
+msgid "Highest accuracy"
+msgstr "最高精度"
+
+#: ../../source/overview/results.md
+msgid "Claude Code (Opus-4.6) achieved 87%"
+msgstr "Claude Code (Opus-4.6) 达到 87%"
+
+#: ../../source/overview/results.md
+msgid "Highest speedup"
+msgstr "最高加速比"
+
+#: ../../source/overview/results.md
+msgid "AutoKernel (Qwen3.5) achieved 1.02×"
+msgstr "AutoKernel (Qwen3.5) 达到 1.02×"
+
+#: ../../source/overview/results.md
+msgid "Most challenging"
+msgstr "最具挑战性"
+
+#: ../../source/overview/results.md
+msgid "cuBLAS operators for all methods"
+msgstr "所有方法的 cuBLAS 算子"
+
+#: ../../source/overview/results.md:19
+msgid "By Operator Source"
+msgstr "按算子来源"
+
+#: ../../source/overview/results.md
+msgid "Source"
+msgstr "来源"
+
+#: ../../source/overview/results.md
+msgid "Best Accuracy"
+msgstr "最佳精度"
+
+#: ../../source/overview/results.md
+msgid "Best Speedup"
+msgstr "最佳加速比"
+
+#: ../../source/overview/results.md
+msgid "ATen"
+msgstr "ATen"
+
+#: ../../source/overview/results.md
+msgid "92% (Claude Code)"
+msgstr "92% (Claude Code)"
+
+#: ../../source/overview/results.md
+msgid "1.00× (AKO4ALL)"
+msgstr "1.00× (AKO4ALL)"
+
+#: ../../source/overview/results.md
+msgid "vLLM"
+msgstr "vLLM"
+
+#: ../../source/overview/results.md
+msgid "68% (Claude Code)"
+msgstr "68% (Claude Code)"
+
+#: ../../source/overview/results.md
+msgid "1.63× (AutoKernel)"
+msgstr "1.63× (AutoKernel)"
+
+#: ../../source/overview/results.md
+msgid "cuBLAS"
+msgstr "cuBLAS"
+
+#: ../../source/overview/results.md
+msgid "94% (Claude Code)"
+msgstr "94% (Claude Code)"
+
+#: ../../source/overview/results.md
+msgid "0.71× (multiple methods)"
+msgstr "0.71× (多种方法)"
+
+#: ../../source/overview/results.md:27 ../../source/overview/results.md:31
+msgid "Multi-Chip Results"
+msgstr "多芯片结果"
+
+#: ../../source/overview/results.md:29
+msgid "Cross-platform evaluation of 110 ATen operators on 6 hardware platforms."
+msgstr "在 6 个硬件平台上对 110 个 ATen 算子进行跨平台评估。"
+
+#: ../../source/overview/results.md:31
+msgid "![Multi-Chip Results](../../_static/images/figures/table_multi_chip.png)"
+msgstr "![多芯片结果](../../_static/images/figures/table_multi_chip.png)"
+
+#: ../../source/overview/results.md:33
+msgid ""
+"![Cross-platform "
+"Performance](../../_static/images/figures/figure_crossplatform.png)"
+msgstr ""
+"![跨平台性能](../../_static/images/figures/figure_crossplatform.png)"
+
+#: ../../source/overview/results.md:33
+msgid "Cross-platform Performance"
+msgstr "跨平台性能"
+
+#: ../../source/overview/results.md
+msgid "Platform variance"
+msgstr "平台差异"
+
+#: ../../source/overview/results.md
+msgid "Generation performance varies significantly across hardware"
+msgstr "生成性能在不同硬件间差异显著"
+
+#: ../../source/overview/results.md
+msgid "Cross-platform degradation"
+msgstr "跨平台性能下降"
+
+#: ../../source/overview/results.md
+msgid "AutoKernel dropped from 87% (NVIDIA) to 25% (Platform E)"
+msgstr "AutoKernel 从 87%（NVIDIA）下降到 25%（平台 E）"
+
+#: ../../source/overview/results.md
+msgid "Compiler maturity impact"
+msgstr "编译器成熟度影响"
+
+#: ../../source/overview/results.md
+msgid "Non-NVIDIA platforms require 2× or more tokens and time"
+msgstr "非 NVIDIA 平台需要 2 倍或更多的 Token 和时间"
+
+#: ../../source/overview/results.md:43
+msgid "Accuracy by Platform"
+msgstr "各平台精度"
+
+#: ../../source/overview/results.md
+msgid "Platform"
+msgstr "平台"
+
+#: ../../source/overview/results.md
+msgid "Claude Code"
+msgstr "Claude Code"
+
+#: ../../source/overview/results.md
+msgid "AKO4ALL"
+msgstr "AKO4ALL"
+
+#: ../../source/overview/results.md
+msgid "NVIDIA"
+msgstr "NVIDIA"
+
+#: ../../source/overview/results.md
+msgid "87%"
+msgstr "87%"
+
+#: ../../source/overview/results.md
+msgid "83%"
+msgstr "83%"
+
+#: ../../source/overview/results.md
+msgid "Platform A"
+msgstr "平台 A"
+
+#: ../../source/overview/results.md
+msgid "~70%"
+msgstr "~70%"
+
+#: ../../source/overview/results.md
+msgid "~60%"
+msgstr "~60%"
+
+#: ../../source/overview/results.md
+msgid "Platform B"
+msgstr "平台 B"
+
+#: ../../source/overview/results.md
+msgid "~65%"
+msgstr "~65%"
+
+#: ../../source/overview/results.md
+msgid "~55%"
+msgstr "~55%"
+
+#: ../../source/overview/results.md
+msgid "Platform C"
+msgstr "平台 C"
+
+#: ../../source/overview/results.md
+msgid "~45%"
+msgstr "~45%"
+
+#: ../../source/overview/results.md
+msgid "Platform D"
+msgstr "平台 D"
+
+#: ../../source/overview/results.md
+msgid "~35%"
+msgstr "~35%"
+
+#: ../../source/overview/results.md
+msgid "Platform E"
+msgstr "平台 E"
+
+#: ../../source/overview/results.md
+msgid "~25%"
+msgstr "~25%"
+
+#: ../../source/overview/results.md:54
+msgid "Cost Analysis"
+msgstr "成本分析"
+
+#: ../../source/overview/results.md
+msgid "Method"
+msgstr "方法"
+
+#: ../../source/overview/results.md
+msgid "Tokens per Success"
+msgstr "每次成功所需 Token"
+
+#: ../../source/overview/results.md
+msgid "Pass@5"
+msgstr "Pass@5"
+
+#: ../../source/overview/results.md
+msgid "~50K"
+msgstr "~50K"
+
+#: ../../source/overview/results.md
+msgid "~500K"
+msgstr "~500K"
+
+#: ../../source/overview/results.md
+msgid "~5.19M"
+msgstr "~5.19M"
+
+#: ../../source/overview/results.md:63
+msgid ""
+"Large-scale agent evaluations may consume billions of tokens. Plan your "
+"budget accordingly."
+msgstr "大规模智能体评估可能消耗数十亿 Token。请相应规划您的预算。"

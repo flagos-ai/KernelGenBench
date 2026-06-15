@@ -1,0 +1,222 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2026, FlagOS Community
+# This file is distributed under the same license as the KernelGenBench
+# Documentation package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: KernelGenBench Documentation \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-06-15 10:42+0800\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: zh_CN\n"
+"Language-Team: zh_CN <LL@li.org>\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.17.0\n"
+
+#: ../../source/reference/hardware.md:1
+msgid "Hardware Platforms"
+msgstr "硬件平台"
+
+#: ../../source/reference/hardware.md:3
+msgid "Details about supported hardware platforms."
+msgstr "关于支持硬件平台的详细信息。"
+
+#: ../../source/reference/hardware.md:5
+msgid "Supported Platforms"
+msgstr "支持的平台"
+
+#: ../../source/reference/hardware.md
+msgid "Platform"
+msgstr "平台"
+
+#: ../../source/reference/hardware.md
+msgid "Vendor"
+msgstr "厂商"
+
+#: ../../source/reference/hardware.md
+msgid "Type"
+msgstr "类型"
+
+#: ../../source/reference/hardware.md
+msgid "Notes"
+msgstr "备注"
+
+#: ../../source/reference/hardware.md ../../source/reference/hardware.md:25
+#: ../../source/reference/hardware.md:46
+msgid "NVIDIA"
+msgstr "NVIDIA"
+
+#: ../../source/reference/hardware.md
+msgid "GPU"
+msgstr "GPU"
+
+#: ../../source/reference/hardware.md
+msgid "Primary baseline"
+msgstr "主要基线"
+
+#: ../../source/reference/hardware.md ../../source/reference/hardware.md:53
+msgid "Ascend NPU"
+msgstr "昇腾 NPU"
+
+#: ../../source/reference/hardware.md
+msgid "Huawei"
+msgstr "华为"
+
+#: ../../source/reference/hardware.md
+msgid "NPU"
+msgstr "NPU"
+
+#: ../../source/reference/hardware.md
+msgid "—"
+msgstr "—"
+
+#: ../../source/reference/hardware.md ../../source/reference/hardware.md:61
+msgid "MUSA"
+msgstr "MUSA"
+
+#: ../../source/reference/hardware.md
+msgid "Moore Threads"
+msgstr "摩尔线程"
+
+#: ../../source/reference/hardware.md ../../source/reference/hardware.md:69
+msgid "Hygon DCU"
+msgstr "海光 DCU"
+
+#: ../../source/reference/hardware.md
+msgid "Hygon"
+msgstr "海光"
+
+#: ../../source/reference/hardware.md
+msgid "DCU"
+msgstr "DCU"
+
+#: ../../source/reference/hardware.md ../../source/reference/hardware.md:77
+msgid "Iluvatar"
+msgstr "天数智芯"
+
+#: ../../source/reference/hardware.md
+msgid "AI Chip"
+msgstr "AI 芯片"
+
+#: ../../source/reference/hardware.md ../../source/reference/hardware.md:85
+msgid "MetaX"
+msgstr "沐曦"
+
+#: ../../source/reference/hardware.md
+msgid "MUXI"
+msgstr "沐曦"
+
+#: ../../source/reference/hardware.md:16
+msgid "Platform Detection"
+msgstr "平台检测"
+
+#: ../../source/reference/hardware.md:23
+msgid "Platform-Specific Features"
+msgstr "平台特定功能"
+
+#: ../../source/reference/hardware.md
+msgid "Feature"
+msgstr "功能"
+
+#: ../../source/reference/hardware.md
+msgid "Support"
+msgstr "支持"
+
+#: ../../source/reference/hardware.md
+msgid "All datasets"
+msgstr "所有数据集"
+
+#: ../../source/reference/hardware.md
+msgid "✓"
+msgstr "✓"
+
+#: ../../source/reference/hardware.md
+msgid "L3 Anti-hack"
+msgstr "L3 反作弊"
+
+#: ../../source/reference/hardware.md
+#, python-brace-format
+msgid "{term}`vLLM` operators"
+msgstr "{term}`vLLM` 算子"
+
+#: ../../source/reference/hardware.md
+#, python-brace-format
+msgid "{term}`cuBLAS` operators"
+msgstr "{term}`cuBLAS` 算子"
+
+#: ../../source/reference/hardware.md:34
+msgid "Non-NVIDIA"
+msgstr "非 NVIDIA"
+
+#: ../../source/reference/hardware.md
+#, python-brace-format
+msgid "{term}`ATen` dataset only"
+msgstr "仅 {term}`ATen` 数据集"
+
+#: ../../source/reference/hardware.md
+msgid "L1 + L2 Anti-hack"
+msgstr "L1 + L2 反作弊"
+
+#: ../../source/reference/hardware.md
+msgid "✗"
+msgstr "✗"
+
+#: ../../source/reference/hardware.md:44
+msgid "Installation Requirements"
+msgstr "安装要求"
+
+#: ../../source/reference/hardware.md:93
+msgid "Cross-Platform Considerations"
+msgstr "跨平台注意事项"
+
+#: ../../source/reference/hardware.md:95
+msgid "Compiler Maturity"
+msgstr "编译器成熟度"
+
+#: ../../source/reference/hardware.md:97
+msgid "Non-NVIDIA platforms typically have:"
+msgstr "非 NVIDIA 平台通常具有："
+
+#: ../../source/reference/hardware.md:98
+#, python-brace-format
+msgid "Less mature {term}`Triton` compilers"
+msgstr "较不成熟的 {term}`Triton` 编译器"
+
+#: ../../source/reference/hardware.md:99
+msgid "Incomplete backend support"
+msgstr "不完整的后端支持"
+
+#: ../../source/reference/hardware.md:100
+msgid "Different memory models"
+msgstr "不同的内存模型"
+
+#: ../../source/reference/hardware.md:102
+msgid "Performance Impact"
+msgstr "性能影响"
+
+#: ../../source/reference/hardware.md:104
+msgid "2× more tokens and time on average"
+msgstr "平均多消耗 2 倍的 token 和时间"
+
+#: ../../source/reference/hardware.md:105
+msgid "May require platform-specific optimizations"
+msgstr "可能需要平台特定的优化"
+
+#: ../../source/reference/hardware.md:106
+#, python-brace-format
+msgid "Results vary by {term}`Operator` complexity"
+msgstr "结果因 {term}`Operator` 复杂度而异"
+
+#: ../../source/reference/hardware.md:108
+msgid "Tolerance Settings"
+msgstr "容差设置"
+
+#: ../../source/reference/hardware.md:110
+msgid "Numerical tolerances are automatically adjusted per platform."
+msgstr "数值容差会根据平台自动调整。"
