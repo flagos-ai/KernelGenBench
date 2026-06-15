@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: KernelGenBench Documentation \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-15 10:42+0800\n"
+"POT-Creation-Date: 2026-06-15 18:12+0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: zh_CN\n"
@@ -28,8 +28,7 @@ msgstr "数据集"
 msgid ""
 "{term}`KernelGenBench` provides four dataset variants for different "
 "evaluation scenarios."
-msgstr ""
-"{term}`KernelGenBench` 为不同的评估场景提供了四种数据集变体。"
+msgstr "{term}`KernelGenBench` 为不同的评估场景提供了四种数据集变体。"
 
 #: ../../source/reference/datasets.md:5
 msgid "Dataset Overview"
@@ -53,8 +52,8 @@ msgstr "平台"
 
 #: ../../source/reference/datasets.md
 #, python-brace-format
-msgid "`{term}`KernelGenBench``"
-msgstr "`{term}`KernelGenBench``"
+msgid "{term}`KernelGenBench`"
+msgstr "{term}`KernelGenBench`"
 
 #: ../../source/reference/datasets.md
 msgid "210"
@@ -71,8 +70,8 @@ msgstr "仅 NVIDIA"
 
 #: ../../source/reference/datasets.md
 #, python-brace-format
-msgid "`{term}`KernelGenBench-aten``"
-msgstr "`{term}`KernelGenBench-aten``"
+msgid "{term}`KernelGenBench-aten`"
+msgstr "{term}`KernelGenBench-aten`"
 
 #: ../../source/reference/datasets.md
 msgid "110"
@@ -89,8 +88,8 @@ msgstr "所有平台"
 
 #: ../../source/reference/datasets.md
 #, python-brace-format
-msgid "`{term}`KernelGenBench-vllm``"
-msgstr "`{term}`KernelGenBench-vllm``"
+msgid "{term}`KernelGenBench-vllm`"
+msgstr "{term}`KernelGenBench-vllm`"
 
 #: ../../source/reference/datasets.md
 msgid "50"
@@ -103,8 +102,8 @@ msgstr "仅 {term}`vLLM`"
 
 #: ../../source/reference/datasets.md
 #, python-brace-format
-msgid "`{term}`KernelGenBench-cublas``"
-msgstr "`{term}`KernelGenBench-cublas``"
+msgid "{term}`KernelGenBench-cublas`"
+msgstr "{term}`KernelGenBench-cublas`"
 
 #: ../../source/reference/datasets.md
 #, python-brace-format
@@ -294,7 +293,7 @@ msgstr "数据集选择"
 #: ../../source/reference/datasets.md:90
 #, python-brace-format
 msgid ""
-"On non-NVIDIA platforms, `{term}`KernelGenBench-aten`` is automatically "
+"On non-NVIDIA platforms, {term}`KernelGenBench-aten` is automatically "
 "selected."
-msgstr ""
-"在非 NVIDIA 平台上，会自动选择 `{term}`KernelGenBench-aten``。"
+msgstr "在非 NVIDIA 平台上，会自动选择 {term}`KernelGenBench-aten`。"
+

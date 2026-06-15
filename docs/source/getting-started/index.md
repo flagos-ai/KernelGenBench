@@ -87,7 +87,7 @@ Test with a single {term}`Operator` to verify everything works:
 python scripts/generate_kernel_and_verify.py \
     --op-name aten::add \
     --single-test \
-    --server-type openai \
+    --server-type openai \s
     --model-name gpt-4o \
     --max-rounds 3
 ```
@@ -121,7 +121,7 @@ python scripts/generate_kernel_and_verify.py \
 | `{term}`KernelGenBench-cublas`` | 50 | {term}`cuBLAS` operators only (NVIDIA only) |
 
 ```{note}
-On non-NVIDIA chips, the default dataset is automatically set to `{term}`KernelGenBench-aten` because {term}`vLLM` and {term}`cuBLAS` operators require NVIDIA GPUs.
+On non-NVIDIA chips, the default dataset is automatically set to {term}`KernelGenBench-aten` because {term}`vLLM` and {term}`cuBLAS` operators require NVIDIA GPUs.
 ```
 
 ## Hardware Detection
@@ -138,7 +138,7 @@ python -c "from kernelgenbench.runtime import get_device_type; print(get_device_
 | Issue | Solution |
 |-------|----------|
 | `ModuleNotFoundError: No module named 'kernelgenbench'` | Run `pip install -e .` in the project root |
-| `{term}`CUDA` out of memory` | Reduce `--device-count` or use smaller batch sizes |
+| {term}`CUDA` out of memory | Reduce `--device-count` or use smaller batch sizes |
 | API authentication errors | Verify your API keys are set correctly |
 | {term}`vLLM` installation conflicts on non-NVIDIA platforms | Do not install {term}`vLLM`; use vendor container images |
 

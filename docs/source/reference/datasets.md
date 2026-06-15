@@ -6,10 +6,10 @@
 
 | Dataset | Operators | Sources | Platforms |
 |---------|-----------|---------|-----------|
-| `{term}`KernelGenBench`` | 210 | {term}`ATen` + {term}`vLLM` + {term}`cuBLAS` | NVIDIA only |
-| `{term}`KernelGenBench-aten`` | 110 | {term}`ATen` only | All platforms |
-| `{term}`KernelGenBench-vllm`` | 50 | {term}`vLLM` only | NVIDIA only |
-| `{term}`KernelGenBench-cublas`` | 50 | {term}`cuBLAS` only | NVIDIA only |
+| {term}`KernelGenBench` | 210 | {term}`ATen` + {term}`vLLM` + {term}`cuBLAS` | NVIDIA only |
+| {term}`KernelGenBench-aten` | 110 | {term}`ATen` only | All platforms |
+| {term}`KernelGenBench-vllm` | 50 | {term}`vLLM` only | NVIDIA only |
+| {term}`KernelGenBench-cublas` | 50 | {term}`cuBLAS` only | NVIDIA only |
 
 ## KernelGenBench (Full)
 
@@ -87,4 +87,4 @@ python scripts/generate_kernel_and_verify.py \
     --server-type openai
 ```
 
-On non-NVIDIA platforms, `{term}`KernelGenBench-aten`` is automatically selected.
+On non-NVIDIA platforms, {term}`KernelGenBench-aten` is automatically selected.

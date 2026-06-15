@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: KernelGenBench Documentation \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-15 10:42+0800\n"
+"POT-Creation-Date: 2026-06-15 18:12+0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: zh_CN\n"
@@ -28,8 +28,7 @@ msgstr "快速开始"
 msgid ""
 "This guide helps you quickly set up {term}`KernelGenBench` and run your "
 "first evaluation."
-msgstr ""
-"本指南帮助您快速安装 {term}`KernelGenBench` 并运行您的第一次评估。"
+msgstr "本指南帮助您快速安装 {term}`KernelGenBench` 并运行您的第一次评估。"
 
 #: ../../source/getting-started/index.md:5
 msgid "Prerequisites"
@@ -66,8 +65,7 @@ msgstr "NVIDIA"
 msgid ""
 "`vllm==0.13.0` will automatically install compatible versions of torch "
 "and triton."
-msgstr ""
-"`vllm==0.13.0` 将自动安装兼容版本的 torch 和 triton。"
+msgstr "`vllm==0.13.0` 将自动安装兼容版本的 torch 和 triton。"
 
 #: ../../source/getting-started/index.md:26
 msgid "Domestic Chips (Ascend / MUSA / Hygon / Iluvatar / MetaX)"
@@ -80,8 +78,8 @@ msgid ""
 "vendor-provided Docker image to start a container, then install "
 "KernelGenBench inside it:"
 msgstr ""
-"在国产芯片上，torch 和芯片特定的运行时（如 torch_npu、torch_musa）已预先安装在厂商容器镜像中。"
-"使用厂商提供的 Docker 镜像启动容器，然后在其中安装 KernelGenBench："
+"在国产芯片上，torch 和芯片特定的运行时（如 torch_npu、torch_musa）已预先安装在厂商容器镜像中。使用厂商提供的 "
+"Docker 镜像启动容器，然后在其中安装 KernelGenBench："
 
 #: ../../source/getting-started/index.md:49
 msgid "**Note**: Do NOT install vllm on non-NVIDIA platforms — it is NVIDIA-only."
@@ -152,8 +150,8 @@ msgstr "描述"
 
 #: ../../source/getting-started/index.md
 #, python-brace-format
-msgid "`{term}`KernelGenBench``"
-msgstr "`{term}`KernelGenBench``"
+msgid "{term}`KernelGenBench`"
+msgstr "{term}`KernelGenBench`"
 
 #: ../../source/getting-started/index.md
 msgid "210"
@@ -166,8 +164,8 @@ msgstr "完整集合（{term}`ATen` + {term}`vLLM` + {term}`cuBLAS`）"
 
 #: ../../source/getting-started/index.md
 #, python-brace-format
-msgid "`{term}`KernelGenBench-aten``"
-msgstr "`{term}`KernelGenBench-aten``"
+msgid "{term}`KernelGenBench-aten`"
+msgstr "{term}`KernelGenBench-aten`"
 
 #: ../../source/getting-started/index.md
 msgid "110"
@@ -180,8 +178,8 @@ msgstr "仅 {term}`ATen` 算子"
 
 #: ../../source/getting-started/index.md
 #, python-brace-format
-msgid "`{term}`KernelGenBench-vllm``"
-msgstr "`{term}`KernelGenBench-vllm``"
+msgid "{term}`KernelGenBench-vllm`"
+msgstr "{term}`KernelGenBench-vllm`"
 
 #: ../../source/getting-started/index.md
 msgid "50"
@@ -194,8 +192,8 @@ msgstr "仅 {term}`vLLM` 算子（仅限 NVIDIA）"
 
 #: ../../source/getting-started/index.md
 #, python-brace-format
-msgid "`{term}`KernelGenBench-cublas``"
-msgstr "`{term}`KernelGenBench-cublas``"
+msgid "{term}`KernelGenBench-cublas`"
+msgstr "{term}`KernelGenBench-cublas`"
 
 #: ../../source/getting-started/index.md
 #, python-brace-format
@@ -205,12 +203,12 @@ msgstr "仅 {term}`cuBLAS` 算子（仅限 NVIDIA）"
 #: ../../source/getting-started/index.md:124
 #, python-brace-format
 msgid ""
-"On non-NVIDIA chips, the default dataset is automatically set to `{term"
+"On non-NVIDIA chips, the default dataset is automatically set to {term"
 "}`KernelGenBench-aten` because {term}`vLLM` and {term}`cuBLAS` operators "
 "require NVIDIA GPUs."
 msgstr ""
-"在非 NVIDIA 芯片上，默认数据集自动设置为 `{term}`KernelGenBench-aten`，"
-"因为 {term}`vLLM` 和 {term}`cuBLAS` 算子需要 NVIDIA GPU。"
+"在非 NVIDIA 芯片上，默认数据集自动设置为 {term}`KernelGenBench-aten`，因为 {term}`vLLM` 和 "
+"{term}`cuBLAS` 算子需要 NVIDIA GPU。"
 
 #: ../../source/getting-started/index.md:127
 msgid "Hardware Detection"
@@ -243,8 +241,8 @@ msgstr "在项目根目录运行 `pip install -e .`"
 
 #: ../../source/getting-started/index.md:123
 #, python-brace-format
-msgid "`{term}`CUDA` out of memory`"
-msgstr "`{term}`CUDA` 内存不足`"
+msgid "{term}`CUDA` out of memory"
+msgstr "{term}`CUDA` 内存不足"
 
 #: ../../source/getting-started/index.md:123
 msgid "Reduce `--device-count` or use smaller batch sizes"
@@ -285,16 +283,15 @@ msgstr "[功能](../features/index.md) - 探索所有功能"
 msgid ""
 "[LLM Track](../operation-guide/llm-track/index.md) - Detailed LLM "
 "evaluation"
-msgstr ""
-"[LLM 赛道](../operation-guide/llm-track/index.md) - 详细的 LLM 评估"
+msgstr "[LLM 赛道](../operation-guide/llm-track/index.md) - 详细的 LLM 评估"
 
 #: ../../source/getting-started/index.md:150
 msgid ""
 "[Agent Track](../operation-guide/agent-track/index.md) - Detailed Agent "
 "evaluation"
-msgstr ""
-"[智能体赛道](../operation-guide/agent-track/index.md) - 详细的智能体评估"
+msgstr "[智能体赛道](../operation-guide/agent-track/index.md) - 详细的智能体评估"
 
 #: ../../source/getting-started/index.md:151
 msgid "[FAQ](../faq/index.md) - Frequently asked questions"
 msgstr "[常见问题](../faq/index.md) - 常见问题解答"
+

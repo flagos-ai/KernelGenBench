@@ -32,6 +32,8 @@ extensions = [
     "sphinx.ext.extlinks",
     "sphinx.ext.intersphinx",
     "sphinxext.opengraph",
+    "sphinx_tippy",
+    "sphinx_togglebutton",
 ]
 
 templates_path = ["../_templates"]
@@ -71,13 +73,37 @@ html_static_path = ["../_static"]
 html_css_files = []
 html_js_files = []
 
-html_theme_options = {
-    "home_page_in_toc": True,
-    "use_download_button": False,
-    "repository_url": "https://github.com/flagos-ai/KernelGenBench",
-    "use_edit_page_button": True,
-    "use_repository_button": True,
-}
+# Logo and favicon configuration based on language
+# Read the Docs builds each language separately with -D language=zh_CN
+if language == "zh_CN":
+    html_logo = "../_static/images/logos/zh-logo.svg"
+    html_theme_options = {
+        "home_page_in_toc": True,
+        "use_download_button": False,
+        "repository_url": "https://github.com/flagos-ai/KernelGenBench",
+        "use_edit_page_button": True,
+        "use_repository_button": True,
+        "logo": {
+            "image_light": "../_static/images/logos/zh-logo.svg",
+            "image_dark": "../_static/images/logos/zh-logo-dark.svg",
+        },
+    }
+else:
+    # Default to English
+    html_logo = "../_static/images/logos/en-logo.svg"
+    html_theme_options = {
+        "home_page_in_toc": True,
+        "use_download_button": False,
+        "repository_url": "https://github.com/flagos-ai/KernelGenBench",
+        "use_edit_page_button": True,
+        "use_repository_button": True,
+        "logo": {
+            "image_light": "../_static/images/logos/en-logo.svg",
+            "image_dark": "../_static/images/logos/en-logo-dark.svg",
+        },
+    }
+
+html_favicon = "../_static/images/logos/favicon.svg"
 
 htmlhelp_basename = "KernelGenBenchdoc"
 

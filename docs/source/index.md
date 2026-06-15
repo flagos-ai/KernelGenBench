@@ -1,49 +1,158 @@
 # KernelGenBench Documentation
 
-A benchmark framework for evaluating {term}`LLM` and agent-based {term}`Triton` kernel generation.
+A benchmark framework for evaluating LLM and agent-based Triton kernel generation across multiple hardware platforms.
 
-```{toctree}
-:maxdepth: 2
-:caption: Contents
+```{button-ref} getting-started/index
+:ref-type: myst
+:color: primary
+:class: sd-btn-lg sd-px-4 sd-py-2 sd-fw-bold
 
-overview/index
-getting-started/index
-features/index
-operation-guide/index
-reference/index
-development/index
-faq/index
-glossary/index
+Getting Started
 ```
 
-## Quick Links
+::::{grid} 1 2 2 3
+:gutter: 1 1 1 2
 
-| Resource | Description |
-|----------|-------------|
-| [Getting Started](getting-started/index.md) | Install and run your first benchmark |
-| [LLM Track](operation-guide/llm-track/index.md) | {term}`Pass@K` evaluation |
-| [Agent Track](operation-guide/agent-track/index.md) | {term}`Agent`-based evaluation |
-| [FAQ](faq/index.md) | Common questions |
-| [Glossary](glossary/index.md) | Technical terminology |
+:::{grid-item-card} {octicon}`browser;1.5em;sd-mr-1` Overview
+:link: overview/index
+:link-type: doc
 
-## About
+Learn what KernelGenBench is, why it matters, and what it can do for you.
 
-{term}`KernelGenBench` is a component of [FlagOS](https://flagos.io/) — a unified, open-source AI system software stack.
++++
+[Learn more »](overview/index)
+:::
 
-### Key Features
+:::{grid-item-card} {octicon}`beaker;1.5em;sd-mr-1` Features
+:link: features/index
+:link-type: doc
 
-- **210 operators** across {term}`ATen`, {term}`vLLM`, and {term}`cuBLAS`
-- **6 hardware platforms** (NVIDIA, Ascend, MUSA, Hygon, Iluvatar, MetaX)
-- **Two evaluation tracks**: LLM Track and {term}`Agent` Track
-- **Automatic verification**: accuracy testing with tolerance-based comparison
+Explore multi-source operators, multi-chip support, anti-hack validation, and evaluation metrics.
 
-## Citation
++++
+[Learn more »](features/index)
+:::
 
-```bibtex
-@software{kernelgenbench2026,
-  title={KernelGenBench: A Benchmark for LLM and Agent-Based Triton Kernel Generation},
-  author={KernelGen Team},
-  url={https://github.com/flagos-ai/KernelGenBench},
-  year={2026}
-}
+:::{grid-item-card} {octicon}`rocket;1.5em;sd-mr-1` LLM Track
+:link: operation-guide/llm-track/index
+:link-type: doc
+
+Evaluate LLMs on generating Triton kernels with Pass@K metric.
+
++++
+[Learn more »](operation-guide/llm-track/index)
+:::
+
+:::{grid-item-card} {octicon}`hub;1.5em;sd-mr-1` Agent Track
+:link: operation-guide/agent-track/index
+:link-type: doc
+
+Evaluate coding agents that iteratively generate, verify, and optimize kernels.
+
++++
+[Learn more »](operation-guide/agent-track/index)
+:::
+
+:::{grid-item-card} {octicon}`book;1.5em;sd-mr-1` Reference
+:link: reference/index
+:link-type: doc
+
+Datasets, operators, hardware platforms, and technical specifications.
+
++++
+[Learn more »](reference/index)
+:::
+
+:::{grid-item-card} {octicon}`tools;1.5em;sd-mr-1` Development
+:link: development/index
+:link-type: doc
+
+Contributing guides, custom operators, and extending the framework.
+
++++
+[Learn more »](development/index)
+:::
+
+::::
+
+---
+
+```{toctree}
+:caption: 📚 Overview
+:maxdepth: 2
+:hidden:
+
+overview/index.md
+overview/what-is.md
+overview/why-kernelgenbench.md
+overview/capabilities.md
+overview/results.md
+```
+
+```{toctree}
+:caption: 🚀 Getting Started
+:maxdepth: 2
+:hidden:
+
+getting-started/index.md
+```
+
+```{toctree}
+:caption: 🔬 Features
+:maxdepth: 2
+:hidden:
+
+features/index.md
+features/multi-source.md
+features/multi-chip.md
+features/anti-hack.md
+features/metrics.md
+```
+
+```{toctree}
+:caption: 📖 Operation Guide
+:maxdepth: 3
+:hidden:
+
+operation-guide/index.md
+operation-guide/llm-track/index.md
+operation-guide/llm-track/commands.md
+operation-guide/llm-track/parameters.md
+operation-guide/llm-track/examples.md
+operation-guide/agent-track/index.md
+operation-guide/agent-track/setup.md
+operation-guide/agent-track/methods.md
+operation-guide/agent-track/commands.md
+operation-guide/agent-track/cost-analysis.md
+```
+
+```{toctree}
+:caption: 📑 Reference
+:maxdepth: 2
+:hidden:
+
+reference/index.md
+reference/datasets.md
+reference/operators.md
+reference/hardware.md
+```
+
+```{toctree}
+:caption: 🔧 Development
+:maxdepth: 2
+:hidden:
+
+development/index.md
+development/contributing.md
+development/custom-operators.md
+development/extending.md
+```
+
+```{toctree}
+:caption: ❓ FAQ & Glossary
+:maxdepth: 2
+:hidden:
+
+faq/index.md
+glossary/index.md
 ```
