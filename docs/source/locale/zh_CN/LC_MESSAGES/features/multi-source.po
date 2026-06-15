@@ -1,0 +1,291 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2026, FlagOS Community
+# This file is distributed under the same license as the KernelGenBench
+# Documentation package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: KernelGenBench Documentation \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-06-15 10:42+0800\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: zh_CN\n"
+"Language-Team: zh_CN <LL@li.org>\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.17.0\n"
+
+#: ../../source/features/multi-source.md:1
+msgid "Multi-Source Operators"
+msgstr "多源算子"
+
+#: ../../source/features/multi-source.md:3
+#, python-brace-format
+msgid ""
+"{term}`KernelGenBench` evaluates kernel generation for 210 operators from"
+" three different sources, each representing different complexity levels "
+"and real-world application scenarios."
+msgstr ""
+"{term}`KernelGenBench` 评估来自三个不同来源的 210 个算子的内核生成能力，每个来源代表不同的复杂度和实际应用场景。"
+
+#: ../../source/features/multi-source.md:5
+msgid "Overview"
+msgstr "概述"
+
+#: ../../source/features/multi-source.md
+msgid "Source"
+msgstr "来源"
+
+#: ../../source/features/multi-source.md
+msgid "Operator Count"
+msgstr "算子数量"
+
+#: ../../source/features/multi-source.md
+msgid "Description"
+msgstr "描述"
+
+#: ../../source/features/multi-source.md
+#, python-brace-format
+msgid "{term}`ATen`"
+msgstr "{term}`ATen`"
+
+#: ../../source/features/multi-source.md
+msgid "110"
+msgstr "110"
+
+#: ../../source/features/multi-source.md
+msgid "PyTorch native operators"
+msgstr "PyTorch 原生算子"
+
+#: ../../source/features/multi-source.md
+#, python-brace-format
+msgid "{term}`vLLM`"
+msgstr "{term}`vLLM`"
+
+#: ../../source/features/multi-source.md
+msgid "50"
+msgstr "50"
+
+#: ../../source/features/multi-source.md
+msgid "LLM inference kernels"
+msgstr "大语言模型推理内核"
+
+#: ../../source/features/multi-source.md
+#, python-brace-format
+msgid "{term}`cuBLAS`"
+msgstr "{term}`cuBLAS`"
+
+#: ../../source/features/multi-source.md
+msgid "Closed-source library reimplementation"
+msgstr "闭源库重实现"
+
+#: ../../source/features/multi-source.md:13
+msgid "ATen Operators"
+msgstr "ATen 算子"
+
+#: ../../source/features/multi-source.md:15
+#, python-brace-format
+msgid ""
+"PyTorch {term}`ATen` operators are core computational building blocks "
+"used in deep learning frameworks."
+msgstr ""
+"PyTorch {term}`ATen` 算子是深度学习框架中使用的核心计算构建块。"
+
+#: ../../source/features/multi-source.md:17
+msgid "Selection Criteria"
+msgstr "选择标准"
+
+#: ../../source/features/multi-source.md:19
+msgid ""
+"Selected the top 50 most frequently used operators from 2,907 open-source"
+" model training traces"
+msgstr "从 2,907 个开源模型训练轨迹中选择使用频率最高的前 50 个算子"
+
+#: ../../source/features/multi-source.md:20
+msgid "Evenly sampled 60 long-tail operators"
+msgstr "均匀采样 60 个长尾算子"
+
+#: ../../source/features/multi-source.md:21
+msgid "Total: 110 operators selected from 900+ ATen APIs"
+msgstr "总计：从 900+ ATen API 中选择 110 个算子"
+
+#: ../../source/features/multi-source.md:23
+msgid "Examples"
+msgstr "示例"
+
+#: ../../source/features/multi-source.md:25
+msgid "`softmax`, `matmul`, `embedding`, `cumsum`, `add.Tensor`"
+msgstr "`softmax`、`matmul`、`embedding`、`cumsum`、`add.Tensor`"
+
+#: ../../source/features/multi-source.md:27
+msgid "Prompt Construction"
+msgstr "提示词构建"
+
+#: ../../source/features/multi-source.md:29
+msgid "Dynamic extraction of FunctionSchema"
+msgstr "动态提取 FunctionSchema"
+
+#: ../../source/features/multi-source.md:30
+msgid "Official PyTorch docstrings"
+msgstr "官方 PyTorch 文档字符串"
+
+#: ../../source/features/multi-source.md:31
+msgid "All overload variants as independent problems"
+msgstr "所有重载变体作为独立问题"
+
+#: ../../source/features/multi-source.md:33
+#: ../../source/features/multi-source.md:81
+msgid "Baseline"
+msgstr "基准"
+
+#: ../../source/features/multi-source.md:35
+msgid "PyTorch native C++ implementation"
+msgstr "PyTorch 原生 C++ 实现"
+
+#: ../../source/features/multi-source.md:37
+msgid "vLLM Operators"
+msgstr "vLLM 算子"
+
+#: ../../source/features/multi-source.md:39
+#, python-brace-format
+msgid ""
+"Production-grade {term}`LLM` inference kernels from {term}`vLLM` "
+"(v0.13.0)."
+msgstr ""
+"来自 {term}`vLLM`（v0.13.0）的生产级 {term}`大语言模型` 推理内核。"
+
+#: ../../source/features/multi-source.md:41
+msgid "Coverage"
+msgstr "覆盖范围"
+
+#: ../../source/features/multi-source.md:43
+#, python-brace-format
+msgid "Attention mechanism ({term}`PagedAttention` v1)"
+msgstr "注意力机制（{term}`PagedAttention` v1）"
+
+#: ../../source/features/multi-source.md:44
+msgid "KV cache management"
+msgstr "KV 缓存管理"
+
+#: ../../source/features/multi-source.md:45
+msgid "Mixed precision quantization (FP8/AWQ)"
+msgstr "混合精度量化（FP8/AWQ）"
+
+#: ../../source/features/multi-source.md:47
+#: ../../source/features/multi-source.md:77
+msgid "Challenges"
+msgstr "挑战"
+
+#: ../../source/features/multi-source.md:49
+msgid ""
+"Complex memory layout management and algorithmic logic make functional "
+"correctness highly challenging."
+msgstr "复杂的内存布局管理和算法逻辑使功能正确性极具挑战。"
+
+#: ../../source/features/multi-source.md:51
+msgid "Goal"
+msgstr "目标"
+
+#: ../../source/features/multi-source.md:53
+msgid "Verify the ability to generate practical inference acceleration kernels."
+msgstr "验证生成实际推理加速内核的能力。"
+
+#: ../../source/features/multi-source.md:55
+msgid "cuBLAS Operators"
+msgstr "cuBLAS 算子"
+
+#: ../../source/features/multi-source.md:57
+#, python-brace-format
+msgid "Closed-source library reimplementation targeting {term}`cuBLAS` (v12.4)."
+msgstr "针对 {term}`cuBLAS`（v12.4）的闭源库重实现。"
+
+#: ../../source/features/multi-source.md:59
+msgid "Selection Strategy"
+msgstr "选择策略"
+
+#: ../../source/features/multi-source.md:61
+msgid "Selected top 10 most frequently called routines via profiling traces"
+msgstr "通过性能分析轨迹选择调用最频繁的前 10 个例程"
+
+#: ../../source/features/multi-source.md:62
+msgid "Extended across different precisions (S/D/C/Z/H) and batching modes"
+msgstr "扩展到不同精度（S/D/C/Z/H）和批处理模式"
+
+#: ../../source/features/multi-source.md:63
+msgid "Strategic sampling of diverse BLAS routines"
+msgstr "对多样化 BLAS 例程进行策略性采样"
+
+#: ../../source/features/multi-source.md:65
+msgid "API Variants"
+msgstr "API 变体"
+
+#: ../../source/features/multi-source.md:67
+#, python-brace-format
+msgid "A single {term}`GEMM` family yields 14 independent problems:"
+msgstr "单个 {term}`GEMM` 系列产生 14 个独立问题："
+
+#: ../../source/features/multi-source.md
+msgid "Precision"
+msgstr "精度"
+
+#: ../../source/features/multi-source.md
+msgid "Standard"
+msgstr "标准"
+
+#: ../../source/features/multi-source.md
+msgid "StridedBatched"
+msgstr "StridedBatched"
+
+#: ../../source/features/multi-source.md
+msgid "Batched"
+msgstr "Batched"
+
+#: ../../source/features/multi-source.md
+msgid "64-bit Index"
+msgstr "64 位索引"
+
+#: ../../source/features/multi-source.md
+msgid "Float32"
+msgstr "Float32"
+
+#: ../../source/features/multi-source.md
+msgid "cublasSgemm"
+msgstr "cublasSgemm"
+
+#: ../../source/features/multi-source.md
+msgid "✓"
+msgstr "✓"
+
+#: ../../source/features/multi-source.md
+msgid "Float64"
+msgstr "Float64"
+
+#: ../../source/features/multi-source.md
+msgid "—"
+msgstr "—"
+
+#: ../../source/features/multi-source.md
+msgid "Complex64"
+msgstr "Complex64"
+
+#: ../../source/features/multi-source.md
+msgid "Complex128"
+msgstr "Complex128"
+
+#: ../../source/features/multi-source.md
+msgid "Float16"
+msgstr "Float16"
+
+#: ../../source/features/multi-source.md:79
+msgid "Matching decades of expert hand-tuned performance is extremely difficult."
+msgstr "达到数十年专家手工优化的性能极为困难。"
+
+#: ../../source/features/multi-source.md:83
+msgid ""
+"Direct loading of `libcublas.so` via `ctypes.cdll`, bypassing high-level "
+"wrappers."
+msgstr "通过 `ctypes.cdll` 直接加载 `libcublas.so`，绕过高级封装。"

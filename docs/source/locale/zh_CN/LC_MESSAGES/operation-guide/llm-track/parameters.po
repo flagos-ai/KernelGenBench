@@ -1,0 +1,320 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2026, FlagOS Community
+# This file is distributed under the same license as the KernelGenBench
+# Documentation package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: KernelGenBench Documentation \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-06-15 10:42+0800\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: zh_CN\n"
+"Language-Team: zh_CN <LL@li.org>\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.17.0\n"
+
+#: ../../source/operation-guide/llm-track/parameters.md:1
+msgid "Parameters"
+msgstr "参数"
+
+#: ../../source/operation-guide/llm-track/parameters.md:3
+msgid "LLM Track command-line parameters."
+msgstr "LLM 赛道命令行参数。"
+
+#: ../../source/operation-guide/llm-track/parameters.md:5
+msgid "Required Parameters"
+msgstr "必需参数"
+
+#: ../../source/operation-guide/llm-track/parameters.md
+msgid "Parameter"
+msgstr "参数"
+
+#: ../../source/operation-guide/llm-track/parameters.md
+msgid "Description"
+msgstr "描述"
+
+#: ../../source/operation-guide/llm-track/parameters.md
+msgid "`--server-type`"
+msgstr "`--server-type`"
+
+#: ../../source/operation-guide/llm-track/parameters.md
+msgid "LLM provider: `openai` or `anthropic`"
+msgstr "LLM 提供商：`openai` 或 `anthropic`"
+
+#: ../../source/operation-guide/llm-track/parameters.md
+msgid "`--model-name`"
+msgstr "`--model-name`"
+
+#: ../../source/operation-guide/llm-track/parameters.md
+msgid "Model identifier"
+msgstr "模型标识符"
+
+#: ../../source/operation-guide/llm-track/parameters.md:12
+msgid "Optional Parameters"
+msgstr "可选参数"
+
+#: ../../source/operation-guide/llm-track/parameters.md
+msgid "Default"
+msgstr "默认值"
+
+#: ../../source/operation-guide/llm-track/parameters.md
+msgid "`--op-name`"
+msgstr "`--op-name`"
+
+#: ../../source/operation-guide/llm-track/parameters.md
+msgid "All"
+msgstr "全部"
+
+#: ../../source/operation-guide/llm-track/parameters.md
+msgid "Test a single operator (e.g., `aten::add`)"
+msgstr "测试单个算子（例如 `aten::add`）"
+
+#: ../../source/operation-guide/llm-track/parameters.md
+msgid "`--single-test`"
+msgstr "`--single-test`"
+
+#: ../../source/operation-guide/llm-track/parameters.md
+msgid "Off"
+msgstr "关闭"
+
+#: ../../source/operation-guide/llm-track/parameters.md
+msgid "Randomly select 1 operator for quick testing"
+msgstr "随机选择 1 个算子进行快速测试"
+
+#: ../../source/operation-guide/llm-track/parameters.md
+msgid "`--dataset`"
+msgstr "`--dataset`"
+
+#: ../../source/operation-guide/llm-track/parameters.md
+msgid "Auto"
+msgstr "自动"
+
+#: ../../source/operation-guide/llm-track/parameters.md
+msgid ""
+"Dataset: `KernelGenBench`, `KernelGenBench-aten`, `KernelGenBench-vllm`, "
+"`KernelGenBench-cublas`"
+msgstr ""
+"数据集：`KernelGenBench`、`KernelGenBench-aten`、`KernelGenBench-vllm`、"
+"`KernelGenBench-cublas`"
+
+#: ../../source/operation-guide/llm-track/parameters.md
+msgid "`--max-rounds`"
+msgstr "`--max-rounds`"
+
+#: ../../source/operation-guide/llm-track/parameters.md
+msgid "10"
+msgstr "10"
+
+#: ../../source/operation-guide/llm-track/parameters.md
+msgid "Number of Pass@K rounds"
+msgstr "Pass@K 轮数"
+
+#: ../../source/operation-guide/llm-track/parameters.md
+msgid "`--device-count`"
+msgstr "`--device-count`"
+
+#: ../../source/operation-guide/llm-track/parameters.md
+msgid "8"
+msgstr "8"
+
+#: ../../source/operation-guide/llm-track/parameters.md
+msgid "Number of GPUs for verification"
+msgstr "用于验证的 GPU 数量"
+
+#: ../../source/operation-guide/llm-track/parameters.md
+msgid "`--timeout`"
+msgstr "`--timeout`"
+
+#: ../../source/operation-guide/llm-track/parameters.md
+msgid "300"
+msgstr "300"
+
+#: ../../source/operation-guide/llm-track/parameters.md
+msgid "Timeout per operator (seconds)"
+msgstr "每个算子的超时时间（秒）"
+
+#: ../../source/operation-guide/llm-track/parameters.md
+msgid "`--temperature`"
+msgstr "`--temperature`"
+
+#: ../../source/operation-guide/llm-track/parameters.md
+msgid "0.8"
+msgstr "0.8"
+
+#: ../../source/operation-guide/llm-track/parameters.md
+msgid "Sampling temperature"
+msgstr "采样温度"
+
+#: ../../source/operation-guide/llm-track/parameters.md
+msgid "`--reflection`"
+msgstr "`--reflection`"
+
+#: ../../source/operation-guide/llm-track/parameters.md
+msgid "Use errors from previous rounds as feedback"
+msgstr "使用前几轮的错误作为反馈"
+
+#: ../../source/operation-guide/llm-track/parameters.md
+msgid "`--resume-from`"
+msgstr "`--resume-from`"
+
+#: ../../source/operation-guide/llm-track/parameters.md
+msgid "-"
+msgstr "-"
+
+#: ../../source/operation-guide/llm-track/parameters.md
+msgid "Resume from checkpoint directory"
+msgstr "从检查点目录恢复"
+
+#: ../../source/operation-guide/llm-track/parameters.md
+msgid "`--debug`"
+msgstr "`--debug`"
+
+#: ../../source/operation-guide/llm-track/parameters.md
+msgid "Debug mode (8 operators only)"
+msgstr "调试模式（仅 8 个算子）"
+
+#: ../../source/operation-guide/llm-track/parameters.md:27
+msgid "Parameter Details"
+msgstr "参数详情"
+
+#: ../../source/operation-guide/llm-track/parameters.md:29
+msgid "--op-name"
+msgstr "--op-name"
+
+#: ../../source/operation-guide/llm-track/parameters.md:31
+msgid "Specify a single operator to test:"
+msgstr "指定要测试的单个算子："
+
+#: ../../source/operation-guide/llm-track/parameters.md:44
+msgid "--dataset"
+msgstr "--dataset"
+
+#: ../../source/operation-guide/llm-track/parameters.md
+msgid "Dataset"
+msgstr "数据集"
+
+#: ../../source/operation-guide/llm-track/parameters.md
+msgid "Operators"
+msgstr "算子"
+
+#: ../../source/operation-guide/llm-track/parameters.md
+msgid "Platforms"
+msgstr "平台"
+
+#: ../../source/operation-guide/llm-track/parameters.md
+msgid "`KernelGenBench`"
+msgstr "`KernelGenBench`"
+
+#: ../../source/operation-guide/llm-track/parameters.md
+msgid "210"
+msgstr "210"
+
+#: ../../source/operation-guide/llm-track/parameters.md
+msgid "NVIDIA only"
+msgstr "仅 NVIDIA"
+
+#: ../../source/operation-guide/llm-track/parameters.md
+msgid "`KernelGenBench-aten`"
+msgstr "`KernelGenBench-aten`"
+
+#: ../../source/operation-guide/llm-track/parameters.md
+msgid "110"
+msgstr "110"
+
+#: ../../source/operation-guide/llm-track/parameters.md
+msgid "All platforms"
+msgstr "所有平台"
+
+#: ../../source/operation-guide/llm-track/parameters.md
+msgid "`KernelGenBench-vllm`"
+msgstr "`KernelGenBench-vllm`"
+
+#: ../../source/operation-guide/llm-track/parameters.md
+msgid "50"
+msgstr "50"
+
+#: ../../source/operation-guide/llm-track/parameters.md
+msgid "`KernelGenBench-cublas`"
+msgstr "`KernelGenBench-cublas`"
+
+#: ../../source/operation-guide/llm-track/parameters.md:53
+msgid "--temperature"
+msgstr "--temperature"
+
+#: ../../source/operation-guide/llm-track/parameters.md
+msgid "Value"
+msgstr "值"
+
+#: ../../source/operation-guide/llm-track/parameters.md
+msgid "Usage"
+msgstr "用途"
+
+#: ../../source/operation-guide/llm-track/parameters.md
+msgid "0"
+msgstr "0"
+
+#: ../../source/operation-guide/llm-track/parameters.md
+msgid "Pass@1 evaluation (deterministic)"
+msgstr "Pass@1 评估（确定性）"
+
+#: ../../source/operation-guide/llm-track/parameters.md
+msgid "Pass@5 evaluation (diverse sampling)"
+msgstr "Pass@5 评估（多样化采样）"
+
+#: ../../source/operation-guide/llm-track/parameters.md:60
+msgid "--max-rounds"
+msgstr "--max-rounds"
+
+#: ../../source/operation-guide/llm-track/parameters.md:62
+msgid "Number of independent kernel samples to generate:"
+msgstr "要生成的独立内核样本数量："
+
+#: ../../source/operation-guide/llm-track/parameters.md:63
+msgid "Higher values → better Pass@K coverage"
+msgstr "更高的值 → 更好的 Pass@K 覆盖率"
+
+#: ../../source/operation-guide/llm-track/parameters.md:64
+msgid "Higher cost → more API calls"
+msgstr "更高的成本 → 更多的 API 调用"
+
+#: ../../source/operation-guide/llm-track/parameters.md:66
+msgid "Output"
+msgstr "输出"
+
+#: ../../source/operation-guide/llm-track/parameters.md:68
+msgid "Results saved to `output/pass_at_k/<timestamp>/`:"
+msgstr "结果保存到 `output/pass_at_k/<timestamp>/`："
+
+#: ../../source/operation-guide/llm-track/parameters.md
+msgid "File"
+msgstr "文件"
+
+#: ../../source/operation-guide/llm-track/parameters.md
+msgid "`results.json`"
+msgstr "`results.json`"
+
+#: ../../source/operation-guide/llm-track/parameters.md
+msgid "Complete results"
+msgstr "完整结果"
+
+#: ../../source/operation-guide/llm-track/parameters.md
+msgid "`kernels/`"
+msgstr "`kernels/`"
+
+#: ../../source/operation-guide/llm-track/parameters.md
+msgid "Generated kernel files"
+msgstr "生成的内核文件"
+
+#: ../../source/operation-guide/llm-track/parameters.md
+msgid "`checkpoints/`"
+msgstr "`checkpoints/`"
+
+#: ../../source/operation-guide/llm-track/parameters.md
+msgid "Resume checkpoints"
+msgstr "恢复检查点"

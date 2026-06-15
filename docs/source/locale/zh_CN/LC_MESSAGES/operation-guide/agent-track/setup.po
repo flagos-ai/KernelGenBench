@@ -1,0 +1,93 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2026, FlagOS Community
+# This file is distributed under the same license as the KernelGenBench
+# Documentation package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: KernelGenBench Documentation \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-06-15 10:42+0800\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: zh_CN\n"
+"Language-Team: zh_CN <LL@li.org>\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.17.0\n"
+
+#: ../../source/operation-guide/agent-track/setup.md:1
+msgid "Setup"
+msgstr "设置"
+
+#: ../../source/operation-guide/agent-track/setup.md:3
+msgid "Configure your environment for the Agent Track evaluation."
+msgstr "为智能体赛道评估配置环境。"
+
+#: ../../source/operation-guide/agent-track/setup.md:5
+msgid "Option A: Single Environment (Recommended)"
+msgstr "选项 A：单一环境（推荐）"
+
+#: ../../source/operation-guide/agent-track/setup.md:7
+msgid "Install Claude Code CLI into the same environment with torch/vllm:"
+msgstr "将 Claude Code CLI 安装到与 torch/vllm 相同的环境中："
+
+#: ../../source/operation-guide/agent-track/setup.md:15
+#: ../../source/operation-guide/agent-track/setup.md:30
+msgid "Edit `config.yaml`:"
+msgstr "编辑 `config.yaml`："
+
+#: ../../source/operation-guide/agent-track/setup.md:22
+msgid "Option B: Separate Environments"
+msgstr "选项 B：独立环境"
+
+#: ../../source/operation-guide/agent-track/setup.md:24
+msgid "If Claude Code is installed in a different environment:"
+msgstr "如果 Claude Code 安装在不同的环境中："
+
+#: ../../source/operation-guide/agent-track/setup.md:37
+msgid "When running, export PATH:"
+msgstr "运行时，导出 PATH："
+
+#: ../../source/operation-guide/agent-track/setup.md:44
+msgid "Configuration Fields"
+msgstr "配置字段"
+
+#: ../../source/operation-guide/agent-track/setup.md
+msgid "Field"
+msgstr "字段"
+
+#: ../../source/operation-guide/agent-track/setup.md
+msgid "Description"
+msgstr "描述"
+
+#: ../../source/operation-guide/agent-track/setup.md
+msgid "`paths.python`"
+msgstr "`paths.python`"
+
+#: ../../source/operation-guide/agent-track/setup.md
+msgid "Python interpreter with torch + vllm + kernelgenbench"
+msgstr "包含 torch + vllm + kernelgenbench 的 Python 解释器"
+
+#: ../../source/operation-guide/agent-track/setup.md
+msgid "`agent.bin`"
+msgstr "`agent.bin`"
+
+#: ../../source/operation-guide/agent-track/setup.md
+msgid "Path to agent CLI executable (default: `claude`)"
+msgstr "智能体 CLI 可执行文件路径（默认：`claude`）"
+
+#: ../../source/operation-guide/agent-track/setup.md:51
+msgid "API Credentials"
+msgstr "API 凭证"
+
+#: ../../source/operation-guide/agent-track/setup.md:53
+msgid "Ensure your API keys are set:"
+msgstr "确保已设置您的 API 密钥："
+
+#: ../../source/operation-guide/agent-track/setup.md:63
+msgid "Verify Setup"
+msgstr "验证设置"

@@ -1,0 +1,239 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2026, FlagOS Community
+# This file is distributed under the same license as the KernelGenBench
+# Documentation package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: KernelGenBench Documentation \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-06-15 10:42+0800\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: zh_CN\n"
+"Language-Team: zh_CN <LL@li.org>\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.17.0\n"
+
+#: ../../source/operation-guide/agent-track/methods.md:1
+msgid "Methods"
+msgstr "方法"
+
+#: ../../source/operation-guide/agent-track/methods.md:3
+msgid "Available agent methods in KernelGenBench."
+msgstr "KernelGenBench 中可用的智能体方法。"
+
+#: ../../source/operation-guide/agent-track/methods.md:5
+msgid "Overview"
+msgstr "概述"
+
+#: ../../source/operation-guide/agent-track/methods.md
+msgid "Method"
+msgstr "方法"
+
+#: ../../source/operation-guide/agent-track/methods.md
+msgid "Description"
+msgstr "描述"
+
+#: ../../source/operation-guide/agent-track/methods.md
+msgid "Model Support"
+msgstr "模型支持"
+
+#: ../../source/operation-guide/agent-track/methods.md
+msgid "`naive_cc`"
+msgstr "`naive_cc`"
+
+#: ../../source/operation-guide/agent-track/methods.md
+msgid "Single Claude Code call"
+msgstr "单次 Claude Code 调用"
+
+#: ../../source/operation-guide/agent-track/methods.md
+msgid "Opus, GLM, Qwen, MiniMax"
+msgstr "Opus, GLM, Qwen, MiniMax"
+
+#: ../../source/operation-guide/agent-track/methods.md
+msgid "`normal_cc`"
+msgstr "`normal_cc`"
+
+#: ../../source/operation-guide/agent-track/methods.md
+msgid "Claude Code + self-verification loop"
+msgstr "Claude Code + 自验证循环"
+
+#: ../../source/operation-guide/agent-track/methods.md
+msgid "`naive_opencode`"
+msgstr "`naive_opencode`"
+
+#: ../../source/operation-guide/agent-track/methods.md
+msgid "Single OpenCode call"
+msgstr "单次 OpenCode 调用"
+
+#: ../../source/operation-guide/agent-track/methods.md
+msgid "`normal_opencode`"
+msgstr "`normal_opencode`"
+
+#: ../../source/operation-guide/agent-track/methods.md
+msgid "OpenCode + self-verification loop"
+msgstr "OpenCode + 自验证循环"
+
+#: ../../source/operation-guide/agent-track/methods.md
+#: ../../source/operation-guide/agent-track/methods.md:39
+msgid "AutoKernel"
+msgstr "AutoKernel"
+
+#: ../../source/operation-guide/agent-track/methods.md
+msgid "Automated kernel optimization"
+msgstr "自动化内核优化"
+
+#: ../../source/operation-guide/agent-track/methods.md
+msgid "GLM, Qwen"
+msgstr "GLM, Qwen"
+
+#: ../../source/operation-guide/agent-track/methods.md
+#: ../../source/operation-guide/agent-track/methods.md:46
+msgid "AKO4ALL"
+msgstr "AKO4ALL"
+
+#: ../../source/operation-guide/agent-track/methods.md
+msgid "Kernel optimization for all operators"
+msgstr "针对所有算子的内核优化"
+
+#: ../../source/operation-guide/agent-track/methods.md
+msgid "Opus"
+msgstr "Opus"
+
+#: ../../source/operation-guide/agent-track/methods.md
+#: ../../source/operation-guide/agent-track/methods.md:53
+msgid "cuda-optimized-skill"
+msgstr "cuda-optimized-skill"
+
+#: ../../source/operation-guide/agent-track/methods.md
+msgid "CUDA optimization with strategy memory"
+msgstr "带策略记忆的 CUDA 优化"
+
+#: ../../source/operation-guide/agent-track/methods.md:17
+msgid "Basic Agent Frameworks"
+msgstr "基础智能体框架"
+
+#: ../../source/operation-guide/agent-track/methods.md:19
+msgid "Claude Code"
+msgstr "Claude Code"
+
+#: ../../source/operation-guide/agent-track/methods.md
+msgid "Variant"
+msgstr "变体"
+
+#: ../../source/operation-guide/agent-track/methods.md
+msgid "Single generation process"
+msgstr "单次生成过程"
+
+#: ../../source/operation-guide/agent-track/methods.md
+msgid "Generation + self-verification + iterative repair"
+msgstr "生成 + 自验证 + 迭代修复"
+
+#: ../../source/operation-guide/agent-track/methods.md:26
+msgid "**Best for**: High accuracy requirements"
+msgstr "**最适用于**：高准确率需求"
+
+#: ../../source/operation-guide/agent-track/methods.md:28
+msgid "OpenCode"
+msgstr "OpenCode"
+
+#: ../../source/operation-guide/agent-track/methods.md
+msgid "Generation + self-verification loop"
+msgstr "生成 + 自验证循环"
+
+#: ../../source/operation-guide/agent-track/methods.md:35
+msgid "**Best for**: Alternative agent framework"
+msgstr "**最适用于**：替代智能体框架"
+
+#: ../../source/operation-guide/agent-track/methods.md:37
+msgid "Kernel-Specific Agents"
+msgstr "内核专用智能体"
+
+#: ../../source/operation-guide/agent-track/methods.md:41
+msgid "Automated kernel optimization pipeline:"
+msgstr "自动化内核优化流程："
+
+#: ../../source/operation-guide/agent-track/methods.md:42
+msgid "Focus on performance optimization"
+msgstr "专注于性能优化"
+
+#: ../../source/operation-guide/agent-track/methods.md:43
+msgid "Support for multiple models (GLM-5.0, Qwen3.5)"
+msgstr "支持多种模型（GLM-5.0、Qwen3.5）"
+
+#: ../../source/operation-guide/agent-track/methods.md:44
+msgid "Highest speedup results"
+msgstr "最高的加速效果"
+
+#: ../../source/operation-guide/agent-track/methods.md:48
+msgid "Kernel optimization for all operators:"
+msgstr "针对所有算子的内核优化："
+
+#: ../../source/operation-guide/agent-track/methods.md:49
+msgid "Uses Opus-4.6"
+msgstr "使用 Opus-4.6"
+
+#: ../../source/operation-guide/agent-track/methods.md:50
+msgid "Comprehensive operator coverage"
+msgstr "全面的算子覆盖"
+
+#: ../../source/operation-guide/agent-track/methods.md:51
+msgid "Good balance of accuracy and speedup"
+msgstr "准确率与加速的良好平衡"
+
+#: ../../source/operation-guide/agent-track/methods.md:55
+msgid "CUDA optimization with strategy memory:"
+msgstr "带策略记忆的 CUDA 优化："
+
+#: ../../source/operation-guide/agent-track/methods.md:56
+msgid "Leverages historical optimization strategies"
+msgstr "利用历史优化策略"
+
+#: ../../source/operation-guide/agent-track/methods.md:57
+msgid "Specialized for CUDA kernel optimization"
+msgstr "专为 CUDA 内核优化设计"
+
+#: ../../source/operation-guide/agent-track/methods.md:58
+msgid "Strategy-based approach for improved performance"
+msgstr "基于策略的方法以提升性能"
+
+#: ../../source/operation-guide/agent-track/methods.md:60
+msgid "Choosing a Method"
+msgstr "选择方法"
+
+#: ../../source/operation-guide/agent-track/methods.md
+msgid "Goal"
+msgstr "目标"
+
+#: ../../source/operation-guide/agent-track/methods.md
+msgid "Recommended Method"
+msgstr "推荐方法"
+
+#: ../../source/operation-guide/agent-track/methods.md
+msgid "High accuracy"
+msgstr "高准确率"
+
+#: ../../source/operation-guide/agent-track/methods.md
+msgid "`normal_cc` (Claude Code)"
+msgstr "`normal_cc`（Claude Code）"
+
+#: ../../source/operation-guide/agent-track/methods.md
+msgid "High speedup"
+msgstr "高加速"
+
+#: ../../source/operation-guide/agent-track/methods.md
+msgid "AutoKernel (Qwen)"
+msgstr "AutoKernel (Qwen)"
+
+#: ../../source/operation-guide/agent-track/methods.md
+msgid "Balanced performance"
+msgstr "平衡性能"
+
+#: ../../source/operation-guide/agent-track/methods.md
+msgid "Cost-effective"
+msgstr "经济高效"

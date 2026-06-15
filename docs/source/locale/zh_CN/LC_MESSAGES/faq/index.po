@@ -1,0 +1,432 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2026, FlagOS Community
+# This file is distributed under the same license as the KernelGenBench
+# Documentation package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: KernelGenBench Documentation \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-06-15 10:42+0800\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: zh_CN\n"
+"Language-Team: zh_CN <LL@li.org>\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.17.0\n"
+
+#: ../../source/faq/index.md:1
+msgid "Frequently Asked Questions"
+msgstr "常见问题"
+
+#: ../../source/faq/index.md:3
+msgid "This section answers common questions about KernelGenBench."
+msgstr "本节回答有关 KernelGenBench 的常见问题。"
+
+#: ../../source/faq/index.md:5
+msgid "Installation"
+msgstr "安装"
+
+#: ../../source/faq/index.md:7
+msgid "Q: Which Python version do I need?"
+msgstr "问：我需要哪个版本的 Python？"
+
+#: ../../source/faq/index.md:9
+msgid ""
+"**A**: Python 3.8 or higher is required. Python 3.10+ is recommended for "
+"best compatibility."
+msgstr ""
+"**答**：需要 Python 3.8 或更高版本。建议使用 Python 3.10+ 以获得最佳兼容性。"
+
+#: ../../source/faq/index.md:11
+msgid "Q: Can I use KernelGenBench on CPU-only machines?"
+msgstr "问：我可以在仅 CPU 的机器上使用 KernelGenBench 吗？"
+
+#: ../../source/faq/index.md:13
+msgid ""
+"**A**: No, KernelGenBench requires GPU hardware for kernel verification. "
+"The generated Triton kernels must be executed on actual GPU hardware."
+msgstr ""
+"**答**：不可以，KernelGenBench 需要 GPU 硬件进行内核验证。生成的 Triton 内核必须在实际的 GPU 硬件上执行。"
+
+#: ../../source/faq/index.md:15
+msgid "Q: Why does vLLM installation fail on non-NVIDIA platforms?"
+msgstr "问：为什么 vLLM 在非 NVIDIA 平台上安装失败？"
+
+#: ../../source/faq/index.md:17
+msgid ""
+"**A**: vLLM is designed for NVIDIA GPUs. On non-NVIDIA platforms, torch "
+"and triton are pre-installed in vendor container images. Do NOT install "
+"vLLM on these platforms — the ATen dataset is automatically used instead."
+msgstr ""
+"**答**：vLLM 专为 NVIDIA GPU 设计。在非 NVIDIA 平台上，torch 和 triton 已预先安装在厂商容器镜像中。"
+"不要在这些平台上安装 vLLM —— 系统会自动使用 ATen 数据集。"
+
+#: ../../source/faq/index.md:19
+msgid "Q: How do I install Claude Code CLI for the Agent Track?"
+msgstr "问：如何为智能体赛道安装 Claude Code CLI？"
+
+#: ../../source/faq/index.md:21
+msgid ""
+"**A**: Run `npm install -g @anthropic-ai/claude-code`. You'll also need "
+"an Anthropic API key set via `export ANTHROPIC_API_KEY=your_key`."
+msgstr ""
+"**答**：运行 `npm install -g @anthropic-ai/claude-code`。您还需要通过 `export ANTHROPIC_API_KEY=your_key` 设置 Anthropic API 密钥。"
+
+#: ../../source/faq/index.md:23
+msgid "Usage"
+msgstr "使用"
+
+#: ../../source/faq/index.md:25
+msgid "Q: What's the difference between LLM Track and Agent Track?"
+msgstr "问：LLM 赛道和智能体赛道有什么区别？"
+
+#: ../../source/faq/index.md:27 ../../source/faq/index.md:45
+#: ../../source/faq/index.md:52 ../../source/faq/index.md:58
+#: ../../source/faq/index.md:83
+msgid "**A**:"
+msgstr "**答**："
+
+#: ../../source/faq/index.md:28
+msgid ""
+"**LLM Track**: Tests direct kernel generation without execution feedback."
+" Lower cost, suitable for comparing base model capabilities."
+msgstr ""
+"**LLM 赛道**：测试没有执行反馈的直接内核生成。成本较低，适合比较基础模型能力。"
+
+#: ../../source/faq/index.md:29
+msgid ""
+"**Agent Track**: Tests iterative generation with execution feedback. "
+"Higher cost but better results, suitable for production-ready kernel "
+"generation."
+msgstr ""
+"**智能体赛道**：测试带有执行反馈的迭代生成。成本较高但效果更好，适合生产级内核生成。"
+
+#: ../../source/faq/index.md:31
+msgid "Q: How do I test a single operator?"
+msgstr "问：如何测试单个算子？"
+
+#: ../../source/faq/index.md:33
+msgid "**A**: Use the `--op-name` parameter:"
+msgstr "**答**：使用 `--op-name` 参数："
+
+#: ../../source/faq/index.md:43
+msgid "Q: Which dataset should I use?"
+msgstr "问：我应该使用哪个数据集？"
+
+#: ../../source/faq/index.md:46
+msgid "**NVIDIA GPUs**: Use `KernelGenBench` (210 operators) for full evaluation"
+msgstr "**NVIDIA GPU**：使用 `KernelGenBench`（210 个算子）进行完整评估"
+
+#: ../../source/faq/index.md:47
+msgid ""
+"**Non-NVIDIA platforms**: Use `KernelGenBench-aten` (110 operators), "
+"which is auto-selected"
+msgstr ""
+"**非 NVIDIA 平台**：使用 `KernelGenBench-aten`（110 个算子），系统会自动选择"
+
+#: ../../source/faq/index.md:48
+msgid ""
+"**Specific focus**: Use `KernelGenBench-vllm` for inference kernels or "
+"`KernelGenBench-cublas` for linear algebra"
+msgstr ""
+"**特定关注点**：使用 `KernelGenBench-vllm` 进行推理内核测试，或使用 `KernelGenBench-cublas` 进行线性代数测试"
+
+#: ../../source/faq/index.md:50
+msgid "Q: How long does a full benchmark take?"
+msgstr "问：完整的基准测试需要多长时间？"
+
+#: ../../source/faq/index.md:53
+msgid ""
+"LLM Track (Pass@5, 210 operators): ~6-12 hours depending on model and "
+"hardware"
+msgstr ""
+"LLM 赛道（Pass@5，210 个算子）：约 6-12 小时，取决于模型和硬件"
+
+#: ../../source/faq/index.md:54
+msgid ""
+"Agent Track (Claude Code, 210 operators): ~24-48 hours depending on "
+"operator complexity"
+msgstr ""
+"智能体赛道（Claude Code，210 个算子）：约 24-48 小时，取决于算子复杂度"
+
+#: ../../source/faq/index.md:56
+msgid "Q: How can I reduce evaluation time?"
+msgstr "问：如何减少评估时间？"
+
+#: ../../source/faq/index.md:59
+msgid "Use `--debug` mode (only 8 operators) for testing"
+msgstr "使用 `--debug` 模式（仅 8 个算子）进行测试"
+
+#: ../../source/faq/index.md:60
+msgid "Increase `--device-count` for parallel verification"
+msgstr "增加 `--device-count` 以进行并行验证"
+
+#: ../../source/faq/index.md:61
+msgid "Use smaller datasets (`KernelGenBench-aten` instead of full)"
+msgstr "使用较小的数据集（如用 `KernelGenBench-aten` 替代完整数据集）"
+
+#: ../../source/faq/index.md:62
+msgid "Use LLM Track instead of Agent Track"
+msgstr "使用 LLM 赛道而非智能体赛道"
+
+#: ../../source/faq/index.md:64
+msgid "Results"
+msgstr "结果"
+
+#: ../../source/faq/index.md:66
+msgid "Q: What does accuracy mean?"
+msgstr "问：准确率是什么意思？"
+
+#: ../../source/faq/index.md:68
+msgid ""
+"**A**: Accuracy is the percentage of operators where at least one "
+"generated kernel passes all test cases and anti-hack checks."
+msgstr ""
+"**答**：准确率是指至少有一个生成的内核通过所有测试用例和防作弊检查的算子百分比。"
+
+#: ../../source/faq/index.md:70
+msgid "Q: What does speedup mean?"
+msgstr "问：加速比是什么意思？"
+
+#: ../../source/faq/index.md:72
+msgid ""
+"**A**: Speedup is the geometric mean of (generated kernel time / baseline"
+" time). A speedup > 1.0x means the generated kernel is faster than the "
+"baseline."
+msgstr ""
+"**答**：加速比是（生成内核时间 / 基准时间）的几何平均值。加速比 > 1.0x 表示生成的内核比基准更快。"
+
+#: ../../source/faq/index.md:74
+msgid "Q: Why is my speedup less than 1.0x?"
+msgstr "问：为什么我的加速比小于 1.0x？"
+
+#: ../../source/faq/index.md:76
+msgid ""
+"**A**: Generated kernels may not always outperform optimized baselines. "
+"This is expected, especially for:"
+msgstr ""
+"**答**：生成的内核并不总是优于优化后的基准。这是预期行为，特别是对于："
+
+#: ../../source/faq/index.md:77
+msgid "cuBLAS operators (highly optimized over decades)"
+msgstr "cuBLAS 算子（经过数十年高度优化）"
+
+#: ../../source/faq/index.md:78
+msgid "Complex vLLM operators"
+msgstr "复杂的 vLLM 算子"
+
+#: ../../source/faq/index.md:79
+msgid "Operators on immature non-NVIDIA platforms"
+msgstr "不成熟的非 NVIDIA 平台上的算子"
+
+#: ../../source/faq/index.md:81
+msgid "Q: Where are my results saved?"
+msgstr "问：结果保存在哪里？"
+
+#: ../../source/faq/index.md:84
+msgid "LLM Track: `output/pass_at_k/<timestamp>/`"
+msgstr "LLM 赛道：`output/pass_at_k/<timestamp>/`"
+
+#: ../../source/faq/index.md:85
+msgid "Agent Track: `agent_bench/runs/<timestamp>/`"
+msgstr "智能体赛道：`agent_bench/runs/<timestamp>/`"
+
+#: ../../source/faq/index.md:87
+msgid "Errors"
+msgstr "错误"
+
+#: ../../source/faq/index.md:89
+msgid "Q: Why do I get \"CUDA out of memory\" errors?"
+msgstr "问：为什么我会遇到"CUDA 内存不足"错误？"
+
+#: ../../source/faq/index.md:91
+msgid ""
+"**A**: Reduce `--device-count` or use smaller batch sizes. Some operators"
+" require significant GPU memory."
+msgstr ""
+"**答**：减少 `--device-count` 或使用更小的批次大小。某些算子需要大量 GPU 内存。"
+
+#: ../../source/faq/index.md:93
+msgid "Q: Why do generated kernels fail verification?"
+msgstr "问：为什么生成的内核验证失败？"
+
+#: ../../source/faq/index.md:95
+msgid "**A**: Common reasons:"
+msgstr "**答**：常见原因："
+
+#: ../../source/faq/index.md:96
+msgid "Numerical precision mismatch (tolerance too strict)"
+msgstr "数值精度不匹配（容差过于严格）"
+
+#: ../../source/faq/index.md:97
+msgid "Edge cases not handled in kernel logic"
+msgstr "内核逻辑未处理边界情况"
+
+#: ../../source/faq/index.md:98
+msgid "Memory access violations"
+msgstr "内存访问违规"
+
+#: ../../source/faq/index.md:99
+msgid "Shape/dtype mismatches"
+msgstr "形状/数据类型不匹配"
+
+#: ../../source/faq/index.md:101
+msgid "Q: Why does the anti-hack check fail?"
+msgstr "问：为什么防作弊检查失败？"
+
+#: ../../source/faq/index.md:103
+msgid ""
+"**A**: The generated kernel may be calling blacklisted APIs instead of "
+"implementing the actual computation. Check the kernel code for:"
+msgstr ""
+"**答**：生成的内核可能正在调用黑名单 API，而不是实现实际计算。请检查内核代码中是否有："
+
+#: ../../source/faq/index.md:104
+msgid "Direct calls to `torch.ops.aten.*`"
+msgstr "直接调用 `torch.ops.aten.*`"
+
+#: ../../source/faq/index.md:105
+msgid "Imports of `vllm` or `ctypes`"
+msgstr "导入 `vllm` 或 `ctypes`"
+
+#: ../../source/faq/index.md:106
+msgid "Any bypass of Triton computation"
+msgstr "任何绕过 Triton 计算的方式"
+
+#: ../../source/faq/index.md:108
+msgid "Platform-Specific"
+msgstr "平台特定问题"
+
+#: ../../source/faq/index.md:110
+msgid "Q: How do I run on Ascend NPU?"
+msgstr "问：如何在昇腾 NPU 上运行？"
+
+#: ../../source/faq/index.md:112
+msgid "**A**: Install Ascend dependencies and run in the vendor container image:"
+msgstr "**答**：安装昇腾依赖并在厂商容器镜像中运行："
+
+#: ../../source/faq/index.md:120
+msgid "Q: Why is accuracy lower on non-NVIDIA platforms?"
+msgstr "问：为什么非 NVIDIA 平台上的准确率较低？"
+
+#: ../../source/faq/index.md:122
+msgid "**A**: Non-NVIDIA platforms have:"
+msgstr "**答**：非 NVIDIA 平台具有："
+
+#: ../../source/faq/index.md:123
+msgid "Less mature Triton compilers"
+msgstr "不够成熟的 Triton 编译器"
+
+#: ../../source/faq/index.md:124
+msgid "Incomplete backend support"
+msgstr "不完整的后端支持"
+
+#: ../../source/faq/index.md:125
+msgid "Different memory models"
+msgstr "不同的内存模型"
+
+#: ../../source/faq/index.md:126
+msgid "Different performance characteristics"
+msgstr "不同的性能特征"
+
+#: ../../source/faq/index.md:128
+msgid ""
+"This is expected and demonstrates the cross-platform portability "
+"challenge."
+msgstr ""
+"这是预期行为，展示了跨平台可移植性的挑战。"
+
+#: ../../source/faq/index.md:130
+msgid "Q: Can I use custom hardware?"
+msgstr "问：我可以使用自定义硬件吗？"
+
+#: ../../source/faq/index.md:132
+msgid "**A**: Yes, you can extend KernelGenBench for new platforms by:"
+msgstr "**答**：可以，您可以通过以下方式为新平台扩展 KernelGenBench："
+
+#: ../../source/faq/index.md:133
+msgid "Adding device detection in `src/runtime/`"
+msgstr "在 `src/runtime/` 中添加设备检测"
+
+#: ../../source/faq/index.md:134
+msgid "Creating platform-specific templates in `agent_bench/templates/`"
+msgstr "在 `agent_bench/templates/` 中创建平台特定模板"
+
+#: ../../source/faq/index.md:135
+msgid "Adding platform-specific tolerances"
+msgstr "添加平台特定的容差"
+
+#: ../../source/faq/index.md:137
+msgid "Cost"
+msgstr "成本"
+
+#: ../../source/faq/index.md:139
+msgid "Q: How much does evaluation cost?"
+msgstr "问：评估成本是多少？"
+
+#: ../../source/faq/index.md:141
+msgid "**A**: Costs depend on:"
+msgstr "**答**：成本取决于："
+
+#: ../../source/faq/index.md:142
+msgid "Method (Pass@1 < Pass@5 < Claude Code < AKO4ALL)"
+msgstr "方法（Pass@1 < Pass@5 < Claude Code < AKO4ALL）"
+
+#: ../../source/faq/index.md:143
+msgid "Number of operators"
+msgstr "算子数量"
+
+#: ../../source/faq/index.md:144
+msgid "Model choice"
+msgstr "模型选择"
+
+#: ../../source/faq/index.md:146
+msgid ""
+"For reference, the full KernelGenBench evaluation consumed 15+ billion "
+"tokens."
+msgstr ""
+"作为参考，完整的 KernelGenBench 评估消耗了超过 150 亿个 token。"
+
+#: ../../source/faq/index.md:148
+msgid "Q: How can I estimate costs before running?"
+msgstr "问：如何在运行前估算成本？"
+
+#: ../../source/faq/index.md:150
+msgid ""
+"**A**: Start with `--debug` mode (8 operators) to measure token "
+"consumption per operator, then extrapolate."
+msgstr ""
+"**答**：先使用 `--debug` 模式（8 个算子）测量每个算子的 token 消耗，然后进行推算。"
+
+#: ../../source/faq/index.md:152
+msgid "Contributing"
+msgstr "贡献"
+
+#: ../../source/faq/index.md:154
+msgid "Q: How do I add a new operator?"
+msgstr "问：如何添加新算子？"
+
+#: ../../source/faq/index.md:156
+msgid ""
+"**A**: See [CONTRIBUTING.md](https://github.com/flagos-"
+"ai/KernelGenBench/blob/main/CONTRIBUTING.md) for detailed instructions on"
+" adding test cases."
+msgstr ""
+"**答**：请参阅 [CONTRIBUTING.md](https://github.com/flagos-"
+"ai/KernelGenBench/blob/main/CONTRIBUTING.md) 获取添加测试用例的详细说明。"
+
+#: ../../source/faq/index.md:158
+msgid "Q: How do I add a new agent method?"
+msgstr "问：如何添加新的智能体方法？"
+
+#: ../../source/faq/index.md:160
+msgid ""
+"**A**: Create a new directory in `agent_bench/methods/` following the "
+"existing structure."
+msgstr ""
+"**答**：在 `agent_bench/methods/` 中按照现有结构创建新目录。"

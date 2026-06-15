@@ -1,0 +1,246 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2026, FlagOS Community
+# This file is distributed under the same license as the KernelGenBench
+# Documentation package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: KernelGenBench Documentation \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-06-15 10:42+0800\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: zh_CN\n"
+"Language-Team: zh_CN <LL@li.org>\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.17.0\n"
+
+#: ../../source/features/anti-hack.md:1
+msgid "Anti-Hack Architecture"
+msgstr "防作弊架构"
+
+#: ../../source/features/anti-hack.md:3
+#, python-brace-format
+msgid ""
+"{term}`KernelGenBench` employs a three-tier anti-hack mechanism to "
+"prevent benchmark evasion and ensure generated kernels actually perform "
+"computation."
+msgstr ""
+"{term}`KernelGenBench` 采用三层防作弊机制，防止基准规避行为，确保生成的内核实际执行计算。"
+
+#: ../../source/features/anti-hack.md:5
+msgid "Overview"
+msgstr "概述"
+
+#: ../../source/features/anti-hack.md:7
+msgid ""
+"The anti-hack architecture guards against \"cheating\" behaviors where "
+"generated code might:"
+msgstr "防作弊架构防范生成代码可能出现的以下「作弊」行为："
+
+#: ../../source/features/anti-hack.md:8
+msgid "Call pre-existing APIs instead of implementing computation"
+msgstr "调用已有 API 而非实现计算逻辑"
+
+#: ../../source/features/anti-hack.md:9
+#, python-brace-format
+msgid "Bypass {term}`Triton` compilation"
+msgstr "绕过 {term}`Triton` 编译"
+
+#: ../../source/features/anti-hack.md:10
+msgid "Use hidden caching mechanisms"
+msgstr "使用隐藏的缓存机制"
+
+#: ../../source/features/anti-hack.md:12
+msgid "L1: AST Static Scan"
+msgstr "L1：AST 静态扫描"
+
+#: ../../source/features/anti-hack.md:14 ../../source/features/anti-hack.md:38
+#: ../../source/features/anti-hack.md:56
+msgid "Purpose"
+msgstr "目的"
+
+#: ../../source/features/anti-hack.md:16
+msgid "Block blacklisted API calls before execution."
+msgstr "在执行前阻止黑名单 API 调用。"
+
+#: ../../source/features/anti-hack.md:18 ../../source/features/anti-hack.md:42
+#: ../../source/features/anti-hack.md:60
+msgid "Method"
+msgstr "方法"
+
+#: ../../source/features/anti-hack.md:20
+msgid "Parse the generated abstract syntax tree (AST) to detect and block:"
+msgstr "解析生成的抽象语法树（AST）以检测并阻止："
+
+#: ../../source/features/anti-hack.md
+msgid "Blocked Pattern"
+msgstr "阻止模式"
+
+#: ../../source/features/anti-hack.md
+msgid "Reason"
+msgstr "原因"
+
+#: ../../source/features/anti-hack.md
+msgid "`torch.ops.aten.*`"
+msgstr "`torch.ops.aten.*`"
+
+#: ../../source/features/anti-hack.md
+msgid "Direct PyTorch API calls"
+msgstr "直接调用 PyTorch API"
+
+#: ../../source/features/anti-hack.md
+msgid "`import vllm`"
+msgstr "`import vllm`"
+
+#: ../../source/features/anti-hack.md
+#, python-brace-format
+msgid "Using {term}`vLLM` implementation"
+msgstr "使用 {term}`vLLM` 实现"
+
+#: ../../source/features/anti-hack.md
+msgid "`ctypes`"
+msgstr "`ctypes`"
+
+#: ../../source/features/anti-hack.md
+msgid "Dynamic library loading"
+msgstr "动态库加载"
+
+#: ../../source/features/anti-hack.md
+msgid "`__import__`"
+msgstr "`__import__`"
+
+#: ../../source/features/anti-hack.md
+msgid "Dynamic imports"
+msgstr "动态导入"
+
+#: ../../source/features/anti-hack.md:29
+msgid "Implementation"
+msgstr "实现"
+
+#: ../../source/features/anti-hack.md:36
+msgid "L2: Ghost Replay"
+msgstr "L2：幽灵回放"
+
+#: ../../source/features/anti-hack.md:40
+#, python-brace-format
+msgid "Verify that the {term}`Triton` kernel is actually executed, not bypassed."
+msgstr "验证 {term}`Triton` 内核确实被执行，而非被绕过。"
+
+#: ../../source/features/anti-hack.md:44
+msgid "Execute kernel normally, capture outputs"
+msgstr "正常执行内核，捕获输出"
+
+#: ../../source/features/anti-hack.md:45
+msgid "Replace `@triton.jit` decorated function with no-op in memory"
+msgstr "在内存中将 `@triton.jit` 装饰的函数替换为空操作"
+
+#: ../../source/features/anti-hack.md:46
+msgid "Re-execute with same inputs"
+msgstr "使用相同输入重新执行"
+
+#: ../../source/features/anti-hack.md:47
+msgid "Compare outputs"
+msgstr "比较输出"
+
+#: ../../source/features/anti-hack.md:49
+msgid "Logic"
+msgstr "逻辑"
+
+#: ../../source/features/anti-hack.md:51
+#, python-brace-format
+msgid ""
+"If outputs are **identical**, the {term}`Triton` kernel was never invoked"
+" → **Cheating detected**"
+msgstr ""
+"如果输出**完全相同**，则 {term}`Triton` 内核从未被调用 → **检测到作弊**"
+
+#: ../../source/features/anti-hack.md:52
+msgid "If outputs **differ**, the kernel was actually executed → **Valid**"
+msgstr "如果输出**不同**，则内核确实被执行 → **有效**"
+
+#: ../../source/features/anti-hack.md:54
+msgid "L3: Hardware Profiling"
+msgstr "L3：硬件分析"
+
+#: ../../source/features/anti-hack.md:58
+#, python-brace-format
+msgid "Confirm {term}`Triton`-specific execution at the hardware level."
+msgstr "在硬件层面确认 {term}`Triton` 特定的执行。"
+
+#: ../../source/features/anti-hack.md:62
+#, python-brace-format
+msgid ""
+"Use `torch.profiler` to verify {term}`Triton`-specific signatures exist "
+"in low-level trace logs."
+msgstr ""
+"使用 `torch.profiler` 验证底层追踪日志中是否存在 {term}`Triton` 特定的签名。"
+
+#: ../../source/features/anti-hack.md:64
+msgid "Availability"
+msgstr "可用性"
+
+#: ../../source/features/anti-hack.md
+msgid "Platform"
+msgstr "平台"
+
+#: ../../source/features/anti-hack.md
+msgid "L3 Support"
+msgstr "L3 支持"
+
+#: ../../source/features/anti-hack.md
+msgid "NVIDIA"
+msgstr "NVIDIA"
+
+#: ../../source/features/anti-hack.md
+msgid "✓"
+msgstr "✓"
+
+#: ../../source/features/anti-hack.md
+msgid "Non-NVIDIA"
+msgstr "非 NVIDIA"
+
+#: ../../source/features/anti-hack.md
+msgid "✗"
+msgstr "✗"
+
+#: ../../source/features/anti-hack.md:71
+msgid ""
+"Non-NVIDIA platforms rely on L1 and L2 due to absence of equivalent "
+"profiling tools."
+msgstr "非 NVIDIA 平台由于缺乏等效的分析工具，仅依赖 L1 和 L2。"
+
+#: ../../source/features/anti-hack.md:73
+msgid "Validation Flow"
+msgstr "验证流程"
+
+#: ../../source/features/anti-hack.md:99
+msgid "Why Anti-Hack Matters"
+msgstr "防作弊的重要性"
+
+#: ../../source/features/anti-hack.md:101
+msgid "Without anti-hack measures, models could:"
+msgstr "如果没有防作弊措施，模型可能会："
+
+#: ../../source/features/anti-hack.md:102
+msgid "Achieve high \"accuracy\" without actual computation"
+msgstr "无需实际计算即可获得高「精度」"
+
+#: ../../source/features/anti-hack.md:103
+msgid "Mask poor kernel generation capability"
+msgstr "掩盖内核生成能力不足"
+
+#: ../../source/features/anti-hack.md:104
+msgid "Invalidate benchmark results"
+msgstr "使基准测试结果失效"
+
+#: ../../source/features/anti-hack.md:106
+#, python-brace-format
+msgid ""
+"{term}`KernelGenBench` ensures evaluations reflect true kernel generation"
+" ability."
+msgstr "{term}`KernelGenBench` 确保评估结果反映真实的内核生成能力。"

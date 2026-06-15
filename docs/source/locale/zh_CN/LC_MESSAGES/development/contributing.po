@@ -1,0 +1,155 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2026, FlagOS Community
+# This file is distributed under the same license as the KernelGenBench
+# Documentation package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: KernelGenBench Documentation \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-06-15 10:42+0800\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: zh_CN\n"
+"Language-Team: zh_CN <LL@li.org>\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.17.0\n"
+
+#: ../../source/development/contributing.md:1
+msgid "Contributing"
+msgstr "贡献"
+
+#: ../../source/development/contributing.md:3
+msgid "How to contribute to KernelGenBench."
+msgstr "如何为 KernelGenBench 做贡献。"
+
+#: ../../source/development/contributing.md:5
+msgid "Ways to Contribute"
+msgstr "贡献方式"
+
+#: ../../source/development/contributing.md
+msgid "Area"
+msgstr "领域"
+
+#: ../../source/development/contributing.md
+msgid "Description"
+msgstr "描述"
+
+#: ../../source/development/contributing.md
+msgid "New operators"
+msgstr "新算子"
+
+#: ../../source/development/contributing.md
+msgid "Expand the benchmark with new test cases"
+msgstr "用新测试用例扩展基准"
+
+#: ../../source/development/contributing.md
+msgid "New chip backends"
+msgstr "新芯片后端"
+
+#: ../../source/development/contributing.md
+msgid "Extend support to additional hardware"
+msgstr "扩展对其他硬件的支持"
+
+#: ../../source/development/contributing.md
+msgid "New agents"
+msgstr "新智能体"
+
+#: ../../source/development/contributing.md
+msgid "Integrate coding tools like Codex, Trae, Cursor"
+msgstr "集成 Codex、Trae、Cursor 等编程工具"
+
+#: ../../source/development/contributing.md
+msgid "New methods"
+msgstr "新方法"
+
+#: ../../source/development/contributing.md
+msgid "Contribute specialized optimization pipelines"
+msgstr "贡献专门的优化流程"
+
+#: ../../source/development/contributing.md:14
+msgid "Getting Started"
+msgstr "快速入门"
+
+#: ../../source/development/contributing.md:16
+msgid "Fork the repository"
+msgstr "Fork 仓库"
+
+#: ../../source/development/contributing.md:17
+msgid "Create a feature branch"
+msgstr "创建特性分支"
+
+#: ../../source/development/contributing.md:18
+msgid "Make your changes"
+msgstr "进行修改"
+
+#: ../../source/development/contributing.md:19
+msgid "Submit a pull request"
+msgstr "提交拉取请求"
+
+#: ../../source/development/contributing.md:21
+msgid "Development Setup"
+msgstr "开发环境设置"
+
+#: ../../source/development/contributing.md:36
+msgid "Code Style"
+msgstr "代码风格"
+
+#: ../../source/development/contributing.md:38
+msgid "Follow PEP 8 for Python code"
+msgstr "Python 代码遵循 PEP 8 规范"
+
+#: ../../source/development/contributing.md:39
+msgid "Use type hints where appropriate"
+msgstr "在适当的地方使用类型提示"
+
+#: ../../source/development/contributing.md:40
+msgid "Add docstrings to public functions"
+msgstr "为公共函数添加文档字符串"
+
+#: ../../source/development/contributing.md:42
+msgid "Pull Request Guidelines"
+msgstr "拉取请求指南"
+
+#: ../../source/development/contributing.md:44
+msgid "**One feature per PR** - Keep changes focused"
+msgstr "**每个 PR 一个特性** - 保持修改专注"
+
+#: ../../source/development/contributing.md:45
+msgid "**Add tests** - Ensure new code is tested"
+msgstr "**添加测试** - 确保新代码经过测试"
+
+#: ../../source/development/contributing.md:46
+msgid "**Update docs** - Keep documentation current"
+msgstr "**更新文档** - 保持文档最新"
+
+#: ../../source/development/contributing.md:47
+msgid "**Link issues** - Reference any related issues"
+msgstr "**关联 issue** - 引用相关问题"
+
+#: ../../source/development/contributing.md:49
+msgid "Directory Structure"
+msgstr "目录结构"
+
+#: ../../source/development/contributing.md:62
+msgid "Code Review"
+msgstr "代码审查"
+
+#: ../../source/development/contributing.md:64
+msgid "All submissions require review by maintainers."
+msgstr "所有提交都需要维护者审查。"
+
+#: ../../source/development/contributing.md:66
+msgid "License"
+msgstr "许可证"
+
+#: ../../source/development/contributing.md:68
+msgid ""
+"By contributing, you agree that your contributions will be licensed under"
+" the MIT License."
+msgstr ""
+"通过贡献，您同意您的贡献将根据 MIT 许可证授权。"

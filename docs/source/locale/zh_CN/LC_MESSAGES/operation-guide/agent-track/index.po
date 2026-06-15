@@ -1,0 +1,58 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2026, FlagOS Community
+# This file is distributed under the same license as the KernelGenBench
+# Documentation package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: KernelGenBench Documentation \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-06-15 10:42+0800\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: zh_CN\n"
+"Language-Team: zh_CN <LL@li.org>\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.17.0\n"
+
+#: ../../source/operation-guide/agent-track/index.md:1
+msgid "Agent Track"
+msgstr "智能体赛道"
+
+#: ../../source/operation-guide/agent-track/index.md:3
+msgid ""
+"Agent Track evaluates coding agents that iteratively generate, verify, "
+"and optimize kernels."
+msgstr "智能体赛道评估迭代生成、验证和优化内核的编程智能体。"
+
+#: ../../source/operation-guide/agent-track/index.md:14
+msgid "What It Tests"
+msgstr "测试内容"
+
+#: ../../source/operation-guide/agent-track/index.md:16
+msgid "Autonomous debugging and optimization capability with execution feedback."
+msgstr "具有执行反馈的自主调试和优化能力。"
+
+#: ../../source/operation-guide/agent-track/index.md:18
+msgid "When to Use"
+msgstr "适用场景"
+
+#: ../../source/operation-guide/agent-track/index.md:20
+msgid "Testing agent frameworks (Claude Code, OpenCode)"
+msgstr "测试智能体框架（Claude Code、OpenCode）"
+
+#: ../../source/operation-guide/agent-track/index.md:21
+msgid "Evaluating kernel-specialized agents (AutoKernel, AKO4ALL)"
+msgstr "评估内核专用智能体（AutoKernel、AKO4ALL）"
+
+#: ../../source/operation-guide/agent-track/index.md:22
+msgid "Production-ready kernel generation"
+msgstr "生产级内核生成"
+
+#: ../../source/operation-guide/agent-track/index.md:24
+msgid "Quick Start"
+msgstr "快速开始"

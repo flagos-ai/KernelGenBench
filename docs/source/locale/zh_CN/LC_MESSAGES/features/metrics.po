@@ -1,0 +1,302 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2026, FlagOS Community
+# This file is distributed under the same license as the KernelGenBench
+# Documentation package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: KernelGenBench Documentation \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-06-15 10:42+0800\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: zh_CN\n"
+"Language-Team: zh_CN <LL@li.org>\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.17.0\n"
+
+#: ../../source/features/metrics.md:1
+msgid "Evaluation Metrics"
+msgstr "评估指标"
+
+#: ../../source/features/metrics.md:3
+#, python-brace-format
+msgid ""
+"{term}`KernelGenBench` measures kernel generation capabilities from "
+"multiple dimensions: correctness, performance, and cost efficiency."
+msgstr ""
+"{term}`KernelGenBench` 从多个维度衡量内核生成能力：正确性、性能和成本效率。"
+
+#: ../../source/features/metrics.md ../../source/features/metrics.md:5
+msgid "Accuracy"
+msgstr "精度"
+
+#: ../../source/features/metrics.md:7 ../../source/features/metrics.md:77
+msgid "Definition"
+msgstr "定义"
+
+#: ../../source/features/metrics.md:9
+msgid ""
+"The percentage of operators where at least one generated kernel passes "
+"the following checks:"
+msgstr "至少有一个生成的内核通过以下检查的算子百分比："
+
+#: ../../source/features/metrics.md:10
+msgid "All test cases (combined shapes, data types, layouts)"
+msgstr "所有测试用例（组合形状、数据类型、布局）"
+
+#: ../../source/features/metrics.md:11
+msgid "Three-layer anti-cheating checks"
+msgstr "三层防作弊检查"
+
+#: ../../source/features/metrics.md:13
+msgid "Clean Pass Rate"
+msgstr "纯净通过率"
+
+#: ../../source/features/metrics.md:15
+msgid "A kernel is counted as successful only when:"
+msgstr "内核仅在以下情况下被计为成功："
+
+#: ../../source/features/metrics.md:16
+msgid "All `ki` test cases pass numerical verification"
+msgstr "所有 `ki` 测试用例通过数值验证"
+
+#: ../../source/features/metrics.md:17
+msgid "All anti-cheating layers pass"
+msgstr "所有防作弊层通过"
+
+#: ../../source/features/metrics.md:19
+msgid "Test Case Generation"
+msgstr "测试用例生成"
+
+#: ../../source/features/metrics.md:21
+msgid "Combinatorial test suites are created through the Cartesian product of:"
+msgstr "组合测试套件通过以下因素的笛卡尔积创建："
+
+#: ../../source/features/metrics.md:22
+msgid "Core semantic parameters (dimensions, transpose)"
+msgstr "核心语义参数（维度、转置）"
+
+#: ../../source/features/metrics.md:23
+msgid "Shape variations"
+msgstr "形状变化"
+
+#: ../../source/features/metrics.md:24
+msgid "Data types"
+msgstr "数据类型"
+
+#: ../../source/features/metrics.md:25
+msgid "Memory layouts"
+msgstr "内存布局"
+
+#: ../../source/features/metrics.md ../../source/features/metrics.md:27
+msgid "Speedup"
+msgstr "加速比"
+
+#: ../../source/features/metrics.md:29
+msgid "Calculation"
+msgstr "计算方式"
+
+#: ../../source/features/metrics.md:31
+msgid "Two-level geometric mean:"
+msgstr "两级几何平均："
+
+#: ../../source/features/metrics.md:33
+#, python-brace-format
+msgid ""
+"First level: Geometric mean across `ki` test cases → Operator-level "
+"{term}`Speedup` `Si`"
+msgstr ""
+"第一级：对 `ki` 个测试用例计算几何平均 → 算子级 {term}`加速比` `Si`"
+
+#: ../../source/features/metrics.md:34
+msgid "Second level: Geometric mean across all operators → Global speedup"
+msgstr "第二级：对所有算子计算几何平均 → 全局加速比"
+
+#: ../../source/features/metrics.md:36
+msgid "Formula"
+msgstr "公式"
+
+#: ../../source/features/metrics.md:43
+msgid "Interpretation"
+msgstr "解读"
+
+#: ../../source/features/metrics.md
+msgid "Meaning"
+msgstr "含义"
+
+#: ../../source/features/metrics.md
+msgid "> 1.0×"
+msgstr "> 1.0×"
+
+#: ../../source/features/metrics.md
+msgid "Generated kernel is faster than baseline"
+msgstr "生成的内核比基准更快"
+
+#: ../../source/features/metrics.md
+msgid "= 1.0×"
+msgstr "= 1.0×"
+
+#: ../../source/features/metrics.md
+msgid "Comparable performance"
+msgstr "性能相当"
+
+#: ../../source/features/metrics.md
+msgid "< 1.0×"
+msgstr "< 1.0×"
+
+#: ../../source/features/metrics.md
+msgid "Generated kernel is slower than baseline"
+msgstr "生成的内核比基准更慢"
+
+#: ../../source/features/metrics.md ../../source/features/metrics.md:51
+msgid "Baseline"
+msgstr "基准"
+
+#: ../../source/features/metrics.md
+msgid "Source"
+msgstr "来源"
+
+#: ../../source/features/metrics.md
+#, python-brace-format
+msgid "{term}`ATen`"
+msgstr "{term}`ATen`"
+
+#: ../../source/features/metrics.md
+msgid "PyTorch native C++"
+msgstr "PyTorch 原生 C++"
+
+#: ../../source/features/metrics.md
+#, python-brace-format
+msgid "{term}`vLLM`"
+msgstr "{term}`vLLM`"
+
+#: ../../source/features/metrics.md
+#, python-brace-format
+msgid "{term}`vLLM` {term}`CUDA` kernels"
+msgstr "{term}`vLLM` {term}`CUDA` 内核"
+
+#: ../../source/features/metrics.md
+#, python-brace-format
+msgid "{term}`cuBLAS`"
+msgstr "{term}`cuBLAS`"
+
+#: ../../source/features/metrics.md
+#, python-brace-format
+msgid "Native {term}`cuBLAS` library"
+msgstr "原生 {term}`cuBLAS` 库"
+
+#: ../../source/features/metrics.md ../../source/features/metrics.md:59
+msgid "Token Cost"
+msgstr "Token 成本"
+
+#: ../../source/features/metrics.md:61
+msgid "Metrics"
+msgstr "指标"
+
+#: ../../source/features/metrics.md
+msgid "Metric"
+msgstr "指标"
+
+#: ../../source/features/metrics.md
+msgid "Description"
+msgstr "描述"
+
+#: ../../source/features/metrics.md
+msgid "Total Tokens"
+msgstr "总 Token 数"
+
+#: ../../source/features/metrics.md
+msgid "Sum of all tokens consumed"
+msgstr "消耗的所有 Token 总和"
+
+#: ../../source/features/metrics.md
+msgid "Tokens per Success"
+msgstr "每次成功的 Token 数"
+
+#: ../../source/features/metrics.md
+msgid "Total tokens ÷ number of passed operators"
+msgstr "总 Token 数 ÷ 通过算子数量"
+
+#: ../../source/features/metrics.md:68
+msgid "Importance"
+msgstr "重要性"
+
+#: ../../source/features/metrics.md:70
+msgid "Token consumption directly affects:"
+msgstr "Token 消耗直接影响："
+
+#: ../../source/features/metrics.md:71
+msgid "API costs"
+msgstr "API 成本"
+
+#: ../../source/features/metrics.md:72
+msgid "Evaluation time"
+msgstr "评估时间"
+
+#: ../../source/features/metrics.md:73
+msgid "Feasibility of large-scale runs"
+msgstr "大规模运行的可行性"
+
+#: ../../source/features/metrics.md ../../source/features/metrics.md:75
+msgid "Runtime"
+msgstr "运行时间"
+
+#: ../../source/features/metrics.md:79
+msgid "Cumulative solving time per operator, independent of parallelism."
+msgstr "每个算子的累积求解时间，与并行度无关。"
+
+#: ../../source/features/metrics.md:81
+msgid "Usage"
+msgstr "用途"
+
+#: ../../source/features/metrics.md:83
+msgid ""
+"Compare efficiency of different generation methods, independent of "
+"parallel execution."
+msgstr "比较不同生成方法的效率，与并行执行无关。"
+
+#: ../../source/features/metrics.md:85
+msgid "Summary Table"
+msgstr "汇总表"
+
+#: ../../source/features/metrics.md
+msgid "Type"
+msgstr "类型"
+
+#: ../../source/features/metrics.md
+msgid "Correctness"
+msgstr "正确性"
+
+#: ../../source/features/metrics.md
+msgid "Percentage of operators passing all tests"
+msgstr "通过所有测试的算子百分比"
+
+#: ../../source/features/metrics.md
+#, python-brace-format
+msgid "{term}`Speedup`"
+msgstr "{term}`加速比`"
+
+#: ../../source/features/metrics.md
+msgid "Performance"
+msgstr "性能"
+
+#: ../../source/features/metrics.md
+msgid "Geometric mean relative to baseline"
+msgstr "相对于基准的几何平均值"
+
+#: ../../source/features/metrics.md
+msgid "Efficiency"
+msgstr "效率"
+
+#: ../../source/features/metrics.md
+msgid "Number of tokens consumed"
+msgstr "消耗的 Token 数量"
+
+#: ../../source/features/metrics.md
+msgid "Time consumed"
+msgstr "消耗的时间"

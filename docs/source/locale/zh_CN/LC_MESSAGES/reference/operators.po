@@ -1,0 +1,338 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2026, FlagOS Community
+# This file is distributed under the same license as the KernelGenBench
+# Documentation package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: KernelGenBench Documentation \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-06-15 10:42+0800\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: zh_CN\n"
+"Language-Team: zh_CN <LL@li.org>\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.17.0\n"
+
+#: ../../source/reference/operators.md ../../source/reference/operators.md:1
+msgid "Operators"
+msgstr "算子"
+
+#: ../../source/reference/operators.md:3
+#, python-brace-format
+msgid "Reference list of operator sources in {term}`KernelGenBench`."
+msgstr "{term}`KernelGenBench` 中算子来源的参考列表。"
+
+#: ../../source/reference/operators.md:5
+msgid "ATen Operators (110)"
+msgstr "ATen 算子（110 个）"
+
+#: ../../source/reference/operators.md:7
+msgid "Selection Criteria"
+msgstr "选择标准"
+
+#: ../../source/reference/operators.md:9
+msgid "Top 50 most frequently used operators from 2,907 model training traces"
+msgstr "从 2,907 个模型训练轨迹中选出使用频率最高的 50 个算子"
+
+#: ../../source/reference/operators.md:10
+msgid "60 long-tail operators uniformly sampled"
+msgstr "均匀采样 60 个长尾算子"
+
+#: ../../source/reference/operators.md:12
+#: ../../source/reference/operators.md:34
+msgid "Examples"
+msgstr "示例"
+
+#: ../../source/reference/operators.md
+msgid "Category"
+msgstr "类别"
+
+#: ../../source/reference/operators.md
+msgid "Arithmetic"
+msgstr "算术"
+
+#: ../../source/reference/operators.md
+msgid "`add`, `sub`, `mul`, `div`"
+msgstr "`add`、`sub`、`mul`、`div`"
+
+#: ../../source/reference/operators.md
+msgid "Reduction"
+msgstr "归约"
+
+#: ../../source/reference/operators.md
+msgid "`sum`, `mean`, `max`, `min`"
+msgstr "`sum`、`mean`、`max`、`min`"
+
+#: ../../source/reference/operators.md
+msgid "Linear"
+msgstr "线性"
+
+#: ../../source/reference/operators.md
+msgid "`matmul`, `linear`, `bmm`"
+msgstr "`matmul`、`linear`、`bmm`"
+
+#: ../../source/reference/operators.md
+msgid "Normalization"
+msgstr "归一化"
+
+#: ../../source/reference/operators.md
+msgid "`softmax`, `layer_norm`"
+msgstr "`softmax`、`layer_norm`"
+
+#: ../../source/reference/operators.md
+msgid "Activation"
+msgstr "激活"
+
+#: ../../source/reference/operators.md
+msgid "`relu`, `gelu`, `silu`"
+msgstr "`relu`、`gelu`、`silu`"
+
+#: ../../source/reference/operators.md
+msgid "Shape Operations"
+msgstr "形状操作"
+
+#: ../../source/reference/operators.md
+msgid "`reshape`, `transpose`, `permute`"
+msgstr "`reshape`、`transpose`、`permute`"
+
+#: ../../source/reference/operators.md:23
+msgid "vLLM Operators (50)"
+msgstr "vLLM 算子（50 个）"
+
+#: ../../source/reference/operators.md:25
+msgid "Categories"
+msgstr "类别"
+
+#: ../../source/reference/operators.md
+msgid "Description"
+msgstr "描述"
+
+#: ../../source/reference/operators.md
+msgid "Attention"
+msgstr "注意力"
+
+#: ../../source/reference/operators.md
+#, python-brace-format
+msgid "{term}`PagedAttention` variants"
+msgstr "{term}`PagedAttention` 变体"
+
+#: ../../source/reference/operators.md
+msgid "KV Cache"
+msgstr "KV 缓存"
+
+#: ../../source/reference/operators.md
+msgid "Cache management kernels"
+msgstr "缓存管理内核"
+
+#: ../../source/reference/operators.md
+msgid "Quantization"
+msgstr "量化"
+
+#: ../../source/reference/operators.md
+msgid "FP8, AWQ kernels"
+msgstr "FP8、AWQ 内核"
+
+#: ../../source/reference/operators.md
+msgid "RMS normalization, fused normalization"
+msgstr "RMS 归一化、融合归一化"
+
+#: ../../source/reference/operators.md
+msgid "Operator"
+msgstr "算子"
+
+#: ../../source/reference/operators.md
+msgid "`paged_attention_v1`"
+msgstr "`paged_attention_v1`"
+
+#: ../../source/reference/operators.md
+msgid "Memory-efficient attention"
+msgstr "内存高效注意力"
+
+#: ../../source/reference/operators.md
+msgid "`fused_add_rms_norm`"
+msgstr "`fused_add_rms_norm`"
+
+#: ../../source/reference/operators.md
+msgid "Fused normalization"
+msgstr "融合归一化"
+
+#: ../../source/reference/operators.md
+msgid "`rotary_embedding`"
+msgstr "`rotary_embedding`"
+
+#: ../../source/reference/operators.md
+msgid "Positional encoding"
+msgstr "位置编码"
+
+#: ../../source/reference/operators.md:42
+msgid "cuBLAS Operators (50)"
+msgstr "cuBLAS 算子（50 个）"
+
+#: ../../source/reference/operators.md:44
+msgid "GEMM Family (14 Variants)"
+msgstr "GEMM 系列（14 种变体）"
+
+#: ../../source/reference/operators.md
+msgid "Precision"
+msgstr "精度"
+
+#: ../../source/reference/operators.md
+msgid "Standard"
+msgstr "标准"
+
+#: ../../source/reference/operators.md
+msgid "StridedBatched"
+msgstr "StridedBatched"
+
+#: ../../source/reference/operators.md
+msgid "Batched"
+msgstr "Batched"
+
+#: ../../source/reference/operators.md
+msgid "Float32"
+msgstr "Float32"
+
+#: ../../source/reference/operators.md
+msgid "`cublasSgemm`"
+msgstr "`cublasSgemm`"
+
+#: ../../source/reference/operators.md
+msgid "`cublasSgemmStridedBatched`"
+msgstr "`cublasSgemmStridedBatched`"
+
+#: ../../source/reference/operators.md
+msgid "`cublasSgemmBatched`"
+msgstr "`cublasSgemmBatched`"
+
+#: ../../source/reference/operators.md
+msgid "Float64"
+msgstr "Float64"
+
+#: ../../source/reference/operators.md
+msgid "—"
+msgstr "—"
+
+#: ../../source/reference/operators.md
+msgid "`cublasDgemmStridedBatched`"
+msgstr "`cublasDgemmStridedBatched`"
+
+#: ../../source/reference/operators.md
+msgid "`cublasDgemmBatched`"
+msgstr "`cublasDgemmBatched`"
+
+#: ../../source/reference/operators.md
+msgid "Complex64"
+msgstr "Complex64"
+
+#: ../../source/reference/operators.md
+msgid "`cublasCgemm`"
+msgstr "`cublasCgemm`"
+
+#: ../../source/reference/operators.md
+msgid "`cublasCgemmStridedBatched`"
+msgstr "`cublasCgemmStridedBatched`"
+
+#: ../../source/reference/operators.md
+msgid "Complex128"
+msgstr "Complex128"
+
+#: ../../source/reference/operators.md
+msgid "`cublasZgemmStridedBatched`"
+msgstr "`cublasZgemmStridedBatched`"
+
+#: ../../source/reference/operators.md
+msgid "`cublasZgemmBatched`"
+msgstr "`cublasZgemmBatched`"
+
+#: ../../source/reference/operators.md
+msgid "Float16"
+msgstr "Float16"
+
+#: ../../source/reference/operators.md
+msgid "`cublasHgemmStridedBatched`"
+msgstr "`cublasHgemmStridedBatched`"
+
+#: ../../source/reference/operators.md
+msgid "`cublasHgemmBatched`"
+msgstr "`cublasHgemmBatched`"
+
+#: ../../source/reference/operators.md:54
+msgid "Other BLAS Routines"
+msgstr "其他 BLAS 例程"
+
+#: ../../source/reference/operators.md:56
+msgid "GEMV (matrix-vector multiplication)"
+msgstr "GEMV（矩阵-向量乘法）"
+
+#: ../../source/reference/operators.md:57
+msgid "SYRK (symmetric rank-k update)"
+msgstr "SYRK（对称秩-k 更新）"
+
+#: ../../source/reference/operators.md:58
+msgid "TRSM (triangular solve)"
+msgstr "TRSM（三角求解）"
+
+#: ../../source/reference/operators.md:59
+msgid "And other routines across multiple precisions"
+msgstr "以及跨多种精度的其他例程"
+
+#: ../../source/reference/operators.md:61
+msgid "Operator Naming Convention"
+msgstr "算子命名约定"
+
+#: ../../source/reference/operators.md
+msgid "Source"
+msgstr "来源"
+
+#: ../../source/reference/operators.md
+msgid "Prefix"
+msgstr "前缀"
+
+#: ../../source/reference/operators.md
+msgid "Example"
+msgstr "示例"
+
+#: ../../source/reference/operators.md
+#, python-brace-format
+msgid "{term}`ATen`"
+msgstr "{term}`ATen`"
+
+#: ../../source/reference/operators.md
+msgid "`aten::`"
+msgstr "`aten::`"
+
+#: ../../source/reference/operators.md
+msgid "`aten::add.Tensor`"
+msgstr "`aten::add.Tensor`"
+
+#: ../../source/reference/operators.md
+#, python-brace-format
+msgid "{term}`vLLM`"
+msgstr "{term}`vLLM`"
+
+#: ../../source/reference/operators.md
+msgid "`vllm13::`"
+msgstr "`vllm13::`"
+
+#: ../../source/reference/operators.md
+msgid "`vllm13::rms_norm`"
+msgstr "`vllm13::rms_norm`"
+
+#: ../../source/reference/operators.md
+#, python-brace-format
+msgid "{term}`cuBLAS`"
+msgstr "{term}`cuBLAS`"
+
+#: ../../source/reference/operators.md
+msgid "`cublas`"
+msgstr "`cublas`"
+
+#: ../../source/reference/operators.md
+msgid "`cublasSgemm_v2`"
+msgstr "`cublasSgemm_v2`"

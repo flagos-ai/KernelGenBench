@@ -1,0 +1,130 @@
+# KernelGenBench 文档中文翻译
+# Copyright (C) 2026, FlagOS Community
+# This file is distributed under the same license as the KernelGenBench
+# Documentation package.
+# FlagOS Community, 2026.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: KernelGenBench Documentation \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-06-15 10:42+0800\n"
+"PO-Revision-Date: 2026-06-15 10:45+0800\n"
+"Last-Translator: FlagOS Community\n"
+"Language: zh_CN\n"
+"Language-Team: zh_CN <LL@li.org>\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.17.0\n"
+
+#: ../../source/index.md:5
+msgid "Contents"
+msgstr "目录"
+
+#: ../../source/index.md:1
+msgid "KernelGenBench Documentation"
+msgstr "KernelGenBench 文档"
+
+#: ../../source/index.md:3
+#, python-brace-format
+msgid ""
+"A benchmark framework for evaluating {term}`LLM` and agent-based "
+"{term}`Triton` kernel generation."
+msgstr ""
+"一个用于评估 {term}`LLM` 和智能体驱动的 {term}`Triton` 内核生成的基准框架。"
+
+#: ../../source/index.md:19
+msgid "Quick Links"
+msgstr "快速链接"
+
+#: ../../source/index.md:5
+msgid "Resource"
+msgstr "资源"
+
+#: ../../source/index.md:5
+msgid "Description"
+msgstr "描述"
+
+#: ../../source/index.md:5
+msgid "[Getting Started](getting-started/index.md)"
+msgstr "[快速开始](getting-started/index.md)"
+
+#: ../../source/index.md:5
+msgid "Install and run your first benchmark"
+msgstr "安装并运行你的第一个基准测试"
+
+#: ../../source/index.md:5
+msgid "[LLM Track](operation-guide/llm-track/index.md)"
+msgstr "[LLM 路径](operation-guide/llm-track/index.md)"
+
+#: ../../source/index.md:5
+#, python-brace-format
+msgid "{term}`Pass@K` evaluation"
+msgstr "{term}`Pass@K` 评估"
+
+#: ../../source/index.md:5
+msgid "[Agent Track](operation-guide/agent-track/index.md)"
+msgstr "[智能体路径](operation-guide/agent-track/index.md)"
+
+#: ../../source/index.md:5
+#, python-brace-format
+msgid "{term}`Agent`-based evaluation"
+msgstr "基于 {term}`Agent` 的评估"
+
+#: ../../source/index.md:5
+msgid "[FAQ](faq/index.md)"
+msgstr "[常见问题](faq/index.md)"
+
+#: ../../source/index.md:5
+msgid "Common questions"
+msgstr "常见问题"
+
+#: ../../source/index.md:5
+msgid "[Glossary](glossary/index.md)"
+msgstr "[术语表](glossary/index.md)"
+
+#: ../../source/index.md:5
+msgid "Technical terminology"
+msgstr "技术术语"
+
+#: ../../source/index.md:29
+msgid "About"
+msgstr "关于"
+
+#: ../../source/index.md:31
+#, python-brace-format
+msgid ""
+"{term}`KernelGenBench` is a component of [FlagOS](https://flagos.io/) — a"
+" unified, open-source AI system software stack."
+msgstr ""
+"{term}`KernelGenBench` 是 [FlagOS](https://flagos.io/) 的一个组件——一个统一的开源 AI 系统软件栈。"
+
+#: ../../source/index.md:33
+msgid "Key Features"
+msgstr "核心特性"
+
+#: ../../source/index.md:35
+#, python-brace-format
+msgid "**210 operators** across {term}`ATen`, {term}`vLLM`, and {term}`cuBLAS`"
+msgstr "**210 个算子**，涵盖 {term}`ATen`、{term}`vLLM` 和 {term}`cuBLAS`"
+
+#: ../../source/index.md:36
+msgid "**6 hardware platforms** (NVIDIA, Ascend, MUSA, Hygon, Iluvatar, MetaX)"
+msgstr "**6 个硬件平台**（NVIDIA、昇腾、MUSA、海光、天数智芯、沐曦）"
+
+#: ../../source/index.md:37
+#, python-brace-format
+msgid "**Two evaluation tracks**: LLM Track and {term}`Agent` Track"
+msgstr "**两条评估路径**：LLM 路径和 {term}`Agent` 路径"
+
+#: ../../source/index.md:38
+msgid ""
+"**Automatic verification**: accuracy testing with tolerance-based "
+"comparison"
+msgstr "**自动化验证**：基于容差比较的精度测试"
+
+#: ../../source/index.md:40
+msgid "Citation"
+msgstr "引用"

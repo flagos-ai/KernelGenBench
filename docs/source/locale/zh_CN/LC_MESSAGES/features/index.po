@@ -1,0 +1,36 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2026, FlagOS Community
+# This file is distributed under the same license as the KernelGenBench
+# Documentation package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: KernelGenBench Documentation \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-06-15 10:42+0800\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: zh_CN\n"
+"Language-Team: zh_CN <LL@li.org>\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.17.0\n"
+
+#: ../../source/features/index.md:1
+msgid "Features"
+msgstr "功能特性"
+
+#: ../../source/features/index.md:3
+msgid "Understand the technical capabilities of KernelGenBench."
+msgstr "了解 KernelGenBench 的技术能力。"
+
+#: ../../source/features/index.md:5
+msgid ""
+"This section provides detailed technical explanations of each feature: "
+"multi-source operators, multi-chip support, anti-hack validation, and "
+"evaluation metrics."
+msgstr ""
+"本节详细介绍每项功能的技术细节：多源算子、多芯片支持、防作弊验证和评估指标。"

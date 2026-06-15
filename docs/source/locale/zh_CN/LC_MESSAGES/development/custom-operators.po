@@ -1,0 +1,96 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2026, FlagOS Community
+# This file is distributed under the same license as the KernelGenBench
+# Documentation package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: KernelGenBench Documentation \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-06-15 10:42+0800\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: zh_CN\n"
+"Language-Team: zh_CN <LL@li.org>\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.17.0\n"
+
+#: ../../source/development/custom-operators.md:1
+msgid "Custom Operators"
+msgstr "自定义算子"
+
+#: ../../source/development/custom-operators.md:3
+msgid "How to add custom operators to KernelGenBench."
+msgstr "如何向 KernelGenBench 添加自定义算子。"
+
+#: ../../source/development/custom-operators.md:5
+msgid "Overview"
+msgstr "概述"
+
+#: ../../source/development/custom-operators.md:7
+msgid "To benchmark your own operators:"
+msgstr "要对您自己的算子进行基准测试："
+
+#: ../../source/development/custom-operators.md:8
+msgid "Add test cases to `src/kernelgenbench/accuracy/`"
+msgstr "将测试用例添加到 `src/kernelgenbench/accuracy/`"
+
+#: ../../source/development/custom-operators.md:9
+msgid "Register them in the dataset"
+msgstr "在数据集中注册它们"
+
+#: ../../source/development/custom-operators.md:10
+msgid "Create operator schema"
+msgstr "创建算子模式"
+
+#: ../../source/development/custom-operators.md:12
+msgid "Step 1: Create Accuracy Test"
+msgstr "步骤 1：创建正确性测试"
+
+#: ../../source/development/custom-operators.md:14
+msgid "Create a file in `src/kernelgenbench/accuracy/`:"
+msgstr "在 `src/kernelgenbench/accuracy/` 中创建文件："
+
+#: ../../source/development/custom-operators.md:45
+msgid "Step 2: Register Operator"
+msgstr "步骤 2：注册算子"
+
+#: ../../source/development/custom-operators.md:47
+msgid "Add to `src/kernelgenbench/dataset/registry.py`:"
+msgstr "添加到 `src/kernelgenbench/dataset/registry.py`："
+
+#: ../../source/development/custom-operators.md:60
+msgid "Step 3: Create Schema (Optional)"
+msgstr "步骤 3：创建模式（可选）"
+
+#: ../../source/development/custom-operators.md:62
+msgid "For LLM prompt generation, create a schema:"
+msgstr "对于 LLM 提示生成，创建一个模式："
+
+#: ../../source/development/custom-operators.md:80
+msgid "Test Your Operator"
+msgstr "测试您的算子"
+
+#: ../../source/development/custom-operators.md:89
+msgid "Best Practices"
+msgstr "最佳实践"
+
+#: ../../source/development/custom-operators.md:91
+msgid "**Comprehensive test cases** - Cover edge cases"
+msgstr "**全面的测试用例** - 覆盖边缘情况"
+
+#: ../../source/development/custom-operators.md:92
+msgid "**Multiple dtypes** - Test float16, float32, etc."
+msgstr "**多种数据类型** - 测试 float16、float32 等"
+
+#: ../../source/development/custom-operators.md:93
+msgid "**Various shapes** - Test small and large tensors"
+msgstr "**各种形状** - 测试小张量和大张量"
+
+#: ../../source/development/custom-operators.md:94
+msgid "**Clear descriptions** - Help LLMs understand the operator"
+msgstr "**清晰的描述** - 帮助 LLM 理解算子"
