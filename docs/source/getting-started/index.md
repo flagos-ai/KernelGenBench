@@ -87,7 +87,7 @@ Test with a single {term}`Operator` to verify everything works:
 python scripts/generate_kernel_and_verify.py \
     --op-name aten::add \
     --single-test \
-    --server-type openai \
+    --server-type openai \s
     --model-name gpt-4o \
     --max-rounds 3
 ```
