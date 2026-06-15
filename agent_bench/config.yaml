@@ -1,0 +1,44 @@
+# Agent Benchmark Configuration
+
+# Agent configuration
+agent:
+  type: claude           # claude / cursor / custom
+  bin: claude            # path to executable
+  timeout: 1800          # per-operator timeout (seconds)
+  max_retries: 3         # max retries on failure
+  budget: 50.0           # per-operator budget (USD, claude only)
+
+# Device configuration
+# Device type is auto-detected (CUDA, NPU, MUSA, Iluvatar, Hygon DCU, MetaX).
+# Override with GEMS_VENDOR env var: nvidia, ascend, mthreads, iluvatar, hygon, muxi
+device:
+  gpu_ids: null          # null=auto-detect, or [0,1,2,3]
+  lock_dir: /tmp/agent_bench_gpu_locks
+
+# Path configuration (relative to agent_bench/ directory)
+paths:
+  prompts: prompts
+  runs: runs
+  templates: templates
+  python: python3        # Python interpreter path - set to your conda env, e.g. /path/to/conda/envs/myenv/bin/python
+
+# Dataset to test module mapping (relative to project root)
+# Sub-datasets (KernelGenBench-aten, etc.) are useful for non-NVIDIA chips that
+# don't support cuBLAS operators.
+test_modules:
+  KernelGenBench:
+    - src/kernelgenbench/accuracy/test_ops_with_benchmark.py
+    - src/kernelgenbench/accuracy/vllm13/
+    - src/kernelgenbench/accuracy/cublas/
+  KernelGenBench-aten:
+    - src/kernelgenbench/accuracy/test_ops_with_benchmark.py
+  KernelGenBench-vllm:
+    - src/kernelgenbench/accuracy/vllm13/
+  KernelGenBench-cublas:
+    - src/kernelgenbench/accuracy/cublas/
+  KernelGenBench-nocublas:
+    - src/kernelgenbench/accuracy/test_ops_with_benchmark.py
+    - src/kernelgenbench/accuracy/vllm13/
+
+# Poll interval (seconds)
+poll_interval: 10

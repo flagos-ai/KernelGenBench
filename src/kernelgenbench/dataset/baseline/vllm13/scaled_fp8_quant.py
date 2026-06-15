@@ -2,7 +2,10 @@
 vLLM scaled_fp8_quant baseline wrapper.
 """
 import torch
-from vllm import _custom_ops
+try:
+    from vllm import _custom_ops
+except ModuleNotFoundError:
+    _custom_ops = None
 
 
 def scaled_fp8_quant(

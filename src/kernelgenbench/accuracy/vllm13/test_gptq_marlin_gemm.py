@@ -5,7 +5,10 @@ from sandbox.utils.accuracy_utils import kernelgenbench_assert_close as assert_c
 from sandbox.utils.accuracy_utils import CustomBenchmarkResult
 import torch
 import triton
-from vllm.scalar_type import scalar_types
+try:
+    from vllm.scalar_type import scalar_types
+except ModuleNotFoundError:
+    scalar_types = None
 
 @label("gptq_marlin_gemm")
 @parametrize("config", [

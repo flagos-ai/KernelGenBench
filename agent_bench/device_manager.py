@@ -10,6 +10,13 @@ import time
 
 logger = logging.getLogger(__name__)
 
+# Prevent torch from auto-loading chip-specific backends on domestic hardware.
+# Must be set before any `import torch` — this module is imported early enough.
+if os.environ.get("ASCEND_RT_VISIBLE_DEVICES") or \
+   os.environ.get("MUSA_VISIBLE_DEVICES") or \
+   os.environ.get("GEMS_VENDOR"):
+    os.environ.setdefault("TORCH_DEVICE_BACKEND_AUTOLOAD", "0")
+
 
 def detect_device_type() -> str:
     """Detect current device type: 'cuda', 'npu', 'musa', 'iluvatar', 'hygon', or 'muxi'."""

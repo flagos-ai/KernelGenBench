@@ -36,14 +36,99 @@ KernelGenBench is a component of [FlagOS](https://flagos.io/) — a unified, ope
 - **Multiple agent methods**: Claude Code, OpenCode, AutoKernel, AKO4ALL
 - **Automatic verification**: accuracy testing with three-tier anti-hack mechanism
 
-## Quick Start
+### NVIDIA
 
 ```bash
-# NVIDIA platform
+git clone https://github.com/flagos-ai/KernelGenBench.git
+cd KernelGenBench
 pip install -r requirements/requirements_nvidia.txt
 pip install -e .
+```
 
-# Test single operator
+> `vllm==0.13.0` will automatically install compatible versions of torch and triton.
+
+### Domestic Chips (Ascend / MUSA / Hygon / Iluvatar / MetaX)
+
+On domestic chips, torch and the chip-specific runtime (e.g., torch_npu, torch_musa) are pre-installed in the vendor container image. Use the vendor-provided Docker image to start a container, then install KernelGenBench inside it:
+
+```bash
+# Start the vendor container (example for Ascend NPU)
+docker run -it --rm --network host \
+    --device=/dev/davinci0 --device=/dev/davinci_manager \
+    ascend/pytorch:latest bash
+
+# Inside the container, clone and install
+git clone https://github.com/flagos-ai/KernelGenBench.git
+cd KernelGenBench
+pip install -r requirements/requirements_ascend.txt
+pip install -e .
+
+# For other chips, replace the requirements file:
+#   Hygon DCU:  requirements/requirements_hygon.txt
+#   MUSA:       requirements/requirements_musa.txt
+#   Iluvatar:   requirements/requirements_iluvatar.txt
+#   MetaX:      requirements/requirements_metax.txt
+```
+
+> **Note**: Do NOT install vllm on non-NVIDIA platforms — it is NVIDIA-only.
+
+Configure API credentials:
+
+```bash
+# Anthropic Claude
+export ANTHROPIC_API_KEY=your_key
+
+# OpenAI / OpenAI-compatible
+export OPENAI_API_KEY=your_key
+export OPENAI_BASE_URL=http://your-endpoint/v1  # optional, for custom endpoints
+```
+
+> **For Agent Track**, also install Claude Code CLI:
+> ```bash
+> npm install -g @anthropic-ai/claude-code
+> ```
+
+## Datasets
+
+| Dataset | Operators | Description |
+|---------|-----------|-------------|
+| `KernelGenBench` | 210 | Full set (ATen + vLLM + cuBLAS, NVIDIA-only) |
+| `KernelGenBench-aten` | 110 | ATen operators only |
+| `KernelGenBench-vllm` | 50 | vLLM operators only (NVIDIA-only) |
+| `KernelGenBench-cublas` | 50 | cuBLAS operators only (NVIDIA-only) |
+
+On non-NVIDIA chips, the default dataset is automatically set to `KernelGenBench-aten` (vLLM and cuBLAS operators require NVIDIA GPUs).
+
+## Supported Devices
+
+KernelGenBench supports 6 hardware platforms: NVIDIA, Ascend, MUSA, Hygon, Iluvatar, MetaX.
+
+Device type is auto-detected. All platforms use the same commands — the framework handles device differences automatically.
+
+## Results
+
+### Multi-Source (NVIDIA A100, 210 operators)
+
+Evaluation across 210 operators from three sources (ATen, vLLM, cuBLAS), showing accuracy and speedup by operator source across all generation paradigms.
+
+![Multi-Source Results](assets/table_multi_source.png)
+
+### Multi-Chip (110 ATen operators, 6 platforms)
+
+Cross-platform evaluation on 110 ATen operators across six hardware platforms, showing whether correctness and speedup transfer across heterogeneous hardware backends. Platforms A–E are anonymized vendor hardware.
+
+![Multi-Chip Results](assets/table_multi_chip.png)
+
+![Cross-platform accuracy, speedup, and ecosystem overhead](assets/figure_crossplatform.png)
+
+*Generating Triton kernels on non-NVIDIA hardware incurs significant additional cost — up to 2× more tokens and time due to immature compilers and incomplete backend support.*
+
+## LLM Track
+
+Evaluate an LLM on generating Triton kernels with Pass@K metric:
+
+```bash
+# Single operator test
 python scripts/generate_kernel_and_verify.py \
     --op-name aten::add \
     --single-test \
@@ -77,4 +162,4 @@ python scripts/generate_kernel_and_verify.py \
 
 ## License
 
-MIT License
+This project is licensed under the Apache 2.0 License.

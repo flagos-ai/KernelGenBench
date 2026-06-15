@@ -4,7 +4,10 @@ vLLM moe_align_block_size baseline wrapper.
 This wrapper calls the vLLM C++ implementation directly.
 """
 
-from vllm import _custom_ops
+try:
+    from vllm import _custom_ops
+except ModuleNotFoundError:
+    _custom_ops = None
 
 
 def moe_align_block_size(
