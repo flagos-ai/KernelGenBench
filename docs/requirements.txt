@@ -1,0 +1,15 @@
+myst-parser
+sphinx-multiproject==1.0.0
+sphinx-rtd-theme
+sphinx-book-theme~=1.1
+sphinx-autodoc2~=0.5.0
+sphinx-design
+sphinx-copybutton
+sphinxext.rediraffe~=0.3.0
+sphinxcontrib.mermaid~=0.7.1
+sphinxext.opengraph~=0.13.0
+sphinx-pyscript
+sphinx-tippy>=0.4.3
+sphinx-togglebutton
+sphinx-tabs==3.4.7
+sphinx-prompt==1.10.2
