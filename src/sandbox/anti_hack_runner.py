@@ -43,6 +43,8 @@ class AntiHackRunner:
             return "cublas"
         elif op_name.startswith("aten::"):
             return "torch"
+        elif op_name.startswith("sglang::"):
+            return "sglang"
         return self.dataset
 
     def need_namespace_triton(self, op_name: str) -> bool:

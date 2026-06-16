@@ -2,57 +2,86 @@
 Anti-hack detection module for kernelgenbench.
 
 Three layers of defense:
-1. Static AST scan: detect forbidden imports/calls before execution
+1. Static AST scan: whitelist-based torch API detection + forbidden import detection
 2. Dual-execution comparison: disable triton.jit and re-run, if results unchanged -> hack
 3. GPU profiling fingerprint: compare launched kernel names against expected patterns
 """
 
 import ast
 import logging
-from typing import Tuple, List, Callable, Any
+from typing import Tuple, List, Callable, Any, Set
 from contextlib import contextmanager
 
 logger = logging.getLogger(__name__)
 
-# Default blacklisted module prefixes
-BLACKLISTED_MODULES = [
-    "vllm",
-    "torch.ops.vllm",
-]
+# ============================================================
+# Layer 1a: Whitelist — allowed torch.* API calls
+# ============================================================
+# Any torch.X() call NOT in this whitelist is considered a hack.
+# Only tensor creation, dtype/size helpers, and triton API are allowed.
 
-# Per-backend blacklists
+ALLOWED_TORCH_API: Set[str] = {
+    # Tensor creation
+    "torch.empty", "torch.zeros", "torch.ones", "torch.randn", "torch.rand",
+    "torch.randint", "torch.arange", "torch.linspace", "torch.logspace",
+    "torch.tensor", "torch.as_tensor", "torch.from_numpy",
+    "torch.empty_like", "torch.zeros_like", "torch.ones_like", "torch.randn_like",
+    "torch.full", "torch.full_like",
+    # Dtype / type
+    "torch.float16", "torch.bfloat16", "torch.float32", "torch.float64",
+    "torch.int8", "torch.uint8", "torch.int16", "torch.int32", "torch.int64",
+    "torch.bool", "torch.long", "torch.half", "torch.double",
+    "torch.Size",
+    # Constants
+    "torch.pi", "torch.inf", "torch.nan", "torch.e",
+    # Device / CUDA setup
+    "torch.cuda.current_device", "torch.cuda.synchronize",
+    "torch.cuda.device_count", "torch.cuda.get_device_name",
+    "torch.cuda.get_device_capability", "torch.cuda.is_available",
+    "torch.cuda.device",
+    # Global flags
+    "torch.no_grad", "torch.enable_grad", "torch.set_grad_enabled",
+    "torch.manual_seed", "torch.set_default_device", "torch.set_default_dtype",
+    "torch._C._cuda_getDeviceCount",  # used in triton internals
+    # Triton API
+    "triton.next_power_of_2", "triton.cdiv", "triton.autotune",
+    "triton.Config", "triton.heuristics",
+    "triton.language", "tl.",  # triton language operations
+}
+
+# triton.language.* and tl.* are special: any call starting with these prefixes
+# is allowed (they represent thousands of triton operations)
+_TRITON_ALLOWED_PREFIXES = ("triton.language.", "tl.", "triton.")
+
+# ============================================================
+# Layer 1b: Hard blacklist — always-forbidden imports/modules
+# ============================================================
+
+# Per-backend hard blacklists (always forbidden regardless of whitelist)
 BACKEND_BLACKLISTS = {
-    "vllm": [
-        "vllm",
-        "torch.ops.vllm",
-    ],
-    "vllm13": [
-        "vllm",
-        "torch.ops.vllm",
-    ],
-    "vllm15": [
-        "vllm",
-        "torch.ops.vllm",
-    ],
-    "cublas": [
-        "cupy",
-        "cublas",
-        "ctypes",
-    ],
-    "torch": [
-        # torch backend: harder to define, only block direct aten dispatch
-        "torch.ops.aten",
-    ],
+    "vllm": ["vllm", "torch.ops.vllm"],
+    "vllm13": ["vllm", "torch.ops.vllm"],
+    "vllm15": ["vllm", "torch.ops.vllm"],
+    "cublas": ["cupy", "cublas", "ctypes"],
+    "torch": ["torch.ops.aten"],
+    # SGLang backends
+    "sglang": [],  # SGLang backend: harder to define specific blacklist beyond whitelist
 }
 
 
 class HackDetector(ast.NodeVisitor):
-    """AST visitor that detects hack patterns in generated code."""
+    """AST visitor that detects hack patterns in generated code.
+
+    Two checks:
+    1. Hard blacklist: forbidden imports/attribute access (ctypes, vllm, etc.)
+    2. Torch API whitelist: any torch.X() call NOT in ALLOWED_TORCH_API -> hack
+    """
 
     def __init__(self, blacklist: List[str] = None):
         self.violations: List[str] = []
-        self.blacklist = blacklist or BLACKLISTED_MODULES
+        self.blacklist = blacklist or []
 
+    # ---- Hard blacklist: imports ----
     def visit_Import(self, node: ast.Import):
         for alias in node.names:
             if self._is_blacklisted(alias.name):
@@ -69,7 +98,23 @@ class HackDetector(ast.NodeVisitor):
             )
         self.generic_visit(node)
 
+    # ---- Torch API whitelist: call detection ----
     def visit_Call(self, node: ast.Call):
+        # Get the full attribute chain of the call, e.g. "torch.sum"
+        call_chain = self._get_attr_chain(node.func)
+
+        if call_chain:
+            # Check hard blacklist first
+            if self._is_blacklisted(call_chain):
+                self.violations.append(
+                    f"Forbidden call: '{call_chain}()' (line {node.lineno})"
+                )
+            # Check torch API whitelist
+            elif self._is_torch_api(call_chain) and not self._is_allowed(call_chain):
+                self.violations.append(
+                    f"Forbidden torch API: '{call_chain}()' not in allowed whitelist (line {node.lineno})"
+                )
+
         # Detect __import__("vllm...")
         if isinstance(node.func, ast.Name) and node.func.id == "__import__":
             if node.args and isinstance(node.args[0], ast.Constant):
@@ -94,22 +139,37 @@ class HackDetector(ast.NodeVisitor):
 
         self.generic_visit(node)
 
+    # ---- Hard blacklist: attribute access ----
     def visit_Attribute(self, node: ast.Attribute):
-        # Detect torch.ops.vllm.xxx access
         attr_chain = self._get_attr_chain(node)
-        if attr_chain:
-            for blacklisted in self.blacklist:
-                if attr_chain.startswith(blacklisted):
-                    self.violations.append(
-                        f"Forbidden attribute access: '{attr_chain}' (line {node.lineno})"
-                    )
-                    break
+        if attr_chain and self._is_blacklisted(attr_chain):
+            self.violations.append(
+                f"Forbidden attribute access: '{attr_chain}' (line {node.lineno})"
+            )
         self.generic_visit(node)
 
+    # ---- Helpers ----
     def _is_blacklisted(self, module_name: str) -> bool:
         for prefix in self.blacklist:
             if module_name == prefix or module_name.startswith(prefix + "."):
                 return True
+        return False
+
+    def _is_torch_api(self, call_chain: str) -> bool:
+        """Check if this is a torch.* function call (as opposed to method call)."""
+        return call_chain.startswith("torch.")
+
+    def _is_allowed(self, call_chain: str) -> bool:
+        """Check if a call chain is in the allowed whitelist."""
+        # Exact match
+        if call_chain in ALLOWED_TORCH_API:
+            return True
+        # Prefix match for triton/tl
+        for prefix in _TRITON_ALLOWED_PREFIXES:
+            if call_chain.startswith(prefix):
+                return True
+        # Allow torch.Tensor attributes accessed as calls (e.g. x.to(), x.clone())
+        # These are typically tensor method calls, not torch API calls
         return False
 
     def _is_importlib_call(self, node: ast.Call) -> bool:
@@ -120,12 +180,21 @@ class HackDetector(ast.NodeVisitor):
         return False
 
     def _get_attr_chain(self, node: ast.AST) -> str:
+        """Reconstruct 'torch.nn.functional.relu' from AST Attribute nodes."""
         parts = []
         while isinstance(node, ast.Attribute):
             parts.append(node.attr)
             node = node.value
         if isinstance(node, ast.Name):
             parts.append(node.id)
+        elif isinstance(node, ast.Call):
+            # chained call like foo().bar — get the inner call chain
+            inner = self._get_attr_chain(node.func)
+            if inner:
+                return None  # too complex, skip
+            return None
+        else:
+            return None
         return ".".join(reversed(parts))
 
 
@@ -133,10 +202,14 @@ def check_code(code: str, backend: str = None) -> Tuple[bool, str]:
     """
     Check if generated code contains hack patterns.
 
+    Two-pronged check:
+    1. Torch API whitelist (always active): any torch.X() call not in ALLOWED_TORCH_API -> hack
+    2. Backend-specific hard blacklist: forbidden imports/access (ctypes, vllm, etc.)
+
     Args:
         code: generated triton kernel source code
-        backend: one of "vllm", "vllm13", "vllm15", "cublas", "torch".
-                 If provided, uses backend-specific blacklist.
+        backend: one of "vllm", "vllm13", "vllm15", "cublas", "torch", "sglang".
+                 If provided, also checks backend-specific hard blacklist.
 
     Returns:
         (is_hack, reason): True if hack detected, with explanation.
@@ -146,7 +219,7 @@ def check_code(code: str, backend: str = None) -> Tuple[bool, str]:
     except SyntaxError:
         return False, ""
 
-    blacklist = BACKEND_BLACKLISTS.get(backend) if backend else None
+    blacklist = BACKEND_BLACKLISTS.get(backend, []) if backend else []
     detector = HackDetector(blacklist=blacklist)
     detector.visit(tree)
 
