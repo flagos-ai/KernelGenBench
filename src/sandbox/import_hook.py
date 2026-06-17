@@ -107,11 +107,13 @@ class RuntimeSandbox:
     def __init__(self):
         self.hook = ImportHookSandbox()
         self.original_meta_path = None
+        self._secure_builtins = SecureBuiltins()
 
     def enable(self):
         """启用沙箱"""
         self.original_meta_path = sys.meta_path.copy()
         sys.meta_path.insert(0, self.hook)
+        self._secure_builtins.enable()
 
     def disable(self):
         """禁用沙箱"""
@@ -119,6 +121,7 @@ class RuntimeSandbox:
             sys.meta_path.remove(self.hook)
         if self.original_meta_path:
             sys.meta_path = self.original_meta_path
+        self._secure_builtins.disable()
 
     def get_import_log(self):
         """获取import日志"""

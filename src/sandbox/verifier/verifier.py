@@ -126,10 +126,16 @@ class Verifier:
         self._setup_sandbox()
 
     def _setup_sandbox(self):
-        """Apply lightweight sandbox protections before any verification."""
+        """Apply lightweight sandbox protections before any verification.
+
+        Env vars are inherited by subprocesses.
+        CUDA protector applies in-process immediately.
+        Import hook is intentionally NOT enabled here (too heavy for daily use).
+        For S-Level competition sandbox, use competition_evaluator.py.
+        """
         import os
 
-        # 1. Disable triton autotune / torch compile caches
+        # 1. Disable triton autotune / torch compile caches (inherited by subprocesses)
         os.environ.setdefault("TRITON_DISABLE_AUTOTUNE", "1")
         os.environ.setdefault("TRITON_CACHE_DIR", "/tmp/triton_cache")
         os.environ.setdefault("TORCHINDUCTOR_DISABLE", "1")
@@ -142,14 +148,6 @@ class Verifier:
             self._cuda_protector.setup()
         except Exception:
             self._cuda_protector = None
-
-        # 3. Runtime import hook (patch triton autotune / torch.compile at import time)
-        try:
-            from sandbox.import_hook import RuntimeSandbox
-            self._runtime_sandbox = RuntimeSandbox()
-            self._runtime_sandbox.enable()
-        except Exception:
-            self._runtime_sandbox = None
 
     def set_modules(self, modules: list, mode: str = "accuracy"):
         assert mode in ["accuracy", "performance"], f"mode must be accuracy or performance, got {mode}"
