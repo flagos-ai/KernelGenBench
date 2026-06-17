@@ -6,7 +6,7 @@ This guide helps you quickly set up {term}`KernelGenBench` and run your first ev
 
 Before installing {term}`KernelGenBench`, ensure you have:
 
-- Python 3.8 or higher
+- Python 3.10 or higher
 - {term}`CUDA` 11.0+ (for NVIDIA platforms)
 - API credentials for your chosen {term}`LLM` provider
 
@@ -87,7 +87,7 @@ Test with a single {term}`Operator` to verify everything works:
 python scripts/generate_kernel_and_verify.py \
     --op-name aten::add \
     --single-test \
-    --server-type openai \s
+    --server-type openai \
     --model-name gpt-4o \
     --max-rounds 3
 ```
@@ -105,7 +105,7 @@ python scripts/generate_kernel_and_verify.py \
 
 # Non-NVIDIA chips (ATen only, 110 operators)
 python scripts/generate_kernel_and_verify.py \
-    --dataset {term}`KernelGenBench-aten` \
+    --dataset KernelGenBench-aten \
     --server-type openai \
     --model-name gpt-4o \
     --max-rounds 10
@@ -115,10 +115,10 @@ python scripts/generate_kernel_and_verify.py \
 
 | Dataset | Operators | Description |
 |---------|-----------|-------------|
-| `{term}`KernelGenBench`` | 210 | Full set ({term}`ATen` + {term}`vLLM` + {term}`cuBLAS`) |
-| `{term}`KernelGenBench-aten`` | 110 | {term}`ATen` operators only |
-| `{term}`KernelGenBench-vllm`` | 50 | {term}`vLLM` operators only (NVIDIA only) |
-| `{term}`KernelGenBench-cublas`` | 50 | {term}`cuBLAS` operators only (NVIDIA only) |
+| `KernelGenBench` | 210 | Full set (ATen + vLLM + cuBLAS, NVIDIA) |
+| `KernelGenBench-aten` | 110 | ATen operators only |
+| `KernelGenBench-vllm` | 50 | vLLM operators only (NVIDIA only) |
+| `KernelGenBench-cublas` | 50 | cuBLAS operators only (NVIDIA only) |
 
 ```{note}
 On non-NVIDIA chips, the default dataset is automatically set to {term}`KernelGenBench-aten` because {term}`vLLM` and {term}`cuBLAS` operators require NVIDIA GPUs.
@@ -130,7 +130,7 @@ On non-NVIDIA chips, the default dataset is automatically set to {term}`KernelGe
 
 ```bash
 # Check detected device
-python -c "from kernelgenbench.runtime import get_device_type; print(get_device_type())"
+python -c "from runtime import get_device_type; print(get_device_type())"
 ```
 
 ## Troubleshooting

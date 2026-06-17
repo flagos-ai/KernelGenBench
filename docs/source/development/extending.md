@@ -129,7 +129,7 @@ Create `agent_bench/test_my_method.sh`:
 ```bash
 #!/bin/bash
 # Test script for my_method
-python runner.py --method my_method "$@"
+python run.py --method my_method "$@"
 ```
 
 ## Adding New Evaluation Metrics
@@ -147,7 +147,7 @@ def compute_my_metric(results):
 
 ```bash
 # Test new platform
-python -c "from kernelgenbench.runtime import get_device_type; print(get_device_type())"
+python -c "from runtime import get_device_type; print(get_device_type())"
 
 # Test new method
 cd agent_bench && bash test_my_method.sh add --device-count 1

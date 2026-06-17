@@ -19,7 +19,7 @@ Device type is automatically detected at runtime:
 
 ```bash
 # Check detected device
-python -c "from kernelgenbench.runtime import get_device_type; print(get_device_type())"
+python -c "from runtime import get_device_type; print(get_device_type())"
 ```
 
 ## Unified Commands

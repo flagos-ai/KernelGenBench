@@ -83,7 +83,7 @@ Linear algebra benchmark.
 ```bash
 # Specify dataset
 python scripts/generate_kernel_and_verify.py \
-    --dataset {term}`KernelGenBench-aten` \
+    --dataset KernelGenBench-aten \
     --server-type openai
 ```
 

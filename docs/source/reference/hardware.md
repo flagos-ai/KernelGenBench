@@ -17,7 +17,7 @@ Details about supported hardware platforms.
 
 ```bash
 # Check detected device
-python -c "from kernelgenbench.runtime import get_device_type; print(get_device_type())"
+python -c "from runtime import get_device_type; print(get_device_type())"
 ```
 
 ## Platform-Specific Features
