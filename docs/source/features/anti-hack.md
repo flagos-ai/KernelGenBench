@@ -13,18 +13,27 @@ The anti-hack architecture guards against "cheating" behaviors where generated c
 
 ### Purpose
 
-Block blacklisted API calls before execution.
+Enforce a whitelist-based approach: most `torch.*` API calls are forbidden.
+Only tensor creation, dtype helpers, and constants are allowed.
 
 ### Method
 
 Parse the generated abstract syntax tree (AST) to detect and block:
 
+**Whitelist (allowed torch APIs):**
+`torch.empty`, `torch.zeros`, `torch.randn`, `torch.range`, `torch.float16`, etc.
+
+**Detected patterns (blocked):**
+
 | Blocked Pattern | Reason |
 |-----------------|--------|
-| `torch.ops.aten.*` | Direct PyTorch API calls |
-| `import vllm` | Using {term}`vLLM` implementation |
-| `ctypes` | Dynamic library loading |
-| `__import__` | Dynamic imports |
+| `torch.*()` not in whitelist | Prevents using torch.sum/mean/mm/reductions |
+| `print()` | Prevents input sniffing from test harness |
+| `.data_ptr()` / `.storage()` | Prevents raw memory access |
+| Module-level `_cache = {}` | Prevents inter-iteration result caching |
+| `import vllm` | Using pre-existing implementations |
+| `exec()` / `eval()` | Dynamic code execution |
+| Import alias / `getattr()` bypass | Catches obfuscation attempts |
 
 ### Implementation
 

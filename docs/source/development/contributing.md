@@ -30,7 +30,7 @@ pip install -r requirements/requirements_nvidia.txt
 pip install -e .
 
 # Run tests
-python -m pytest tests/
+python scripts/generate_kernel_and_verify.py --single-test --server-type openai
 ```
 
 ## Code Style

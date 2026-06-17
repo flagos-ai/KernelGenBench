@@ -116,6 +116,7 @@ python scripts/generate_kernel_and_verify.py \
 | Dataset | Operators | Description |
 |---------|-----------|-------------|
 | `KernelGenBench` | 210 | Full set (ATen + vLLM + cuBLAS, NVIDIA) |
+| `KernelGenBench-nocublas` | 160 | ATen + vLLM (NVIDIA, no cuBLAS) |
 | `KernelGenBench-aten` | 110 | ATen operators only |
 | `KernelGenBench-vllm` | 50 | vLLM operators only (NVIDIA only) |
 | `KernelGenBench-cublas` | 50 | cuBLAS operators only (NVIDIA only) |

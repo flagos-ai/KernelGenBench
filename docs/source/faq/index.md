@@ -6,7 +6,7 @@ This section answers common questions about KernelGenBench.
 
 ### Q: Which Python version do I need?
 
-**A**: Python 3.8 or higher is required. Python 3.10+ is recommended for best compatibility.
+**A**: Python 3.10 or higher is required.
 
 ### Q: Can I use KernelGenBench on CPU-only machines?
 
@@ -82,7 +82,7 @@ cd agent_bench && bash test_ops.sh add --device-count 1
 
 **A**:
 - LLM Track: `output/pass_at_k/<timestamp>/`
-- Agent Track: `agent_bench/runs/<timestamp>/`
+- Agent Track: `agent_bench/runs/<method>_<dataset>_<timestamp>/`
 
 ## Errors
 

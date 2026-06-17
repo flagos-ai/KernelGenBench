@@ -13,12 +13,12 @@ Reference list of operator sources in {term}`KernelGenBench`.
 
 | Category | Operators |
 |----------|-----------|
-| Arithmetic | `add`, `sub`, `mul`, `div` |
-| Reduction | `sum`, `mean`, `max`, `min` |
+| Arithmetic | `add`, `div`, `floor_divide`, `cos`, `sin` |
+| Reduction | `sum`, `mean`, `argmax`, `amin` |
 | Linear | `matmul`, `linear`, `bmm` |
-| Normalization | `softmax`, `layer_norm` |
-| Activation | `relu`, `gelu`, `silu` |
-| Shape Operations | `reshape`, `transpose`, `permute` |
+| Normalization | `_softmax`, `softmax` |
+| Activation | `hardsigmoid`, `prelu`, `heaviside` |
+| Shape Operations | `expand`, `repeat`, `view` |
 
 ## vLLM Operators (50)
 
@@ -45,9 +45,9 @@ Reference list of operator sources in {term}`KernelGenBench`.
 
 | Precision | Standard | StridedBatched | Batched |
 |-----------|----------|----------------|---------|
-| Float32 | `cublasSgemm` | `cublasSgemmStridedBatched` | `cublasSgemmBatched` |
+| Float32 | `cublasSgemm_v2` | `cublasSgemmStridedBatched` | `cublasSgemmBatched_64` |
 | Float64 | — | `cublasDgemmStridedBatched` | `cublasDgemmBatched` |
-| Complex64 | `cublasCgemm` | `cublasCgemmStridedBatched` | — |
+| Complex64 | `cublasCgemm_v2` | `cublasCgemmStridedBatched` | — |
 | Complex128 | — | `cublasZgemmStridedBatched` | `cublasZgemmBatched` |
 | Float16 | — | `cublasHgemmStridedBatched` | `cublasHgemmBatched` |
 
@@ -64,4 +64,4 @@ Reference list of operator sources in {term}`KernelGenBench`.
 |--------|--------|---------|
 | {term}`ATen` | `aten::` | `aten::add.Tensor` |
 | {term}`vLLM` | `vllm13::` | `vllm13::rms_norm` |
-| {term}`cuBLAS` | `cublas` | `cublasSgemm_v2` |
+| {term}`cuBLAS` | `cublas::` | `cublas::cublasSgemm_v2` |

@@ -10,9 +10,9 @@ Available agent methods in KernelGenBench.
 | `normal_cc` | Claude Code + self-verification loop | Opus, GLM, Qwen, MiniMax |
 | `naive_opencode` | Single OpenCode call | Opus, GLM, Qwen, MiniMax |
 | `normal_opencode` | OpenCode + self-verification loop | Opus, GLM, Qwen, MiniMax |
-| AutoKernel | Automated kernel optimization | GLM, Qwen |
-| AKO4ALL | Kernel optimization for all operators | Opus |
-| cuda-optimized-skill | CUDA optimization with strategy memory | Opus |
+| AutoKernel | Automated kernel optimization (standalone: `test_autokernel.sh`) | GLM, Qwen |
+| AKO4ALL | Kernel optimization for all operators (standalone: `test_ako4all.sh`) | Opus |
+| cuda-optimized-skill | CUDA optimization with strategy memory (standalone) | Opus |
 
 ## Basic Agent Frameworks
 

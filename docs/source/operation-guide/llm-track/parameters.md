@@ -38,7 +38,7 @@ Specify a single operator to test:
 --op-name vllm13::rms_norm
 
 # cuBLAS operator
---op-name cublasSgemm_v2
+--op-name cublas::cublasSgemm_v2
 ```
 
 ### --dataset
@@ -69,6 +69,6 @@ Results saved to `output/pass_at_k/<timestamp>/`:
 
 | File | Description |
 |------|-------------|
-| `results.json` | Complete results |
+| `pass_at_k_results.json` | Complete results |
 | `kernels/` | Generated kernel files |
 | `checkpoints/` | Resume checkpoints |

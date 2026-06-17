@@ -1,12 +1,13 @@
 # Datasets
 
-{term}`KernelGenBench` provides four dataset variants for different evaluation scenarios.
+{term}`KernelGenBench` provides five dataset variants for different evaluation scenarios.
 
 ## Dataset Overview
 
 | Dataset | Operators | Sources | Platforms |
 |---------|-----------|---------|-----------|
 | {term}`KernelGenBench` | 210 | {term}`ATen` + {term}`vLLM` + {term}`cuBLAS` | NVIDIA only |
+| {term}`KernelGenBench-nocublas` | 160 | {term}`ATen` + {term}`vLLM` | NVIDIA only |
 | {term}`KernelGenBench-aten` | 110 | {term}`ATen` only | All platforms |
 | {term}`KernelGenBench-vllm` | 50 | {term}`vLLM` only | NVIDIA only |
 | {term}`KernelGenBench-cublas` | 50 | {term}`cuBLAS` only | NVIDIA only |

@@ -6,10 +6,10 @@ How to extend KernelGenBench with new platforms and methods.
 
 ### Step 1: Add Device Detection
 
-Edit `src/kernelgenbench/runtime/device.py`:
+Edit `src/runtime/__init__.py`:
 
 ```python
-def detect_device():
+def _detect_device_name() -> str:
     """Detect current hardware platform."""
     # Add detection logic for your platform
     if is_my_platform():
@@ -21,7 +21,7 @@ def detect_device():
 
 ### Step 2: Create Platform Configuration
 
-Create `src/kernelgenbench/runtime/platforms/my_platform.py`:
+Add platform constraints to the `DEVICE_CONSTRAINTS` dict in `src/runtime/__init__.py`:
 
 ```python
 class MyPlatformConfig:
@@ -134,7 +134,7 @@ python run.py --method my_method "$@"
 
 ## Adding New Evaluation Metrics
 
-Edit `src/kernelgenbench/metrics/`:
+Add custom analysis to `scripts/analyze/analyze.py`:
 
 ```python
 def compute_my_metric(results):
