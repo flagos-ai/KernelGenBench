@@ -1,76 +1,50 @@
 """
-File System Isolation for KernelGenBench sandbox.
-
-Ensures each test run has a clean filesystem:
-- Isolated HOME directory (tmpfs)
-- Disabled triton/torch/cuda caches
-- Cleanup after each test
+Layer 1: File System Isolation.
+From: triton_competition_anti_cheat_guide.md - Section 3
 """
 import os
 import shutil
 import tempfile
-import logging
-
-logger = logging.getLogger(__name__)
-
-# Cache paths that must be isolated or disabled per test run.
-_CACHE_PATHS = [
-    "~/.triton",
-    "~/.cache/triton",
-    "~/.torch",
-    "~/.cache/torch",
-    "~/.nv",
-    "~/.cache/nvidia",
-    "~/.cupy",
-]
 
 
 class CacheIsolator:
-    """Cache directory isolator for safe kernel evaluation.
+    """缓存目录隔离器"""
 
-    Usage:
-        with CacheIsolator() as home:
-            # HOME is now a fresh tmpdir, all caches isolated
-            run_test()
-
-        # after context exit: HOME restored, tmpdir cleaned up
-    """
+    CACHE_PATHS = [
+        '~/.triton',
+        '~/.cache/triton',
+        '~/.torch',
+        '~/.cache/torch',
+        '~/.nv',
+    ]
 
     def __init__(self):
-        self._original_home = None
-        self._isolated_home = None
+        self.original_home = os.environ.get('HOME', '/root')
+        self.isolated_home = None
 
-    def isolate(self) -> str:
-        """Create an isolated environment. Returns the isolated HOME path."""
-        self._original_home = os.environ.get("HOME", "/root")
-        self._isolated_home = tempfile.mkdtemp(prefix="kgenbench_isolated_")
+    def isolate(self):
+        """创建隔离环境"""
+        # 创建隔离HOME
+        self.isolated_home = tempfile.mkdtemp(prefix='isolated_home_')
+        os.environ['HOME'] = self.isolated_home
 
-        os.environ["HOME"] = self._isolated_home
+        # 设置所有缓存变量指向临时目录或禁用
+        os.environ['TRITON_CACHE_DIR'] = os.path.join(self.isolated_home, '.triton')
+        os.environ['TORCHINDUCTOR_CACHE_DIR'] = os.path.join(self.isolated_home, '.torch')
+        os.environ['CUDA_CACHE_DISABLE'] = '1'
+        os.environ['XDG_CACHE_HOME'] = os.path.join(self.isolated_home, '.cache')
 
-        # Point all caches into the isolated home (or disable)
-        triton_cache = os.path.join(self._isolated_home, ".triton")
-        inductor_cache = os.path.join(self._isolated_home, ".torch")
-        xdg_cache = os.path.join(self._isolated_home, ".cache")
+        # 创建必要的目录结构
+        os.makedirs(os.environ['TRITON_CACHE_DIR'], exist_ok=True)
+        os.makedirs(os.environ['TORCHINDUCTOR_CACHE_DIR'], exist_ok=True)
 
-        os.makedirs(triton_cache, exist_ok=True)
-        os.makedirs(inductor_cache, exist_ok=True)
-        os.makedirs(xdg_cache, exist_ok=True)
-
-        os.environ["TRITON_CACHE_DIR"] = triton_cache
-        os.environ["TORCHINDUCTOR_CACHE_DIR"] = inductor_cache
-        os.environ["XDG_CACHE_HOME"] = xdg_cache
-        os.environ["CUDA_CACHE_DISABLE"] = "1"
-
-        logger.debug(f"CacheIsolator: HOME isolated to {self._isolated_home}")
-        return self._isolated_home
+        return self.isolated_home
 
     def cleanup(self):
-        """Clean up the isolated environment and restore original HOME."""
-        if self._isolated_home and os.path.exists(self._isolated_home):
-            shutil.rmtree(self._isolated_home, ignore_errors=True)
-            logger.debug(f"CacheIsolator: cleaned up {self._isolated_home}")
-        if self._original_home:
-            os.environ["HOME"] = self._original_home
+        """清理隔离环境"""
+        if self.isolated_home and os.path.exists(self.isolated_home):
+            shutil.rmtree(self.isolated_home, ignore_errors=True)
+        os.environ['HOME'] = self.original_home
 
     def __enter__(self):
         return self.isolate()

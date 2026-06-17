@@ -1,185 +1,205 @@
 """
-Bucketed Random Shape Generator for KernelGenBench.
-
-Generates GPU-alignment-friendly random shapes with controlled noise.
-Prevents shape-specific kernel caching while maintaining warp alignment.
+Layer 4: Bucketed Random Shape (replaces fully random primes).
+From: triton_competition_anti_cheat_guide.md - Section 6
 """
 import random
-from typing import Tuple, List, Optional, Dict
+from typing import List, Tuple, Optional
 from dataclasses import dataclass
 
 
 @dataclass
 class ShapeBucket:
-    base: int
-    noise_range: Tuple[int, int]  # (min, max) offset
-    alignment: int
+    """Shape分桶配置"""
+    base: int          # 基准值
+    noise_range: Tuple[int, int]  # 噪声范围
+    alignment: int     # 对齐要求
 
 
 class BucketedShapeGenerator:
-    """Generates random shapes within GPU-friendly buckets.
+    """分桶随机Shape生成器"""
 
-    Key principle: random enough to prevent shape-specific caching,
-    but aligned enough to not break warp/tile optimization paths.
-    """
-
-    # Standard shape buckets per size category
+    # 标准分桶配置（GPU友好）
     STANDARD_BUCKETS = {
-        "small": [
+        'small': [
             ShapeBucket(128, (-8, 8), 32),
             ShapeBucket(256, (-16, 16), 32),
             ShapeBucket(512, (-32, 32), 64),
         ],
-        "medium": [
+        'medium': [
             ShapeBucket(1024, (-64, 64), 128),
             ShapeBucket(2048, (-128, 128), 128),
             ShapeBucket(4096, (-256, 256), 256),
         ],
-        "large": [
+        'large': [
             ShapeBucket(8192, (-512, 512), 256),
             ShapeBucket(16384, (-1024, 1024), 512),
         ],
     }
 
-    # Specialized GEMM shapes
-    GEMM_OPTIONS = {
-        "M": [128, 256, 512, 1024, 2048, 4096, 8192],
-        "N": [128, 256, 512, 1024, 2048, 4096, 8192],
-        "K": [128, 256, 512, 1024, 2048, 4096, 8192],
+    # 特殊分桶（针对特定算子）
+    GEMM_BUCKETS = {
+        'M': [128, 256, 512, 1024, 2048, 4096, 8192],
+        'N': [128, 256, 512, 1024, 2048, 4096, 8192],
+        'K': [128, 256, 512, 1024, 2048, 4096, 8192],
     }
 
-    # Attention shapes
-    ATTENTION_OPTIONS = {
-        "seq_len": [128, 256, 512, 1024, 2048, 4096],
-        "head_dim": [64, 128, 256],
-        "num_heads": [8, 12, 16, 32],
-        "batch_size": [1, 2, 4, 8, 16, 32],
-    }
-
-    # Conv shapes
-    CONV_OPTIONS = {
-        "spatial": [28, 56, 112, 224],
-        "channels": [64, 128, 256, 512, 1024],
-        "kernel": [1, 3, 5, 7],
-    }
-
-    # Noise offsets per size category
-    NOISE_OFFSETS = {
-        "small": [-32, -16, 0, 16, 32],
-        "medium": [-128, -64, 0, 64, 128],
-        "large": [-512, -256, 0, 256, 512],
-    }
-
-    def __init__(self, seed: int = None):
-        self._rng = random.Random(seed)
-
-    def _apply_noise(self, value: int, alignment: int,
-                     size_category: str = "medium") -> int:
-        """Apply random noise while maintaining alignment."""
-        offsets = self.NOISE_OFFSETS.get(size_category, [-64, -32, 0, 32, 64])
-        noise = self._rng.choice(offsets)
-        result = value + noise
-        # Ensure positivity and alignment
-        result = max(alignment, result)
-        result = (result // alignment) * alignment
-        return result
+    def __init__(self, bucket_type: str = 'standard'):
+        self.bucket_type = bucket_type
 
     def generate_gemm_shape(self,
-                            size_category: str = None,
-                            noise_enabled: bool = True) -> Tuple[int, int, int]:
-        """Generate a (M, N, K) GEMM shape.
+                           size_category: str = 'mixed',
+                           noise_enabled: bool = True) -> Tuple[int, int, int]:
+        """
+        生成GEMM Shape
 
         Args:
-            size_category: 'small', 'medium', 'large', or None (random)
-            noise_enabled: if True, adds random noise within bucket
+            size_category: 'small', 'medium', 'large', 'mixed'
+            noise_enabled: 是否添加噪声
         """
-        if size_category is None:
-            size_category = self._rng.choice(["small", "medium", "large"])
+        if size_category == 'mixed':
+            # 随机选择大小类别
+            size_category = random.choice(['small', 'medium', 'large'])
 
-        M = self._rng.choice(self.GEMM_OPTIONS["M"])
-        N = self._rng.choice(self.GEMM_OPTIONS["N"])
-        K = self._rng.choice(self.GEMM_OPTIONS["K"])
+        # 选择基准值
+        if size_category == 'small':
+            M = random.choice([128, 256, 512])
+            N = random.choice([128, 256, 512])
+            K = random.choice([128, 256, 512])
+        elif size_category == 'medium':
+            M = random.choice([1024, 2048, 4096])
+            N = random.choice([1024, 2048, 4096])
+            K = random.choice([1024, 2048, 4096])
+        else:  # large
+            M = random.choice([8192, 16384])
+            N = random.choice([8192, 16384])
+            K = random.choice([8192, 16384])
 
+        # 添加噪声（保持对齐）
         if noise_enabled:
-            M = self._apply_noise(M, 64, size_category)
-            N = self._apply_noise(N, 64, size_category)
-            K = self._apply_noise(K, 64, size_category)
+            noise_m = random.choice([-128, -64, -32, 0, 32, 64, 128])
+            noise_n = random.choice([-128, -64, -32, 0, 32, 64, 128])
+            noise_k = random.choice([-128, -64, -32, 0, 32, 64, 128])
+
+            M = max(64, M + noise_m)
+            N = max(64, N + noise_n)
+            K = max(64, K + noise_k)
 
         return (M, N, K)
 
-    def generate_attention_shape(self) -> Dict:
-        """Generate an attention operator shape."""
+    def generate_conv_shape(self,
+                           batch_range: Tuple[int, int] = (1, 32),
+                           channel_range: Tuple[int, int] = (64, 512),
+                           spatial_range: Tuple[int, int] = (28, 224)) -> dict:
+        """生成Conv Shape"""
+        batch = random.randint(*batch_range)
+        in_channels = random.choice([64, 128, 256, 512, 768, 1024])
+        out_channels = random.choice([64, 128, 256, 512, 768, 1024])
+        height = random.choice([28, 56, 112, 224])
+        width = random.choice([28, 56, 112, 224])
+        kernel_size = random.choice([1, 3, 5, 7])
+
         return {
-            "batch": self._rng.choice(self.ATTENTION_OPTIONS["batch_size"]),
-            "seq_len": self._rng.choice(self.ATTENTION_OPTIONS["seq_len"]),
-            "num_heads": self._rng.choice(self.ATTENTION_OPTIONS["num_heads"]),
-            "head_dim": self._rng.choice(self.ATTENTION_OPTIONS["head_dim"]),
+            'batch': batch,
+            'in_channels': in_channels,
+            'out_channels': out_channels,
+            'height': height,
+            'width': width,
+            'kernel_size': kernel_size,
         }
 
-    def generate_conv_shape(self) -> Dict:
-        """Generate a convolution operator shape."""
-        return {
-            "batch": self._rng.randint(1, 32),
-            "in_channels": self._rng.choice(self.CONV_OPTIONS["channels"]),
-            "out_channels": self._rng.choice(self.CONV_OPTIONS["channels"]),
-            "spatial": self._rng.choice(self.CONV_OPTIONS["spatial"]),
-            "kernel_size": self._rng.choice(self.CONV_OPTIONS["kernel"]),
-        }
+    def generate_attention_shape(self,
+                                batch_range: Tuple[int, int] = (1, 32),
+                                seq_len_options: List[int] = None,
+                                head_dim_options: List[int] = None) -> dict:
+        """生成Attention Shape"""
+        if seq_len_options is None:
+            seq_len_options = [128, 256, 512, 1024, 2048]
+        if head_dim_options is None:
+            head_dim_options = [64, 128, 256]
 
-    def generate_shapes(self, op_type: str, count: int,
-                        size_category: str = None) -> List:
-        """Generate multiple shapes for a given operator type."""
-        shapes = []
-        for _ in range(count):
-            if op_type == "gemm":
-                shapes.append(self.generate_gemm_shape(size_category))
-            elif op_type == "attention":
-                shapes.append(self.generate_attention_shape())
-            elif op_type == "conv":
-                shapes.append(self.generate_conv_shape())
-        return shapes
+        batch = random.randint(*batch_range)
+        seq_len = random.choice(seq_len_options)
+        num_heads = random.choice([8, 12, 16, 32])
+        head_dim = random.choice(head_dim_options)
+
+        return {
+            'batch': batch,
+            'seq_len': seq_len,
+            'num_heads': num_heads,
+            'head_dim': head_dim,
+        }
 
 
 class TensorLayoutRandomizer:
-    """Randomizes tensor layout (stride/contiguity) to prevent kernel cache hits.
+    """张量Layout随机化器"""
 
-    Triton kernel cache keys include stride patterns. Randomizing these
-    ensures kernels get freshly compiled for each test.
-    """
+    def __init__(self):
+        self.layout_options = ['contiguous', 'strided', 'transposed']
 
-    LAYOUTS = ["contiguous", "strided", "transposed"]
+    def randomize_layout(self, tensor: "torch.Tensor") -> "torch.Tensor":
+        """
+        随机化张量Layout
 
-    def __init__(self, seed: int = None):
-        self._rng = random.Random(seed)
-
-    def randomize_2d(self, tensor) -> "torch.Tensor":
-        """Apply random 2D layout to a tensor."""
+        Triton kernel cache key包含：
+        - dtype
+        - stride pattern
+        - contiguity
+        随机化可以防止kernel复用
+        """
         import torch
-        layout = self._rng.choice(self.LAYOUTS)
+        layout = random.choice(self.layout_options)
 
-        if layout == "contiguous":
+        if layout == 'contiguous':
             return tensor.contiguous()
 
-        elif layout == "strided":
-            M, N = tensor.shape
-            stride_0 = N + self._rng.randint(1, 32)
-            t = torch.empty_strided((M, N), (stride_0, 1),
-                                    dtype=tensor.dtype, device=tensor.device)
-            t.copy_(tensor)
-            return t
+        elif layout == 'strided':
+            # 创建非连续stride
+            if tensor.dim() == 2:
+                M, N = tensor.shape
+                # 故意创建非对齐stride
+                stride_0 = N + random.randint(1, 32)
+                stride_1 = 1
+                new_tensor = torch.empty_strided(
+                    (M, N), (stride_0, stride_1),
+                    dtype=tensor.dtype, device=tensor.device
+                )
+                new_tensor.copy_(tensor)
+                return new_tensor
+            else:
+                return tensor
 
-        elif layout == "transposed":
-            return tensor.t().contiguous().t()
+        elif layout == 'transposed':
+            if tensor.dim() == 2:
+                return tensor.t().contiguous().t()
+            return tensor
 
         return tensor
 
-    def randomize_contiguity(self, tensor, prob: float = 0.3) -> "torch.Tensor":
-        """With given probability, create a non-contiguous view."""
-        if self._rng.random() < prob and tensor.dim() == 2:
-            M, N = tensor.shape
-            pad = self._rng.randint(1, 64)
-            padded = torch.zeros(M, N + pad, dtype=tensor.dtype,
-                                device=tensor.device)
-            padded[:, :N].copy_(tensor)
-            return padded[:, :N]
+    def randomize_contiguity(self, tensor: "torch.Tensor") -> "torch.Tensor":
+        """
+        随机化连续性
+
+        概率性添加padding或不连续stride
+        """
+        import torch
+        if random.random() < 0.3:
+            # 30%概率创建非连续张量
+            if tensor.dim() == 2:
+                M, N = tensor.shape
+                padded_N = N + random.randint(1, 64)
+                padded = torch.zeros(M, padded_N, dtype=tensor.dtype, device=tensor.device)
+                padded[:, :N] = tensor
+                return padded[:, :N]
+
         return tensor
+
+    def generate_random_strides(self, shape: Tuple[int, ...]) -> Tuple[int, ...]:
+        """生成随机stride"""
+        strides = []
+        current = 1
+        for dim in reversed(shape):
+            # 随机添加padding
+            padding = random.randint(0, 32)
+            strides.insert(0, current)
+            current = current * (dim + padding)
+        return tuple(strides)

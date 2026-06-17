@@ -1,20 +1,71 @@
 """
-CUDA Layer Protection for KernelGenBench sandbox.
-
-Disables/protects:
-- CUDA Graph (capture + replay)
-- cuBLAS/cuDNN state (reset between tests)
-- TF32 (prevents precision-related cache variance)
-- CUDA Profiler (prevents profiler-based caching)
+Layer 3: CUDA Layer Protection.
+From: triton_competition_anti_cheat_guide.md - Section 5
 """
 import torch
-import logging
-
-logger = logging.getLogger(__name__)
+import os
 
 
-class _DisabledGraphCtx:
-    """Context manager that raises when CUDA Graph is used."""
+class CUDALayerProtector:
+    """CUDA层保护器"""
+
+    def __init__(self):
+        self.original_graph = None
+        self.original_make_graphed_callables = None
+
+    def disable_cuda_graph(self):
+        """禁用CUDA Graph"""
+        if hasattr(torch, 'cuda'):
+            # 保存原始函数
+            if hasattr(torch.cuda, 'graph'):
+                self.original_graph = torch.cuda.graph
+            if hasattr(torch.cuda, 'make_graphed_callables'):
+                self.original_make_graphed_callables = torch.cuda.make_graphed_callables
+
+            # 替换为禁用版本
+            torch.cuda.graph = DisabledCUDAGraphContext
+            torch.cuda.make_graphed_callables = lambda *a, **k: a[0] if a else None
+
+    def reset_cuda_state(self):
+        """重置CUDA状态"""
+        if torch.cuda.is_available():
+            # 清空缓存
+            torch.cuda.empty_cache()
+
+            # 重置cuBLAS
+            if hasattr(torch.cuda, 'blas_handle'):
+                del torch.cuda.blas_handle
+
+            # 同步
+            torch.cuda.synchronize()
+
+            # 创建新的stream
+            torch.cuda.set_stream(torch.cuda.Stream())
+
+    def disable_cuda_profiler(self):
+        """禁用CUDA Profiler（防止利用profiler缓存）"""
+        os.environ['CUDA_PROFILER_DISABLE'] = '1'
+
+    def setup(self):
+        """完整设置"""
+        self.disable_cuda_graph()
+        self.reset_cuda_state()
+        self.disable_cuda_profiler()
+
+        # 禁用TF32（防止精度相关缓存）
+        torch.backends.cuda.matmul.allow_tf32 = False
+        torch.backends.cudnn.allow_tf32 = False
+
+    def restore(self):
+        """恢复原始状态"""
+        if self.original_graph and hasattr(torch.cuda, 'graph'):
+            torch.cuda.graph = self.original_graph
+        if self.original_make_graphed_callables and hasattr(torch.cuda, 'make_graphed_callables'):
+            torch.cuda.make_graphed_callables = self.original_make_graphed_callables
+
+
+class DisabledCUDAGraphContext:
+    """禁用的CUDA Graph上下文管理器"""
 
     def __init__(self, *args, **kwargs):
         raise RuntimeError(
@@ -27,71 +78,3 @@ class _DisabledGraphCtx:
 
     def __exit__(self, *args):
         pass
-
-
-class CUDALayerProtector:
-    """Protects CUDA layer from cache-based cheating."""
-
-    def __init__(self):
-        self._original_graph = None
-        self._original_make_graphed = None
-        self._original_tf32_matmul = None
-        self._original_tf32_cudnn = None
-
-    def disable_cuda_graph(self):
-        if not hasattr(torch, "cuda"):
-            return
-        if hasattr(torch.cuda, "graph"):
-            self._original_graph = torch.cuda.graph
-            torch.cuda.graph = _DisabledGraphCtx
-            logger.debug("CUDALayerProtector: CUDA Graph disabled")
-        if hasattr(torch.cuda, "make_graphed_callables"):
-            self._original_make_graphed = torch.cuda.make_graphed_callables
-            torch.cuda.make_graphed_callables = lambda *a, **k: a[0] if a else None
-
-    def disable_tf32(self):
-        """Disable TF32 to prevent precision-dependent caching."""
-        if hasattr(torch.backends, "cuda") and hasattr(torch.backends.cuda, "matmul"):
-            self._original_tf32_matmul = torch.backends.cuda.matmul.allow_tf32
-            torch.backends.cuda.matmul.allow_tf32 = False
-        if hasattr(torch.backends, "cudnn"):
-            self._original_tf32_cudnn = torch.backends.cudnn.allow_tf32
-            torch.backends.cudnn.allow_tf32 = False
-        logger.debug("CUDALayerProtector: TF32 disabled")
-
-    def reset_cuda_state(self):
-        """Reset CUDA state between tests."""
-        if not torch.cuda.is_available():
-            return
-        torch.cuda.empty_cache()
-        torch.cuda.synchronize()
-        torch.cuda.set_stream(torch.cuda.Stream())
-        logger.debug("CUDALayerProtector: CUDA state reset")
-
-    def disable_profiler(self):
-        import os
-        os.environ["CUDA_PROFILER_DISABLE"] = "1"
-
-    def setup(self):
-        self.disable_cuda_graph()
-        self.disable_tf32()
-        self.reset_cuda_state()
-        self.disable_profiler()
-
-    def restore(self):
-        if self._original_graph is not None and hasattr(torch.cuda, "graph"):
-            torch.cuda.graph = self._original_graph
-        if self._original_make_graphed is not None and hasattr(torch.cuda, "make_graphed_callables"):
-            torch.cuda.make_graphed_callables = self._original_make_graphed
-        if self._original_tf32_matmul is not None:
-            torch.backends.cuda.matmul.allow_tf32 = self._original_tf32_matmul
-        if self._original_tf32_cudnn is not None:
-            torch.backends.cudnn.allow_tf32 = self._original_tf32_cudnn
-        logger.debug("CUDALayerProtector: restored")
-
-    def __enter__(self):
-        self.setup()
-        return self
-
-    def __exit__(self, *args):
-        self.restore()

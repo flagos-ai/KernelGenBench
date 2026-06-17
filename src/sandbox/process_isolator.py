@@ -1,148 +1,151 @@
 """
-Process Isolation Execution for KernelGenBench.
-
-Each test runs in a fresh subprocess with:
-- Full sandbox layers applied (cache, import hook, CUDA, etc.)
-- Clean global state (no module-level cache leaks)
-- Independent memory space
+Layer 5: Process Isolation Execution.
+From: triton_competition_anti_cheat_guide.md - Section 7
 """
 import multiprocessing as mp
-import json
+import os
 import time
-import random
-from typing import Callable, Dict, Any, List, Optional
+from typing import Callable, Dict, Any
+from dataclasses import dataclass
 
 
-def _isolated_worker(test_fn: Callable, test_args: tuple,
-                    test_kwargs: dict, config: dict) -> Dict[str, Any]:
-    """Worker function that runs inside an isolated subprocess.
+@dataclass
+class TestConfig:
+    """测试配置"""
+    seed: int
+    shape: tuple
+    dtype: str
+    noise_config: dict
+    layout_config: dict
 
-    Applies all sandbox layers automatically before executing the test.
+
+def isolated_test_worker(config: Dict[str, Any]) -> Dict[str, Any]:
+    """
+    隔离进程工作函数
+
+    每次调用都是全新进程，清理所有全局状态
     """
     import torch
-    import os
+    import random
 
-    # === Layer 1: File system isolation ===
+    # ===== 第一步：文件系统隔离 =====
     from sandbox.cache_isolator import CacheIsolator
     cache_isolator = CacheIsolator()
     cache_isolator.isolate()
 
-    # === Layer 2: Environment variables ===
-    os.environ["TRITON_DISABLE_AUTOTUNE"] = "1"
-    os.environ["TORCHINDUCTOR_DISABLE"] = "1"
-    os.environ["TORCHDYNAMO_DISABLE"] = "1"
-    os.environ["CUDA_CACHE_DISABLE"] = "1"
+    # ===== 第二步：环境变量设置 =====
+    os.environ['TRITON_DISABLE_AUTOTUNE'] = '1'
+    os.environ['TORCHINDUCTOR_DISABLE'] = '1'
+    os.environ['TORCHDYNAMO_DISABLE'] = '1'
+    os.environ['CUDA_CACHE_DISABLE'] = '1'
 
-    # === Layer 3: Import hook sandbox ===
+    # ===== 第三步：启用Import Hook沙箱 =====
     from sandbox.import_hook import RuntimeSandbox
     sandbox = RuntimeSandbox()
     sandbox.enable()
 
-    # === Layer 4: CUDA protection ===
-    from sandbox.cuda_protector import CUDALayerProtector
-    cuda_protector = CUDALayerProtector()
-    cuda_protector.setup()
-
     try:
-        # Set seeds
-        seed = config.get("seed", 42)
-        torch.manual_seed(seed)
-        random.seed(seed)
+        # ===== 第四步：CUDA层保护 =====
+        from sandbox.cuda_protector import CUDALayerProtector
+        cuda_protector = CUDALayerProtector()
+        cuda_protector.setup()
+
+        # ===== 第五步：随机种子设置 =====
+        torch.manual_seed(config['seed'])
+        random.seed(config['seed'])
+
+        # ===== 第六步：准备输入 =====
+        M, N, K = config['shape']
+
+        # 创建输入张量
+        input_tensor = torch.randn((M, K), device='cuda',
+                                   dtype=getattr(torch, config['dtype']))
+        weight = torch.randn((K, N), device='cuda',
+                            dtype=getattr(torch, config['dtype']))
+
+        # 强制新内存分配
+        input_tensor = input_tensor.clone().contiguous()
+        weight = weight.clone().contiguous()
+
+        # Layout随机化（防止kernel cache复用）
+        from sandbox.shape_generator import TensorLayoutRandomizer
+        layout_randomizer = TensorLayoutRandomizer()
+        if config.get('randomize_layout', True):
+            weight = layout_randomizer.randomize_layout(weight)
+
+        # ===== 第七步：加载并执行算子 =====
+        operator = config['load_operator']()
 
         # Warmup
-        warmup = config.get("warmup_runs", 1)
-        for _ in range(warmup):
-            test_fn(*test_args, **test_kwargs)
-        if torch.cuda.is_available():
-            torch.cuda.synchronize()
+        for _ in range(config.get('warmup', 1)):
+            _ = operator(input_tensor, weight)
+        torch.cuda.synchronize()
 
-        # Timed runs
+        # 正式计时
         times = []
-        runs = config.get("timing_runs", 4)
-        for _ in range(runs):
-            if torch.cuda.is_available():
-                torch.cuda.synchronize()
+        for _ in range(config.get('runs', 4)):
+            torch.cuda.synchronize()
             start = time.perf_counter()
-            test_fn(*test_args, **test_kwargs)
-            if torch.cuda.is_available():
-                torch.cuda.synchronize()
-            times.append(time.perf_counter() - start)
+            output = operator(input_tensor, weight)
+            torch.cuda.synchronize()
+            end = time.perf_counter()
+            times.append(end - start)
 
-        return {"status": "success", "times": times}
+        return {
+            'times': times,
+            'shape': (M, N, K),
+            'seed': config['seed'],
+            'status': 'success'
+        }
 
     except Exception as e:
-        import traceback
         return {
-            "status": "error",
-            "error": str(e),
-            "traceback": traceback.format_exc(),
+            'error': str(e),
+            'status': 'failed'
         }
 
     finally:
+        # 清理
         sandbox.disable()
-        cuda_protector.restore()
         cache_isolator.cleanup()
 
 
 class ProcessIsolatedEvaluator:
-    """Runs tests in isolated subprocesses using spawn.
+    """进程隔离评测器"""
 
-    Each evaluation gets a completely fresh process with:
-    - Clean HOME and cache directories
-    - Active runtime import hooks
-    - CUDA protections enabled
-    - No leaked global/static state
+    def __init__(self, num_workers: int = 1):
+        self.ctx = mp.get_context('spawn')
 
-    Usage:
-        evaluator = ProcessIsolatedEvaluator()
-        result = evaluator.run(test_fn, input_a, input_b,
-                               warmup_runs=1, timing_runs=4)
-    """
-
-    def __init__(self):
-        self._ctx = mp.get_context("spawn")
-
-    def run(self,
-            test_fn: Callable,
-            *test_args,
-            warmup_runs: int = 1,
-            timing_runs: int = 4,
-            seed: int = None,
-            **test_kwargs) -> Dict[str, Any]:
-        """Run a single test in an isolated subprocess.
-
-        Args:
-            test_fn: callable to benchmark
-            *test_args: positional args passed to test_fn
-            warmup_runs: warmup iterations
-            timing_runs: timed iterations
-            seed: random seed (auto-generated if None)
-            **test_kwargs: keyword args passed to test_fn
-
-        Returns:
-            {"status": "success", "times": [...]} or {"status": "error", ...}
-        """
-        if seed is None:
-            seed = random.randint(0, 2**31 - 1)
-
+    def evaluate_single(self,
+                       operator_loader: Callable,
+                       test_config: TestConfig) -> Dict[str, Any]:
+        """单次评测"""
         config = {
-            "seed": seed,
-            "warmup_runs": warmup_runs,
-            "timing_runs": timing_runs,
+            'seed': test_config.seed,
+            'shape': test_config.shape,
+            'dtype': test_config.dtype,
+            'noise_config': test_config.noise_config,
+            'layout_config': test_config.layout_config,
+            'load_operator': operator_loader,
+            'warmup': 1,
+            'runs': 4,
+            'randomize_layout': True,
         }
 
-        with self._ctx.Pool(1) as pool:
-            result = pool.apply(_isolated_worker,
-                                (test_fn, test_args, test_kwargs, config))
+        # 序列化config（ multiprocessing需要）
+        # 注意：operator_loader需要能被pickle
+
+        with self.ctx.Pool(1) as pool:
+            result = pool.apply(isolated_test_worker, (config,))
+
         return result
 
-    def run_batch(self,
-                  test_fn: Callable,
-                  args_list: List[tuple],
-                  **kw) -> List[Dict[str, Any]]:
-        """Run multiple tests, each in its own isolated subprocess."""
+    def evaluate_batch(self,
+                      operator_loader: Callable,
+                      test_configs: list) -> list:
+        """批量评测（每组独立进程）"""
         results = []
-        for args in args_list:
-            result = self.run(test_fn, *args, **kw)
+        for config in test_configs:
+            result = self.evaluate_single(operator_loader, config)
             results.append(result)
-        return results
+        return result

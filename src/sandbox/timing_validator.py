@@ -1,20 +1,16 @@
 """
-Statistical Timing Validator for KernelGenBench.
-
-Validates measured kernel times using statistical methods:
-- CV (Coefficient of Variation): stability check
-- IQR ratio: outlier resistance
-- Convergence score: warmup detection
-- Outlier detection via IQR method
-- Retest consistency check
+Layer 6: Statistical Timing Validator (replaces simple threshold checks).
+From: triton_competition_anti_cheat_guide.md - Section 8
 """
 import statistics
+import numpy as np
 from typing import List, Tuple, Optional
 from dataclasses import dataclass
 from enum import Enum
 
 
-class AnomalyType(Enum):
+class TimingAnomalyType(Enum):
+    """时序异常类型"""
     NORMAL = "normal"
     CONVERGENCE_ISSUE = "convergence_issue"
     HIGH_VARIANCE = "high_variance"
@@ -23,173 +19,224 @@ class AnomalyType(Enum):
 
 
 @dataclass
-class ValidationResult:
+class TimingValidationResult:
+    """时序校验结果"""
     is_valid: bool
-    anomaly_type: AnomalyType
-    cv: float              # Coefficient of Variation
-    iqr_ratio: float       # IQR / median
+    anomaly_type: TimingAnomalyType
+    cv: float  # Coefficient of Variation
+    iqr_ratio: float  # IQR ratio
     convergence_score: float
     message: str
 
 
 class StatisticalTimingValidator:
-    """Validates timing measurements with statistical methods.
-
-    Uses CV, IQR, and convergence analysis instead of simple threshold
-    checks, which avoids false positives from legitimate warmup effects.
-    """
+    """统计时序校验器"""
 
     def __init__(self,
-                 cv_threshold: float = 0.15,
-                 iqr_threshold: float = 0.3,
-                 convergence_threshold: float = 1.5,
-                 retest_ratio_threshold: float = 1.3):
+                 cv_threshold: float = 0.15,  # CV阈值
+                 iqr_threshold: float = 0.3,   # IQR阈值
+                 convergence_threshold: float = 0.1):
         self.cv_threshold = cv_threshold
         self.iqr_threshold = iqr_threshold
         self.convergence_threshold = convergence_threshold
-        self.retest_ratio_threshold = retest_ratio_threshold
 
-    def cv(self, times: List[float]) -> float:
-        """Coefficient of Variation: std / mean. Lower = more stable."""
-        if len(times) < 2:
+    def compute_cv(self, times: List[float]) -> float:
+        """
+        计算变异系数 (Coefficient of Variation)
+
+        CV = std / mean
+
+        工业标准：CV < 0.15 表示稳定
+        """
+        if not times or len(times) < 2:
             return 0.0
+
         mean = statistics.mean(times)
         if mean == 0:
-            return float("inf")
-        return statistics.stdev(times) / mean
+            return float('inf')
 
-    def iqr_ratio(self, times: List[float]) -> float:
-        """IQR / median. Robust measure of spread."""
-        if len(times) < 4:
+        std = statistics.stdev(times)
+        return std / mean
+
+    def compute_iqr_ratio(self, times: List[float]) -> float:
+        """
+        计算IQR比率 (Interquartile Range)
+
+        IQR = Q3 - Q1
+        IQR_ratio = IQR / median
+
+        工业标准：IQR_ratio < 0.3 表示稳定
+        """
+        if not times or len(times) < 4:
             return 0.0
-        # Pure-Python IQR (avoids numpy dependency)
-        s = sorted(times)
-        n = len(s)
-        q1 = self._percentile(s, 25)
-        q3 = self._percentile(s, 75)
+
+        arr = np.array(times)
+        q1 = np.percentile(arr, 25)
+        q3 = np.percentile(arr, 75)
         iqr = q3 - q1
-        median = self._percentile(s, 50)
+        median = np.median(arr)
+
         if median == 0:
-            return float("inf")
+            return float('inf')
+
         return iqr / median
 
-    @staticmethod
-    def _percentile(sorted_vals: List[float], p: int) -> float:
-        """Compute p-th percentile from sorted list."""
-        n = len(sorted_vals)
-        idx = (p / 100.0) * (n - 1)
-        lo = int(idx)
-        hi = min(lo + 1, n - 1)
-        frac = idx - lo
-        return sorted_vals[lo] * (1 - frac) + sorted_vals[hi] * frac
+    def compute_convergence_score(self, times: List[float]) -> float:
+        """
+        计算收敛分数
 
-    def convergence_score(self, times: List[float]) -> float:
-        """Ratio of CV(second_half) / CV(first_half).
+        检查时间序列是否趋于稳定
 
-        > 1.0 means later runs are less stable (bad convergence).
-        < 1.0 means later runs are more stable (good, expected after warmup).
+        方法：比较前半段和后半段的变异
         """
         if len(times) < 4:
-            return 0.0
-        mid = len(times) // 2
-        cv_first = self.cv(times[:mid])
-        if cv_first == 0:
-            return 0.0
-        return self.cv(times[mid:]) / cv_first
+            return 1.0
 
-    def detect_outliers(self, times: List[float]) -> List[int]:
-        """Detect outlier indices using the 1.5*IQR rule."""
+        mid = len(times) // 2
+        first_half = times[:mid]
+        second_half = times[mid:]
+
+        cv_first = self.compute_cv(first_half)
+        cv_second = self.compute_cv(second_half)
+
+        # 如果后半段比前半段更稳定，说明在收敛
+        if cv_first == 0:
+            return 1.0
+
+        return cv_second / cv_first
+
+    def detect_outliers_iqr(self, times: List[float]) -> List[int]:
+        """
+        使用IQR方法检测离群点
+
+        返回离群点的索引
+        """
         if len(times) < 4:
             return []
-        s = sorted(enumerate(times), key=lambda x: x[1])
-        vals = [x[1] for x in s]
-        q1 = self._percentile(vals, 25)
-        q3 = self._percentile(vals, 75)
+
+        arr = np.array(times)
+        q1 = np.percentile(arr, 25)
+        q3 = np.percentile(arr, 75)
         iqr = q3 - q1
-        lower = q1 - 1.5 * iqr
-        upper = q3 + 1.5 * iqr
-        return [idx for idx, _ in enumerate(times) if times[idx] < lower or times[idx] > upper]
 
-    def validate(self, times: List[float]) -> ValidationResult:
-        """Comprehensive timing validation.
+        lower_bound = q1 - 1.5 * iqr
+        upper_bound = q3 + 1.5 * iqr
 
-        Returns ValidationResult with anomaly details.
+        outliers = []
+        for i, t in enumerate(times):
+            if t < lower_bound or t > upper_bound:
+                outliers.append(i)
+
+        return outliers
+
+    def validate(self, times: List[float]) -> TimingValidationResult:
         """
-        cv_val = self.cv(times)
-        iqr_val = self.iqr_ratio(times)
-        conv = self.convergence_score(times)
-        outliers = self.detect_outliers(times)
+        综合校验
 
-        issues = []
+        不是看绝对ratio，而是看"是否稳定收敛"
+        """
+        # 计算统计量
+        cv = self.compute_cv(times)
+        iqr_ratio = self.compute_iqr_ratio(times)
+        convergence = self.compute_convergence_score(times)
+        outliers = self.detect_outliers_iqr(times)
 
-        if cv_val > self.cv_threshold:
-            issues.append(f"High CV ({cv_val:.3f} > {self.cv_threshold})")
-        if iqr_val > self.iqr_threshold:
-            issues.append(f"High IQR ratio ({iqr_val:.3f} > {self.iqr_threshold})")
-        if conv > self.convergence_threshold:
-            issues.append(f"Poor convergence ({conv:.3f} > {self.convergence_threshold})")
+        # 判断逻辑
+        message_parts = []
+
+        # 1. CV检查
+        if cv > self.cv_threshold:
+            message_parts.append(f"High CV ({cv:.3f} > {self.cv_threshold})")
+
+        # 2. IQR检查
+        if iqr_ratio > self.iqr_threshold:
+            message_parts.append(f"High IQR ratio ({iqr_ratio:.3f} > {self.iqr_threshold})")
+
+        # 3. 收敛检查
+        if convergence > 1.5:
+            message_parts.append(f"Poor convergence ({convergence:.3f})")
+
+        # 4. 离群点检查
         if len(outliers) > len(times) * 0.25:
-            issues.append(f"Many outliers ({len(outliers)}/{len(times)})")
+            message_parts.append(f"Many outliers ({len(outliers)}/{len(times)})")
 
-        if not issues:
-            return ValidationResult(
-                is_valid=True, anomaly_type=AnomalyType.NORMAL,
-                cv=cv_val, iqr_ratio=iqr_val, convergence_score=conv,
+        # 综合判断
+        if not message_parts:
+            return TimingValidationResult(
+                is_valid=True,
+                anomaly_type=TimingAnomalyType.NORMAL,
+                cv=cv,
+                iqr_ratio=iqr_ratio,
+                convergence_score=convergence,
                 message="Timing distribution is normal"
             )
 
-        # Classify anomaly
-        if conv > 2.0:
-            atype = AnomalyType.CONVERGENCE_ISSUE
-        elif cv_val > 0.3:
-            atype = AnomalyType.HIGH_VARIANCE
-        elif outliers and times[0] in [times[i] for i in outliers]:
-            atype = AnomalyType.CACHED_BEHAVIOR
+        # 判断异常类型
+        if convergence > 2.0:
+            anomaly_type = TimingAnomalyType.CONVERGENCE_ISSUE
+        elif cv > 0.3:
+            anomaly_type = TimingAnomalyType.HIGH_VARIANCE
+        elif len(outliers) > 0 and times[0] in [times[i] for i in outliers]:
+            anomaly_type = TimingAnomalyType.CACHED_BEHAVIOR
         else:
-            atype = AnomalyType.OUTLIER
+            anomaly_type = TimingAnomalyType.OUTLIER
 
-        return ValidationResult(
-            is_valid=False, anomaly_type=atype,
-            cv=cv_val, iqr_ratio=iqr_val, convergence_score=conv,
-            message="; ".join(issues)
+        return TimingValidationResult(
+            is_valid=False,
+            anomaly_type=anomaly_type,
+            cv=cv,
+            iqr_ratio=iqr_ratio,
+            convergence_score=convergence,
+            message="; ".join(message_parts)
         )
 
-    def check_consistency(self,
-                          times1: List[float],
-                          times2: List[float]) -> Tuple[bool, str]:
-        """Compare two measurement sets for consistency.
-
-        Ensures retest results are within acceptable range.
+    def retest_comparison(self,
+                         times1: List[float],
+                         times2: List[float]) -> Tuple[bool, str]:
         """
-        m1 = statistics.median(times1)
-        m2 = statistics.median(times2)
-        if m1 == 0 or m2 == 0:
+        比较两次测试的一致性
+
+        用于复测校验
+        """
+        median1 = statistics.median(times1)
+        median2 = statistics.median(times2)
+
+        if median1 == 0 or median2 == 0:
             return False, "Zero median detected"
-        ratio = max(m1, m2) / min(m1, m2)
-        if ratio > self.retest_ratio_threshold:
-            return False, f"Inconsistent: {ratio:.2f}x (max {self.retest_ratio_threshold}x)"
-        return True, f"Consistent: {ratio:.2f}x"
+
+        ratio = max(median1, median2) / min(median1, median2)
+
+        # 两次测试结果差异不应超过30%
+        if ratio > 1.3:
+            return False, f"Inconsistent results: {ratio:.2f}x difference"
+
+        return True, f"Consistent: {ratio:.2f}x difference"
 
 
-class TimingValidator:
-    """High-level timing validator with full validation + retest support."""
+class AdvancedTimingValidator:
+    """高级时序校验器（支持多种检测方法）"""
 
     def __init__(self):
-        self.stats = StatisticalTimingValidator()
+        self.statistical_validator = StatisticalTimingValidator()
 
     def full_validation(self,
-                        times: List[float],
-                        retest_times: Optional[List[float]] = None) -> dict:
+                       times: List[float],
+                       retest_times: Optional[List[float]] = None) -> dict:
+        """完整校验"""
         result = {
-            "times": times,
-            "median_ms": statistics.median(times) * 1000 if times else 0,
-            "statistical": self.stats.validate(times),
-            "retest": None,
+            'times': times,
+            'statistical': self.statistical_validator.validate(times),
+            'retest': None,
         }
+
         if retest_times:
-            is_cons, msg = self.stats.check_consistency(times, retest_times)
-            result["retest"] = {
-                "is_consistent": is_cons,
-                "message": msg,
+            is_consistent, msg = self.statistical_validator.retest_comparison(
+                times, retest_times
+            )
+            result['retest'] = {
+                'is_consistent': is_consistent,
+                'message': msg,
+                'retest_times': retest_times
             }
+
         return result
