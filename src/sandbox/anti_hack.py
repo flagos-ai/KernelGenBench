@@ -83,6 +83,52 @@ class HackDetector(ast.NodeVisitor):
         self.blacklist = blacklist or []
         # Track import aliases: {"tr": "torch", "ts": "torch.sum", ...}
         self._aliases: dict = {}
+        # Scope depth for detecting module-level mutable state
+        self._scope_depth: int = 0
+
+    # ---- Scope tracking ----
+    def visit_FunctionDef(self, node):
+        self._scope_depth += 1
+        self.generic_visit(node)
+        self._scope_depth -= 1
+
+    def visit_AsyncFunctionDef(self, node):
+        self._scope_depth += 1
+        self.generic_visit(node)
+        self._scope_depth -= 1
+
+    def visit_ClassDef(self, node):
+        self._scope_depth += 1
+        self.generic_visit(node)
+        self._scope_depth -= 1
+
+    # ---- Module-level mutable state detection ----
+    def visit_Assign(self, node):
+        if self._scope_depth == 0:
+            for target in node.targets:
+                if isinstance(target, ast.Name):
+                    if isinstance(node.value, (ast.Dict, ast.List, ast.Set)):
+                        self.violations.append(
+                            f"Forbidden module-level mutable state: '{target.id} = {{...}}' "
+                            f"is banned in competition mode (line {node.lineno})"
+                        )
+                    elif isinstance(node.value, ast.Call):
+                        call_name = self._get_attr_chain(node.value.func)
+                        if call_name in ("dict", "list", "set"):
+                            self.violations.append(
+                                f"Forbidden module-level mutable state: '{target.id} = {call_name}()' "
+                                f"is banned in competition mode (line {node.lineno})"
+                            )
+        self.generic_visit(node)
+
+    def visit_AnnAssign(self, node):
+        if self._scope_depth == 0 and isinstance(node.target, ast.Name):
+            if isinstance(node.value, (ast.Dict, ast.List, ast.Set)):
+                self.violations.append(
+                    f"Forbidden module-level mutable state: '{node.target.id}: ... = {{...}}' "
+                    f"is banned in competition mode (line {node.lineno})"
+                )
+        self.generic_visit(node)
 
     # ---- Hard blacklist + alias tracking: imports ----
     def visit_Import(self, node: ast.Import):
