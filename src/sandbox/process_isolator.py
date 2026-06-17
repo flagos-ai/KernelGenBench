@@ -57,39 +57,46 @@ def isolated_test_worker(config: Dict[str, Any]) -> Dict[str, Any]:
         # ===== 第六步：准备输入 =====
         M, N, K = config['shape']
 
-        # 创建输入张量
-        input_tensor = torch.randn((M, K), device='cuda',
-                                   dtype=getattr(torch, config['dtype']))
-        weight = torch.randn((K, N), device='cuda',
-                            dtype=getattr(torch, config['dtype']))
+        dtype = getattr(torch, config['dtype'])
+        runs = config.get('runs', 4)
+        per_iteration_seeds = config.get('per_iteration_seeds',
+                                         [config['seed'] + i for i in range(runs)])
 
-        # 强制新内存分配
-        input_tensor = input_tensor.clone().contiguous()
-        weight = weight.clone().contiguous()
-
-        # Layout随机化（防止kernel cache复用）
         from sandbox.shape_generator import TensorLayoutRandomizer
         layout_randomizer = TensorLayoutRandomizer()
-        if config.get('randomize_layout', True):
-            weight = layout_randomizer.randomize_layout(weight)
 
         # ===== 第七步：加载并执行算子 =====
         operator = config['load_operator']()
 
-        # Warmup
+        # Warmup with dedicated seed
+        warmup_seed = config.get('warmup_seed', config['seed'] - 1)
+        torch.manual_seed(warmup_seed)
+        random.seed(warmup_seed)
+        w_input = torch.randn((M, K), dtype=dtype, device='cuda').clone().contiguous()
+        w_weight = torch.randn((K, N), dtype=dtype, device='cuda').clone().contiguous()
         for _ in range(config.get('warmup', 1)):
-            _ = operator(input_tensor, weight)
+            _ = operator(w_input.clone(), w_weight.clone())
         torch.cuda.synchronize()
 
-        # 正式计时
+        # 正式计时：每轮不同 seed + clone 杀死缓存
         times = []
-        for _ in range(config.get('runs', 4)):
+        for iter_seed in per_iteration_seeds:
+            torch.manual_seed(iter_seed)
+            random.seed(iter_seed)
+
+            input_tensor = torch.randn((M, K), dtype=dtype, device='cuda').clone().contiguous()
+            weight = torch.randn((K, N), dtype=dtype, device='cuda').clone().contiguous()
+
+            if config.get('randomize_layout', True):
+                weight = layout_randomizer.randomize_layout(weight)
+
             torch.cuda.synchronize()
             start = time.perf_counter()
-            output = operator(input_tensor, weight)
+            output = operator(input_tensor.clone(), weight.clone())
             torch.cuda.synchronize()
             end = time.perf_counter()
             times.append(end - start)
+            del input_tensor, weight
 
         return {
             'times': times,

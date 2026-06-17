@@ -127,6 +127,12 @@ class HackDetector(ast.NodeVisitor):
                     f"Forbidden torch API: '{call_chain}()' not in allowed whitelist (line {node.lineno})"
                 )
 
+        # Detect print() — input sniffing
+        if isinstance(node.func, ast.Name) and node.func.id == "print":
+            self.violations.append(
+                f"Forbidden call: 'print()' is banned in competition mode (line {node.lineno})"
+            )
+
         # Detect getattr(torch, "sum") — dynamic attribute access
         if (
             isinstance(node.func, ast.Name) and node.func.id == "getattr"
@@ -168,12 +174,21 @@ class HackDetector(ast.NodeVisitor):
 
         self.generic_visit(node)
 
-    # ---- Hard blacklist: attribute access ----
+    # ---- Hard blacklist: attribute access + memory pointer detection ----
+    _FORBIDDEN_ATTRS = {
+        "data_ptr", "untyped_storage", "storage", "storage_offset",
+    }
+
     def visit_Attribute(self, node: ast.Attribute):
         attr_chain = self._get_attr_chain(node)
         if attr_chain and self._is_blacklisted(attr_chain):
             self.violations.append(
                 f"Forbidden attribute access: '{attr_chain}' (line {node.lineno})"
+            )
+        # Detect memory pointer access: x.data_ptr(), x.storage(), etc.
+        if node.attr in self._FORBIDDEN_ATTRS:
+            self.violations.append(
+                f"Forbidden memory access: '.{node.attr}' is banned in competition mode (line {node.lineno})"
             )
         self.generic_visit(node)
 

@@ -134,26 +134,10 @@ def isolated_worker_main(config_dict: dict) -> dict:
     cuda_protector.setup()
 
     try:
-        # 设置随机种子
-        torch.manual_seed(config_dict['seed'])
-        random.seed(config_dict['seed'])
-        np.random.seed(config_dict['seed'])
-
-        # 准备输入
         M, N, K = config_dict['shape']
         dtype = getattr(torch, config_dict['dtype'])
-
-        # 创建张量（强制新内存）
-        input_tensor = torch.randn((M, K), dtype=dtype, device='cuda')
-        weight = torch.randn((K, N), dtype=dtype, device='cuda')
-
-        input_tensor = input_tensor.clone().contiguous()
-        weight = weight.clone().contiguous()
-
-        # Layout随机化
-        from sandbox.shape_generator import TensorLayoutRandomizer
-        if config_dict.get('layout_type') != 'contiguous':
-            weight = TensorLayoutRandomizer().randomize_layout(weight)
+        per_iteration_seeds = config_dict.get('per_iteration_seeds',
+                                              [config_dict['seed'] + i for i in range(config_dict['timing_runs'])])
 
         # 加载算子
         operator_path = config_dict['operator_path']
@@ -164,19 +148,42 @@ def isolated_worker_main(config_dict: dict) -> dict:
         spec.loader.exec_module(module)
         operator = module.forward
 
-        # Warmup
+        from sandbox.shape_generator import TensorLayoutRandomizer
+        layout_randomizer = TensorLayoutRandomizer()
+
+        # Warmup with a dedicated seed (not used in scoring)
+        torch.manual_seed(config_dict.get('warmup_seed', config_dict['seed'] - 1))
+        random.seed(config_dict.get('warmup_seed', config_dict['seed'] - 1))
+        warmup_input = torch.randn((M, K), dtype=dtype, device='cuda').clone().contiguous()
+        warmup_weight = torch.randn((K, N), dtype=dtype, device='cuda').clone().contiguous()
         for _ in range(config_dict['warmup_runs']):
-            _ = operator(input_tensor, weight)
+            _ = operator(warmup_input.clone(), warmup_weight.clone())
         torch.cuda.synchronize()
 
-        # 正式计时
+        # 正式计时：每次迭代不同 seed，杀死缓存攻击
         times = []
-        for _ in range(config_dict['timing_runs']):
+        for i, iter_seed in enumerate(per_iteration_seeds):
+            # 每次迭代用不同的 seed → 不同的输入值
+            torch.manual_seed(iter_seed)
+            random.seed(iter_seed)
+            np.random.seed(iter_seed)
+
+            input_tensor = torch.randn((M, K), dtype=dtype, device='cuda').clone().contiguous()
+            weight = torch.randn((K, N), dtype=dtype, device='cuda').clone().contiguous()
+
+            # Layout随机化
+            if config_dict.get('layout_type') != 'contiguous':
+                weight = layout_randomizer.randomize_layout(weight)
+
+            # Clone again before passing to operator (prevents pointer equality checks)
             torch.cuda.synchronize()
             start = time.perf_counter()
-            _ = operator(input_tensor, weight)
+            _ = operator(input_tensor.clone(), weight.clone())
             torch.cuda.synchronize()
             times.append(time.perf_counter() - start)
+
+            # Force memory release between iterations
+            del input_tensor, weight
 
         return {
             'status': 'success',
@@ -266,6 +273,11 @@ class CompetitionEvaluator:
 
     def _run_single_test(self, case: TestCase) -> Dict[str, Any]:
         """执行单次测试（进程隔离）"""
+        # Generate unique seed per iteration to prevent inter-iteration caching
+        per_iteration_seeds = [
+            case.seed + i * 10007 + random.randint(0, 99991)
+            for i in range(self.config.timing_runs)
+        ]
         config_dict = {
             'seed': case.seed,
             'shape': case.shape,
@@ -274,6 +286,8 @@ class CompetitionEvaluator:
             'operator_path': self.operator_path,
             'warmup_runs': self.config.warmup_runs,
             'timing_runs': self.config.timing_runs,
+            'per_iteration_seeds': per_iteration_seeds,
+            'warmup_seed': case.seed - 1,
         }
 
         ctx = mp.get_context('spawn')

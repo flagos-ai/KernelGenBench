@@ -146,6 +146,7 @@ class SecureBuiltins:
         self.original_exec = builtins.exec
         self.original_eval = builtins.eval
         self.original_compile = builtins.compile
+        self.original_print = builtins.print
 
         # 禁止的关键字
         self.forbidden_keywords = {
@@ -176,11 +177,19 @@ class SecureBuiltins:
         """启用安全包装"""
         builtins.exec = self.secure_exec
         builtins.eval = self.secure_eval
+        # Disable print() to prevent input sniffing
+        builtins.print = self._print_noop
 
     def disable(self):
         """禁用安全包装"""
         builtins.exec = self.original_exec
         builtins.eval = self.original_eval
+        builtins.print = self.original_print
+
+    @staticmethod
+    def _print_noop(*args, **kwargs):
+        """Print is disabled during evaluation."""
+        pass
 
 
 class SecurityError(Exception):
