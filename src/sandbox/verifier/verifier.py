@@ -51,7 +51,7 @@ class VerifyConfig:
     acc_timeout: int = 300    # seconds
     perf_timeout: int = 600    # seconds
     manage_device_visibility: bool = True  # Whether to set device visibility env var
-    anti_hack: bool = False  # Enable anti-hack Layer 2/3 runtime checks
+    anti_hack: bool = True  # Enable anti-hack Layer 2/3 runtime checks
 
 @dataclass
 class Source:
@@ -454,6 +454,7 @@ class Verifier:
         speedup = None
         first_failure_traceback = None  # Store first failure traceback for reporting
         first_func_combo = None
+        first_normal_output = None  # Saved from accuracy test for Layer 2 optimization
         for func, mark in funcs:
             func_name = func.__name__
             if func is None:
@@ -478,6 +479,8 @@ class Verifier:
                     raise e
                 try:
                     ret = func(**combo)
+                    if first_normal_output is None:
+                        first_normal_output = deepcopy(ret) if ret is not None else None
                 except Exception as e:
                     tb_str = traceback.format_exc()
                     success = False
@@ -562,16 +565,26 @@ class Verifier:
 
         # Anti-hack Layer 2 & 3: only when config.anti_hack is enabled
         if self._running_config.anti_hack and failed == 0 and first_func_combo is not None:
-            from sandbox.anti_hack import dual_execution_check, gpu_profiling_check
+            from sandbox.anti_hack import dual_execution_check_with_ref, gpu_profiling_check
             ah_func, ah_kwargs = first_func_combo
             hack_detected = False
             hack_reason = ""
-            try:
-                is_hack, reason = dual_execution_check(ah_func, ah_kwargs)
-                if is_hack:
-                    hack_detected, hack_reason = True, reason
-            except Exception as e:
-                logger.debug(f"Anti-hack Layer2 skipped: {e}")
+            # Layer 2: optimized — reuse already-computed normal output from accuracy test
+            if first_normal_output is not None:
+                try:
+                    is_hack, reason = dual_execution_check_with_ref(ah_func, ah_kwargs, first_normal_output)
+                    if is_hack:
+                        hack_detected, hack_reason = True, reason
+                except Exception as e:
+                    logger.debug(f"Anti-hack Layer2 skipped: {e}")
+            else:
+                from sandbox.anti_hack import dual_execution_check
+                try:
+                    is_hack, reason = dual_execution_check(ah_func, ah_kwargs)
+                    if is_hack:
+                        hack_detected, hack_reason = True, reason
+                except Exception as e:
+                    logger.debug(f"Anti-hack Layer2 skipped: {e}")
             if not hack_detected:
                 try:
                     is_hack, reason = gpu_profiling_check(ah_func, ah_kwargs)

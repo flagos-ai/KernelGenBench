@@ -380,25 +380,63 @@ def dual_execution_check(
     try:
         out_normal = func(**kwargs)
     except Exception:
-        # If normal run fails, can't do comparison
         return False, ""
 
     # Run 2: with triton.jit disabled
     try:
         with disable_triton_jit():
-            # Re-import the module to pick up the patched triton.jit
-            # The kernel functions become plain python functions
+            out_disabled = func(**kwargs)
+    except Exception:
+        return False, ""
+
+    if out_normal is None and out_disabled is None:
+        return False, ""
+
+    if _results_match(out_normal, out_disabled, rtol, atol):
+        return True, (
+            "Dual-execution hack detected: output is identical "
+            "with triton.jit disabled, indicating no real triton kernel is used."
+        )
+
+    return False, ""
+
+
+def dual_execution_check_with_ref(
+    func: Callable,
+    kwargs: dict,
+    ref_output: Any,
+    rtol: float = 1e-3,
+    atol: float = 1e-3,
+) -> Tuple[bool, str]:
+    """
+    Optimized dual-execution: compare against an already-computed reference output.
+
+    Only runs ONCE (with triton.jit disabled), then compares with ref_output
+    from the accuracy test's normal execution. Saves 50% of execution time.
+
+    Args:
+        func: the registered triton function to test
+        kwargs: input parameters for the function
+        ref_output: already-computed output from normal execution
+        rtol/atol: tolerance for "same result" comparison
+
+    Returns:
+        (is_hack, reason): True if hack detected.
+    """
+    import torch
+
+    # Run: with triton.jit disabled only (normal execution already done in verify)
+    try:
+        with disable_triton_jit():
             out_disabled = func(**kwargs)
     except Exception:
         # If disabled run crashes, triton kernel was actually needed -> not hack
         return False, ""
 
-    # Compare results
-    if out_normal is None and out_disabled is None:
-        # Both None - check in-place outputs via kwargs
+    if ref_output is None and out_disabled is None:
         return False, ""
 
-    if _results_match(out_normal, out_disabled, rtol, atol):
+    if _results_match(ref_output, out_disabled, rtol, atol):
         return True, (
             "Dual-execution hack detected: output is identical "
             "with triton.jit disabled, indicating no real triton kernel is used."
