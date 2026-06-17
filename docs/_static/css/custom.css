@@ -1,0 +1,10 @@
+/* ============================================
+   FLAGOS DOCUMENTATION - SHARED CUSTOM CSS
+   For sphinx_book_theme sub-projects
+   ============================================ */
+
+/* Adjust sphinx-book-theme navbar logo size */ 
+.sidebar-primary-item .logo__image {
+    max-height: 45px !important;
+    width: auto !important;
+}

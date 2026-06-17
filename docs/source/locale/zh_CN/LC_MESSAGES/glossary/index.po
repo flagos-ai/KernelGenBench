@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: KernelGenBench Documentation \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-15 18:12+0800\n"
+"POT-Creation-Date: 2026-06-17 11:11+0800\n"
 "PO-Revision-Date: 2026-06-15 18:15+0800\n"
 "Last-Translator: FlagOS Community\n"
 "Language: zh_CN\n"
@@ -29,159 +29,227 @@ msgid ""
 "KernelGenBench documentation."
 msgstr "本节定义了 KernelGenBench 文档中使用的技术术语。"
 
-#: ../../source/glossary/index.md:5
-#, python-brace-format
+#: ../../source/glossary/index.md:6
+msgid "Agent"
+msgstr "Agent"
+
+#: ../../source/glossary/index.md:7
 msgid ""
-"{.glossary} Agent : A coding agent that autonomously generates, executes,"
-" and iterates on code based on feedback. In KernelGenBench, agents like "
-"Claude Code and OpenCode can debug and optimize kernels through "
-"execution-driven reinforcement."
+"A coding agent that autonomously generates, executes, and iterates on "
+"code based on feedback. In KernelGenBench, agents like Claude Code and "
+"OpenCode can debug and optimize kernels through execution-driven "
+"reinforcement."
 msgstr ""
-"**Agent（智能体）**：一种能够根据反馈自主生成、执行和迭代代码的编程智能体。在 KernelGenBench 中，Claude Code 和 OpenCode 等智能体可以通过执行驱动的强化学习来调试和优化内核。"
+"**Agent（智能体）**：一种能够根据反馈自主生成、执行和迭代代码的编程智能体。在 KernelGenBench 中，Claude Code "
+"和 OpenCode 等智能体可以通过执行驱动的强化学习来调试和优化内核。"
 
-#: ../../source/glossary/index.md:9
-#, python-brace-format
-msgid ""
-"{.glossary} ATen : PyTorch's native tensor library, providing fundamental"
-" operations for deep learning. KernelGenBench includes 110 ATen operators"
-" derived from real model training traces."
-msgstr "**ATen**：PyTorch 的原生张量库，为深度学习提供基础运算。KernelGenBench 包含 110 个从真实模型训练轨迹中提取的 ATen 算子。"
+#: ../../source/glossary/index.md ../../source/glossary/index.md:10
+msgid "ATen"
+msgstr "ATen"
 
-#: ../../source/glossary/index.md:13
-#, python-brace-format
+#: ../../source/glossary/index.md:11
 msgid ""
-"{.glossary} CUDA : NVIDIA's proprietary parallel computing platform and "
-"programming model for GPU acceleration. CUDA is deeply tied to NVIDIA "
-"hardware architecture."
+"PyTorch's native tensor library, providing fundamental operations for "
+"deep learning. KernelGenBench includes 110 ATen operators derived from "
+"real model training traces."
+msgstr ""
+"**ATen**：PyTorch 的原生张量库，为深度学习提供基础运算。KernelGenBench 包含 110 个从真实模型训练轨迹中提取的 "
+"ATen 算子。"
+
+#: ../../source/glossary/index.md ../../source/glossary/index.md:14
+msgid "CUDA"
+msgstr "CUDA"
+
+#: ../../source/glossary/index.md:15
+msgid ""
+"NVIDIA's proprietary parallel computing platform and programming model "
+"for GPU acceleration. CUDA is deeply tied to NVIDIA hardware "
+"architecture."
 msgstr "**CUDA**：NVIDIA 的专有并行计算平台和 GPU 加速编程模型。CUDA 与 NVIDIA 硬件架构深度绑定。"
 
-#: ../../source/glossary/index.md:17
-#, python-brace-format
-msgid ""
-"{.glossary} cuBLAS : NVIDIA's closed-source Basic Linear Algebra "
-"Subprograms library, highly optimized for NVIDIA GPUs. KernelGenBench "
-"includes 50 cuBLAS operators representing extreme performance challenges."
-msgstr ""
-"**cuBLAS**：NVIDIA 的闭源基础线性代数子程序库，针对 NVIDIA GPU 进行了高度优化。KernelGenBench 包含 50 个 cuBLAS 算子，代表了极端的性能挑战。"
+#: ../../source/glossary/index.md:18
+msgid "cuBLAS"
+msgstr "cuBLAS"
 
-#: ../../source/glossary/index.md:21
-#, python-brace-format
+#: ../../source/glossary/index.md:19
 msgid ""
-"{.glossary} GEMM : General Matrix Multiplication, a fundamental linear "
-"algebra operation. cuBLAS includes numerous GEMM variants across "
-"different precisions and batching modes."
+"NVIDIA's closed-source Basic Linear Algebra Subprograms library, highly "
+"optimized for NVIDIA GPUs. KernelGenBench includes 50 cuBLAS operators "
+"representing extreme performance challenges."
+msgstr ""
+"**cuBLAS**：NVIDIA 的闭源基础线性代数子程序库，针对 NVIDIA GPU 进行了高度优化。KernelGenBench 包含 "
+"50 个 cuBLAS 算子，代表了极端的性能挑战。"
+
+#: ../../source/glossary/index.md ../../source/glossary/index.md:22
+msgid "GEMM"
+msgstr "GEMM"
+
+#: ../../source/glossary/index.md:23
+msgid ""
+"General Matrix Multiplication, a fundamental linear algebra operation. "
+"cuBLAS includes numerous GEMM variants across different precisions and "
+"batching modes."
 msgstr "**GEMM**：通用矩阵乘法，一种基础的线性代数运算。cuBLAS 包含众多不同精度和批处理模式的 GEMM 变体。"
 
-#: ../../source/glossary/index.md:25
-#, python-brace-format
+#: ../../source/glossary/index.md:26
+msgid "Kernel"
+msgstr "Kernel"
+
+#: ../../source/glossary/index.md:27
 msgid ""
-"{.glossary} Kernel : A function that executes on a GPU, written in CUDA "
-"or Triton. Kernels directly determine computational performance and must "
-"be optimized for specific hardware."
+"A function that executes on a GPU, written in CUDA or Triton. Kernels "
+"directly determine computational performance and must be optimized for "
+"specific hardware."
 msgstr "**Kernel（内核）**：在 GPU 上执行的函数，用 CUDA 或 Triton 编写。内核直接决定计算性能，必须针对特定硬件进行优化。"
 
-#: ../../source/glossary/index.md:29
-#, python-brace-format
-msgid ""
-"{.glossary} KernelGenBench : A comprehensive benchmark framework for "
-"evaluating LLM and agent-based Triton kernel generation across multiple "
-"hardware platforms. Part of the FlagOS ecosystem."
-msgstr "**KernelGenBench**：一个全面的基准框架，用于评估跨多个硬件平台的 LLM 和基于智能体的 Triton 内核生成。FlagOS 生态系统的一部分。"
+#: ../../source/glossary/index.md:30
+msgid "KernelGenBench"
+msgstr "KernelGenBench"
 
-#: ../../source/glossary/index.md:33
-#, python-brace-format
+#: ../../source/glossary/index.md:31
 msgid ""
-"{.glossary} KernelGenBench-aten : A dataset subset containing 110 PyTorch"
-" ATen operators, used for cross-platform evaluation on all supported "
-"hardware."
+"A comprehensive benchmark framework for evaluating LLM and agent-based "
+"Triton kernel generation across multiple hardware platforms. Part of the "
+"FlagOS ecosystem."
+msgstr ""
+"**KernelGenBench**：一个全面的基准框架，用于评估跨多个硬件平台的 LLM 和基于智能体的 Triton 内核生成。FlagOS "
+"生态系统的一部分。"
+
+#: ../../source/glossary/index.md:34
+msgid "KernelGenBench-aten"
+msgstr "KernelGenBench-aten"
+
+#: ../../source/glossary/index.md:35
+msgid ""
+"A dataset subset containing 110 PyTorch ATen operators, used for cross-"
+"platform evaluation on all supported hardware."
 msgstr "**KernelGenBench-aten**：包含 110 个 PyTorch ATen 算子的数据集子集，用于所有支持硬件的跨平台评估。"
 
-#: ../../source/glossary/index.md:37
-#, python-brace-format
+#: ../../source/glossary/index.md:38
+msgid "KernelGenBench-cublas"
+msgstr "KernelGenBench-cublas"
+
+#: ../../source/glossary/index.md:39
 msgid ""
-"{.glossary} KernelGenBench-cublas : A dataset subset containing 50 cuBLAS"
-" operators, available only on NVIDIA platforms due to library "
-"dependencies."
+"A dataset subset containing 50 cuBLAS operators, available only on NVIDIA"
+" platforms due to library dependencies."
 msgstr "**KernelGenBench-cublas**：包含 50 个 cuBLAS 算子的数据集子集，由于库依赖关系，仅在 NVIDIA 平台上可用。"
 
-#: ../../source/glossary/index.md:41
-#, python-brace-format
-msgid ""
-"{.glossary} KernelGenBench-MS : The Multi-Source sub-benchmark evaluating"
-" 210 operators from three sources (ATen, vLLM, cuBLAS) on NVIDIA "
-"hardware."
-msgstr "**KernelGenBench-MS**：多源子基准，在 NVIDIA 硬件上评估来自三个来源（ATen、vLLM、cuBLAS）的 210 个算子。"
+#: ../../source/glossary/index.md:42
+msgid "KernelGenBench-MS"
+msgstr "KernelGenBench-MS"
 
-#: ../../source/glossary/index.md:45
-#, python-brace-format
+#: ../../source/glossary/index.md:43
 msgid ""
-"{.glossary} KernelGenBench-MC : The Multi-Chip sub-benchmark evaluating "
-"110 ATen operators across six hardware platforms to measure performance "
-"portability."
+"The Multi-Source sub-benchmark evaluating 210 operators from three "
+"sources (ATen, vLLM, cuBLAS) on NVIDIA hardware."
+msgstr ""
+"**KernelGenBench-MS**：多源子基准，在 NVIDIA 硬件上评估来自三个来源（ATen、vLLM、cuBLAS）的 210 "
+"个算子。"
+
+#: ../../source/glossary/index.md:46
+msgid "KernelGenBench-MC"
+msgstr "KernelGenBench-MC"
+
+#: ../../source/glossary/index.md:47
+msgid ""
+"The Multi-Chip sub-benchmark evaluating 110 ATen operators across six "
+"hardware platforms to measure performance portability."
 msgstr "**KernelGenBench-MC**：多芯片子基准，在六个硬件平台上评估 110 个 ATen 算子，以衡量性能可移植性。"
 
-#: ../../source/glossary/index.md:49
-#, python-brace-format
+#: ../../source/glossary/index.md:50
+msgid "KernelGenBench-vllm"
+msgstr "KernelGenBench-vllm"
+
+#: ../../source/glossary/index.md:51
 msgid ""
-"{.glossary} KernelGenBench-vllm : A dataset subset containing 50 vLLM "
-"operators, available only on NVIDIA platforms."
+"A dataset subset containing 50 vLLM operators, available only on NVIDIA "
+"platforms."
 msgstr "**KernelGenBench-vllm**：包含 50 个 vLLM 算子的数据集子集，仅在 NVIDIA 平台上可用。"
 
-#: ../../source/glossary/index.md:53
-#, python-brace-format
-msgid ""
-"{.glossary} LLM : Large Language Model, an AI model trained on vast "
-"amounts of text data. In KernelGenBench, LLMs are evaluated on their "
-"ability to generate GPU kernels."
-msgstr "**LLM（大语言模型）**：一种在海量文本数据上训练的 AI 模型。在 KernelGenBench 中，LLM 的 GPU 内核生成能力受到评估。"
+#: ../../source/glossary/index.md ../../source/glossary/index.md:54
+msgid "LLM"
+msgstr "LLM"
 
-#: ../../source/glossary/index.md:57
-#, python-brace-format
+#: ../../source/glossary/index.md:55
 msgid ""
-"{.glossary} Operator : A reusable computational unit in deep learning "
-"frameworks. Operators define \"what\" to compute (e.g., `torch.add`), "
-"while kernels define \"how\" to execute on hardware."
-msgstr "**Operator（算子）**：深度学习框架中的可复用计算单元。算子定义"计算什么"（如 `torch.add`），而内核定义"如何在硬件上执行"。"
+"Large Language Model, an AI model trained on vast amounts of text data. "
+"In KernelGenBench, LLMs are evaluated on their ability to generate GPU "
+"kernels."
+msgstr ""
+"**LLM（大语言模型）**：一种在海量文本数据上训练的 AI 模型。在 KernelGenBench 中，LLM 的 GPU "
+"内核生成能力受到评估。"
 
-#: ../../source/glossary/index.md:61
-#, python-brace-format
+#: ../../source/glossary/index.md:58
+msgid "Operator"
+msgstr "Operator"
+
+#: ../../source/glossary/index.md:59
 msgid ""
-"{.glossary} Pass@K : An evaluation metric measuring whether at least one "
-"correct solution exists among K generated samples. Pass@1 tests single-"
-"generation capability; Pass@5 allows multiple attempts."
+"A reusable computational unit in deep learning frameworks. Operators "
+"define \"what\" to compute (e.g., `torch.add`), while kernels define "
+"\"how\" to execute on hardware."
+msgstr ""
+"**Operator（算子）**：深度学习框架中的可复用计算单元。算子定义\"计算什么\"（如 "
+"`torch.add`），而内核定义\"如何在硬件上执行\"。"
+
+#: ../../source/glossary/index.md:62
+msgid "Pass@K"
+msgstr "Pass@K"
+
+#: ../../source/glossary/index.md:63
+msgid ""
+"An evaluation metric measuring whether at least one correct solution "
+"exists among K generated samples. Pass@1 tests single-generation "
+"capability; Pass@5 allows multiple attempts."
 msgstr "**Pass@K**：一种评估指标，衡量 K 个生成样本中是否至少存在一个正确解。Pass@1 测试单次生成能力；Pass@5 允许多次尝试。"
 
-#: ../../source/glossary/index.md:65
-#, python-brace-format
-msgid ""
-"{.glossary} PagedAttention : A memory-efficient attention mechanism used "
-"in vLLM for LLM inference. Part of the vLLM operator subset in "
-"KernelGenBench."
-msgstr "**PagedAttention**：vLLM 中用于 LLM 推理的高效内存注意力机制。KernelGenBench 中 vLLM 算子子集的一部分。"
+#: ../../source/glossary/index.md:66
+msgid "PagedAttention"
+msgstr "PagedAttention"
 
-#: ../../source/glossary/index.md:69
-#, python-brace-format
+#: ../../source/glossary/index.md:67
 msgid ""
-"{.glossary} Speedup : Performance improvement ratio of generated kernel "
-"versus baseline implementation. Calculated as geometric mean across test "
-"cases and operators."
+"A memory-efficient attention mechanism used in vLLM for LLM inference. "
+"Part of the vLLM operator subset in KernelGenBench."
+msgstr ""
+"**PagedAttention**：vLLM 中用于 LLM 推理的高效内存注意力机制。KernelGenBench 中 vLLM "
+"算子子集的一部分。"
+
+#: ../../source/glossary/index.md:70
+msgid "Speedup"
+msgstr "Speedup"
+
+#: ../../source/glossary/index.md:71
+msgid ""
+"Performance improvement ratio of generated kernel versus baseline "
+"implementation. Calculated as geometric mean across test cases and "
+"operators."
 msgstr "**Speedup（加速比）**：生成内核相对于基准实现的性能提升比率。通过测试用例和算子的几何平均值计算。"
 
-#: ../../source/glossary/index.md:73
-#, python-brace-format
+#: ../../source/glossary/index.md:74
+msgid "Triton"
+msgstr "Triton"
+
+#: ../../source/glossary/index.md:75
 msgid ""
-"{.glossary} Triton : An open-source programming language for GPU kernels "
-"that abstracts low-level details while maintaining high performance. "
-"Triton code is portable across different GPU architectures."
+"An open-source programming language for GPU kernels that abstracts low-"
+"level details while maintaining high performance. Triton code is portable"
+" across different GPU architectures."
 msgstr "**Triton**：一种用于 GPU 内核的开源编程语言，在保持高性能的同时抽象底层细节。Triton 代码可在不同 GPU 架构间移植。"
 
-#: ../../source/glossary/index.md:77
-#, python-brace-format
+#: ../../source/glossary/index.md:78
+msgid "vLLM"
+msgstr "vLLM"
+
+#: ../../source/glossary/index.md:79
 msgid ""
-"{.glossary} vLLM : A high-throughput LLM inference engine with custom "
-"CUDA kernels. KernelGenBench includes 50 vLLM operators representing "
-"production inference workloads."
-msgstr "**vLLM**：一个带有自定义 CUDA 内核的高吞吐量 LLM 推理引擎。KernelGenBench 包含 50 个代表生产推理工作负载的 vLLM 算子。"
+"A high-throughput LLM inference engine with custom CUDA kernels. "
+"KernelGenBench includes 50 vLLM operators representing production "
+"inference workloads."
+msgstr ""
+"**vLLM**：一个带有自定义 CUDA 内核的高吞吐量 LLM 推理引擎。KernelGenBench 包含 50 个代表生产推理工作负载的 "
+"vLLM 算子。"
 
 #: ../../source/glossary/index.md:83
 msgid "Acronyms"
@@ -204,10 +272,6 @@ msgid "Abstract Syntax Tree"
 msgstr "抽象语法树"
 
 #: ../../source/glossary/index.md
-msgid "ATen"
-msgstr "ATen"
-
-#: ../../source/glossary/index.md
 msgid "A Tensor Library"
 msgstr "张量库"
 
@@ -218,10 +282,6 @@ msgstr "BLAS"
 #: ../../source/glossary/index.md
 msgid "Basic Linear Algebra Subprograms"
 msgstr "基础线性代数子程序"
-
-#: ../../source/glossary/index.md
-msgid "CUDA"
-msgstr "CUDA"
 
 #: ../../source/glossary/index.md
 msgid "Compute Unified Device Architecture"
@@ -236,10 +296,6 @@ msgid "Data Center Accelerator"
 msgstr "数据中心加速器"
 
 #: ../../source/glossary/index.md
-msgid "GEMM"
-msgstr "GEMM"
-
-#: ../../source/glossary/index.md
 msgid "General Matrix Multiplication"
 msgstr "通用矩阵乘法"
 
@@ -250,10 +306,6 @@ msgstr "GPU"
 #: ../../source/glossary/index.md
 msgid "Graphics Processing Unit"
 msgstr "图形处理器"
-
-#: ../../source/glossary/index.md
-msgid "LLM"
-msgstr "LLM"
 
 #: ../../source/glossary/index.md
 msgid "Large Language Model"
@@ -346,3 +398,4 @@ msgstr "沐曦"
 #: ../../source/glossary/index.md
 msgid "GPU accelerators"
 msgstr "GPU 加速器"
+

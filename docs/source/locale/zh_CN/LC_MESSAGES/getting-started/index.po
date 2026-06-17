@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: KernelGenBench Documentation \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-15 18:12+0800\n"
+"POT-Creation-Date: 2026-06-17 11:11+0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: zh_CN\n"
@@ -150,7 +150,7 @@ msgstr "描述"
 
 #: ../../source/getting-started/index.md
 #, python-brace-format
-msgid "{term}`KernelGenBench`"
+msgid "`{term}`KernelGenBench``"
 msgstr "{term}`KernelGenBench`"
 
 #: ../../source/getting-started/index.md
@@ -164,7 +164,7 @@ msgstr "完整集合（{term}`ATen` + {term}`vLLM` + {term}`cuBLAS`）"
 
 #: ../../source/getting-started/index.md
 #, python-brace-format
-msgid "{term}`KernelGenBench-aten`"
+msgid "`{term}`KernelGenBench-aten``"
 msgstr "{term}`KernelGenBench-aten`"
 
 #: ../../source/getting-started/index.md
@@ -178,7 +178,7 @@ msgstr "仅 {term}`ATen` 算子"
 
 #: ../../source/getting-started/index.md
 #, python-brace-format
-msgid "{term}`KernelGenBench-vllm`"
+msgid "`{term}`KernelGenBench-vllm``"
 msgstr "{term}`KernelGenBench-vllm`"
 
 #: ../../source/getting-started/index.md
@@ -192,7 +192,7 @@ msgstr "仅 {term}`vLLM` 算子（仅限 NVIDIA）"
 
 #: ../../source/getting-started/index.md
 #, python-brace-format
-msgid "{term}`KernelGenBench-cublas`"
+msgid "`{term}`KernelGenBench-cublas``"
 msgstr "{term}`KernelGenBench-cublas`"
 
 #: ../../source/getting-started/index.md

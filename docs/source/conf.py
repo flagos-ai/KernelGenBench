@@ -66,16 +66,20 @@ language = "en"
 locale_dirs = ["locale/"]
 gettext_compact = False  # Generate separate POT file for each source file
 
+# Detect the actual build language from Read the Docs environment variable
+# Falls back to the language config variable for local builds
+CURRENT_LANGUAGE = os.getenv("READTHEDOCS_LANGUAGE", language)
+
 # -- HTML output -------------------------------------------------------------
 
 html_theme = "sphinx_book_theme"
 html_static_path = ["../_static"]
-html_css_files = []
+html_css_files = ["css/custom.css"]
 html_js_files = []
 
-# Logo and favicon configuration based on language
-# Read the Docs builds each language separately with -D language=zh_CN
-if language == "zh_CN":
+# Logo and favicon configuration based on build language
+# Read the Docs sets READTHEDOCS_LANGUAGE environment variable during builds
+if CURRENT_LANGUAGE == "zh_CN":
     html_logo = "../_static/images/logos/zh-logo.svg"
     html_theme_options = {
         "home_page_in_toc": True,
@@ -89,7 +93,7 @@ if language == "zh_CN":
         },
     }
 else:
-    # Default to English
+    # Default to English configuration for all other languages
     html_logo = "../_static/images/logos/en-logo.svg"
     html_theme_options = {
         "home_page_in_toc": True,

@@ -43,7 +43,7 @@ Evaluate LLMs on generating Triton kernels with Pass@K metric.
 [Learn more »](operation-guide/llm-track/index)
 :::
 
-:::{grid-item-card} {octicon}`hub;1.5em;sd-mr-1` Agent Track
+:::{grid-item-card} {octicon}`hubot;1.5em;sd-mr-1` Agent Track
 :link: operation-guide/agent-track/index
 :link-type: doc
 
