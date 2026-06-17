@@ -61,7 +61,7 @@ export OPENAI_API_KEY=your_key
 export OPENAI_BASE_URL=http://your-endpoint/v1  # Optional, for custom endpoints
 ```
 
-### Step 3: Install Claude Code CLI (for Agent Track)
+### Install Claude Code CLI (for Agent Track)
 
 If you plan to use the Agent Track, install the Claude Code CLI:
 

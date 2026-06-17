@@ -80,8 +80,7 @@ def test_accuracy_my_op(shape, dtype):
     y = torch.randn(M, N, device='cuda', dtype=dtype)
 
     ref_out = kernelgenbench.baseline.my_op(x, y)
-    # During verification, kernelgenbench.triton.my_op is the generated kernel
-    act_out = kernelgenbench.baseline.my_op(x.clone(), y.clone())
+    act_out = kernelgenbench.triton.my_op(x.clone(), y.clone())
 
     assert_close(act_out, ref_out, dtype)
 ```

@@ -39,6 +39,10 @@ KernelGenBench-cublas
 : A dataset subset containing 50 cuBLAS operators, available only on NVIDIA platforms due to library dependencies.
 
 {.glossary}
+KernelGenBench-nocublas
+: A dataset subset containing 160 operators (ATen + vLLM), used for NVIDIA evaluation without cuBLAS dependency.
+
+{.glossary}
 KernelGenBench-MS
 : The Multi-Source sub-benchmark evaluating 210 operators from three sources (ATen, vLLM, cuBLAS) on NVIDIA hardware.
 
