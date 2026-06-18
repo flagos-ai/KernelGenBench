@@ -36,4 +36,4 @@
     border-right-color: var(--pst-color-surface) !important;
 }
 
-tippy_tip_selector = "figure, table, img, p, aside, div.admonition, div.literal-block-wrapper, dl.glossary dd"
+/* Removed invalid non-CSS declaration from custom CSS */

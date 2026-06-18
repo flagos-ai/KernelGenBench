@@ -7,7 +7,7 @@ A benchmark framework for evaluating LLM and agent-based Triton kernel generatio
 :color: primary
 :class: sd-btn-lg sd-px-4 sd-py-2 sd-fw-bold
 
-Getting Started
+[Getting Started »](getting-started/index)
 ```
 
 ::::{grid} 1 2 2 3

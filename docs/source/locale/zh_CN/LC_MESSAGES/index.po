@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: KernelGenBench Documentation \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-17 11:14+0800\n"
+"POT-Creation-Date: 2026-06-18 12:16+0800\n"
 "PO-Revision-Date: 2026-06-15 10:45+0800\n"
 "Last-Translator: FlagOS Community\n"
 "Language: zh_CN\n"
@@ -23,27 +23,27 @@ msgstr ""
 msgid "📚 Overview"
 msgstr "📚 概述"
 
-#: ../../source/index.md:92
+#: ../../source/index.md:88
 msgid "🚀 Getting Started"
 msgstr "🚀 快速开始"
 
-#: ../../source/index.md:100
+#: ../../source/index.md:96
 msgid "🔬 Features"
 msgstr "🔬 功能"
 
-#: ../../source/index.md:112
+#: ../../source/index.md:104
 msgid "📖 Operation Guide"
 msgstr "📖 操作指南"
 
-#: ../../source/index.md:129
+#: ../../source/index.md:112
 msgid "📑 Reference"
 msgstr "📑 参考"
 
-#: ../../source/index.md:140
+#: ../../source/index.md:120
 msgid "🔧 Development"
 msgstr "🔧 开发"
 
-#: ../../source/index.md:151
+#: ../../source/index.md:128
 msgid "❓ FAQ & Glossary"
 msgstr "❓ 常见问题与术语表"
 
@@ -58,8 +58,8 @@ msgid ""
 msgstr "一个用于评估 LLM 和智能体驱动的 Triton 内核生成的基准框架，支持多种硬件平台。"
 
 #: ../../source/index.md:5
-msgid "Getting Started"
-msgstr "快速开始"
+msgid "Getting Started »"
+msgstr "快速开始 »"
 
 #: ../../source/index.md:17
 msgid ""
