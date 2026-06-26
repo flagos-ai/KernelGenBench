@@ -84,6 +84,17 @@ def iqm(values: List[float]) -> Optional[float]:
     return sum(middle) / len(middle)
 
 
+def geometric_std(values: List[float]) -> Optional[float]:
+    """Geometric standard deviation = exp(std(log(values))). Reports spread as multiplier."""
+    positive = [v for v in values if v > 0]
+    if len(positive) < 2:
+        return None
+    logs = [math.log(v) for v in positive]
+    mean_log = sum(logs) / len(logs)
+    variance = sum((x - mean_log) ** 2 for x in logs) / (len(logs) - 1)
+    return math.exp(math.sqrt(variance))
+
+
 def trimmed_mean(values: List[float], pct: float = 0.1) -> Optional[float]:
     """Trimmed mean: remove top/bottom pct fraction, then average."""
     if not values:
@@ -124,8 +135,82 @@ def compute_speedup_stats(speedup_list: List[Dict]) -> Optional[Dict]:
     }
 
 
+def _load_passed_operators(result_dir: Path) -> Optional[set]:
+    """Load passed operator names from pass_at_k results.
+
+    Priority: pass_at_k_results_antihack.json > pass_at_k_results.json
+    Returns set of passed operator names, or None if not available.
+    """
+    # Priority 1: antihack clean list
+    antihack_file = result_dir / "pass_at_k_results_antihack.json"
+    if antihack_file.exists():
+        try:
+            with open(antihack_file, 'r') as f:
+                data = json.load(f)
+            clean = data.get("clean_passed_operators")
+            if clean is not None:
+                print(f"Loaded {len(clean)} passed operators from antihack results")
+                return set(clean)
+        except Exception as e:
+            print(f"Warning: Failed to load {antihack_file}: {e}", file=sys.stderr)
+
+    # Priority 2: pass_at_k_results.json
+    results_file = result_dir / "pass_at_k_results.json"
+    if results_file.exists():
+        try:
+            with open(results_file, 'r') as f:
+                data = json.load(f)
+            passed = data.get("passed_operators")
+            if passed is not None:
+                print(f"Loaded {len(passed)} passed operators from pass_at_k_results")
+                return set(passed)
+        except Exception as e:
+            print(f"Warning: Failed to load {results_file}: {e}", file=sys.stderr)
+
+    return None
+
+
+def _load_speedup_from_test_reports(
+    log_dir: Path, op_name: str, round_num: int
+) -> Optional[Dict]:
+    """Load speedup data from individual test_report_*.json file.
+
+    Returns operator result dict with speedup_stats, or None.
+    """
+    report_file = log_dir / f"test_report_{op_name}.json"
+    if not report_file.exists():
+        return None
+
+    try:
+        with open(report_file, 'r') as f:
+            test_cases = json.load(f)
+    except Exception:
+        return None
+
+    if not test_cases or not isinstance(test_cases, list):
+        return None
+
+    # Collect speedup entries from individual test cases
+    speedup_list = []
+    for tc in test_cases:
+        sp = tc.get("speedup")
+        if sp and isinstance(sp, dict) and "speedup" in sp:
+            speedup_list.append(sp)
+
+    speedup_stats = compute_speedup_stats(speedup_list)
+    return {
+        "round": round_num,
+        "speedup_stats": speedup_stats,
+    }
+
+
 def load_from_verification_dir(result_dir: Path) -> Dict[str, Dict]:
     """Load results from verification directory.
+
+    Uses a multi-source strategy:
+    1. Get passed operators from pass_at_k results (antihack > results)
+    2. Load speedup from result.json where available
+    3. For passed operators missing from result.json, load from test_report_*.json
 
     Keeps the BEST speedup (by geometric mean) across all rounds.
     """
@@ -147,47 +232,75 @@ def load_from_verification_dir(result_dir: Path) -> Dict[str, Dict]:
 
     print(f"Found {len(log_dirs)} rounds of verification results")
 
+    # Get authoritative passed operator set
+    passed_ops = _load_passed_operators(result_dir)
+
     for log_dir in log_dirs:
         round_num = int(log_dir.name.split("_")[1])
         result_file = log_dir / "result.json"
 
-        if not result_file.exists():
-            continue
+        # Phase 1: Load from result.json (operators marked success)
+        result_json_passed = set()
+        if result_file.exists():
+            try:
+                with open(result_file, 'r') as f:
+                    results = json.load(f)
+            except Exception as e:
+                print(f"Warning: Failed to load {result_file}: {e}", file=sys.stderr)
+                results = []
 
-        try:
-            with open(result_file, 'r') as f:
-                results = json.load(f)
-        except Exception as e:
-            print(f"Warning: Failed to load {result_file}: {e}", file=sys.stderr)
-            continue
+            for item in results:
+                op_name = item.get("op_name")
+                if not op_name:
+                    continue
 
-        for item in results:
-            op_name = item.get("op_name")
-            if not op_name:
-                continue
+                if not item.get("success"):
+                    continue
 
-            if not item.get("success"):
-                continue
+                result_json_passed.add(op_name)
+                speedup_list = item.get("speedup", [])
+                speedup_stats = compute_speedup_stats(speedup_list)
+                current_geo = speedup_stats["geo_mean"] if speedup_stats else None
 
-            speedup_list = item.get("speedup", [])
-            speedup_stats = compute_speedup_stats(speedup_list)
+                if op_name in operator_results:
+                    existing_stats = operator_results[op_name].get("speedup_stats")
+                    existing_geo = existing_stats["geo_mean"] if existing_stats else None
+                    if current_geo is not None:
+                        if existing_geo is None or current_geo > existing_geo:
+                            operator_results[op_name] = {
+                                "round": round_num,
+                                "speedup_stats": speedup_stats,
+                            }
+                else:
+                    operator_results[op_name] = {
+                        "round": round_num,
+                        "speedup_stats": speedup_stats,
+                    }
 
-            current_geo = speedup_stats["geo_mean"] if speedup_stats else None
+        # Phase 2: For passed operators not in result.json, try test_report files
+        if passed_ops is not None:
+            missing_ops = passed_ops - result_json_passed - set(operator_results.keys())
+            for op_name in missing_ops:
+                report_result = _load_speedup_from_test_reports(log_dir, op_name, round_num)
+                if report_result is not None:
+                    current_geo = report_result["speedup_stats"]["geo_mean"] if report_result["speedup_stats"] else None
+                    if op_name in operator_results:
+                        existing_stats = operator_results[op_name].get("speedup_stats")
+                        existing_geo = existing_stats["geo_mean"] if existing_stats else None
+                        if current_geo is not None:
+                            if existing_geo is None or current_geo > existing_geo:
+                                operator_results[op_name] = report_result
+                    else:
+                        operator_results[op_name] = report_result
 
-            if op_name in operator_results:
-                existing_stats = operator_results[op_name].get("speedup_stats")
-                existing_geo = existing_stats["geo_mean"] if existing_stats else None
-
-                if current_geo is not None:
-                    if existing_geo is None or current_geo > existing_geo:
-                        operator_results[op_name] = {
-                            "round": round_num,
-                            "speedup_stats": speedup_stats,
-                        }
-            else:
+    # Phase 3: If we have a passed_ops set, ensure all passed ops are represented
+    # (even without speedup data)
+    if passed_ops is not None:
+        for op_name in passed_ops:
+            if op_name not in operator_results:
                 operator_results[op_name] = {
-                    "round": round_num,
-                    "speedup_stats": speedup_stats,
+                    "round": 0,
+                    "speedup_stats": None,
                 }
 
     return operator_results
@@ -276,6 +389,7 @@ def compute_summary_stats(values: List[float]) -> Dict:
         "count": len(values),
         "arith_mean": sum(values) / len(values),
         "geo_mean": geometric_mean(values),
+        "geo_std": geometric_std(values),
         "median": median(values),
         "iqm": iqm(values),
         "trimmed_mean_10": trimmed_mean(values, 0.1),
@@ -284,9 +398,81 @@ def compute_summary_stats(values: List[float]) -> Dict:
     }
 
 
+# ── Timing data ──────────────────────────────────────────────────────────────
+
+def load_timing_data(result_dir: Path) -> Dict[str, Dict]:
+    """Load per-operator timing from workspace file timestamps.
+
+    For new format (attempt files): sums duration across all attempts.
+    For old format (overwritten files): uses last attempt only.
+    Falls back to progress.json duration_seconds.
+    """
+    timing = {}
+
+    # Scan workspace files for per-attempt timing (support workspaces and workspaces_ako)
+    workspaces_dir = result_dir / "workspaces"
+    if not workspaces_dir.exists():
+        workspaces_dir = result_dir / "workspaces_ako"
+    if workspaces_dir.exists():
+        for ws_dir in workspaces_dir.iterdir():
+            if not ws_dir.is_dir():
+                continue
+            op_name = ws_dir.name.replace("__", "::", 1)
+
+            # New format: prompt_attempt*.md + cc_output_attempt*.jsonl
+            attempt_prompts = sorted(ws_dir.glob("prompt_attempt*.md"))
+            attempt_outputs = sorted(ws_dir.glob("cc_output_attempt*.jsonl"))
+
+            if attempt_prompts and attempt_outputs:
+                total_duration = 0
+                for pf, of in zip(attempt_prompts, attempt_outputs):
+                    total_duration += max(0, of.stat().st_mtime - pf.stat().st_mtime)
+                timing[op_name] = {
+                    "total_duration": round(total_duration),
+                    "num_attempts": len(attempt_prompts),
+                }
+            else:
+                # Old format: single prompt.md + cc_output.jsonl
+                pf = ws_dir / "prompt.md"
+                of = ws_dir / "cc_output.jsonl"
+                if pf.exists() and of.exists():
+                    timing[op_name] = {
+                        "total_duration": round(max(0, of.stat().st_mtime - pf.stat().st_mtime)),
+                        "num_attempts": 1,
+                    }
+
+    # Fill from progress.json for any missing
+    progress_file = result_dir / "progress.json"
+    if progress_file.exists():
+        try:
+            with open(progress_file, 'r') as f:
+                progress_data = json.load(f)
+            # Support both "operators" and "kernels" keys
+            progress_ops = progress_data.get("operators", {}) or progress_data.get("kernels", {})
+            for raw_name, info in progress_ops.items():
+                op_name = raw_name.replace("__", "::", 1)
+                if op_name not in timing and info.get("duration_seconds"):
+                    timing[op_name] = {
+                        "total_duration": info["duration_seconds"],
+                        "num_attempts": info.get("attempt", 0) + 1,
+                    }
+        except Exception:
+            pass
+
+    return timing
+
+
+def format_duration(seconds: Optional[int]) -> str:
+    """Format seconds as hours (e.g., 1.23h, 0.05h)."""
+    if seconds is None:
+        return "N/A"
+    hours = int(seconds) / 3600
+    return f"{hours:.2f}h"
+
+
 # ── Console output ───────────────────────────────────────────────────────────
 
-def print_summary(operator_results: Dict[str, Dict], result_dir: Path, dataset: str):
+def print_summary(operator_results: Dict[str, Dict], result_dir: Path, dataset: str, timing: Dict[str, Dict] = None, token_info: Dict = None):
     """Print summary statistics to console."""
     totals = DATASET_TOTALS[dataset]
     groups = group_by_type(operator_results)
@@ -314,8 +500,8 @@ def print_summary(operator_results: Dict[str, Dict], result_dir: Path, dataset: 
     overall = compute_summary_stats(all_geo_means)
 
     print("-" * 110)
-    print(f"{'Category':<15} {'Passed':>8} {'Total':>8} {'GeoMean':>10} {'Median':>10} {'IQM':>10} {'ArithMean':>10} {'Min':>10} {'Max':>10}")
-    print("-" * 110)
+    print(f"{'Category':<15} {'Passed':>8} {'Total':>8} {'GeoMean':>10} {'GeoStd':>8} {'Median':>10} {'IQM':>10} {'ArithMean':>10} {'Min':>10} {'Max':>10}")
+    print("-" * 118)
 
     for label, type_key in [("Overall", None), ("aten", "aten"), ("cublas", "cublas"), ("vllm13", "vllm13")]:
         if type_key is None:
@@ -330,12 +516,13 @@ def print_summary(operator_results: Dict[str, Dict], result_dir: Path, dataset: 
         geos = collect_geo_means(ops)
         s = compute_summary_stats(geos)
         if not s:
-            print(f"{label:<15} {0:>8} {total:>8} {'N/A':>10} {'N/A':>10} {'N/A':>10} {'N/A':>10} {'N/A':>10} {'N/A':>10}")
+            print(f"{label:<15} {0:>8} {total:>8} {'N/A':>10} {'N/A':>8} {'N/A':>10} {'N/A':>10} {'N/A':>10} {'N/A':>10} {'N/A':>10}")
             continue
 
-        print(f"{label:<15} {s['count']:>8} {total:>8} {s['geo_mean']:>10.4f} {s['median']:>10.4f} {s['iqm']:>10.4f} {s['arith_mean']:>10.4f} {s['min']:>10.4f} {s['max']:>10.4f}")
+        geo_std_str = f"{s['geo_std']:.4f}" if s.get('geo_std') else "N/A"
+        print(f"{label:<15} {s['count']:>8} {total:>8} {s['geo_mean']:>10.4f} {geo_std_str:>8} {s['median']:>10.4f} {s['iqm']:>10.4f} {s['arith_mean']:>10.4f} {s['min']:>10.4f} {s['max']:>10.4f}")
 
-    print("-" * 110)
+    print("-" * 118)
     print()
 
     # Detailed per-operator table
@@ -386,10 +573,101 @@ def print_summary(operator_results: Dict[str, Dict], result_dir: Path, dataset: 
         print(f"  {label:<20} {count:>3} ({pct:>5.1f}%) {bar}")
     print()
 
+    # Geomean threshold counts (based on total operators tested, not just passed)
+    thresholds = [(">0.8", 0.8), (">1.0", 1.0), (">1.5", 1.5)]
+    print("Geomean Threshold Counts (based on total tested):")
+    for label, thresh in thresholds:
+        cnt = sum(1 for g in all_geo_means if g > thresh)
+        pct = cnt / totals['total'] * 100 if totals['total'] > 0 else 0
+        print(f"  {label:<8} {cnt:>3} / {totals['total']} ({pct:.1f}%)")
+    print()
+
+    # Per-type breakdown: thresholds, tokens, timing
+    print("=" * 130)
+    print("Per-Type Breakdown")
+    print("=" * 130)
+
+    type_entries = [("Overall", None), ("aten", "aten"), ("cublas", "cublas"), ("vllm13", "vllm13")]
+    for label, type_key in type_entries:
+        if type_key is None:
+            type_ops = with_speedup
+            total = totals["total"]
+        else:
+            type_ops = {k: v for k, v in groups[type_key].items() if v.get("speedup_stats")}
+            total = totals.get(type_key, 0)
+            if total == 0:
+                continue
+
+        type_geos = collect_geo_means(type_ops)
+        if not type_geos:
+            continue
+
+        print(f"\n--- {label} ({len(type_geos)} passed / {total} total) ---")
+
+        # Thresholds
+        for thresh_label, thresh in thresholds:
+            cnt = sum(1 for g in type_geos if g > thresh)
+            pct = cnt / total * 100 if total > 0 else 0
+            print(f"  {thresh_label:<8} {cnt:>3} / {total} ({pct:.1f}%)")
+
+        # Token stats for this type
+        if token_info:
+            per_op_tokens = token_info.get("per_op", {})
+            # Total tokens = all ops in this type (including failed)
+            if type_key is None:
+                type_token_total = sum(per_op_tokens.values())
+            else:
+                prefix = type_key + "__"
+                type_token_total = sum(v for k, v in per_op_tokens.items() if k.startswith(prefix))
+            passed_count = len(type_ops)
+            if type_token_total > 0:
+                per_success = type_token_total // passed_count if passed_count > 0 else 0
+                print(f"  Tokens: {type_token_total:,} total, {per_success:,} per success")
+
+        # Timing stats for this type
+        if timing:
+            type_time_total = 0
+            type_time_count = 0
+            for op_name in type_ops:
+                if op_name in timing:
+                    type_time_total += timing[op_name]["total_duration"]
+                    type_time_count += 1
+                else:
+                    ws_name = op_name.replace("::", "__", 1)
+                    if ws_name in timing:
+                        type_time_total += timing[ws_name]["total_duration"]
+                        type_time_count += 1
+            if type_time_count > 0:
+                print(f"  Timing (passed): {format_duration(type_time_total)} total, {format_duration(type_time_total // type_time_count)} avg")
+
+    print()
+
+    # Timing summary
+    if timing:
+        total_time = sum(t["total_duration"] for t in timing.values())
+        avg_time = total_time / len(timing) if timing else 0
+        print("=" * 80)
+        print("Timing Summary")
+        print("=" * 80)
+        print(f"  Total time (all operators, all attempts): {format_duration(total_time)}")
+        print(f"  Average per operator: {format_duration(int(avg_time))}")
+        print(f"  Operators with timing data: {len(timing)}")
+        print()
+
+        # Per-operator timing table
+        print("-" * 80)
+        print(f"{'Operator':<45} {'Duration':>10} {'Attempts':>8}")
+        print("-" * 80)
+        sorted_timing = sorted(timing.items(), key=lambda x: x[1]["total_duration"], reverse=True)
+        for op_name, t in sorted_timing:
+            print(f"{op_name:<45} {format_duration(t['total_duration']):>10} {t['num_attempts']:>8}")
+        print("-" * 80)
+        print()
+
 
 # ── Markdown output ──────────────────────────────────────────────────────────
 
-def generate_markdown(operator_results: Dict[str, Dict], result_dir: Path, dataset: str) -> str:
+def generate_markdown(operator_results: Dict[str, Dict], result_dir: Path, dataset: str, timing: Dict[str, Dict] = None) -> str:
     """Generate markdown report."""
     totals = DATASET_TOTALS[dataset]
     groups = group_by_type(operator_results)
@@ -422,8 +700,8 @@ def generate_markdown(operator_results: Dict[str, Dict], result_dir: Path, datas
     # Per-type statistics table
     lines.append("## Statistics by Category")
     lines.append("")
-    lines.append("| Category | Passed | Total | GeoMean | Median | IQM | ArithMean | Min | Max |")
-    lines.append("|----------|--------|-------|---------|--------|-----|-----------|-----|-----|")
+    lines.append("| Category | Passed | Total | GeoMean | GeoStd | Median | IQM | ArithMean | Min | Max |")
+    lines.append("|----------|--------|-------|---------|--------|--------|-----|-----------|-----|-----|")
 
     for label, type_key in [("**Overall**", None), ("aten", "aten"), ("cublas", "cublas"), ("vllm13", "vllm13")]:
         if type_key is None:
@@ -438,9 +716,10 @@ def generate_markdown(operator_results: Dict[str, Dict], result_dir: Path, datas
         geos = collect_geo_means(ops)
         s = compute_summary_stats(geos)
         if not s:
-            lines.append(f"| {label} | 0 | {total} | - | - | - | - | - | - |")
+            lines.append(f"| {label} | 0 | {total} | - | - | - | - | - | - | - |")
             continue
-        lines.append(f"| {label} | {s['count']} | {total} | {s['geo_mean']:.4f} | {s['median']:.4f} | {s['iqm']:.4f} | {s['arith_mean']:.4f} | {s['min']:.4f} | {s['max']:.4f} |")
+        geo_std_str = f"{s['geo_std']:.4f}" if s.get('geo_std') else "-"
+        lines.append(f"| {label} | {s['count']} | {total} | {s['geo_mean']:.4f} | {geo_std_str} | {s['median']:.4f} | {s['iqm']:.4f} | {s['arith_mean']:.4f} | {s['min']:.4f} | {s['max']:.4f} |")
 
     lines.append("")
 
@@ -511,14 +790,44 @@ def generate_markdown(operator_results: Dict[str, Dict], result_dir: Path, datas
             lines.append(f"| {op_name} | {get_op_type(op_name)} | {round_val} |")
         lines.append("")
 
+    # Geomean threshold counts
+    all_geo_means = collect_geo_means(with_speedup)
+    if all_geo_means:
+        lines.append("## Geomean Threshold Counts")
+        lines.append("")
+        lines.append("| Threshold | Count | Total | Percentage |")
+        lines.append("|-----------|-------|-------|------------|")
+        for label, thresh in [(">0.8", 0.8), (">1.0", 1.0), (">1.5", 1.5)]:
+            cnt = sum(1 for g in all_geo_means if g > thresh)
+            pct = cnt / len(all_geo_means) * 100
+            lines.append(f"| {label} | {cnt} | {len(all_geo_means)} | {pct:.1f}% |")
+        lines.append("")
+
+    # Timing summary
+    if timing:
+        total_time = sum(t["total_duration"] for t in timing.values())
+        avg_time = total_time / len(timing) if timing else 0
+        lines.append("## Timing Summary")
+        lines.append("")
+        lines.append(f"- Total time (all operators, all attempts): {format_duration(total_time)}")
+        lines.append(f"- Average per operator: {format_duration(int(avg_time))}")
+        lines.append(f"- Operators with timing data: {len(timing)}")
+        lines.append("")
+        lines.append("| Operator | Duration | Attempts |")
+        lines.append("|----------|----------|----------|")
+        sorted_timing = sorted(timing.items(), key=lambda x: x[1]["total_duration"], reverse=True)
+        for op_name, t in sorted_timing:
+            lines.append(f"| {op_name} | {format_duration(t['total_duration'])} | {t['num_attempts']} |")
+        lines.append("")
+
     return "\n".join(lines)
 
 
 # ── Main ─────────────────────────────────────────────────────────────────────
 
-def save_results(operator_results: Dict[str, Dict], result_dir: Path, dataset: str):
+def save_results(operator_results: Dict[str, Dict], result_dir: Path, dataset: str, timing: Dict[str, Dict] = None):
     """Save results to markdown file."""
-    md_content = generate_markdown(operator_results, result_dir, dataset)
+    md_content = generate_markdown(operator_results, result_dir, dataset, timing)
     output_file = result_dir / "speedup_analysis_v6.md"
     with open(output_file, 'w') as f:
         f.write(md_content)
@@ -527,7 +836,7 @@ def save_results(operator_results: Dict[str, Dict], result_dir: Path, dataset: s
 
 def main():
     if len(sys.argv) < 2:
-        print("Usage: python scripts/analyze/analyze.py <result_dir> [--dataset auto|v2_1|KernelGenBench] [--no-antihack]")
+        print("Usage: python scripts/analyze/analyze_speedup_v6.py <result_dir> [--dataset auto|v2_1|KernelGenBench] [--no-antihack]")
         sys.exit(1)
 
     result_dir = Path(sys.argv[1])
@@ -583,8 +892,24 @@ def main():
         print(f"Warning: Unknown dataset '{dataset}', using KernelGenBench defaults", file=sys.stderr)
         dataset = "KernelGenBench"
 
-    print_summary(operator_results, result_dir, dataset)
-    save_results(operator_results, result_dir, dataset)
+    timing = load_timing_data(result_dir)
+
+    # Load token data
+    token_info = None
+    try:
+        from analyze_tokens import scan_workspace_tokens
+        token_info = scan_workspace_tokens(result_dir)
+    except ImportError:
+        # Try relative import
+        try:
+            sys.path.insert(0, str(Path(__file__).resolve().parent))
+            from analyze_tokens import scan_workspace_tokens
+            token_info = scan_workspace_tokens(result_dir)
+        except Exception:
+            pass
+
+    print_summary(operator_results, result_dir, dataset, timing, token_info)
+    save_results(operator_results, result_dir, dataset, timing)
 
 
 if __name__ == "__main__":
