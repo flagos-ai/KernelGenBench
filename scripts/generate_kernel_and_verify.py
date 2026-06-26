@@ -48,6 +48,22 @@ from kernelgenbench.framework.kernelgenbench_adapter import KernelGenBenchAdapte
 from generator.kernelgenbench_prompt_builder import KernelGenBenchPromptBuilder
 
 
+class MmShapePromptBuilder:
+    """MmShapeBench PromptBuilder — wraps KernelGenBenchPromptBuilder,
+    temporarily swapping op_name to aten::mm for correct signatures."""
+
+    def __init__(self, mode="basic"):
+        self._inner = KernelGenBenchPromptBuilder(mode=mode)
+
+    def build(self, gen_args):
+        original = gen_args.triton_kernel_name
+        gen_args.triton_kernel_name = "aten::mm"
+        try:
+            return self._inner.build(gen_args)
+        finally:
+            gen_args.triton_kernel_name = original
+
+
 class PassAtKTester:
     def __init__(
         self,
@@ -117,6 +133,9 @@ class PassAtKTester:
                 case "KernelGenBench-nocublas":
                     from kernelgenbench.dataset import get_kernelgenbench_nocublas_operators
                     self.operator_loader = get_kernelgenbench_nocublas_operators()
+                case "MmShapeBench":
+                    from kernelgenbench.dataset import get_mm_shape_operators
+                    self.operator_loader = get_mm_shape_operators()
                 case _:
                     raise ValueError(f"Unsupported dataset: {self.dataset}")
 
@@ -130,8 +149,12 @@ class PassAtKTester:
 
     def _create_prompt_builder(self):
         mode = "basic"
-        prompt_builder = KernelGenBenchPromptBuilder(mode=mode)
-        logger.info(f"Created KernelGenBenchPromptBuilder with mode: {mode}")
+        if self.dataset == "MmShapeBench":
+            prompt_builder = MmShapePromptBuilder(mode=mode)
+            logger.info(f"Created MmShapePromptBuilder with mode: {mode}")
+        else:
+            prompt_builder = KernelGenBenchPromptBuilder(mode=mode)
+            logger.info(f"Created KernelGenBenchPromptBuilder with mode: {mode}")
         return prompt_builder
 
     def _create_adapter(self):
