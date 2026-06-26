@@ -76,6 +76,18 @@ python scripts/generate_kernel_and_verify.py \
     --model-name claude-opus-4-6
 ```
 
+### Third-Party Providers
+
+Use `--base-url` to connect to any OpenAI-compatible provider.
+
+```bash
+python scripts/generate_kernel_and_verify.py \
+    --server-type openai \
+    --model-name <model-name> \
+    --base-url <api-endpoint> \
+    --api-key <your-api-key>
+```
+
 ## Advanced Options
 
 ### Enable Reflection
