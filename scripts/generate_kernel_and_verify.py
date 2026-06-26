@@ -354,19 +354,19 @@ class PassAtKTester:
         saved_count = 0
         
         for idx, (generated_code, name, sample_id) in enumerate(generated_codes):
-            full_name = name
-            
+            full_name = api_names[idx]
+
             result_entry = {
                 "operator": full_name,
-                "test_file_name": f"{name}.py",
+                "test_file_name": f"{full_name}.py",
                 "success": False,
                 "error": None,
                 "code_length": 0,
             }
-            
+
             if generated_code and isinstance(generated_code, str) and len(generated_code.strip()) > 0:
                 try:
-                    test_file = round_dir / f"{name.split('.')[-1]}.py"
+                    test_file = round_dir / f"{full_name}.py"
                     with open(test_file, "w") as f:
                         f.write(generated_code)
                     
