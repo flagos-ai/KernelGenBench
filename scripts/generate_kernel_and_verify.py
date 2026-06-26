@@ -740,6 +740,8 @@ def main():
     # Generation config
     parser.add_argument("--server-type", type=str, default="openai")
     parser.add_argument("--model-name", type=str, default="gpt-4o-mini")
+    parser.add_argument("--base-url", type=str, default=None, help="API base URL (for OpenAI-compatible providers)")
+    parser.add_argument("--api-key", type=str, default=None, help="API key (overrides OPENAI_API_KEY / ANTHROPIC_API_KEY env var)")
     parser.add_argument("--temperature", type=float, default=0.8)
     parser.add_argument("--max-tokens", type=int, default=16384)
     parser.add_argument("--num-workers", type=int, default=150)
@@ -793,10 +795,18 @@ def main():
     run_name = output_dir.name
     
     # Create generation config
+    # Set API key in env if provided
+    if args.api_key:
+        os.environ["OPENAI_API_KEY"] = args.api_key
+        os.environ["ANTHROPIC_API_KEY"] = args.api_key
+
+    base_url = args.base_url if args.base_url else "http://localhost:8000/v1"
+
     gen_config = GenerationConfig(
         run_name="",
         server_type=args.server_type,
         model_name=args.model_name,
+        base_url=base_url,
         temperature=args.temperature,
         max_tokens=args.max_tokens,
         num_workers=args.num_workers,
