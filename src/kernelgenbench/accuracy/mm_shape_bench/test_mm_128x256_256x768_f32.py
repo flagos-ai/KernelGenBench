@@ -3,7 +3,7 @@ import torch
 from sandbox.config import DEVICE as device
 from sandbox.verifier.test_parametrize import label
 from sandbox.register import REGISTERED_OPS
-from sandbox.utils.accuracy_utils import kernelgenbench_assert_close as gems_assert_close, to_reference
+from sandbox.utils.accuracy_utils import kernelgenbench_assert_close, to_reference
 from runtime import get_triton_testing
 from sandbox.utils.accuracy_utils import CustomBenchmarkResult
 
@@ -22,7 +22,7 @@ def test_accuracy_mm_128x256_256x768_f32():
     with kernelgenbench.use_ops(REGISTERED_OPS):
         res_out = torch.mm(inp1, inp2)
 
-    gems_assert_close(res_out, ref_out, dtype, reduce_dim=K)
+    kernelgenbench_assert_close(res_out, ref_out, dtype, reduce_dim=K)
 
     quantiles = [0.5, 0.2, 0.8]
     ms_torch, _, _ = get_triton_testing().do_bench(
