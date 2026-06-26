@@ -3,7 +3,7 @@ import torch
 from sandbox.config import DEVICE as device
 from sandbox.verifier.test_parametrize import label
 from sandbox.register import REGISTERED_OPS
-from sandbox.utils.accuracy_utils import gems_assert_close, to_reference
+from sandbox.utils.accuracy_utils import kernelgenbench_assert_close as gems_assert_close, to_reference
 from runtime import get_triton_testing
 from sandbox.utils.accuracy_utils import CustomBenchmarkResult
 
