@@ -15,6 +15,8 @@ LLM Track command-line parameters.
 |-----------|---------|-------------|
 | `--op-name` | All | Test a single operator (e.g., `aten::add`) |
 | `--single-test` | Off | Randomly select 1 operator for quick testing |
+| `--base-url` | `http://localhost:8000/v1` | API base URL for OpenAI-compatible providers (e.g., DashScope, vLLM server) |
+| `--api-key` | Env var | API key (overrides `OPENAI_API_KEY` / `ANTHROPIC_API_KEY` env var) |
 | `--dataset` | Auto | Dataset: `KernelGenBench`, `KernelGenBench-aten`, `KernelGenBench-vllm`, `KernelGenBench-cublas` |
 | `--max-rounds` | 10 | Number of Pass@K rounds |
 | `--device-count` | 8 | Number of GPUs for verification |
@@ -62,6 +64,24 @@ Specify a single operator to test:
 Number of independent kernel samples to generate:
 - Higher values → better Pass@K coverage
 - Higher cost → more API calls
+
+### --base-url
+
+Specify a custom API endpoint for OpenAI-compatible providers:
+
+```bash
+--server-type openai --model-name <model> --base-url <endpoint>
+```
+
+### --api-key
+
+Override the default API key from environment variables:
+
+```bash
+--api-key <your-key>
+```
+
+If not set, reads from `OPENAI_API_KEY` or `ANTHROPIC_API_KEY` depending on `--server-type`.
 
 ## Output
 
