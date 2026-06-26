@@ -752,7 +752,7 @@ def main():
     parser.add_argument("--name", type=str, default="aten", help="Namespace to test (default: aten)")
     parser.add_argument("--acc-test-func-path", type=str, default="", help="Path to the accuracy test function directory")
     parser.add_argument("--benchmark-func-path", type=str, default="", help="Path to the performance test function directory")
-    parser.add_argument("--dataset", type=str, default=_DEFAULT_DATASET, help=f"Dataset version to use (default: {_DEFAULT_DATASET})", choices=["KernelGenBench", "KernelGenBench-aten", "KernelGenBench-vllm", "KernelGenBench-cublas", "KernelGenBench-nocublas"])
+    parser.add_argument("--dataset", type=str, default=_DEFAULT_DATASET, help=f"Dataset version to use (default: {_DEFAULT_DATASET})", choices=["KernelGenBench", "KernelGenBench-aten", "KernelGenBench-vllm", "KernelGenBench-cublas", "KernelGenBench-nocublas", "MmShapeBench"])
     parser.add_argument("--output-dir", type=Path, default=PROJECT_ROOT / "output" / "pass_at_k", help="Output directory")
     parser.add_argument("--resume-from", type=Path, help="Resume from existing checkpoint directory")
     parser.add_argument("--test-type", type=str, default="triton", choices=["accuracy", "performance", "triton"])
