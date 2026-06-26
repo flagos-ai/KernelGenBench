@@ -69,8 +69,8 @@ def load_ops_from_prompts(prompts_dir: Path, namespace: str, dataset: str = None
     ops = []
     for f in sorted(prompts_dir.glob("*.md")):
         stem = f.stem  # e.g., "softmax" or "aten__add" or "vllm13__rms_norm"
-        if dataset and dataset.startswith("KernelGenBench") and "__" in stem:
-            # KernelGenBench uses "namespace__opname" format
+        if dataset and (dataset.startswith("KernelGenBench") or dataset == "MmShapeBench") and "__" in stem:
+            # KernelGenBench / MmShapeBench use "namespace__opname" format
             ns, op_name = stem.split("__", 1)
             ops.append(f"{ns}::{op_name}")
         else:
