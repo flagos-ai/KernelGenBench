@@ -10,7 +10,8 @@ from concurrent.futures import ProcessPoolExecutor, as_completed
 
 logger = logging.getLogger(__name__)
 
-ANTHROPIC_KEY = os.environ.get("ANTHROPIC_API_KEY")
+ANTHROPIC_KEY = os.environ.get("ANTHROPIC_API_KEY") or os.environ.get("ANTHROPIC_AUTH_TOKEN")
+ANTHROPIC_BASE_URL = os.environ.get("ANTHROPIC_BASE_URL")
 OPENAI_KEY = os.environ.get("OPENAI_API_KEY")
 
 ############################################
@@ -74,10 +75,10 @@ def query_server(
     match server_type:
         case "anthropic":
             import anthropic as _anthropic
-            _kwargs = {"api_key": ANTHROPIC_KEY}
-            if os.environ.get("ANTHROPIC_BASE_URL"):
-                _kwargs["base_url"] = os.environ["ANTHROPIC_BASE_URL"]
-            client = _anthropic.Anthropic(**_kwargs)
+            client = _anthropic.Anthropic(
+                api_key=ANTHROPIC_KEY,
+                base_url=ANTHROPIC_BASE_URL if ANTHROPIC_BASE_URL else _anthropic.NOT_GIVEN,
+            )
             model = model_name
         case "openai":
             client = OpenAI(api_key=OPENAI_KEY)
