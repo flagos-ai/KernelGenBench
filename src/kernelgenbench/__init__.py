@@ -41,6 +41,8 @@ class use_ops:
         del current_work_registrar
 
 
+use_gems = use_ops  # backward-compat alias for migrated flagbench code
+
 def all_ops():
     return current_work_registrar.get_all_ops()
 

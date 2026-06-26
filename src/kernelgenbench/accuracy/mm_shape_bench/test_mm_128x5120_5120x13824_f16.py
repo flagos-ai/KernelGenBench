@@ -1,4 +1,4 @@
-import flagbench
+import kernelgenbench as flagbench
 import torch
 from sandbox.config import DEVICE as device
 from sandbox.verifier.test_parametrize import label
