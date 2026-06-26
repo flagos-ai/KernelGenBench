@@ -23,7 +23,7 @@ class BenchmarkResult:
 from sandbox.utils.accuracy_utils import CustomBenchmarkResult
 
 
-from kernelgenbench.dataset import is_pytorch_op, IMPL_INFO
+from kernelgenbench.dataset import is_pytorch_op, IMPL_INFO, resolve_op_func_name
 def get_visible_devices_env():
     return "CUDA_VISIBLE_DEVICES"
 
@@ -333,10 +333,20 @@ class Verifier:
         if _is_torch_op:
             # PyTorch operator: check all overload variants
             impl_info = IMPL_INFO.get(name)
-            ops = [op for op, _ in impl_info]
+            if impl_info:
+                ops = [op for op, _ in impl_info]
+            else:
+                # Specialized operator (e.g., mm_shape): resolve to base op
+                resolved = resolve_op_func_name(name)
+                impl_info = IMPL_INFO.get(resolved)
+                if impl_info:
+                    ops = [op for op, _ in impl_info]
+                else:
+                    ops = [resolved]
         else:
-            # Non-PyTorch operator: only check the main function name
-            ops = [name]
+            # Non-PyTorch operator: resolve name, then check function
+            resolved = resolve_op_func_name(name)
+            ops = [resolved]
 
         # Uniformly check function definitions
         for op in ops:

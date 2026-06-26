@@ -657,6 +657,20 @@ def get_mm_shape_info(label: str):
     return MM_SHAPE_OPERATORS.get(label)
 
 
+def resolve_op_func_name(op_name: str, namespace: str = "aten") -> str:
+    """将 benchmark 算子名解析为代码中应出现的函数名。
+
+    对于 MmShape 等特化算子（如 mm_128x768_768x768_f32），
+    函数名是基础算子名（如 mm），而不是带 shape 的完整名。
+    对于常规算子，返回 op_name 本身。
+    """
+    if op_name in MM_SHAPE_OPERATORS:
+        # 去掉 _shape_spec 后缀：从 mm_128x768_768x768_f32 中提取 mm
+        # 安全方式：用 get_mm_shape_info 确认这是 MmShape 算子，然后取基础名
+        return "mm"
+    return op_name
+
+
 # if os.environ.get("FLAGBENCH_USE_DYNAMIC_IMPL_INFO", "0") == "1":
 #     dynamic_impl_info = DynamicImplInfo()
 #     IMPL_INFO = dynamic_impl_info
