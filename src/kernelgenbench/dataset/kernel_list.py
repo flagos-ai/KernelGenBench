@@ -524,9 +524,9 @@ def is_pytorch_op(api: str, namespace: str = "") -> bool:
     return api in IMPL_INFO
 
 # ============ MM Shape-Specific Benchmark ============
-# 每个 (shape, dtype) = 1 道独立题目，底层都是 aten::mm
-# 50 shapes × 2 dtypes (f32, f16) = 100 题
-# Shape 来源：2907 个 HF 模型真实训练 trace (aten.mm.default)
+# 50 unique shapes x 2 dtypes (f32, f16) = 100 test cases
+# Each (shape, dtype) is a standalone benchmark pinned to aten::mm
+# Shapes sourced from 2907 HF model training traces (aten.mm.default)
 
 MM_SHAPE_OPERATORS = {
     # label: ((M, K), (K, N), dtype_short)
@@ -638,10 +638,10 @@ MM_SHAPE_OPERATOR_NAMES = list(MM_SHAPE_OPERATORS.keys())
 
 
 def get_mm_shape_operators():
-    """获取 MM Shape Benchmark 算子字典
+    """Get MM Shape Benchmark operator dict.
 
-    返回格式: {"aten::mm_128x768_768x768_f32": torch.ops.aten.mm, ...}
-    所有 shape 题共用同一个底层算子 torch.ops.aten.mm。
+    Returns: {"aten::mm_128x768_768x768_f32": torch.ops.aten.mm, ...}
+    All shape variants share the same underlying torch.ops.aten.mm operator.
     """
     mm_op = getattr(torch.ops.aten, "mm", None)
     if mm_op is None:
@@ -653,20 +653,19 @@ def get_mm_shape_operators():
 
 
 def get_mm_shape_info(label: str):
-    """获取 shape 信息: 返回 ((M, K), (K, N), dtype_short) 或 None"""
+    """Get shape info: returns ((M, K), (K, N), dtype) or None."""
     return MM_SHAPE_OPERATORS.get(label)
 
 
 def resolve_op_func_name(op_name: str, namespace: str = "aten") -> str:
-    """将 benchmark 算子名解析为代码中应出现的函数名。
+    """Resolve a benchmark operator name to the expected function name in code.
 
-    对于 MmShape 等特化算子（如 mm_128x768_768x768_f32），
-    函数名是基础算子名（如 mm），而不是带 shape 的完整名。
-    对于常规算子，返回 op_name 本身。
+    For specialized benchmarks (e.g., MmShape), the benchmark op name
+    (mm_128x768_768x768_f32) differs from the actual function name (mm).
+    This resolves to the base operator name for such cases.
+    For regular operators, returns op_name unchanged.
     """
     if op_name in MM_SHAPE_OPERATORS:
-        # 去掉 _shape_spec 后缀：从 mm_128x768_768x768_f32 中提取 mm
-        # 安全方式：用 get_mm_shape_info 确认这是 MmShape 算子，然后取基础名
         return "mm"
     return op_name
 

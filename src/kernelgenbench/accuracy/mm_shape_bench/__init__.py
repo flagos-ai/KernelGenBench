@@ -1,8 +1,9 @@
 """
-MM Shape-Specific Benchmark — 50 shapes × 2 dtypes = 100 题
+MM Shape-Specific Benchmark — 50 shapes x 2 dtypes = 100 test cases.
 
-每题固定 (shape, dtype)，测试 LLM 能否为特定场景写最优 Triton kernel。
-Shape 来源：2907 个 HF 模型真实训练 trace (aten.mm.default)。
+Each test pins a (shape, dtype) and evaluates whether the agent can write
+an optimal Triton kernel for that specific matmul configuration.
+Shapes sourced from 2907 HF model training traces (aten.mm.default).
 """
 
 from .test_mm_128x768_768x768_f32 import test_accuracy_mm_128x768_768x768_f32
