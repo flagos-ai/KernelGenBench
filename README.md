@@ -78,12 +78,13 @@ python scripts/generate_kernel_and_verify.py \
 ## Citation
 
 ```bibtex
-@misc{kernelgenbench2026,
-  title={KernelGenBench: A Multi-Source and Multi-Chip Benchmark for LLM-based Kernel Generation},
-  author={Anonymous},
-  year={2026},
-  note={Under review. Paper available at \url{https://github.com/flagos-ai/KernelGenBench}}},
-  url={https://github.com/flagos-ai/KernelGenBench}
+@inproceedings{kernelgenbench2026,
+  title     = {KernelGenBench: A Multi-Source and Multi-Chip Benchmark for LLM-based Kernel Generation},
+  author    = {Anonymous Author(s)},
+  booktitle = {Under review},
+  year      = {2026},
+  note      = {Preprint PDF and repository available at \url{https://github.com/flagos-ai/KernelGenBench}},
+  url       = {https://github.com/flagos-ai/KernelGenBench}
 }
 ```
 

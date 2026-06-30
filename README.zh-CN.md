@@ -318,12 +318,13 @@ KernelGenBench 是 [FlagOS](https://github.com/flagos-ai) 开源生态的一部�
 如果 KernelGenBench 对您的研究或评测有帮助，请引用：
 
 ```bibtex
-@misc{kernelgenbench2026,
-  title={KernelGenBench: A Multi-Source and Multi-Chip Benchmark for LLM-based Kernel Generation},
-  author={Anonymous},
-  year={2026},
-  note={Under review},
-  url={https://github.com/flagos-ai/KernelGenBench}
+@inproceedings{kernelgenbench2026,
+  title     = {KernelGenBench: A Multi-Source and Multi-Chip Benchmark for LLM-based Kernel Generation},
+  author    = {Anonymous Author(s)},
+  booktitle = {Under review},
+  year      = {2026},
+  note      = {Preprint PDF and repository available at \url{https://github.com/flagos-ai/KernelGenBench}},
+  url       = {https://github.com/flagos-ai/KernelGenBench}
 }
 ```
 
