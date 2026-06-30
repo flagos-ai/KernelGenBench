@@ -48,6 +48,22 @@ from kernelgenbench.framework.kernelgenbench_adapter import KernelGenBenchAdapte
 from generator.kernelgenbench_prompt_builder import KernelGenBenchPromptBuilder
 
 
+class MmShapePromptBuilder:
+    """MmShapeBench PromptBuilder — wraps KernelGenBenchPromptBuilder,
+    temporarily swapping op_name to aten::mm for correct signatures."""
+
+    def __init__(self, mode="basic"):
+        self._inner = KernelGenBenchPromptBuilder(mode=mode)
+
+    def build(self, gen_args):
+        original = gen_args.triton_kernel_name
+        gen_args.triton_kernel_name = "aten::mm"
+        try:
+            return self._inner.build(gen_args)
+        finally:
+            gen_args.triton_kernel_name = original
+
+
 class PassAtKTester:
     def __init__(
         self,
@@ -117,6 +133,9 @@ class PassAtKTester:
                 case "KernelGenBench-nocublas":
                     from kernelgenbench.dataset import get_kernelgenbench_nocublas_operators
                     self.operator_loader = get_kernelgenbench_nocublas_operators()
+                case "MmShapeBench":
+                    from kernelgenbench.dataset import get_mm_shape_operators
+                    self.operator_loader = get_mm_shape_operators()
                 case _:
                     raise ValueError(f"Unsupported dataset: {self.dataset}")
 
@@ -130,8 +149,12 @@ class PassAtKTester:
 
     def _create_prompt_builder(self):
         mode = "basic"
-        prompt_builder = KernelGenBenchPromptBuilder(mode=mode)
-        logger.info(f"Created KernelGenBenchPromptBuilder with mode: {mode}")
+        if self.dataset == "MmShapeBench":
+            prompt_builder = MmShapePromptBuilder(mode=mode)
+            logger.info(f"Created MmShapePromptBuilder with mode: {mode}")
+        else:
+            prompt_builder = KernelGenBenchPromptBuilder(mode=mode)
+            logger.info(f"Created KernelGenBenchPromptBuilder with mode: {mode}")
         return prompt_builder
 
     def _create_adapter(self):
@@ -331,19 +354,19 @@ class PassAtKTester:
         saved_count = 0
         
         for idx, (generated_code, name, sample_id) in enumerate(generated_codes):
-            full_name = name
-            
+            full_name = api_names[idx]
+
             result_entry = {
                 "operator": full_name,
-                "test_file_name": f"{name}.py",
+                "test_file_name": f"{full_name}.py",
                 "success": False,
                 "error": None,
                 "code_length": 0,
             }
-            
+
             if generated_code and isinstance(generated_code, str) and len(generated_code.strip()) > 0:
                 try:
-                    test_file = round_dir / f"{name.split('.')[-1]}.py"
+                    test_file = round_dir / f"{full_name}.py"
                     with open(test_file, "w") as f:
                         f.write(generated_code)
                     
@@ -729,7 +752,7 @@ def main():
     parser.add_argument("--name", type=str, default="aten", help="Namespace to test (default: aten)")
     parser.add_argument("--acc-test-func-path", type=str, default="", help="Path to the accuracy test function directory")
     parser.add_argument("--benchmark-func-path", type=str, default="", help="Path to the performance test function directory")
-    parser.add_argument("--dataset", type=str, default=_DEFAULT_DATASET, help=f"Dataset version to use (default: {_DEFAULT_DATASET})", choices=["KernelGenBench", "KernelGenBench-aten", "KernelGenBench-vllm", "KernelGenBench-cublas", "KernelGenBench-nocublas"])
+    parser.add_argument("--dataset", type=str, default=_DEFAULT_DATASET, help=f"Dataset version to use (default: {_DEFAULT_DATASET})", choices=["KernelGenBench", "KernelGenBench-aten", "KernelGenBench-vllm", "KernelGenBench-cublas", "KernelGenBench-nocublas", "MmShapeBench"])
     parser.add_argument("--output-dir", type=Path, default=PROJECT_ROOT / "output" / "pass_at_k", help="Output directory")
     parser.add_argument("--resume-from", type=Path, help="Resume from existing checkpoint directory")
     parser.add_argument("--test-type", type=str, default="triton", choices=["accuracy", "performance", "triton"])

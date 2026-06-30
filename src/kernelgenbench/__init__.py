@@ -48,6 +48,7 @@ accuracy_modules = [
     "kernelgenbench.accuracy.test_ops_with_benchmark",
     "kernelgenbench.accuracy.cublas",
     "kernelgenbench.accuracy.vllm13",
+    "kernelgenbench.accuracy.mm_shape_bench",
 ]
 
 __all__ = [

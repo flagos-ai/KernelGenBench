@@ -79,6 +79,9 @@ def create_triton_generate_args(torch_op_name: str, torch_op_func_or_namespace: 
     # Extract the function name from the full path
     # e.g., 'torch.add' -> 'add', 'torch.nn.functional.gelu' -> 'gelu'
     kernel_name = torch_op_name.split('.')[-1]
+    # Resolve specialized benchmark names (e.g., mm_128x768_768x768_f32 -> mm)
+    from kernelgenbench.dataset import resolve_op_func_name
+    kernel_name = resolve_op_func_name(kernel_name)
     
     # Get signature information
     if isinstance(torch_op_func_or_namespace, str) and len(torch_op_func_or_namespace) > 0:

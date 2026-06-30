@@ -24,6 +24,9 @@ DEFAULT_TEST_MODULES = {
         "src/kernelgenbench/accuracy/test_ops_with_benchmark.py",
         "src/kernelgenbench/accuracy/vllm13/",
     ],
+    "MmShapeBench": [
+        "src/kernelgenbench/accuracy/mm_shape_bench/",
+    ],
 }
 
 

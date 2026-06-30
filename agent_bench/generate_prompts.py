@@ -17,6 +17,8 @@ from kernelgenbench.dataset import (
     get_cublas_operators,
     get_aten_operators,
     get_kernelgenbench_nocublas_operators,
+    get_mm_shape_operators,
+    get_mm_shape_info,
 )
 from kernelgenbench.dataset.kernel_list import DynamicImplInfo
 from kernelgenbench.dataset.dataloader import TorchOpsLoader
@@ -47,6 +49,7 @@ DATASET_NAMES = [
     "KernelGenBench-vllm",
     "KernelGenBench-cublas",
     "KernelGenBench-nocublas",
+    "MmShapeBench",
 ]
 
 
@@ -60,6 +63,8 @@ def _get_flat_ops(dataset: str) -> dict:
         return get_cublas_operators()
     elif dataset == "KernelGenBench-nocublas":
         return get_kernelgenbench_nocublas_operators()
+    elif dataset == "MmShapeBench":
+        return get_mm_shape_operators()
     else:
         return get_kernelgenbench_operators()
 
@@ -234,8 +239,11 @@ def generate_prompts_for_dataset(
     # Get operators
     flat_ops = _get_flat_ops(dataset)
 
-    # Sub-datasets share KernelGenBench prompts directory
-    prompts_dataset = "KernelGenBench"
+    # MmShapeBench uses its own prompts directory
+    if dataset == "MmShapeBench":
+        prompts_dataset = "MmShapeBench"
+    else:
+        prompts_dataset = "KernelGenBench"
 
     dataset_output_dir = output_dir / prompts_dataset
     dataset_output_dir.mkdir(parents=True, exist_ok=True)
@@ -273,7 +281,20 @@ def generate_prompts_for_dataset(
             continue
 
         # Get operator info based on namespace
-        if namespace in ("vllm13", "cublas"):
+        if dataset == "MmShapeBench":
+            op_info = get_operator_info("mm", "aten")
+            shape_info = get_mm_shape_info(op_name)
+            if shape_info:
+                (M, K), (K2, N), dtype = shape_info
+                shape_context = (
+                    f"\n\n**Target Shape (optimize for this specific shape):**\n"
+                    f"- A shape: `({M}, {K})`\n"
+                    f"- B shape: `({K2}, {N})`\n"
+                    f"- dtype: `{dtype}`\n"
+                    f"\nWrite the kernel optimized for exactly this (M, K, N) combination."
+                )
+                op_info["signatures"] += shape_context
+        elif namespace in ("vllm13", "cublas"):
             baseline_func = flat_ops.get(full_name)
             op_info = get_baseline_operator_info(op_name, namespace, baseline_func)
         else:
@@ -349,3 +370,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+

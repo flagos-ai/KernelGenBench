@@ -1,3 +1,11 @@
+import triton.testing as _triton_testing
+
+
+def get_triton_testing():
+    """Return triton.testing module for benchmark utilities."""
+    return _triton_testing
+
+
 """
 Runtime device detection and constraints.
 
