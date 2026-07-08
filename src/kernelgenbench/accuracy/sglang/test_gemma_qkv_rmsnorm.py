@@ -24,7 +24,7 @@ def test_accuracy_gemma_qkv_rmsnorm(shape, dtype):
     ref_q, ref_k, ref_v = q.clone(), k.clone(), v.clone()
     act_q, act_k, act_v = q.clone(), k.clone(), v.clone()
     kernelgenbench.baseline.gemma_qkv_rmsnorm(ref_q, ref_k, ref_v, q_weight, k_weight, num_q_heads=num_qh, num_kv_heads=num_kh, head_dim=hdim, eps=1e-6)
-    kernelgenbench.baseline.gemma_qkv_rmsnorm(act_q, act_k, act_v, q_weight, k_weight, num_q_heads=num_qh, num_kv_heads=num_kh, head_dim=hdim, eps=1e-6)
+    kernelgenbench.triton.gemma_qkv_rmsnorm(act_q, act_k, act_v, q_weight, k_weight, num_q_heads=num_qh, num_kv_heads=num_kh, head_dim=hdim, eps=1e-6)
     assert_close(act_q, ref_q, dtype)
     assert_close(act_k, ref_k, dtype)
     if M < 256:
@@ -33,8 +33,12 @@ def test_accuracy_gemma_qkv_rmsnorm(shape, dtype):
     k_b = torch.randn(M, num_kh * hdim, device='cuda', dtype=dtype)
     v_b = torch.randn(M, num_kh * hdim, device='cuda', dtype=dtype)
     ms_baseline = triton.testing.do_bench(
-        lambda: kernelgenbench.baseline.gemma_qkv_rmsnorm(q_b.clone(), k_b.clone(), v_b.clone(), q_weight, k_weight, num_q_heads=num_qh, num_kv_heads=num_kh, head_dim=hdim, eps=1e-6),
+        lambda: kernelgenbench.baseline.gemma_qkv_rmsnorm(q_b, k_b, v_b, q_weight, k_weight, num_q_heads=num_qh, num_kv_heads=num_kh, head_dim=hdim, eps=1e-6),
         warmup=25, rep=100
     )
-    speedup = 1.0
-    return CustomBenchmarkResult(ref_time=ms_baseline, res_time=ms_baseline, speedup=speedup)
+    ms_triton = triton.testing.do_bench(
+        lambda: kernelgenbench.triton.gemma_qkv_rmsnorm(q_b.clone(), k_b.clone(), v_b.clone(), q_weight, k_weight, num_q_heads=num_qh, num_kv_heads=num_kh, head_dim=hdim, eps=1e-6),
+        warmup=25, rep=100
+    )
+    speedup = ms_baseline / ms_triton if ms_triton > 0 else float('inf')
+    return CustomBenchmarkResult(ref_time=ms_baseline, res_time=ms_triton, speedup=speedup)

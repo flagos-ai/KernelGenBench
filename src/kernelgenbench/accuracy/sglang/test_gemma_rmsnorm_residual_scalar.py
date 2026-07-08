@@ -20,13 +20,17 @@ def test_accuracy_gemma_rmsnorm_residual_scalar(shape, dtype):
     residual = torch.randn(M, N, device='cuda', dtype=dtype)
     scalar = torch.tensor(0.5, device='cuda', dtype=dtype)
     ref_out = kernelgenbench.baseline.gemma_rmsnorm_residual_scalar(x, weight, residual, scalar, eps=1e-6)
-    act_out = kernelgenbench.baseline.gemma_rmsnorm_residual_scalar(x.clone(), weight, residual.clone(), scalar, eps=1e-6)
+    act_out = kernelgenbench.triton.gemma_rmsnorm_residual_scalar(x.clone(), weight, residual.clone(), scalar, eps=1e-6)
     assert_close(act_out, ref_out, dtype)
     if M < 256:
         return None
     ms_baseline = triton.testing.do_bench(
-        lambda: kernelgenbench.baseline.gemma_rmsnorm_residual_scalar(x, weight, residual, scalar, eps=1e-6),
+        lambda: kernelgenbench.baseline.gemma_rmsnorm_residual_scalar(x.clone(), weight, residual.clone(), scalar, eps=1e-6),
         warmup=25, rep=100
     )
-    speedup = 1.0
-    return CustomBenchmarkResult(ref_time=ms_baseline, res_time=ms_baseline, speedup=speedup)
+    ms_triton = triton.testing.do_bench(
+        lambda: kernelgenbench.triton.gemma_rmsnorm_residual_scalar(x.clone(), weight, residual.clone(), scalar, eps=1e-6),
+        warmup=25, rep=100
+    )
+    speedup = ms_baseline / ms_triton if ms_triton > 0 else float('inf')
+    return CustomBenchmarkResult(ref_time=ms_baseline, res_time=ms_triton, speedup=speedup)

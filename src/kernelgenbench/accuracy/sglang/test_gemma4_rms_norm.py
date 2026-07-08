@@ -19,7 +19,7 @@ def test_accuracy_gemma4_rms_norm(shape, dtype, scale_shift):
     x = torch.randn(M, dim, device='cuda', dtype=dtype)
 
     ref_out = kernelgenbench.baseline.gemma4_rms_norm(x, dim, eps=1e-6, scale_shift=scale_shift)
-    act_out = kernelgenbench.baseline.gemma4_rms_norm(x.clone(), dim, eps=1e-6, scale_shift=scale_shift)
+    act_out = kernelgenbench.triton.gemma4_rms_norm(x.clone(), dim, eps=1e-6, scale_shift=scale_shift)
 
     assert_close(act_out, ref_out, dtype)
 
@@ -28,8 +28,12 @@ def test_accuracy_gemma4_rms_norm(shape, dtype, scale_shift):
 
     x_bench = torch.randn(M, dim, device='cuda', dtype=dtype)
     ms_baseline = triton.testing.do_bench(
-        lambda: kernelgenbench.baseline.gemma4_rms_norm(x_bench, dim, eps=1e-6, scale_shift=scale_shift),
+        lambda: kernelgenbench.baseline.gemma4_rms_norm(x.clone(), dim, eps=1e-6, scale_shift=scale_shift),
         warmup=25, rep=100
     )
-    speedup = 1.0
-    return CustomBenchmarkResult(ref_time=ms_baseline, res_time=ms_baseline, speedup=speedup)
+    ms_triton = triton.testing.do_bench(
+        lambda: kernelgenbench.triton.gemma4_rms_norm(x.clone(), dim, eps=1e-6, scale_shift=scale_shift),
+        warmup=25, rep=100
+    )
+    speedup = ms_baseline / ms_triton if ms_triton > 0 else float('inf')
+    return CustomBenchmarkResult(ref_time=ms_baseline, res_time=ms_triton, speedup=speedup)

@@ -24,7 +24,7 @@ def test_accuracy_mrotary_embedding(seq_len, num_heads, head_size, dtype, is_neo
     act_q, act_k = q0.clone(), k0.clone()
     mrope_section = [head_size // 6] * 3
     kernelgenbench.baseline.mrotary_embedding(ref_q, ref_k, positions, is_neox_style=is_neox, head_size=head_size, rotary_dim=head_size, mrope_section=mrope_section)
-    kernelgenbench.baseline.mrotary_embedding(act_q, act_k, positions, is_neox_style=is_neox, head_size=head_size, rotary_dim=head_size, mrope_section=mrope_section)
+    kernelgenbench.triton.mrotary_embedding(act_q, act_k, positions, is_neox_style=is_neox, head_size=head_size, rotary_dim=head_size, mrope_section=mrope_section)
     assert_close(act_q, ref_q, dtype)
     assert_close(act_k, ref_k, dtype)
     if seq_len < 512:
@@ -37,7 +37,7 @@ def test_accuracy_mrotary_embedding(seq_len, num_heads, head_size, dtype, is_neo
         kernelgenbench.baseline.mrotary_embedding(q, k, pos_b, is_neox_style=is_neox, head_size=head_size, rotary_dim=head_size, mrope_section=mrope_section)
     def bench_triton():
         q, k = q_b.clone(), k_b.clone()
-        kernelgenbench.baseline.mrotary_embedding(q, k, pos_b, is_neox_style=is_neox, head_size=head_size, rotary_dim=head_size, mrope_section=mrope_section)
+        kernelgenbench.triton.mrotary_embedding(q, k, pos_b, is_neox_style=is_neox, head_size=head_size, rotary_dim=head_size, mrope_section=mrope_section)
     ms_baseline = triton.testing.do_bench(bench_baseline, warmup=25, rep=100)
     ms_triton = triton.testing.do_bench(bench_triton, warmup=25, rep=100)
     speedup = ms_baseline / ms_triton if ms_triton > 0 else float('inf')

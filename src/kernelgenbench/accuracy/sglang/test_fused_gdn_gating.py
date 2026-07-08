@@ -21,14 +21,18 @@ def test_accuracy_fused_gdn_gating(shape, dtype):
     b = torch.randn(B, HV, device='cuda', dtype=dtype)
     dt_bias = torch.randn(HV, device='cuda', dtype=dtype)
     ref_g, ref_beta_out = kernelgenbench.baseline.fused_gdn_gating(A_log=A_log, a=a, b=b, dt_bias=dt_bias, beta=1.0, threshold=20.0)
-    act_g, act_beta_out = kernelgenbench.baseline.fused_gdn_gating(A_log=A_log, a=a.clone(), b=b.clone(), dt_bias=dt_bias, beta=1.0, threshold=20.0)
+    act_g, act_beta_out = kernelgenbench.triton.fused_gdn_gating(A_log=A_log, a=a.clone(), b=b.clone(), dt_bias=dt_bias, beta=1.0, threshold=20.0)
     assert_close(act_g, ref_g, dtype)
     assert_close(act_beta_out, ref_beta_out, dtype)
     if M < 256:
         return None
     ms_baseline = triton.testing.do_bench(
-        lambda: kernelgenbench.baseline.fused_gdn_gating(A_log=A_log, a=a, b=b, dt_bias=dt_bias, beta=1.0, threshold=20.0),
+        lambda: kernelgenbench.baseline.fused_gdn_gating(A_log=A_log, a=a.clone(), b=b.clone(), dt_bias=dt_bias, beta=1.0, threshold=20.0),
         warmup=25, rep=100
     )
-    speedup = 1.0
-    return CustomBenchmarkResult(ref_time=ms_baseline, res_time=ms_baseline, speedup=speedup)
+    ms_triton = triton.testing.do_bench(
+        lambda: kernelgenbench.triton.fused_gdn_gating(A_log=A_log, a=a.clone(), b=b.clone(), dt_bias=dt_bias, beta=1.0, threshold=20.0),
+        warmup=25, rep=100
+    )
+    speedup = ms_baseline / ms_triton if ms_triton > 0 else float('inf')
+    return CustomBenchmarkResult(ref_time=ms_baseline, res_time=ms_triton, speedup=speedup)

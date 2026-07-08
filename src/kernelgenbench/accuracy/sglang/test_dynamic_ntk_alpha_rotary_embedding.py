@@ -27,7 +27,7 @@ def test_accuracy_dynamic_ntk_alpha_rotary_embedding(seq_len, num_heads, head_si
     kernelgenbench.baseline.dynamic_ntk_alpha_rotary_embedding(
         ref_q, ref_k, positions, is_neox_style=is_neox, head_size=head_size, rotary_dim=head_size,
         scaling_alpha=scaling_alpha)
-    kernelgenbench.baseline.dynamic_ntk_alpha_rotary_embedding(
+    kernelgenbench.triton.dynamic_ntk_alpha_rotary_embedding(
         act_q, act_k, positions, is_neox_style=is_neox, head_size=head_size, rotary_dim=head_size,
         scaling_alpha=scaling_alpha)
 
@@ -49,7 +49,7 @@ def test_accuracy_dynamic_ntk_alpha_rotary_embedding(seq_len, num_heads, head_si
 
     def bench_triton():
         q, k = q_b.clone(), k_b.clone()
-        kernelgenbench.baseline.dynamic_ntk_alpha_rotary_embedding(
+        kernelgenbench.triton.dynamic_ntk_alpha_rotary_embedding(
             q, k, pos_b, is_neox_style=is_neox, head_size=head_size, rotary_dim=head_size,
             scaling_alpha=scaling_alpha)
 

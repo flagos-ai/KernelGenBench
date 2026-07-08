@@ -20,7 +20,7 @@ def test_accuracy_fused_dual_residual_rmsnorm(shape, dtype):
 
     ref_out, ref_res = kernelgenbench.baseline.fused_dual_residual_rmsnorm(
         x, residual, hidden_size, hidden_size, eps=1e-6)
-    act_out, act_res = kernelgenbench.baseline.fused_dual_residual_rmsnorm(
+    act_out, act_res = kernelgenbench.triton.fused_dual_residual_rmsnorm(
         x.clone(), residual.clone(), hidden_size, hidden_size, eps=1e-6)
 
     assert_close(act_out, ref_out, dtype)
@@ -32,9 +32,12 @@ def test_accuracy_fused_dual_residual_rmsnorm(shape, dtype):
     x_bench = torch.randn(M, hidden_size, device='cuda', dtype=dtype)
     r_bench = torch.randn(M, hidden_size, device='cuda', dtype=dtype)
     ms_baseline = triton.testing.do_bench(
-        lambda: kernelgenbench.baseline.fused_dual_residual_rmsnorm(
-            x_bench, r_bench, hidden_size, hidden_size, eps=1e-6),
+        lambda: kernelgenbench.baseline.fused_dual_residual_rmsnorm(x.clone(), residual.clone(), hidden_size, hidden_size, eps=1e-6),
         warmup=25, rep=100
     )
-    speedup = 1.0
-    return CustomBenchmarkResult(ref_time=ms_baseline, res_time=ms_baseline, speedup=speedup)
+    ms_triton = triton.testing.do_bench(
+        lambda: kernelgenbench.triton.fused_dual_residual_rmsnorm(x.clone(), residual.clone(), hidden_size, hidden_size, eps=1e-6),
+        warmup=25, rep=100
+    )
+    speedup = ms_baseline / ms_triton if ms_triton > 0 else float('inf')
+    return CustomBenchmarkResult(ref_time=ms_baseline, res_time=ms_triton, speedup=speedup)

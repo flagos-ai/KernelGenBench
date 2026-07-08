@@ -19,7 +19,7 @@ def test_accuracy_rms_norm_without_scale(shape, dtype, eps):
     x = torch.randn(M, hidden_size, device='cuda', dtype=dtype)
 
     ref_out = kernelgenbench.baseline.rms_norm_without_scale(x, hidden_size, eps=eps)
-    act_out = kernelgenbench.baseline.rms_norm_without_scale(x.clone(), hidden_size, eps=eps)
+    act_out = kernelgenbench.triton.rms_norm_without_scale(x.clone(), hidden_size, eps=eps)
 
     assert_close(act_out, ref_out, dtype)
 
@@ -28,8 +28,12 @@ def test_accuracy_rms_norm_without_scale(shape, dtype, eps):
 
     x_bench = torch.randn(M, hidden_size, device='cuda', dtype=dtype)
     ms_baseline = triton.testing.do_bench(
-        lambda: kernelgenbench.baseline.rms_norm_without_scale(x_bench, hidden_size, eps=eps),
+        lambda: kernelgenbench.baseline.rms_norm_without_scale(x.clone(), hidden_size, eps=eps),
         warmup=25, rep=100
     )
-    speedup = 1.0
-    return CustomBenchmarkResult(ref_time=ms_baseline, res_time=ms_baseline, speedup=speedup)
+    ms_triton = triton.testing.do_bench(
+        lambda: kernelgenbench.triton.rms_norm_without_scale(x.clone(), hidden_size, eps=eps),
+        warmup=25, rep=100
+    )
+    speedup = ms_baseline / ms_triton if ms_triton > 0 else float('inf')
+    return CustomBenchmarkResult(ref_time=ms_baseline, res_time=ms_triton, speedup=speedup)

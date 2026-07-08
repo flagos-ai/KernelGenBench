@@ -19,13 +19,17 @@ def test_accuracy_experts_combine_triton(shape, dtype):
     moe_hidden = torch.randn(M, K, N, device='cuda', dtype=dtype)
     mlp_hidden = torch.randn(M, N, device='cuda', dtype=dtype)
     ref_out = kernelgenbench.baseline.experts_combine_triton(moe_hidden, mlp_hidden, output_buffer=None)
-    act_out = kernelgenbench.baseline.experts_combine_triton(moe_hidden.clone(), mlp_hidden.clone(), output_buffer=None)
+    act_out = kernelgenbench.triton.experts_combine_triton(moe_hidden.clone(), mlp_hidden.clone(), output_buffer=None)
     assert_close(act_out, ref_out, dtype)
     if M < 256:
         return None
     ms_baseline = triton.testing.do_bench(
-        lambda: kernelgenbench.baseline.experts_combine_triton(moe_hidden, mlp_hidden, output_buffer=None),
+        lambda: kernelgenbench.baseline.experts_combine_triton(moe_hidden.clone(), mlp_hidden.clone(), output_buffer=None),
         warmup=25, rep=100
     )
-    speedup = 1.0
-    return CustomBenchmarkResult(ref_time=ms_baseline, res_time=ms_baseline, speedup=speedup)
+    ms_triton = triton.testing.do_bench(
+        lambda: kernelgenbench.triton.experts_combine_triton(moe_hidden.clone(), mlp_hidden.clone(), output_buffer=None),
+        warmup=25, rep=100
+    )
+    speedup = ms_baseline / ms_triton if ms_triton > 0 else float('inf')
+    return CustomBenchmarkResult(ref_time=ms_baseline, res_time=ms_triton, speedup=speedup)

@@ -23,7 +23,7 @@ def test_accuracy_triton_mrope_fused(shape, dtype):
     ref_q, ref_k = q0.clone(), k0.clone()
     act_q, act_k = q0.clone(), k0.clone()
     kernelgenbench.baseline.triton_mrope_fused(ref_q, ref_k, cos_sin_cache, positions, mrope_section, head_size=N, rotary_dim=N, mrope_interleaved=False, mrope_interleaved_glm=False, is_neox_style=True, axis_map=None)
-    kernelgenbench.baseline.triton_mrope_fused(act_q, act_k, cos_sin_cache, positions, mrope_section, head_size=N, rotary_dim=N, mrope_interleaved=False, mrope_interleaved_glm=False, is_neox_style=True, axis_map=None)
+    kernelgenbench.triton.triton_mrope_fused(act_q, act_k, cos_sin_cache, positions, mrope_section, head_size=N, rotary_dim=N, mrope_interleaved=False, mrope_interleaved_glm=False, is_neox_style=True, axis_map=None)
     assert_close(act_q, ref_q, dtype)
     assert_close(act_k, ref_k, dtype)
     if M < 256:
@@ -36,5 +36,9 @@ def test_accuracy_triton_mrope_fused(shape, dtype):
         lambda: kernelgenbench.baseline.triton_mrope_fused(q_b.clone(), k_b.clone(), cos_b, pos_b, mrope_section=[N//6]*3, head_size=N, rotary_dim=N, mrope_interleaved=False, mrope_interleaved_glm=False, is_neox_style=True, axis_map=None),
         warmup=25, rep=100
     )
-    speedup = 1.0
-    return CustomBenchmarkResult(ref_time=ms_baseline, res_time=ms_baseline, speedup=speedup)
+    ms_triton = triton.testing.do_bench(
+        lambda: kernelgenbench.triton.triton_mrope_fused(q_b.clone(), k_b.clone(), cos_b, pos_b, mrope_section=[N//6]*3, head_size=N, rotary_dim=N, mrope_interleaved=False, mrope_interleaved_glm=False, is_neox_style=True, axis_map=None),
+        warmup=25, rep=100
+    )
+    speedup = ms_baseline / ms_triton if ms_triton > 0 else float('inf')
+    return CustomBenchmarkResult(ref_time=ms_baseline, res_time=ms_triton, speedup=speedup)

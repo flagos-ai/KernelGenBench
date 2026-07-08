@@ -20,13 +20,17 @@ def test_accuracy_layer_norm_gated_fwd(shape, dtype):
     weight = torch.ones(N, device='cuda', dtype=dtype)
     bias = torch.zeros(N, device='cuda', dtype=dtype)
     ref_out = kernelgenbench.baseline.layer_norm_gated_fwd(x, g, weight, bias, activation='swish', eps=1e-5, residual=None)
-    act_out = kernelgenbench.baseline.layer_norm_gated_fwd(x.clone(), g.clone(), weight, bias, activation='swish', eps=1e-5, residual=None)
+    act_out = kernelgenbench.triton.layer_norm_gated_fwd(x.clone(), g.clone(), weight, bias, activation='swish', eps=1e-5, residual=None)
     assert_close(act_out[0], ref_out[0], dtype)
     if M < 256:
         return None
     ms_baseline = triton.testing.do_bench(
-        lambda: kernelgenbench.baseline.layer_norm_gated_fwd(x, g, weight, bias, activation='swish', eps=1e-5, residual=None),
+        lambda: kernelgenbench.baseline.layer_norm_gated_fwd(x.clone(), g.clone(), weight, bias, activation='swish', eps=1e-5, residual=None),
         warmup=25, rep=100
     )
-    speedup = 1.0
-    return CustomBenchmarkResult(ref_time=ms_baseline, res_time=ms_baseline, speedup=speedup)
+    ms_triton = triton.testing.do_bench(
+        lambda: kernelgenbench.triton.layer_norm_gated_fwd(x.clone(), g.clone(), weight, bias, activation='swish', eps=1e-5, residual=None),
+        warmup=25, rep=100
+    )
+    speedup = ms_baseline / ms_triton if ms_triton > 0 else float('inf')
+    return CustomBenchmarkResult(ref_time=ms_baseline, res_time=ms_triton, speedup=speedup)

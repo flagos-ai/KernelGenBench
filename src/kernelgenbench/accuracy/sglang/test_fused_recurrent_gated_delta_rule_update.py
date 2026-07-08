@@ -26,17 +26,21 @@ def test_accuracy_fused_recurrent_gated_delta_rule_update(shape, dtype):
     ref_out = kernelgenbench.baseline.fused_recurrent_gated_delta_rule_update(
         q=q, k=k, v=v, g=g, beta=beta, scale=scale, initial_state=init_state,
         cu_seqlens=None, initial_state_indices=None, intermediate_states=None, eagle_tree=None)
-    act_out = kernelgenbench.baseline.fused_recurrent_gated_delta_rule_update(
+    act_out = kernelgenbench.triton.fused_recurrent_gated_delta_rule_update(
         q=q.clone(), k=k.clone(), v=v.clone(), g=g.clone(), beta=beta.clone(), scale=scale, initial_state=init_state.clone(),
         cu_seqlens=None, initial_state_indices=None, intermediate_states=None, eagle_tree=None)
     assert_close(act_out, ref_out, dtype, strict=False)
     if M < 256:
         return None
     ms_baseline = triton.testing.do_bench(
-        lambda: kernelgenbench.baseline.fused_recurrent_gated_delta_rule_update(
-            q=q, k=k, v=v, g=g, beta=beta, scale=scale, initial_state=init_state,
-            cu_seqlens=None, initial_state_indices=None, intermediate_states=None, eagle_tree=None),
+        lambda: kernelgenbench.baseline.fused_recurrent_gated_delta_rule_update(q=q.clone(), k=k.clone(), v=v.clone(), g=g.clone(), beta=beta.clone(), scale=scale, initial_state=init_state.clone(),
+        cu_seqlens=None, initial_state_indices=None, intermediate_states=None, eagle_tree=None),
         warmup=25, rep=100
     )
-    speedup = 1.0
-    return CustomBenchmarkResult(ref_time=ms_baseline, res_time=ms_baseline, speedup=speedup)
+    ms_triton = triton.testing.do_bench(
+        lambda: kernelgenbench.triton.fused_recurrent_gated_delta_rule_update(q=q.clone(), k=k.clone(), v=v.clone(), g=g.clone(), beta=beta.clone(), scale=scale, initial_state=init_state.clone(),
+        cu_seqlens=None, initial_state_indices=None, intermediate_states=None, eagle_tree=None),
+        warmup=25, rep=100
+    )
+    speedup = ms_baseline / ms_triton if ms_triton > 0 else float('inf')
+    return CustomBenchmarkResult(ref_time=ms_baseline, res_time=ms_triton, speedup=speedup)

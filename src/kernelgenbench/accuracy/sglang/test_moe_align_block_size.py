@@ -17,15 +17,19 @@ def test_accuracy_moe_align_block_size(shape, dtype):
     M, N = shape
     topk_ids = torch.randint(0, 4, (M, 2), device='cuda', dtype=torch.int32)
     ref_out = kernelgenbench.baseline.moe_align_block_size(topk_ids, num_experts=4, block_size=32)
-    act_out = kernelgenbench.baseline.moe_align_block_size(topk_ids.clone(), num_experts=4, block_size=32)
+    act_out = kernelgenbench.triton.moe_align_block_size(topk_ids.clone(), num_experts=4, block_size=32)
     assert_close(act_out[0], ref_out[0], torch.int32)
     assert_close(act_out[1], ref_out[1], torch.int32)
     if M < 256:
         return None
     topk_b = torch.randint(0, 4, (M, 2), device='cuda', dtype=torch.int32)
     ms_baseline = triton.testing.do_bench(
-        lambda: kernelgenbench.baseline.moe_align_block_size(topk_b, num_experts=4, block_size=32),
+        lambda: kernelgenbench.baseline.moe_align_block_size(topk_ids.clone(), num_experts=4, block_size=32),
         warmup=25, rep=100
     )
-    speedup = 1.0
-    return CustomBenchmarkResult(ref_time=ms_baseline, res_time=ms_baseline, speedup=speedup)
+    ms_triton = triton.testing.do_bench(
+        lambda: kernelgenbench.triton.moe_align_block_size(topk_ids.clone(), num_experts=4, block_size=32),
+        warmup=25, rep=100
+    )
+    speedup = ms_baseline / ms_triton if ms_triton > 0 else float('inf')
+    return CustomBenchmarkResult(ref_time=ms_baseline, res_time=ms_triton, speedup=speedup)

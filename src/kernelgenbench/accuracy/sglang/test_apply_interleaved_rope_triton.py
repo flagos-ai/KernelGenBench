@@ -20,7 +20,7 @@ def test_accuracy_apply_interleaved_rope_triton(seq_len, rotary_dim, dtype, mrop
     x = torch.randn(3, N, D, device='cuda', dtype=dtype)
 
     ref_out = kernelgenbench.baseline.apply_interleaved_rope_triton(x, mrope_section)
-    act_out = kernelgenbench.baseline.apply_interleaved_rope_triton(x.clone(), mrope_section)
+    act_out = kernelgenbench.triton.apply_interleaved_rope_triton(x.clone(), mrope_section)
 
     assert_close(act_out, ref_out, dtype)
 
@@ -29,8 +29,12 @@ def test_accuracy_apply_interleaved_rope_triton(seq_len, rotary_dim, dtype, mrop
 
     x_bench = torch.randn(3, N, D, device='cuda', dtype=dtype)
     ms_baseline = triton.testing.do_bench(
-        lambda: kernelgenbench.baseline.apply_interleaved_rope_triton(x_bench, mrope_section),
+        lambda: kernelgenbench.baseline.apply_interleaved_rope_triton(x.clone(), mrope_section),
         warmup=25, rep=100
     )
-    speedup = 1.0
-    return CustomBenchmarkResult(ref_time=ms_baseline, res_time=ms_baseline, speedup=speedup)
+    ms_triton = triton.testing.do_bench(
+        lambda: kernelgenbench.triton.apply_interleaved_rope_triton(x.clone(), mrope_section),
+        warmup=25, rep=100
+    )
+    speedup = ms_baseline / ms_triton if ms_triton > 0 else float('inf')
+    return CustomBenchmarkResult(ref_time=ms_baseline, res_time=ms_triton, speedup=speedup)

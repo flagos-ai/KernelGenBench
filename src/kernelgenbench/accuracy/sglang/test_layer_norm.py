@@ -20,7 +20,7 @@ def test_accuracy_layer_norm(shape, dtype, eps, elementwise_affine):
     x = torch.randn(M, hidden_size, device='cuda', dtype=dtype)
 
     ref_out = kernelgenbench.baseline.layer_norm(x, hidden_size, eps=eps, elementwise_affine=elementwise_affine)
-    act_out = kernelgenbench.baseline.layer_norm(x.clone(), hidden_size, eps=eps, elementwise_affine=elementwise_affine)
+    act_out = kernelgenbench.triton.layer_norm(x.clone(), hidden_size, eps=eps, elementwise_affine=elementwise_affine)
 
     assert_close(act_out, ref_out, dtype)
 
@@ -33,7 +33,7 @@ def test_accuracy_layer_norm(shape, dtype, eps, elementwise_affine):
         warmup=25, rep=100
     )
     ms_triton = triton.testing.do_bench(
-        lambda: kernelgenbench.baseline.layer_norm(x_bench.clone(), hidden_size, eps=eps, elementwise_affine=elementwise_affine),
+        lambda: kernelgenbench.triton.layer_norm(x_bench.clone(), hidden_size, eps=eps, elementwise_affine=elementwise_affine),
         warmup=25, rep=100
     )
     speedup = ms_baseline / ms_triton if ms_triton > 0 else float('inf')

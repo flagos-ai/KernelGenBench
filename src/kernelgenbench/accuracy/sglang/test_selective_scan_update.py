@@ -23,13 +23,17 @@ def test_accuracy_selective_scan_update(shape, dtype):
     B = torch.randn(M, dstate, device='cuda', dtype=dtype)
     C = torch.randn(M, dstate, device='cuda', dtype=dtype)
     ref_out, ref_state = kernelgenbench.baseline.selective_scan_update(state=state, x=x, dt=dt, A=A, B=B, C=C, D=None, z=None, dt_bias=None, state_batch_indices=None)
-    act_out, act_state = kernelgenbench.baseline.selective_scan_update(state=state.clone(), x=x.clone(), dt=dt.clone(), A=A, B=B.clone(), C=C.clone(), D=None, z=None, dt_bias=None, state_batch_indices=None)
+    act_out, act_state = kernelgenbench.triton.selective_scan_update(state=state.clone(), x=x.clone(), dt=dt.clone(), A=A, B=B.clone(), C=C.clone(), D=None, z=None, dt_bias=None, state_batch_indices=None)
     assert_close(act_out, ref_out, dtype)
     if M < 256:
         return None
     ms_baseline = triton.testing.do_bench(
-        lambda: kernelgenbench.baseline.selective_scan_update(state=state, x=x, dt=dt, A=A, B=B, C=C, D=None, z=None, dt_bias=None, state_batch_indices=None),
+        lambda: kernelgenbench.baseline.selective_scan_update(state=state.clone(), x=x.clone(), dt=dt.clone(), A=A, B=B.clone(), C=C.clone(), D=None, z=None, dt_bias=None, state_batch_indices=None),
         warmup=25, rep=100
     )
-    speedup = 1.0
-    return CustomBenchmarkResult(ref_time=ms_baseline, res_time=ms_baseline, speedup=speedup)
+    ms_triton = triton.testing.do_bench(
+        lambda: kernelgenbench.triton.selective_scan_update(state=state.clone(), x=x, dt=dt.clone(), A=A, B=B.clone(), C=C.clone(), D=None, z=None, dt_bias=None, state_batch_indices=None),
+        warmup=25, rep=100
+    )
+    speedup = ms_baseline / ms_triton if ms_triton > 0 else float('inf')
+    return CustomBenchmarkResult(ref_time=ms_baseline, res_time=ms_triton, speedup=speedup)

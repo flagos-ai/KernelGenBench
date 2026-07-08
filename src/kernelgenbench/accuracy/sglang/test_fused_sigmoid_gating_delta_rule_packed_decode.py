@@ -30,7 +30,7 @@ def test_accuracy_fused_sigmoid_gating_delta_rule_packed_decode(shape, dtype):
         mixed_qkv=mixed_qkv, a=a, b=b, A_log=A_log, dt_bias=dt_bias, scale=scale,
         initial_state=init_state, out=out, ssm_state_indices=ssm_state_indices,
         use_qk_l2norm_in_kernel=False)
-    act_out, act_state = kernelgenbench.baseline.fused_sigmoid_gating_delta_rule_packed_decode(
+    act_out, act_state = kernelgenbench.triton.fused_sigmoid_gating_delta_rule_packed_decode(
         mixed_qkv=mixed_qkv.clone(), a=a.clone(), b=b.clone(), A_log=A_log, dt_bias=dt_bias, scale=scale,
         initial_state=init_state.clone(), out=out.clone(), ssm_state_indices=ssm_state_indices,
         use_qk_l2norm_in_kernel=False)
@@ -38,11 +38,16 @@ def test_accuracy_fused_sigmoid_gating_delta_rule_packed_decode(shape, dtype):
     if M < 256:
         return None
     ms_baseline = triton.testing.do_bench(
-        lambda: kernelgenbench.baseline.fused_sigmoid_gating_delta_rule_packed_decode(
-            mixed_qkv=mixed_qkv, a=a, b=b, A_log=A_log, dt_bias=dt_bias, scale=scale,
-            initial_state=init_state, out=out, ssm_state_indices=ssm_state_indices,
-            use_qk_l2norm_in_kernel=False),
+        lambda: kernelgenbench.baseline.fused_sigmoid_gating_delta_rule_packed_decode(mixed_qkv=mixed_qkv.clone(), a=a.clone(), b=b.clone(), A_log=A_log, dt_bias=dt_bias, scale=scale,
+        initial_state=init_state.clone(), out=out.clone(), ssm_state_indices=ssm_state_indices,
+        use_qk_l2norm_in_kernel=False),
         warmup=25, rep=100
     )
-    speedup = 1.0
-    return CustomBenchmarkResult(ref_time=ms_baseline, res_time=ms_baseline, speedup=speedup)
+    ms_triton = triton.testing.do_bench(
+        lambda: kernelgenbench.triton.fused_sigmoid_gating_delta_rule_packed_decode(mixed_qkv=mixed_qkv.clone(), a=a.clone(), b=b.clone(), A_log=A_log, dt_bias=dt_bias, scale=scale,
+        initial_state=init_state.clone(), out=out.clone(), ssm_state_indices=ssm_state_indices,
+        use_qk_l2norm_in_kernel=False),
+        warmup=25, rep=100
+    )
+    speedup = ms_baseline / ms_triton if ms_triton > 0 else float('inf')
+    return CustomBenchmarkResult(ref_time=ms_baseline, res_time=ms_triton, speedup=speedup)

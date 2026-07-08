@@ -27,14 +27,18 @@ def test_accuracy_fused_moe(shape, dtype):
     gather_idx = GatherIndx(*gather_idx)
     scatter_idx = ScatterIndx(*scatter_idx)
     ref_out = kernelgenbench.baseline.fused_moe(hidden_states, w1, w2, routing_data, gather_idx, scatter_idx, inplace=False, activation='silu')
-    act_out = kernelgenbench.baseline.fused_moe(hidden_states.clone(), w1, w2, routing_data, gather_idx, scatter_idx, inplace=False, activation='silu')
+    act_out = kernelgenbench.triton.fused_moe(hidden_states.clone(), w1, w2, routing_data, gather_idx, scatter_idx, inplace=False, activation='silu')
     assert_close(act_out, ref_out, dtype)
     if M < 256:
         return None
     hidden_b = torch.randn(M, N, device='cuda', dtype=dtype)
     ms_baseline = triton.testing.do_bench(
-        lambda: kernelgenbench.baseline.fused_moe(hidden_b, w1, w2, routing_data, gather_idx, scatter_idx, inplace=False, activation='silu'),
+        lambda: kernelgenbench.baseline.fused_moe(hidden_states.clone(), w1, w2, routing_data, gather_idx, scatter_idx, inplace=False, activation='silu'),
         warmup=25, rep=100
     )
-    speedup = 1.0
-    return CustomBenchmarkResult(ref_time=ms_baseline, res_time=ms_baseline, speedup=speedup)
+    ms_triton = triton.testing.do_bench(
+        lambda: kernelgenbench.triton.fused_moe(hidden_states.clone(), w1, w2, routing_data, gather_idx, scatter_idx, inplace=False, activation='silu'),
+        warmup=25, rep=100
+    )
+    speedup = ms_baseline / ms_triton if ms_triton > 0 else float('inf')
+    return CustomBenchmarkResult(ref_time=ms_baseline, res_time=ms_triton, speedup=speedup)

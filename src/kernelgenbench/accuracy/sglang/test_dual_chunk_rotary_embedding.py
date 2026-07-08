@@ -24,7 +24,7 @@ def test_accuracy_dual_chunk_rotary_embedding(seq_len, num_heads, head_size, dty
     act_q, act_k = q0.clone(), k0.clone()
 
     kernelgenbench.baseline.dual_chunk_rotary_embedding(ref_q, ref_k, positions, is_neox_style=is_neox, head_size=head_size, rotary_dim=head_size)
-    kernelgenbench.baseline.dual_chunk_rotary_embedding(act_q, act_k, positions, is_neox_style=is_neox, head_size=head_size, rotary_dim=head_size)
+    kernelgenbench.triton.dual_chunk_rotary_embedding(act_q, act_k, positions, is_neox_style=is_neox, head_size=head_size, rotary_dim=head_size)
     assert_close(act_q, ref_q, dtype)
     assert_close(act_k, ref_k, dtype)
     if seq_len < 512:
@@ -37,7 +37,7 @@ def test_accuracy_dual_chunk_rotary_embedding(seq_len, num_heads, head_size, dty
         kernelgenbench.baseline.dual_chunk_rotary_embedding(q, k, pos_b, is_neox_style=is_neox, head_size=head_size, rotary_dim=head_size)
     def bench_triton():
         q, k = q_b.clone(), k_b.clone()
-        kernelgenbench.baseline.dual_chunk_rotary_embedding(q, k, pos_b, is_neox_style=is_neox, head_size=head_size, rotary_dim=head_size)
+        kernelgenbench.triton.dual_chunk_rotary_embedding(q, k, pos_b, is_neox_style=is_neox, head_size=head_size, rotary_dim=head_size)
     ms_baseline = triton.testing.do_bench(bench_baseline, warmup=25, rep=100)
     ms_triton = triton.testing.do_bench(bench_triton, warmup=25, rep=100)
     speedup = ms_baseline / ms_triton if ms_triton > 0 else float('inf')

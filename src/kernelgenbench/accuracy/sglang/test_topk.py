@@ -19,13 +19,17 @@ def test_accuracy_topk(shape, dtype):
     hidden_states = torch.randn(M, N, device='cuda', dtype=dtype)
     router_logits = torch.randn(M, E, device='cuda', dtype=torch.float32)
     ref_out = kernelgenbench.baseline.topk(hidden_states, router_logits, topk=2)
-    act_out = kernelgenbench.baseline.topk(hidden_states.clone(), router_logits.clone(), topk=2)
+    act_out = kernelgenbench.triton.topk(hidden_states.clone(), router_logits.clone(), topk=2)
     assert_close(act_out.weights, ref_out.weights, torch.float32)
     if M < 256:
         return None
     ms_baseline = triton.testing.do_bench(
-        lambda: kernelgenbench.baseline.topk(hidden_states, router_logits, topk=2),
+        lambda: kernelgenbench.baseline.topk(hidden_states.clone(), router_logits.clone(), topk=2),
         warmup=25, rep=100
     )
-    speedup = 1.0
-    return CustomBenchmarkResult(ref_time=ms_baseline, res_time=ms_baseline, speedup=speedup)
+    ms_triton = triton.testing.do_bench(
+        lambda: kernelgenbench.triton.topk(hidden_states.clone(), router_logits.clone(), topk=2),
+        warmup=25, rep=100
+    )
+    speedup = ms_baseline / ms_triton if ms_triton > 0 else float('inf')
+    return CustomBenchmarkResult(ref_time=ms_baseline, res_time=ms_triton, speedup=speedup)

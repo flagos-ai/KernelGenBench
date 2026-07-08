@@ -18,13 +18,17 @@ def test_accuracy_causal_conv1d_fn(shape, dtype):
     x = torch.randn(M, N, device='cuda', dtype=dtype)
     weight = torch.randn(N, 4, device='cuda', dtype=dtype)
     ref_out = kernelgenbench.baseline.causal_conv1d_fn(x, weight, bias=None, query_start_loc=None, cache_indices=None, has_initial_state=None, conv_states=None, activation='silu')
-    act_out = kernelgenbench.baseline.causal_conv1d_fn(x.clone(), weight, bias=None, query_start_loc=None, cache_indices=None, has_initial_state=None, conv_states=None, activation='silu')
+    act_out = kernelgenbench.triton.causal_conv1d_fn(x.clone(), weight, bias=None, query_start_loc=None, cache_indices=None, has_initial_state=None, conv_states=None, activation='silu')
     assert_close(act_out, ref_out, dtype)
     if M < 256:
         return None
     ms_baseline = triton.testing.do_bench(
-        lambda: kernelgenbench.baseline.causal_conv1d_fn(x, weight, bias=None, query_start_loc=None, cache_indices=None, has_initial_state=None, conv_states=None, activation='silu'),
+        lambda: kernelgenbench.baseline.causal_conv1d_fn(x.clone(), weight, bias=None, query_start_loc=None, cache_indices=None, has_initial_state=None, conv_states=None, activation='silu'),
         warmup=25, rep=100
     )
-    speedup = 1.0
-    return CustomBenchmarkResult(ref_time=ms_baseline, res_time=ms_baseline, speedup=speedup)
+    ms_triton = triton.testing.do_bench(
+        lambda: kernelgenbench.triton.causal_conv1d_fn(x, weight, bias=None, query_start_loc=None, cache_indices=None, has_initial_state=None, conv_states=None, activation='silu'),
+        warmup=25, rep=100
+    )
+    speedup = ms_baseline / ms_triton if ms_triton > 0 else float('inf')
+    return CustomBenchmarkResult(ref_time=ms_baseline, res_time=ms_triton, speedup=speedup)

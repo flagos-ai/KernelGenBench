@@ -18,14 +18,18 @@ def test_accuracy_conv3d_layer(shape, dtype):
     in_c, out_c, ks = 3, N, 3
     x = torch.randn(M, in_c, 16, 16, 16, device='cuda', dtype=dtype)
     ref_out = kernelgenbench.baseline.conv3d_layer(x, in_channels=in_c, out_channels=out_c, kernel_size=ks, stride=1, padding=1, bias=False)
-    act_out = kernelgenbench.baseline.conv3d_layer(x.clone(), in_channels=in_c, out_channels=out_c, kernel_size=ks, stride=1, padding=1, bias=False)
+    act_out = kernelgenbench.triton.conv3d_layer(x.clone(), in_channels=in_c, out_channels=out_c, kernel_size=ks, stride=1, padding=1, bias=False)
     assert_close(act_out, ref_out, dtype)
     if M < 256:
         return None
     x_b = torch.randn(M, in_c, 16, 16, 16, device='cuda', dtype=dtype)
     ms_baseline = triton.testing.do_bench(
-        lambda: kernelgenbench.baseline.conv3d_layer(x_b, in_channels=in_c, out_channels=out_c, kernel_size=ks, stride=1, padding=1, bias=False),
+        lambda: kernelgenbench.baseline.conv3d_layer(x.clone(), in_channels=in_c, out_channels=out_c, kernel_size=ks, stride=1, padding=1, bias=False),
         warmup=25, rep=100
     )
-    speedup = 1.0
-    return CustomBenchmarkResult(ref_time=ms_baseline, res_time=ms_baseline, speedup=speedup)
+    ms_triton = triton.testing.do_bench(
+        lambda: kernelgenbench.triton.conv3d_layer(x.clone(), in_channels=in_c, out_channels=out_c, kernel_size=ks, stride=1, padding=1, bias=False),
+        warmup=25, rep=100
+    )
+    speedup = ms_baseline / ms_triton if ms_triton > 0 else float('inf')
+    return CustomBenchmarkResult(ref_time=ms_baseline, res_time=ms_triton, speedup=speedup)

@@ -19,7 +19,7 @@ def test_accuracy_gemma3_rms_norm(shape, dtype, eps):
     x = torch.randn(M, dim, device='cuda', dtype=dtype)
 
     ref_out = kernelgenbench.baseline.gemma3_rms_norm(x, dim, eps=eps)
-    act_out = kernelgenbench.baseline.gemma3_rms_norm(x.clone(), dim, eps=eps)
+    act_out = kernelgenbench.triton.gemma3_rms_norm(x.clone(), dim, eps=eps)
 
     assert_close(act_out, ref_out, dtype)
 
@@ -28,8 +28,12 @@ def test_accuracy_gemma3_rms_norm(shape, dtype, eps):
 
     x_bench = torch.randn(M, dim, device='cuda', dtype=dtype)
     ms_baseline = triton.testing.do_bench(
-        lambda: kernelgenbench.baseline.gemma3_rms_norm(x_bench, dim, eps=eps),
+        lambda: kernelgenbench.baseline.gemma3_rms_norm(x.clone(), dim, eps=eps),
         warmup=25, rep=100
     )
-    speedup = 1.0
-    return CustomBenchmarkResult(ref_time=ms_baseline, res_time=ms_baseline, speedup=speedup)
+    ms_triton = triton.testing.do_bench(
+        lambda: kernelgenbench.triton.gemma3_rms_norm(x.clone(), dim, eps=eps),
+        warmup=25, rep=100
+    )
+    speedup = ms_baseline / ms_triton if ms_triton > 0 else float('inf')
+    return CustomBenchmarkResult(ref_time=ms_baseline, res_time=ms_triton, speedup=speedup)
