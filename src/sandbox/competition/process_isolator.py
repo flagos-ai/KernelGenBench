@@ -29,7 +29,7 @@ def isolated_test_worker(config: Dict[str, Any]) -> Dict[str, Any]:
     import random
 
     # ===== 第一步：文件系统隔离 =====
-    from sandbox.cache_isolator import CacheIsolator
+    from .cache_isolator import CacheIsolator
     cache_isolator = CacheIsolator()
     cache_isolator.isolate()
 
@@ -40,13 +40,13 @@ def isolated_test_worker(config: Dict[str, Any]) -> Dict[str, Any]:
     os.environ['CUDA_CACHE_DISABLE'] = '1'
 
     # ===== 第三步：启用Import Hook沙箱 =====
-    from sandbox.import_hook import RuntimeSandbox
+    from .import_hook import RuntimeSandbox
     sandbox = RuntimeSandbox()
     sandbox.enable()
 
     try:
         # ===== 第四步：CUDA层保护 =====
-        from sandbox.cuda_protector import CUDALayerProtector
+        from .cuda_protector import CUDALayerProtector
         cuda_protector = CUDALayerProtector()
         cuda_protector.setup()
 
@@ -62,7 +62,7 @@ def isolated_test_worker(config: Dict[str, Any]) -> Dict[str, Any]:
         per_iteration_seeds = config.get('per_iteration_seeds',
                                          [config['seed'] + i for i in range(runs)])
 
-        from sandbox.shape_generator import TensorLayoutRandomizer
+        from .shape_generator import TensorLayoutRandomizer
         layout_randomizer = TensorLayoutRandomizer()
 
         # ===== 第七步：加载并执行算子 =====

@@ -143,7 +143,7 @@ class Verifier:
 
         # 2. CUDA layer protection (disable CUDA Graph, TF32, reset state)
         try:
-            from sandbox.cuda_protector import CUDALayerProtector
+            from sandbox.competition.cuda_protector import CUDALayerProtector
             self._cuda_protector = CUDALayerProtector()
             self._cuda_protector.setup()
         except Exception:
