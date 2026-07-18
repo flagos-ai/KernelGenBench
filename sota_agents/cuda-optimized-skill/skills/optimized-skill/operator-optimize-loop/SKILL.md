@@ -3,6 +3,23 @@ name: operator-optimize-loop
 description: Run an operator optimization loop for CUDA, CUTLASS, or Triton implementations. The loop enforces correctness validation, benchmark, backend-aware profiling/artifact capture, strategy memory (positive/negative/rejected), and final best-version selection. Use when Claude needs to iterate on a `.cu` or Triton `.py` operator for a user-specified number of rounds, compare versions by benchmark results, keep full Nsight Compute evidence for winners, and prepare the next optimization step from the latest reports.
 ---
 
+<!--
+ Copyright 2026 FlagOS Contributors
+
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+
+     http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+ -->
+
+
 # Operator Optimization Loop
 
 这个 skill 是 `skills/optimized-skill` 的统一主入口，用来把现有能力串成闭环：
