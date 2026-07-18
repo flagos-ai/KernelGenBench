@@ -1,4 +1,19 @@
 #!/usr/bin/env python3
+
+# Copyright 2026 FlagOS Contributors
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
 """
 Converted test file for operators: _flash_attention_backward, _flash_attention_forward, _index_put_impl_, _local_scalar_dense, _scaled_dot_product_flash_attention, _scaled_dot_product_flash_attention_backward, _softmax, _to_copy, add, add_, arange, argmax, bitwise_not, bmm, cat, clone, contiguous, copy_, cos, cumsum, diff, div, div_, embedding, embedding_backward, embedding_dense_backward, eq, expand, expand_as, exponential_, fill_, floor_divide, full, gather, gt, index, index_put_, index_select, item, le, linear, masked_fill_, matmul, mean, mm, mul, narrow, neg, ones_like, pow, resolve_conj, resolve_neg, rsqrt, rsub, scaled_dot_product_attention, scatter, select, silu, silu_backward, sin, softmax, sort, stack, sub, sum, to, zero_, zeros, zeros_like
 
@@ -11317,7 +11332,3 @@ def test_accuracy_zeros_like(shape, dtype):
     speedup = ms_torch / ms_triton
     result = CustomBenchmarkResult(ref_time=ms_torch, res_time=ms_triton, speedup=speedup,)
     return result
-
-
-
-

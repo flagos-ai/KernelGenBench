@@ -3,6 +3,23 @@ name: kernel-benchmark
 description: Compile, validate, and benchmark a CUDA, CUTLASS, or Triton operator against an optional Python reference by driving `skills/optimized-skill/kernel-benchmark/scripts/benchmark.py`. Use when Claude needs to 验证算子正确性、做 baseline 性能测试、比较 operator 与 reference 的 speedup、对 CUDA/CUTLASS 读取 `extern "C" void solve(...)` 签名推断参数，或在进入后续分析前先得到稳定 benchmark 结果。
 ---
 
+<!--
+ Copyright 2026 FlagOS Contributors
+
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+
+     http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+ -->
+
+
 # Kernel Benchmark
 
 通过 `skills/optimized-skill/kernel-benchmark/scripts/benchmark.py` 编译、验证、压测三类算子：
