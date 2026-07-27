@@ -116,7 +116,7 @@ def query_server(
                 top_k=top_k,
                 max_tokens=max_tokens,
             )
-        outputs = [choice.text for choice in response.content if not hasattr(choice, 'thinking') or not choice.thinking]
+        outputs = ["\n\n".join(choice.text for choice in response.content if not hasattr(choice, 'thinking') or not choice.thinking)]
     elif server_type == "openai" and is_reasoning_model:
         response = client.chat.completions.create(
             model=model,
