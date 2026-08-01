@@ -2,6 +2,8 @@
 
 [[中文版](./README.zh-CN.md)|English]
 
+> **Paper**: [KernelGenBench: A Multi-Source and Multi-Chip Benchmark for LLM-based Kernel Generation](https://arxiv.org/abs/2607.27231) (arXiv:2607.27231)
+
 <div align="right">
   <a href="https://www.linkedin.com/company/flagos-community" target="_blank">
     <img src="./docs/assets/Linkedin.png" alt="LinkedIn" width="32" height="32" />
@@ -25,8 +27,6 @@
 KernelGenBench is a component of [FlagOS](https://flagos.io/) — a unified, open-source AI system software stack that fosters an open technology ecosystem by seamlessly integrating various models, systems, and chips. Following the principle of "develop once, migrate across various chips", FlagOS aims to unlock the full computational potential of hardware, break down barriers between different chip software stacks, and effectively reduce migration costs.
 
 KernelGenBench is a benchmark framework for evaluating LLM and agent-based Triton kernel generation across multiple hardware platforms.
-
-> **Paper**: [KernelGenBench: A Multi-Source and Multi-Chip Benchmark for LLM-based Kernel Generation](paper/KernelGenBench_paper.pdf) (Under Review)
 
 ![KernelGenBench Overview](docs/source/_static/images/figures/overview.png)
 
@@ -78,13 +78,12 @@ python scripts/generate_kernel_and_verify.py \
 ## Citation
 
 ```bibtex
-@inproceedings{kernelgenbench2026,
+@article{zang2026kernelgenbench,
   title     = {KernelGenBench: A Multi-Source and Multi-Chip Benchmark for LLM-based Kernel Generation},
-  author    = {Anonymous Author(s)},
-  booktitle = {Under review},
+  author    = {Peiyu Zang and Jian Tao and Jialing Zhang and Yichen Yuan and Wentao Zhang and Guang Liu and Yonghua Lin},
+  journal   = {arXiv preprint arXiv:2607.27231},
   year      = {2026},
-  note      = {Preprint PDF and repository available at \url{https://github.com/flagos-ai/KernelGenBench}},
-  url       = {https://github.com/flagos-ai/KernelGenBench}
+  url       = {https://arxiv.org/abs/2607.27231}
 }
 ```
 

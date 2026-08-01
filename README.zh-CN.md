@@ -18,7 +18,7 @@
 
 跨多种硬件平台评测 LLM 和 Agent 生成 Triton kernel 能力的基准框架。
 
-> **论文**: [KernelGenBench: A Multi-Source and Multi-Chip Benchmark for LLM-based Kernel Generation](paper/KernelGenBench_paper.pdf) (Under Review)
+> **论文**：[KernelGenBench: A Multi-Source and Multi-Chip Benchmark for LLM-based Kernel Generation](https://arxiv.org/abs/2607.27231)（arXiv:2607.27231）
 
 ![KernelGenBench 架构概览](docs/source/_static/images/figures/overview.png)
 
@@ -334,13 +334,12 @@ KernelGenBench 是 [FlagOS](https://github.com/flagos-ai) 开源生态的一部�
 如果 KernelGenBench 对您的研究或评测有帮助，请引用：
 
 ```bibtex
-@inproceedings{kernelgenbench2026,
+@article{zang2026kernelgenbench,
   title     = {KernelGenBench: A Multi-Source and Multi-Chip Benchmark for LLM-based Kernel Generation},
-  author    = {Anonymous Author(s)},
-  booktitle = {Under review},
+  author    = {Peiyu Zang and Jian Tao and Jialing Zhang and Yichen Yuan and Wentao Zhang and Guang Liu and Yonghua Lin},
+  journal   = {arXiv preprint arXiv:2607.27231},
   year      = {2026},
-  note      = {Preprint PDF and repository available at \url{https://github.com/flagos-ai/KernelGenBench}},
-  url       = {https://github.com/flagos-ai/KernelGenBench}
+  url       = {https://arxiv.org/abs/2607.27231}
 }
 ```
 
