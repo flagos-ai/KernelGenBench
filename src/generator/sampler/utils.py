@@ -97,12 +97,19 @@ def query_server(
         case "openai":
             client = OpenAI(api_key=OPENAI_KEY)
             model = model_name
+        case "zyapi":
+            import anthropic as _anthropic
+            client = _anthropic.Anthropic(
+                auth_token=os.environ.get("ANTHROPIC_AUTH_TOKEN"),
+                base_url="https://zyapi.xmsxb.com/",
+            )
+            model = model_name
         case _:
             _base_url = base_url or os.environ.get("OPENAI_BASE_URL", "http://localhost:8000/v1")
             client = OpenAI(api_key=os.environ.get("OPENAI_API_KEY", "EMPTY"), base_url=_base_url)
             model = model_name
 
-    if server_type == "anthropic":
+    if server_type in ("anthropic", "zyapi"):
         assert type(prompt) == str
         if is_reasoning_model:
             response = client.beta.messages.create(
@@ -123,7 +130,7 @@ def query_server(
                 top_k=top_k,
                 max_tokens=max_tokens,
             )
-        outputs = [choice.text for choice in response.content if not hasattr(choice, 'thinking') or not choice.thinking]
+        outputs = ["\n\n".join(choice.text for choice in response.content if not hasattr(choice, 'thinking') or not choice.thinking)]
     elif server_type == "openai" and is_reasoning_model:
         response = client.chat.completions.create(
             model=model,
@@ -167,6 +174,10 @@ SERVER_PRESETS = {
     "openai": {
         "temperature": 0.0,
         "max_tokens": 4096,
+    },
+    "zyapi": {
+        "temperature": 0.0,
+        "max_tokens": 32768,
     },
 }
 

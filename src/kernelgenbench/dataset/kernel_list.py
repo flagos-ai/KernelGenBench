@@ -69,7 +69,8 @@ class DynamicImplInfo:
             return self._cache[api]
         if api in self._cache_errors:
             return None
-        assert namespace in self.namespaces, f"namespace {namespace} not found"
+        if namespace not in self.namespaces:
+            return None
         try:
             schemas = self.loader.get_operator(namespace, api).schemas
             self._cache[api] = self._schemas_to_impl_info(schemas, namespace, api)
