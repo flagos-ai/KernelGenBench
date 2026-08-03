@@ -19,7 +19,7 @@ agent:
   type: claude           # claude / cursor / custom
   bin: claude            # path to executable
   timeout: 1800          # per-operator timeout (seconds)
-  max_retries: 3         # max retries on failure
+  max_retries: 1         # one attempt only; do not retry on failure
   budget: 50.0           # per-operator budget (USD, claude only)
 
 # Device configuration
