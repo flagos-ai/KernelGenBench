@@ -775,9 +775,15 @@ def main():
     parser.add_argument("--timeout", type=int, default=300, help="Timeout for each test")
     
     # Generation config
-    parser.add_argument("--server-type", type=str, default="openai")
+    parser.add_argument(
+        "--api-format", "--server-type",
+        dest="server_type",
+        choices=["openai", "anthropic"],
+        default="openai",
+        help="API wire format; --server-type is kept as a backward-compatible alias",
+    )
     parser.add_argument("--model-name", type=str, default="gpt-4o-mini")
-    parser.add_argument("--base-url", type=str, default=None, help="API base URL (for OpenAI-compatible providers)")
+    parser.add_argument("--base-url", type=str, default=None, help="API base URL for either supported API format")
     parser.add_argument("--api-key", type=str, default=None, help="API key (overrides OPENAI_API_KEY / ANTHROPIC_API_KEY env var)")
     parser.add_argument("--temperature", type=float, default=0.8)
     parser.add_argument("--max-tokens", type=int, default=16384)
@@ -823,6 +829,8 @@ def main():
     args_file = output_dir / "args.json"
     with open(args_file, "w") as f:
         args_dict = vars(args).copy()
+        if args_dict.get("api_key"):
+            args_dict["api_key"] = "<redacted>"
         # Convert Path objects to strings for JSON serialization
         for key, value in args_dict.items():
             if isinstance(value, Path):
@@ -832,18 +840,18 @@ def main():
     run_name = output_dir.name
     
     # Create generation config
-    # Set API key in env if provided
+    # Set only the environment variable for the selected wire format. The
+    # inference client reads it when each request is created, so CLI values work
+    # even though this module imports the generator before parsing arguments.
     if args.api_key:
-        os.environ["OPENAI_API_KEY"] = args.api_key
-        os.environ["ANTHROPIC_API_KEY"] = args.api_key
-
-    base_url = args.base_url if args.base_url else "http://localhost:8000/v1"
+        key_env = "ANTHROPIC_API_KEY" if args.server_type == "anthropic" else "OPENAI_API_KEY"
+        os.environ[key_env] = args.api_key
 
     gen_config = GenerationConfig(
         run_name="",
         server_type=args.server_type,
         model_name=args.model_name,
-        base_url=base_url,
+        base_url=args.base_url,
         temperature=args.temperature,
         max_tokens=args.max_tokens,
         num_workers=args.num_workers,

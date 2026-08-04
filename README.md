@@ -49,8 +49,15 @@ pip install -e .
 python scripts/generate_kernel_and_verify.py \
     --op-name aten::add \
     --single-test \
-    --server-type openai
+    --api-format openai \
+    --model-name your-model \
+    --base-url https://your-provider.example/v1 \
+    --api-key your-key
 ```
+
+`--api-format` describes the API protocol, not a registered provider. Any
+OpenAI-compatible or Anthropic-compatible endpoint can be used directly with
+`--base-url`, `--api-key`, and `--model-name`.
 
 👉 **For detailed setup, see [Getting Started](docs/source/getting-started/index.md).**
 

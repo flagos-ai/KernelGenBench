@@ -82,7 +82,7 @@ class GenerationConfig:
     log_prompt: bool = False
     backend: str = "triton"
     greedy_sample: bool = False
-    base_url: str = "http://localhost:8000/v1"
+    base_url: Optional[str] = None
     strict_check: bool = False
     seed: int = 42
     use_ai_advice: bool = False

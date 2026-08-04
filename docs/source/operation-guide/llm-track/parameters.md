@@ -22,7 +22,7 @@ LLM Track command-line parameters.
 
 | Parameter | Description |
 |-----------|-------------|
-| `--server-type` | LLM provider: `openai` or `anthropic` |
+| `--api-format` | API protocol: `openai` or `anthropic` |
 | `--model-name` | Model identifier |
 
 ## Optional Parameters
@@ -31,7 +31,7 @@ LLM Track command-line parameters.
 |-----------|---------|-------------|
 | `--op-name` | All | Test a single operator (e.g., `aten::add`) |
 | `--single-test` | Off | Randomly select 1 operator for quick testing |
-| `--base-url` | `http://localhost:8000/v1` | API base URL for OpenAI-compatible providers (e.g., DashScope, vLLM server) |
+| `--base-url` | SDK default / Env var | API base URL for either compatible protocol |
 | `--api-key` | Env var | API key (overrides `OPENAI_API_KEY` / `ANTHROPIC_API_KEY` env var) |
 | `--dataset` | Auto | Dataset: `KernelGenBench`, `KernelGenBench-aten`, `KernelGenBench-vllm`, `KernelGenBench-cublas` |
 | `--max-rounds` | 10 | Number of Pass@K rounds |
@@ -83,10 +83,10 @@ Number of independent kernel samples to generate:
 
 ### --base-url
 
-Specify a custom API endpoint for OpenAI-compatible providers:
+Specify a custom OpenAI-compatible or Anthropic-compatible endpoint:
 
 ```bash
---server-type openai --model-name <model> --base-url <endpoint>
+--api-format <openai|anthropic> --model-name <model> --base-url <endpoint>
 ```
 
 ### --api-key
@@ -97,7 +97,10 @@ Override the default API key from environment variables:
 --api-key <your-key>
 ```
 
-If not set, reads from `OPENAI_API_KEY` or `ANTHROPIC_API_KEY` depending on `--server-type`.
+If not set, the selected protocol reads `OPENAI_API_KEY` or
+`ANTHROPIC_API_KEY`. The corresponding base URL can be supplied through
+`OPENAI_BASE_URL` or `ANTHROPIC_BASE_URL`. `--server-type` remains
+available as a backward-compatible alias for `--api-format`.
 
 ## Output
 
