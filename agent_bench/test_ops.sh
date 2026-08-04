@@ -23,7 +23,8 @@
 #   ./test_ops.sh add --dataset KernelGenBench  # Specify dataset
 #   ./test_ops.sh --skip-gen              # Skip prompt generation
 #   ./test_ops.sh --skip-verify           # Skip verification
-#   ./test_ops.sh --device-count 4        # Use 4 GPUs for verification
+#   ./test_ops.sh --device-count 4        # Use GPUs 0-3 for generation and verification
+#   ./test_ops.sh --gpu-ids 1,3,5,7       # Use exact GPUs for both stages
 
 set -e
 
@@ -60,6 +61,8 @@ fi
 DATASET="$DEFAULT_DATASET"
 METHOD="normal_cc"
 DEVICE_COUNT=8
+GPU_IDS=""
+DEVICE_COUNT_SET=false
 TIMEOUT=600
 SKIP_GEN=false
 SKIP_VERIFY=false
@@ -80,7 +83,20 @@ while [[ $# -gt 0 ]]; do
             shift 2
             ;;
         --device-count)
+            if [[ -n "$GPU_IDS" ]]; then
+                echo "Error: --device-count and --gpu-ids are mutually exclusive"
+                exit 1
+            fi
             DEVICE_COUNT="$2"
+            DEVICE_COUNT_SET=true
+            shift 2
+            ;;
+        --gpu-ids)
+            if [[ "$DEVICE_COUNT_SET" == "true" ]]; then
+                echo "Error: --device-count and --gpu-ids are mutually exclusive"
+                exit 1
+            fi
+            GPU_IDS="$2"
             shift 2
             ;;
         --timeout)
@@ -118,7 +134,8 @@ while [[ $# -gt 0 ]]; do
             echo "  -d, --dataset       Dataset to use (default: KernelGenBench)"
             echo "  -m, --method        Agent method to use (default: naive_cc)"
             echo "                      Available: naive_cc, normal_cc, iterative_optimizer"
-            echo "  --device-count      Number of GPUs for verification (default: 8)"
+            echo "  --device-count      Use the first N GPUs for generation and verification (default: 8)"
+            echo "  --gpu-ids           Use exact GPU IDs for both stages (for example: 1,3,5,7)"
             echo "  --timeout           Timeout per operator in seconds (default: 600)"
             echo "  --skip-gen          Skip prompt generation step"
             echo "  --skip-verify       Skip verification step (only generate)"
@@ -149,6 +166,12 @@ while [[ $# -gt 0 ]]; do
 done
 
 # Build --op argument if operators specified
+
+if [[ -n "$GPU_IDS" ]]; then
+    DEVICE_ARGS=(--gpu-ids "$GPU_IDS")
+else
+    DEVICE_ARGS=(--device-count "$DEVICE_COUNT")
+fi
 if [[ -n "$OPERATORS" ]]; then
     OP_ARG="--op $OPERATORS"
     DISPLAY_TARGET="$OPERATORS"
@@ -166,6 +189,11 @@ echo "Target: $DISPLAY_TARGET"
 echo "=================================================="
 
 # Step 1: Generate prompts
+if [[ -n "$GPU_IDS" ]]; then
+    echo "GPUs: $GPU_IDS"
+else
+    echo "GPUs: first $DEVICE_COUNT"
+fi
 if [[ "$SKIP_GEN" == "false" ]]; then
     echo ""
     echo "[Step 1/3] Generating prompts..."
@@ -184,7 +212,7 @@ echo ""
 echo "[Step 2/3] Running agent to generate kernels..."
 
 # Build run.py command as an array (safer than eval)
-RUN_ARGS=(--dataset "$DATASET" --method "$METHOD")
+RUN_ARGS=(--dataset "$DATASET" --method "$METHOD" "${DEVICE_ARGS[@]}")
 if [[ -n "$OPERATORS" ]]; then
     RUN_ARGS+=(--op "$OPERATORS")
 fi
@@ -215,7 +243,15 @@ echo "Run completed: $RUN_NAME"
 if [[ "$SKIP_VERIFY" == "false" ]]; then
     echo ""
     echo "[Step 3/3] Verifying generated kernels..."
-    $PYTHON verify.py --run "$RUN_NAME" $OP_ARG --device-count "$DEVICE_COUNT" --timeout "$TIMEOUT" $VERBOSE
+    VERIFY_ARGS=(--run "$RUN_NAME" "${DEVICE_ARGS[@]}" --timeout "$TIMEOUT")
+    if [[ -n "$OPERATORS" ]]; then
+        VERIFY_ARGS+=(--op "$OPERATORS")
+    fi
+    if [[ -n "$VERBOSE" ]]; then
+        VERIFY_ARGS+=("$VERBOSE")
+    fi
+
+    $PYTHON verify.py "${VERIFY_ARGS[@]}"
 else
     echo ""
     echo "[Step 3/3] Skipping verification (--skip-verify)"

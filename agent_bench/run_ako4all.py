@@ -41,7 +41,12 @@ try:
 except ImportError:
     yaml = None
 
-from device_manager import DeviceManager, detect_device_type
+from device_manager import (
+    DeviceManager,
+    detect_device_type,
+    parse_device_count,
+    parse_device_ids,
+)
 
 logging.basicConfig(
     level=logging.INFO,
@@ -492,9 +497,12 @@ def run(args):
         yaml.dump(config, f, default_flow_style=False)
 
     # Initialize device manager
+    gpu_ids = args.gpu_ids
+    if gpu_ids is None and args.device_count is not None:
+        gpu_ids = list(range(args.device_count))
     device_mgr = DeviceManager(
         lock_dir="/tmp/agent_bench_gpu_locks",
-        gpu_ids=None,  # Auto-detect all GPUs
+        gpu_ids=gpu_ids,
     )
 
     # Initialize progress
@@ -794,6 +802,20 @@ def main():
         type=str,
         default=None,
         help="Resume a previous run by name (skips existing kernels)",
+    )
+
+    device_group = parser.add_mutually_exclusive_group()
+    device_group.add_argument(
+        "--device-count",
+        type=parse_device_count,
+        default=None,
+        help="Number of devices to use (default: auto-detect)",
+    )
+    device_group.add_argument(
+        "--gpu-ids",
+        type=parse_device_ids,
+        default=None,
+        help="Comma-separated physical device IDs to use (for example: 0,2,3)",
     )
 
     args = parser.parse_args()

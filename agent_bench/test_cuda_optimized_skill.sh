@@ -49,6 +49,8 @@ BASELINE_DIR=""
 TIMEOUT=1800
 VERIFY_TIMEOUT=600
 DEVICE_COUNT=8
+GPU_IDS=""
+DEVICE_COUNT_SET=false
 BUDGET=""
 CLAUDE_BIN=""
 MAX_RETRIES=""
@@ -84,7 +86,20 @@ while [[ $# -gt 0 ]]; do
             shift 2
             ;;
         --device-count)
+            if [[ -n "$GPU_IDS" ]]; then
+                echo "Error: --device-count and --gpu-ids are mutually exclusive"
+                exit 1
+            fi
             DEVICE_COUNT="$2"
+            DEVICE_COUNT_SET=true
+            shift 2
+            ;;
+        --gpu-ids)
+            if [[ "$DEVICE_COUNT_SET" == "true" ]]; then
+                echo "Error: --device-count and --gpu-ids are mutually exclusive"
+                exit 1
+            fi
+            GPU_IDS="$2"
             shift 2
             ;;
         --budget)
@@ -135,7 +150,8 @@ while [[ $# -gt 0 ]]; do
             echo "  --baseline-dir         Baseline directory with kernel .py files"
             echo "  -t, --timeout          Timeout per kernel in seconds (default: 1800)"
             echo "  --verify-timeout       Timeout for verification in seconds (default: 600)"
-            echo "  --device-count         Number of GPUs to use (default: 8)"
+            echo "  --device-count         Use the first N GPUs for generation and verification (default: 8)"
+            echo "  --gpu-ids              Use exact GPU IDs for both stages (for example: 1,3,5,7)"
             echo "  --budget               Budget limit per kernel in USD"
             echo "  --claude-bin           Path to claude binary"
             echo "  --max-retries          Max attempts per kernel (default: 1)"
@@ -165,6 +181,12 @@ while [[ $# -gt 0 ]]; do
     esac
 done
 
+if [[ -n "$GPU_IDS" ]]; then
+    DEVICE_ARGS=(--gpu-ids "$GPU_IDS")
+else
+    DEVICE_ARGS=(--device-count "$DEVICE_COUNT")
+fi
+
 # Validate: need baseline-dir or baseline-run (unless resuming or skip-run)
 if [[ "$SKIP_RUN" == "false" && -z "$RESUME_RUN" && -z "$BASELINE_DIR" && -z "$BASELINE_RUN" ]]; then
     echo "Error: --baseline-dir or --baseline-run is required"
@@ -177,7 +199,11 @@ echo "cuda-optimized-skill Benchmark"
 echo "=================================================="
 echo "Dataset:    $DATASET"
 echo "Timeout:    ${TIMEOUT}s per kernel"
-echo "Devices:    $DEVICE_COUNT"
+if [[ -n "$GPU_IDS" ]]; then
+    echo "GPUs:       $GPU_IDS"
+else
+    echo "GPUs:       first $DEVICE_COUNT"
+fi
 if [[ -n "$BASELINE_DIR" ]]; then
     echo "Baseline:   $BASELINE_DIR"
 elif [[ -n "$BASELINE_RUN" ]]; then
@@ -208,7 +234,7 @@ if [[ "$SKIP_RUN" == "false" ]]; then
     echo ""
     echo "[Step 2/3] Running cuda-optimized-skill optimization..."
 
-    RUN_ARGS=(--dataset "$DATASET" -t "$TIMEOUT" --device-count "$DEVICE_COUNT")
+    RUN_ARGS=(--dataset "$DATASET" -t "$TIMEOUT" "${DEVICE_ARGS[@]}")
 
     if [[ -n "$BASELINE_DIR" ]]; then
         RUN_ARGS+=(--baseline-dir "$BASELINE_DIR")
@@ -264,7 +290,7 @@ if [[ "$SKIP_VERIFY" == "false" ]]; then
     echo ""
     echo "[Step 3/3] Verifying optimized kernels..."
 
-    VERIFY_ARGS=(--run "$RUN_NAME" --device-count "$DEVICE_COUNT" --timeout "$VERIFY_TIMEOUT")
+    VERIFY_ARGS=(--run "$RUN_NAME" "${DEVICE_ARGS[@]}" --timeout "$VERIFY_TIMEOUT")
     if [[ -n "$OPERATORS" ]]; then
         VERIFY_ARGS+=(--op "$OPERATORS")
     fi

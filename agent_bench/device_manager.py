@@ -136,6 +136,33 @@ def get_device_env_var() -> str:
     return _VISIBLE_DEVICES_ENV.get(detect_device_type(), "CUDA_VISIBLE_DEVICES")
 
 
+def parse_device_ids(value: str) -> list[int]:
+    """Parse a comma-separated list of non-negative, unique device IDs."""
+    try:
+        device_ids = [int(item.strip()) for item in value.split(",") if item.strip()]
+    except ValueError as exc:
+        raise ValueError("device IDs must be comma-separated integers") from exc
+
+    if not device_ids:
+        raise ValueError("at least one device ID is required")
+    if any(device_id < 0 for device_id in device_ids):
+        raise ValueError("device IDs must be non-negative")
+    if len(device_ids) != len(set(device_ids)):
+        raise ValueError("device IDs must be unique")
+    return device_ids
+
+
+def parse_device_count(value: str) -> int:
+    """Parse a positive device count."""
+    try:
+        device_count = int(value)
+    except ValueError as exc:
+        raise ValueError("device count must be an integer") from exc
+    if device_count < 1:
+        raise ValueError("device count must be at least 1")
+    return device_count
+
+
 class DeviceManager:
     """Manages device allocation using lock files to prevent conflicts."""
 
