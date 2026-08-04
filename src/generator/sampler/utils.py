@@ -24,10 +24,6 @@ from concurrent.futures import ProcessPoolExecutor, as_completed
 
 logger = logging.getLogger(__name__)
 
-ANTHROPIC_KEY = os.environ.get("ANTHROPIC_API_KEY") or os.environ.get("ANTHROPIC_AUTH_TOKEN")
-ANTHROPIC_BASE_URL = os.environ.get("ANTHROPIC_BASE_URL")
-OPENAI_KEY = os.environ.get("OPENAI_API_KEY")
-
 ############################################
 # Triton Prompt
 ############################################
@@ -86,20 +82,34 @@ def query_server(
     base_url: str = None,
     **kwargs,
 ):
+    if server_type not in {"anthropic", "openai"}:
+        raise ValueError(
+            f"Unsupported API format: {server_type!r}. "
+            "Use 'openai' for OpenAI-compatible APIs or 'anthropic' for "
+            "Anthropic-compatible APIs."
+        )
+
     match server_type:
         case "anthropic":
             import anthropic as _anthropic
-            client = _anthropic.Anthropic(
-                api_key=ANTHROPIC_KEY,
-                base_url=ANTHROPIC_BASE_URL if ANTHROPIC_BASE_URL else _anthropic.NOT_GIVEN,
-            )
+            client_args = {}
+            api_key = os.environ.get("ANTHROPIC_API_KEY") or os.environ.get("ANTHROPIC_AUTH_TOKEN")
+            resolved_base_url = base_url or os.environ.get("ANTHROPIC_BASE_URL")
+            if api_key:
+                client_args["api_key"] = api_key
+            if resolved_base_url:
+                client_args["base_url"] = resolved_base_url
+            client = _anthropic.Anthropic(**client_args)
             model = model_name
         case "openai":
-            client = OpenAI(api_key=OPENAI_KEY)
-            model = model_name
-        case _:
-            _base_url = base_url or os.environ.get("OPENAI_BASE_URL", "http://localhost:8000/v1")
-            client = OpenAI(api_key=os.environ.get("OPENAI_API_KEY", "EMPTY"), base_url=_base_url)
+            client_args = {}
+            api_key = os.environ.get("OPENAI_API_KEY")
+            resolved_base_url = base_url or os.environ.get("OPENAI_BASE_URL")
+            if api_key:
+                client_args["api_key"] = api_key
+            if resolved_base_url:
+                client_args["base_url"] = resolved_base_url
+            client = OpenAI(**client_args)
             model = model_name
 
     if server_type == "anthropic":
@@ -124,37 +134,27 @@ def query_server(
                 max_tokens=max_tokens,
             )
         outputs = [choice.text for choice in response.content if not hasattr(choice, 'thinking') or not choice.thinking]
-    elif server_type == "openai" and is_reasoning_model:
-        response = client.chat.completions.create(
-            model=model,
-            messages=[{"role": "user", "content": prompt}],
-            reasoning_effort=reasoning_effort,
-        )
-        outputs = [choice.message.content for choice in response.choices]
     else:
-        if type(prompt) == str:
-            response = client.completions.create(
+        messages = prompt if isinstance(prompt, list) else [
+            {"role": "system", "content": system_prompt},
+            {"role": "user", "content": prompt},
+        ]
+        if is_reasoning_model:
+            response = client.chat.completions.create(
                 model=model,
-                prompt=prompt,
-                temperature=temperature,
-                n=num_completions,
-                max_tokens=max_tokens,
-                top_p=top_p,
+                messages=messages,
+                reasoning_effort=reasoning_effort,
             )
-            outputs = [choice.text for choice in response.choices]
         else:
             response = client.chat.completions.create(
                 model=model,
-                messages=prompt if isinstance(prompt, list) else [
-                    {"role": "system", "content": system_prompt},
-                    {"role": "user", "content": prompt},
-                ],
+                messages=messages,
                 temperature=temperature,
                 n=num_completions,
                 max_tokens=max_tokens,
                 top_p=top_p,
             )
-            outputs = [choice.message.content for choice in response.choices]
+        outputs = [choice.message.content for choice in response.choices]
 
     return outputs[0] if len(outputs) == 1 else outputs
 

@@ -74,13 +74,13 @@ python scripts/generate_kernel_and_verify.py \
     --server-type openai
 ```
 
-## Server Types
+## API Formats
 
 ### OpenAI
 
 ```bash
 python scripts/generate_kernel_and_verify.py \
-    --server-type openai \
+    --api-format openai \
     --model-name gpt-4o
 ```
 
@@ -88,21 +88,25 @@ python scripts/generate_kernel_and_verify.py \
 
 ```bash
 python scripts/generate_kernel_and_verify.py \
-    --server-type anthropic \
+    --api-format anthropic \
     --model-name claude-opus-4-6
 ```
 
-### Third-Party Providers
+### Compatible Endpoints
 
-Use `--base-url` to connect to any OpenAI-compatible provider.
+No provider registration is required. Select the endpoint's wire protocol and
+pass its URL, key, and model directly:
 
 ```bash
 python scripts/generate_kernel_and_verify.py \
-    --server-type openai \
+    --api-format <openai|anthropic> \
     --model-name <model-name> \
     --base-url <api-endpoint> \
     --api-key <your-api-key>
 ```
+
+The same values can be provided with `OPENAI_BASE_URL` /
+`OPENAI_API_KEY` or `ANTHROPIC_BASE_URL` / `ANTHROPIC_API_KEY`.
 
 ## Advanced Options
 

@@ -148,23 +148,40 @@ export OPENAI_BASE_URL=http://your-endpoint/v1  # 可选，自定义端点
 python scripts/generate_kernel_and_verify.py \
     --op-name aten::add \
     --single-test \
-    --server-type openai \
+    --api-format openai \
     --model-name your-model-name \
     --max-rounds 3
 
 # 完整测试（全部 210 个算子）
 python scripts/generate_kernel_and_verify.py \
-    --server-type openai \
+    --api-format openai \
     --model-name your-model-name \
     --max-rounds 3
 
 # 非 NVIDIA 芯片（仅 ATen）
 python scripts/generate_kernel_and_verify.py \
     --dataset KernelGenBench-aten \
-    --server-type openai \
+    --api-format openai \
     --model-name your-model-name \
     --max-rounds 3
 ```
+
+`--api-format` 表示接口协议，而不是需要预先注册的服务商名称。任何
+OpenAI-compatible 或 Anthropic-compatible 接口都可以直接通过
+`--base-url`、`--api-key` 和 `--model-name` 使用。例如：
+
+```bash
+python scripts/generate_kernel_and_verify.py \
+    --op-name aten::add \
+    --api-format anthropic \
+    --model-name your-model-name \
+    --base-url https://your-provider.example \
+    --api-key your-key
+```
+
+也可以省略 `--base-url` 和 `--api-key`，分别使用
+`OPENAI_BASE_URL` / `OPENAI_API_KEY` 或
+`ANTHROPIC_BASE_URL` / `ANTHROPIC_API_KEY` 环境变量。
 
 ### 参数说明
 
@@ -173,7 +190,7 @@ python scripts/generate_kernel_and_verify.py \
 | `--op-name` | 指定单个算子（如 `aten::add`、`vllm13::rms_norm`） | 全部算子 |
 | `--single-test` | 随机选 1 个算子快速测试 | 关闭 |
 | `--dataset` | 数据集（`KernelGenBench`、`KernelGenBench-aten`、`-vllm`、`-cublas`） | 自动检测 |
-| `--server-type` | LLM 提供商（`openai`、`anthropic`） | `openai` |
+| `--api-format` | API 协议（`openai`、`anthropic`）；`--server-type` 是兼容别名 | `openai` |
 | `--model-name` | 模型名称 | `gpt-4o` |
 | `--max-rounds` | Pass@K 轮数 | 10 |
 | `--device-count` | 验证使用的 GPU 数量 | 8 |
