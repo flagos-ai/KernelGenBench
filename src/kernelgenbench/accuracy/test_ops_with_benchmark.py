@@ -9797,9 +9797,38 @@ def test_accuracy_le_scalar(shape, dtype):
 
 
 # ========== linear ==========
-@label("baddbmm")
 @label("linear")
-@label("matmul")
+@parametrize("M, N, K", MNK_SHAPES)
+@parametrize("dtype", FLOAT_DTYPES)
+@parametrize("has_bias", [True, False])
+def test_accuracy_linear(M, N, K, dtype, has_bias):
+    inp = torch.randn((M, K), dtype=dtype, device=device)
+    weight = torch.randn((N, K), dtype=dtype, device=device)
+    bias = torch.randn((N,), dtype=dtype, device=device) if has_bias else None
+    ref_inp = to_reference(inp, True)
+    ref_weight = to_reference(weight, True)
+    ref_bias = to_reference(bias, True) if bias is not None else None
+
+    ref_out = torch.ops.aten.linear(ref_inp, ref_weight, ref_bias)
+    with kernelgenbench.use_ops(REGISTERED_OPS):
+        res_out = torch.ops.aten.linear(inp, weight, bias)
+    kernelgenbench_assert_close(res_out, ref_out, dtype, reduce_dim=K)
+
+    from sandbox.utils.accuracy_utils import CustomBenchmarkResult
+    quantiles = [0.5, 0.2, 0.8]
+    ms_torch, _, _ = get_triton_testing().do_bench(
+        lambda: torch.ops.aten.linear(ref_inp, ref_weight, ref_bias), rep=100, quantiles=quantiles
+    )
+    with kernelgenbench.use_ops(REGISTERED_OPS):
+        ms_triton, _, _ = get_triton_testing().do_bench(
+            lambda: torch.ops.aten.linear(inp, weight, bias), rep=100, quantiles=quantiles
+        )
+    return CustomBenchmarkResult(
+        ref_time=ms_torch, res_time=ms_triton, speedup=ms_torch / ms_triton
+    )
+
+
+@label("baddbmm")
 @parametrize("M, N, K", MNK_SHAPES)
 @parametrize("scalar", SCALARS)
 @parametrize("dtype", FLOAT_DTYPES)
@@ -9839,8 +9868,6 @@ def test_accuracy_baddbmm(M, N, K, scalar, dtype):
 
 # ========== linear ==========
 @label("baddbmm_backward")
-@label("linear")
-@label("matmul")
 @parametrize("M, N, K", MNK_SHAPES)
 @parametrize("scalar", SCALARS)
 @parametrize("dtype", FLOAT_DTYPES)
@@ -9955,9 +9982,35 @@ def test_accuracy_masked_fill_(shape, dtype, threshold, value):
 
 
 # ========== matmul ==========
-@label("baddbmm")
-@label("linear")
 @label("matmul")
+@parametrize("M, N, K", MNK_SHAPES)
+@parametrize("dtype", FLOAT_DTYPES)
+def test_accuracy_matmul(M, N, K, dtype):
+    inp = torch.randn((M, K), dtype=dtype, device=device)
+    other = torch.randn((K, N), dtype=dtype, device=device)
+    ref_inp = to_reference(inp, True)
+    ref_other = to_reference(other, True)
+
+    ref_out = torch.ops.aten.matmul(ref_inp, ref_other)
+    with kernelgenbench.use_ops(REGISTERED_OPS):
+        res_out = torch.ops.aten.matmul(inp, other)
+    kernelgenbench_assert_close(res_out, ref_out, dtype, reduce_dim=K)
+
+    from sandbox.utils.accuracy_utils import CustomBenchmarkResult
+    quantiles = [0.5, 0.2, 0.8]
+    ms_torch, _, _ = get_triton_testing().do_bench(
+        lambda: torch.ops.aten.matmul(ref_inp, ref_other), rep=100, quantiles=quantiles
+    )
+    with kernelgenbench.use_ops(REGISTERED_OPS):
+        ms_triton, _, _ = get_triton_testing().do_bench(
+            lambda: torch.ops.aten.matmul(inp, other), rep=100, quantiles=quantiles
+        )
+    return CustomBenchmarkResult(
+        ref_time=ms_torch, res_time=ms_triton, speedup=ms_torch / ms_triton
+    )
+
+
+@label("baddbmm")
 @parametrize("M, N, K", MNK_SHAPES)
 @parametrize("scalar", SCALARS)
 @parametrize("dtype", FLOAT_DTYPES)
@@ -9997,8 +10050,6 @@ def test_accuracy_baddbmm(M, N, K, scalar, dtype):
 
 # ========== matmul ==========
 @label("baddbmm_backward")
-@label("linear")
-@label("matmul")
 @parametrize("M, N, K", MNK_SHAPES)
 @parametrize("scalar", SCALARS)
 @parametrize("dtype", FLOAT_DTYPES)
