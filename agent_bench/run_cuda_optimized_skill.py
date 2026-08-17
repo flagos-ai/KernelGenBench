@@ -53,7 +53,12 @@ try:
 except ImportError:
     yaml = None
 
-from device_manager import DeviceManager, detect_device_type
+from device_manager import (
+    DeviceManager,
+    detect_device_type,
+    parse_device_count,
+    parse_device_ids,
+)
 
 logging.basicConfig(
     level=logging.INFO,
@@ -361,10 +366,12 @@ def run(args):
         yaml.dump(config, f, default_flow_style=False)
 
     # Initialize device manager
-    device_count = args.device_count if hasattr(args, "device_count") and args.device_count else 8
+    gpu_ids = args.gpu_ids
+    if gpu_ids is None:
+        gpu_ids = list(range(args.device_count))
     device_mgr = DeviceManager(
         lock_dir="/tmp/cuda_optimized_gpu_locks",
-        gpu_ids=list(range(device_count)),
+        gpu_ids=gpu_ids,
     )
 
     progress = Progress(run_dir / "progress.json")
@@ -586,11 +593,18 @@ def main():
         default=1800,
         help="Timeout per kernel in seconds (default: 1800)",
     )
-    parser.add_argument(
+    device_group = parser.add_mutually_exclusive_group()
+    device_group.add_argument(
         "--device-count",
-        type=int,
+        type=parse_device_count,
         default=8,
         help="Number of GPUs to use (default: 8)",
+    )
+    device_group.add_argument(
+        "--gpu-ids",
+        type=parse_device_ids,
+        default=None,
+        help="Comma-separated physical GPU IDs (for example: 0,2,3)",
     )
     parser.add_argument(
         "--claude-bin",

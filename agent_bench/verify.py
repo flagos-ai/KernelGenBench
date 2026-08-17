@@ -37,6 +37,7 @@ sys.path.insert(0, str(PROJECT_ROOT / "src"))
 sys.path.insert(0, str(PROJECT_ROOT))
 
 from test_modules import get_test_modules  # noqa: E402
+from device_manager import parse_device_count, parse_device_ids  # noqa: E402
 
 logger = logging.getLogger(__name__)
 
@@ -55,6 +56,7 @@ def verify_kernels(
     dataset: str,
     config: dict,
     device_count: int = 8,
+    device_ids: list[int] | None = None,
     operators: list[str] | None = None,
     timeout: int = 600,
 ) -> dict:
@@ -65,6 +67,7 @@ def verify_kernels(
         dataset: Dataset name
         config: Config dict
         device_count: Number of GPUs
+        device_ids: Exact physical device IDs, overriding device_count
         operators: Optional specific operators to verify
         timeout: Timeout per operator
 
@@ -158,6 +161,7 @@ def verify_kernels(
     summary, results = verifier.only_verify(
         name_source_map=verify_requests,
         device_count=device_count,
+        device_ids=device_ids,
     )
 
     # Process results
@@ -223,11 +227,18 @@ def main():
         default=None,
         help="Specific operator(s) to verify, comma-separated"
     )
-    parser.add_argument(
+    device_group = parser.add_mutually_exclusive_group()
+    device_group.add_argument(
         "--device-count", "-d",
-        type=int,
+        type=parse_device_count,
         default=8,
         help="Number of GPUs for verification (default: 8)"
+    )
+    device_group.add_argument(
+        "--gpu-ids",
+        type=parse_device_ids,
+        default=None,
+        help="Comma-separated physical GPU IDs (for example: 0,2,3)",
     )
     parser.add_argument(
         "--timeout", "-t",
@@ -317,6 +328,7 @@ def main():
             dataset=dataset,
             config=config,
             device_count=args.device_count,
+            device_ids=args.gpu_ids,
             operators=operators,
             timeout=args.timeout,
         )

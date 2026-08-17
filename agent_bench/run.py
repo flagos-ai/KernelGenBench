@@ -33,7 +33,12 @@ try:
 except ImportError:
     yaml = None
 
-from device_manager import DeviceManager, get_device_env_var
+from device_manager import (
+    DeviceManager,
+    get_device_env_var,
+    parse_device_count,
+    parse_device_ids,
+)
 from methods import get_method, list_methods
 
 logger = logging.getLogger(__name__)
@@ -292,7 +297,9 @@ def run(args):
     # Initialize device manager
     device_cfg = config.get("device", {}) or {}
     gpu_ids = device_cfg.get("gpu_ids")
-    if args.device_count is not None:
+    if args.gpu_ids is not None:
+        gpu_ids = args.gpu_ids
+    elif args.device_count is not None:
         gpu_ids = list(range(args.device_count))
     device_mgr = DeviceManager(
         lock_dir=device_cfg.get("lock_dir", "/tmp/agent_bench_gpu_locks"),
@@ -544,11 +551,18 @@ def main():
         action="store_true",
         help="Enable debug logging"
     )
-    parser.add_argument(
+    device_group = parser.add_mutually_exclusive_group()
+    device_group.add_argument(
         "--device-count",
-        type=int,
+        type=parse_device_count,
         default=None,
         help="Number of devices to use (default: auto-detect)"
+    )
+    device_group.add_argument(
+        "--gpu-ids",
+        type=parse_device_ids,
+        default=None,
+        help="Comma-separated physical device IDs to use (for example: 0,2,3)"
     )
 
     args = parser.parse_args()

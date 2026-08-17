@@ -52,6 +52,8 @@ BASELINE_DIR=""
 TIMEOUT=1800
 VERIFY_TIMEOUT=600
 DEVICE_COUNT=8
+GPU_IDS=""
+DEVICE_COUNT_SET=false
 BUDGET=""
 CLAUDE_BIN=""
 MAX_RETRIES=""
@@ -92,7 +94,20 @@ while [[ $# -gt 0 ]]; do
             shift 2
             ;;
         --device-count)
+            if [[ -n "$GPU_IDS" ]]; then
+                echo "Error: --device-count and --gpu-ids are mutually exclusive"
+                exit 1
+            fi
             DEVICE_COUNT="$2"
+            DEVICE_COUNT_SET=true
+            shift 2
+            ;;
+        --gpu-ids)
+            if [[ "$DEVICE_COUNT_SET" == "true" ]]; then
+                echo "Error: --device-count and --gpu-ids are mutually exclusive"
+                exit 1
+            fi
+            GPU_IDS="$2"
             shift 2
             ;;
         --budget)
@@ -140,7 +155,8 @@ while [[ $# -gt 0 ]]; do
             echo "  --baseline-dir         Directory of baseline kernel .py files (for optimize mode)"
             echo "  -t, --timeout          Timeout per kernel in seconds (default: 1800)"
             echo "  --verify-timeout       Timeout for verification in seconds (default: 600)"
-            echo "  --device-count         Number of GPUs for verification (default: 8)"
+            echo "  --device-count         Use the first N GPUs for generation and verification (default: 8)"
+            echo "  --gpu-ids              Use exact GPU IDs for both stages (for example: 1,3,5,7)"
             echo "  --budget               Budget limit per kernel in USD"
             echo "  --claude-bin           Path to claude binary"
             echo "  --max-retries          Max attempts per kernel (default: 1)"
@@ -179,6 +195,12 @@ done
 
 echo "=================================================="
 echo "AutoKernel Benchmark"
+
+if [[ -n "$GPU_IDS" ]]; then
+    DEVICE_ARGS=(--gpu-ids "$GPU_IDS")
+else
+    DEVICE_ARGS=(--device-count "$DEVICE_COUNT")
+fi
 echo "Device type: $_DEVICE_TYPE"
 echo "Dataset: $DATASET"
 echo "Mode: $MODE"
@@ -192,6 +214,11 @@ echo "=================================================="
 
 START_TIME=$(date +%s)
 
+if [[ -n "$GPU_IDS" ]]; then
+    echo "GPUs: $GPU_IDS"
+else
+    echo "GPUs: first $DEVICE_COUNT"
+fi
 # Step 1: Generate prompts (if needed)
 if [[ "$SKIP_GEN" == "false" && "$SKIP_RUN" == "false" ]]; then
     echo ""
@@ -234,7 +261,7 @@ if [[ "$SKIP_RUN" == "false" ]]; then
     if [[ -n "$RESUME_RUN" ]]; then
         RUN_ARGS+=(--resume "$RESUME_RUN")
     fi
-    RUN_ARGS+=(--device-count "$DEVICE_COUNT")
+    RUN_ARGS+=("${DEVICE_ARGS[@]}")
 
     python run_autokernel.py "${RUN_ARGS[@]}"
 else
@@ -262,7 +289,7 @@ if [[ "$SKIP_VERIFY" == "false" ]]; then
     echo ""
     echo "[Step 3/3] Verifying generated kernels..."
 
-    VERIFY_ARGS=(--run "$RUN_NAME" --device-count "$DEVICE_COUNT" --timeout "$VERIFY_TIMEOUT")
+    VERIFY_ARGS=(--run "$RUN_NAME" "${DEVICE_ARGS[@]}" --timeout "$VERIFY_TIMEOUT")
     if [[ -n "$OPERATORS" ]]; then
         VERIFY_ARGS+=(--op "$OPERATORS")
     fi

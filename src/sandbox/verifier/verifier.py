@@ -391,10 +391,15 @@ class Verifier:
         self, 
         name_source_map: List[VerifyRequest],
         test_type: str = "accuracy", # accuracy or performance
-        device_count: int = 1, 
+        device_count: int = 1,
+        device_ids: List[int] | None = None,
     ) -> Tuple[Dict, List[VerifyResult]]:
         self._running_config.test_type = test_type
-        results = self.verify(name_source_maps=name_source_map, device_count=device_count)
+        results = self.verify(
+            name_source_maps=name_source_map,
+            device_count=device_count,
+            device_ids=device_ids,
+        )
         summary, info = self._summary(results)
         return summary, results
 
@@ -437,7 +442,8 @@ class Verifier:
     def verify(
         self,
         name_source_maps: List[VerifyRequest],
-        device_count: int = 1
+        device_count: int = 1,
+        device_ids: List[int] | None = None,
     ) -> List[VerifyResult]:
         """
 
@@ -445,15 +451,19 @@ class Verifier:
         check_result = []
         # if device_count > 1 and len(name_source_maps) > 1:
         total_tasks = len(name_source_maps)
-        task_chunks = [[] for _ in range(device_count)]
+        if device_ids is None:
+            device_ids = list(range(device_count))
+        if not device_ids:
+            raise ValueError("device_ids must contain at least one device")
+        task_chunks = [[] for _ in device_ids]
         for i, name_source_map in enumerate(name_source_maps):
-            task_chunks[i % device_count].append(name_source_map)
+            task_chunks[i % len(device_ids)].append(name_source_map)
         result_queue = mp.Queue()
 
         # One process per GPU
         processes: List[mp.Process] = []
-        for i, chunk in enumerate(task_chunks):
-            p = mp.Process(target=self._verify_with_one_device, args=(chunk, i, result_queue))
+        for device_id, chunk in zip(device_ids, task_chunks):
+            p = mp.Process(target=self._verify_with_one_device, args=(chunk, device_id, result_queue))
             p.start()
             processes.append(p)
         
